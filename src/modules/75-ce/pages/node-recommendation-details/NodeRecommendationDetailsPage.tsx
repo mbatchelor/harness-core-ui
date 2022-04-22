@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { Layout, Text, Card, Popover, Container } from '@wings-software/uicore'
 import { Color, FontVariation } from '@harness/design-system'
@@ -30,6 +30,7 @@ import { getProviderIcon } from '@ce/utils/recommendationUtils'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { ViewNodepoolTimeRange } from '@ce/components/RecommendationDetails/constants'
 import NodeRecommendationDetails from '@ce/components/NodeRecommendation/NodeRecommendation'
+import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import css from './NodeRecommendationDetailsPage.module.scss'
 
 interface Params {
@@ -41,7 +42,7 @@ interface Params {
 const NodeRecommendationDetailsPage = () => {
   const { getString } = useStrings()
   const { recommendation, accountId, recommendationName } = useParams<Params>()
-  const [timeRange, setTimeRange] = useState<NodepoolTimeRangeValue>({
+  const [timeRange, setTimeRange] = useQueryParamsState<NodepoolTimeRangeValue>('timeRange', {
     value: NodepoolTimeRangeType.LAST_7,
     label: NodepoolTimeRange.LAST_7
   })

@@ -53,7 +53,7 @@ interface TuneRecommendationCardProps {
   state: IState
   dispatch: React.Dispatch<Action>
   buffer: number
-  setBuffer: React.Dispatch<React.SetStateAction<number>>
+  setBuffer: (newState: number) => void
   showInstanceFamiliesModal: () => void
   initialState: IState
   updatedState: IState
@@ -174,7 +174,7 @@ const Resources: React.FC<{ dispatch: React.Dispatch<Action>; state: IState }> =
 const Buffer: React.FC<{
   state: IState
   buffer: number
-  setBuffer: React.Dispatch<React.SetStateAction<number>>
+  setBuffer: (newState: number) => void
 }> = ({ state, buffer, setBuffer }) => {
   const { getString } = useStrings()
 
@@ -347,7 +347,7 @@ const ApplyPreferencesButtonGroup: React.FC<{
   initialState: IState
   updatedState: IState
   dispatch: React.Dispatch<Action>
-  setBuffer: React.Dispatch<React.SetStateAction<number>>
+  setBuffer: (newState: number) => void
   buffer: number
   loading: boolean
 }> = ({ updateRecommendationDetails, state, initialState, updatedState, dispatch, setBuffer, buffer, loading }) => {

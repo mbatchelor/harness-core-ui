@@ -51,6 +51,7 @@ import {
   getProviderIcon,
   isResourceConsistent
 } from '@ce/utils/recommendationUtils'
+import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import { InstanceFamiliesModalTab } from '../InstanceFamiliesModalTab/InstanceFamiliesModalTab'
 import ResourceUtilizationCharts from './ResourceUtilizationCharts'
 import { ACTIONS, Action, IState } from './constants'
@@ -145,7 +146,7 @@ const NodeRecommendationDetails: React.FC<NodeRecommendationDetailsProps> = ({
   const { showError } = useToaster()
   const timeRangeFilter = GET_NODEPOOL_DATE_RANGE[timeRange.value]
 
-  const [buffer, setBuffer] = useState(0)
+  const [buffer, setBuffer] = useQueryParamsState('bufferValue', 0)
   const [tuneRecomVisible, setTuneRecomVisible] = useState(true)
 
   const { includeTypes, includeSeries, excludeTypes, excludeSeries } = defaultTo(
@@ -327,7 +328,9 @@ const NodeRecommendationDetails: React.FC<NodeRecommendationDetailsProps> = ({
             </Container>
           </Layout.Horizontal>
           <Recommender stats={recommendationStats} details={recomDetails} loading={loading} />
-          <TuneRecommendationHelpText toggleCardVisible={() => setTuneRecomVisible(prevState => !prevState)} />
+          <TuneRecommendationHelpText
+            toggleCardVisible={() => setTuneRecomVisible((prevState: boolean) => !prevState)}
+          />
         </Card>
       </Layout.Vertical>
       <Layout.Vertical spacing="large" padding="xlarge">
