@@ -30,6 +30,10 @@
     }
   }
 
+  & :global(.Pane.horizontal.Pane2) {
+    z-index: 2;
+  }
+
   .splitPane2 {
     z-index: 200;
     /* vertical split styles */

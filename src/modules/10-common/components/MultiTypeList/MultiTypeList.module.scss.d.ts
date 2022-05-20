@@ -8,6 +8,7 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly group: string
+  readonly trashBtn: string
   readonly withoutAligning: string
   readonly withoutSpacing: string
 }

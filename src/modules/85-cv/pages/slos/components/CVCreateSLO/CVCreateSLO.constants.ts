@@ -36,7 +36,8 @@ export const initialValuesSLO: SLOForm = {
   [SLOFormFields.VALID_REQUEST_METRIC]: '',
   [SLOFormFields.SLI_MISSING_DATA_TYPE]: SLIMissingDataTypes.GOOD,
   [SLOFormFields.PERIOD_TYPE]: PeriodTypes.ROLLING,
-  [SLOFormFields.SLO_TARGET_PERCENTAGE]: 99
+  [SLOFormFields.SLO_TARGET_PERCENTAGE]: 99,
+  [SLOFormFields.NOTIFICATION_RULE_REFS]: []
 }
 
 export const comparatorOptions: SelectOption[] = [

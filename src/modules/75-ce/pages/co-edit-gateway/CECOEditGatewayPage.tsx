@@ -152,7 +152,8 @@ export const CECOEditGatewayPage: React.FC = () => {
         deleteCloudResources: service.opts?.delete_cloud_resources as boolean,
         alwaysUsePrivateIP: service.opts?.always_use_private_ip as boolean,
         access_details: service.opts?.access_details as ConnectionMetadata,
-        hide_progress_page: service.opts?.hide_progress_page as boolean
+        hide_progress_page: service.opts?.hide_progress_page as boolean,
+        dry_run: service.opts?.dry_run
       },
       provider: allProviders.find(provider => provider.value === providerType) as Provider,
       selectedInstances: selectedInstances,
@@ -188,6 +189,7 @@ export const CECOEditGatewayPage: React.FC = () => {
           setGatewayDetails={setGatewayDetails}
           previousTab={() => undefined}
           isEditFlow={true}
+          originalRuleDetails={data?.response?.service}
         />
       ) : (
         <div style={{ position: 'relative', height: 'calc(100vh - 128px)' }}>

@@ -152,7 +152,7 @@ describe('ASG selection modal component', () => {
       </TestWrapper>
     )
 
-    const refreshBtn = getByText('Refresh')
+    const refreshBtn = getByText('ce.common.refresh')
     expect(refreshBtn).toBeDefined()
     act(() => {
       fireEvent.click(refreshBtn)
@@ -208,7 +208,7 @@ describe('ASG selection modal component', () => {
     })
     expect(radioBtn.checked).toBeTruthy()
 
-    const addBtn = getByText('Add selected')
+    const addBtn = getByText('ce.co.autoStoppingRule.configuration.addSelectedBtnText')
     expect(addBtn).toBeDefined()
     act(() => {
       fireEvent.click(addBtn)

@@ -128,7 +128,7 @@ exports[`<TemplateStudio /> tests snapshot test for new template with git sync 1
     >
       <div
         class="StyledProps--font StyledProps--main subHeader StyledProps--padding-right-xlarge StyledProps--padding-left-xlarge StyledProps--border StyledProps--border-bottom StyledProps--border-color-grey200 StyledProps--background-white"
-        style="height: 52px;"
+        style="height: 49px;"
       >
         <div
           class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-space-between"
@@ -520,7 +520,7 @@ exports[`<TemplateStudio /> tests snapshot test for new template without git syn
     >
       <div
         class="StyledProps--font StyledProps--main subHeader StyledProps--padding-right-xlarge StyledProps--padding-left-xlarge StyledProps--border StyledProps--border-bottom StyledProps--border-color-grey200 StyledProps--background-white"
-        style="height: 52px;"
+        style="height: 49px;"
       >
         <div
           class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-space-between"
@@ -912,7 +912,7 @@ exports[`<TemplateStudio /> tests snapshot test for template studio in visual vi
     >
       <div
         class="StyledProps--font StyledProps--main subHeader StyledProps--padding-right-xlarge StyledProps--padding-left-xlarge StyledProps--border StyledProps--border-bottom StyledProps--border-color-grey200 StyledProps--background-white"
-        style="height: 52px;"
+        style="height: 49px;"
       >
         <div
           class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-space-between"

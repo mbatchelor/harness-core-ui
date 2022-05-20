@@ -37,7 +37,10 @@ import { useStrings } from 'framework/strings'
 import type { DelegateProfile } from '@delegates/DelegateInterface'
 
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { AddDescriptionAndKVTagsWithIdentifier } from '@common/components/AddDescriptionAndTags/AddDescriptionAndTags'
+import {
+  AddDescriptionAndKVTagsWithIdentifier,
+  FormikForAddDescriptionandKVTags
+} from '@common/components/AddDescriptionAndTags/AddDescriptionAndTags'
 
 import { DelegateSize } from '@delegates/constants'
 import { useCreateTokenModal } from '@delegates/components/DelegateTokens/modals/useCreateTokenModal'
@@ -265,6 +268,7 @@ const DelegateSetup: React.FC<StepProps<K8sDelegateWizardData> & DelegateSetupSt
                     <Layout.Vertical className={css.leftPanel}>
                       <div className={css.formGroup}>
                         <AddDescriptionAndKVTagsWithIdentifier
+                          formikProps={formikProps as unknown as FormikProps<FormikForAddDescriptionandKVTags>}
                           tagsProps={{
                             addOnBlur: true
                           }}

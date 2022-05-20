@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { IconProps } from '@wings-software/uicore/dist/icons/Icon'
+import type { IconProps } from '@harness/icons'
 import type { Module } from '@common/interfaces/RouteInterfaces'
 import type { ResourceDTO, ResourceScopeDTO } from 'services/audit'
 import type { StringKeys } from 'framework/strings'

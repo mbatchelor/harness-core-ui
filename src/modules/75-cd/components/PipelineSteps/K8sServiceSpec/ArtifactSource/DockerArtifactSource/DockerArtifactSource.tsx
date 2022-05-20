@@ -19,14 +19,14 @@ import { ArtifactToConnectorMap, ENABLED_ARTIFACT_TYPES } from '@pipeline/compon
 import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { shouldFetchTagsSource } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
   getImagePath,
   getYamlData,
   isArtifactSourceRuntime,
   isFieldfromTriggerTabDisabled,
-  resetTags
+  resetTags,
+  shouldFetchTagsSource
 } from '../artifactSourceUtils'
 import ArtifactTagRuntimeField from '../ArtifactSourceRuntimeFields/ArtifactTagRuntimeField'
 import css from '../../K8sServiceSpec.module.scss'
@@ -61,7 +61,7 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
   const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
-  const [lastImagePath, setLastImagePath] = useState('')
+  const [lastQueryData, setLastQueryData] = useState({ connectorRef: '', imagePath: '' })
   const {
     data: dockerdata,
     loading: fetchingTags,
@@ -105,13 +105,16 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
 
   const fetchTagsEnabled = (): void => {
     if (canFetchTags()) {
-      setLastImagePath(imagePathValue)
+      setLastQueryData({ connectorRef: connectorRefValue, imagePath: imagePathValue })
       fetchTags()
     }
   }
 
   const canFetchTags = (): boolean => {
-    return !!(lastImagePath !== imagePathValue && shouldFetchTagsSource(connectorRefValue, [imagePathValue]))
+    return (
+      !!(lastQueryData.connectorRef != connectorRefValue || lastQueryData.imagePath !== imagePathValue) &&
+      shouldFetchTagsSource([connectorRefValue, imagePathValue])
+    )
   }
 
   const isFieldDisabled = (fieldName: string, isTag = false): boolean => {

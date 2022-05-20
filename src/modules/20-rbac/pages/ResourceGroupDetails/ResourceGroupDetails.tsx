@@ -6,23 +6,12 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import {
-  Text,
-  Layout,
-  Container,
-  Icon,
-  ButtonVariation,
-  useToaster,
-  Page,
-  Card,
-  Button,
-  DropDown
-} from '@wings-software/uicore'
-import { Color, FontVariation } from '@harness/design-system'
+import { Text, Layout, Container, Icon, ButtonVariation, useToaster, Page, Card, Button } from '@wings-software/uicore'
+import { Color } from '@harness/design-system'
 
 import { useParams } from 'react-router-dom'
 import ReactTimeago from 'react-timeago'
-import { defaultTo } from 'lodash-es'
+import { defaultTo, uniqWith, isEqual } from 'lodash-es'
 import type { ModulePathParams, ResourceGroupDetailsPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import ResourceTypeList from '@rbac/components/ResourceTypeList/ResourceTypeList'
@@ -44,8 +33,9 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { SelectionType } from '@rbac/utils/utils'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
-import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import ResourcesCardList from '@rbac/components/ResourcesCardList/ResourcesCardList'
+import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
+import { useDeepCompareEffect } from '@common/hooks'
 import {
   cleanUpResourcesMap,
   computeResourceMapOnChange,
@@ -53,15 +43,14 @@ import {
   getDefaultIncludedScope,
   getFilteredResourceTypes,
   getFormattedDataForApi,
-  getIncludedScopes,
   getResourceSelectorsfromMap,
-  getScopeDropDownItems,
-  getScopeType,
   getSelectedResourcesMap,
+  getSelectedScopeType,
   getSelectionType,
   SelectorScope,
   validateResourceSelectors
 } from './utils'
+import ResourceGroupScope from './views/ResourceGroupScope'
 import css from './ResourceGroupDetails.module.scss'
 
 const ResourceGroupDetails: React.FC = () => {
@@ -72,14 +61,14 @@ const ResourceGroupDetails: React.FC = () => {
   const { showError, showSuccess } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
   const [isUpdated, setIsUpdated] = useState<boolean>(false)
+  const resourceGroupScope = getScopeFromDTO({ accountIdentifier: accountId, orgIdentifier, projectIdentifier })
   const [includedScopes, setIncludedScopes] = useState<ScopeSelector[]>([])
-  const [selectedScope, setSelectedScope] = useState<SelectorScope>(SelectorScope.CURRENT)
   const [selectionType, setSelectionType] = useState<SelectionType>(SelectionType.SPECIFIED)
+  const [selectedScope, setSelectedScope] = useState<SelectorScope>(SelectorScope.CURRENT)
   const [selectedResourcesMap, setSelectedResourceMap] = useState<Map<ResourceType, string[] | string>>(new Map())
   const [resourceTypes, setResourceTypes] = useState<ResourceType[]>([])
   const [resourceCategoryMap, setResourceCategoryMap] =
     useState<Map<ResourceType | ResourceCategory, ResourceType[] | undefined>>()
-  const scope = getScopeFromDTO({ accountIdentifier: accountId, orgIdentifier, projectIdentifier })
 
   const [canEdit] = usePermission(
     {
@@ -128,10 +117,9 @@ const ResourceGroupDetails: React.FC = () => {
       )
     )
     setSelectionType(getSelectionType(resourceGroupDetails?.data?.resourceGroup))
-    setSelectedScope(getScopeType(resourceGroupDetails?.data?.resourceGroup))
   }, [resourceGroupDetails?.data?.resourceGroup])
 
-  useEffect(() => {
+  useDeepCompareEffect(() => {
     const types = getFilteredResourceTypes(resourceTypeData, selectedScope)
     setResourceTypes(types)
     setResourceCategoryMap(_map => RbacFactory.getResourceCategoryList(types))
@@ -159,7 +147,7 @@ const ResourceGroupDetails: React.FC = () => {
     const dataToSubmit: ResourceGroupV2Request = getFormattedDataForApi(
       data,
       selectionType,
-      includedScopes,
+      uniqWith(includedScopes, isEqual),
       resourceSelectors
     )
 
@@ -172,10 +160,6 @@ const ResourceGroupDetails: React.FC = () => {
     } /* istanbul ignore next */ catch (err) {
       showError(getRBACErrorMessage(err))
     }
-  }
-
-  const disableSelection = (): boolean => {
-    return selectionType === SelectionType.ALL || selectedScope === SelectorScope.INCLUDE_CHILD_SCOPES
   }
 
   const onResourceSelectionChange = (resourceType: ResourceType, isAdd: boolean, identifiers?: string[]): void => {
@@ -287,7 +271,7 @@ const ResourceGroupDetails: React.FC = () => {
                   </Layout.Horizontal>
                 )}
                 <RbacButton
-                  text={getString('applyChanges')}
+                  text={getString('save')}
                   onClick={() => updateResourceGroupData(resourceGroup)}
                   disabled={updating || !isUpdated}
                   variation={ButtonVariation.PRIMARY}
@@ -309,50 +293,43 @@ const ResourceGroupDetails: React.FC = () => {
             </Layout.Horizontal>
           </Card>
         )}
-        <Container className={css.pageContainer}>
-          <Container padding="xlarge" className={css.resourceTypeListContainer}>
-            <ResourceTypeList
-              selectionType={selectionType}
-              resourceCategoryMap={resourceCategoryMap}
-              onResourceSelectionChange={onResourceSelectionChange}
-              onResourceCategorySelect={onResourceCategorySelect}
-              preSelectedResourceList={Array.from(selectedResourcesMap.keys())}
-              disableAddingResources={disableAddingResources}
-              onSelectionTypeChange={onSelectionTypeChange}
-            />
-          </Container>
-          <Layout.Vertical spacing="small">
-            <Layout.Horizontal
-              spacing="small"
-              flex={{ justifyContent: 'flex-start' }}
-              padding={{ top: 'xlarge', left: 'xlarge', bottom: 'small' }}
-            >
-              <Text font={{ variation: FontVariation.H6 }} color={Color.GREY_800}>
-                {getString('common.scope')}
-              </Text>
-              <DropDown
-                items={getScopeDropDownItems(scope, getString)}
-                icon="settings"
-                value={selectedScope}
-                onChange={item => {
-                  setIsUpdated(true)
-                  setSelectedScope(item.value as SelectorScope)
-                  setIncludedScopes(getIncludedScopes(item.value as SelectorScope, resourceGroup))
-                }}
-                width={300}
-                filterable={false}
+        <Layout.Vertical spacing="small" flex={{ justifyContent: 'flex-start' }} padding="xlarge">
+          <ResourceGroupScope
+            resourceGroup={resourceGroup}
+            includedScopes={includedScopes}
+            onSuccess={scopes => {
+              setIncludedScopes(_scopes => scopes)
+              setSelectedScope(_scope => getSelectedScopeType(resourceGroupScope, scopes))
+            }}
+            setIsUpdated={setIsUpdated}
+          />
+          <Container className={css.pageContainer}>
+            <Container padding="xlarge" className={css.resourceTypeListContainer}>
+              <ResourceTypeList
+                selectionType={selectionType}
+                resourceCategoryMap={resourceCategoryMap}
+                onResourceSelectionChange={onResourceSelectionChange}
+                onResourceCategorySelect={onResourceCategorySelect}
+                preSelectedResourceList={Array.from(selectedResourcesMap.keys())}
+                disableAddingResources={disableAddingResources}
+                onSelectionTypeChange={onSelectionTypeChange}
               />
-            </Layout.Horizontal>
-            <ResourcesCardList
-              selectedResourcesMap={selectedResourcesMap}
-              resourceCategoryMap={resourceCategoryMap}
-              onResourceSelectionChange={onResourceSelectionChange}
-              onResourceCategorySelect={onResourceCategorySelect}
-              disableAddingResources={isHarnessManaged}
-              disableSelection={disableSelection()}
-            />
-          </Layout.Vertical>
-        </Container>
+            </Container>
+            <Layout.Vertical spacing="small">
+              <ResourcesCardList
+                selectedResourcesMap={selectedResourcesMap}
+                resourceCategoryMap={resourceCategoryMap}
+                onResourceSelectionChange={onResourceSelectionChange}
+                onResourceCategorySelect={onResourceCategorySelect}
+                disableAddingResources={isHarnessManaged}
+                disableSelection={
+                  selectionType === SelectionType.ALL ||
+                  getSelectedScopeType(resourceGroupScope, includedScopes) !== SelectorScope.CURRENT
+                }
+              />
+            </Layout.Vertical>
+          </Container>
+        </Layout.Vertical>
       </Page.Body>
     </>
   )

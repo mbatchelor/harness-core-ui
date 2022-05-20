@@ -14,9 +14,9 @@ import routes from '@common/RouteDefinitions'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { formatDate, formatTime } from '@cf/utils/CFUtils'
-import { useGitSync } from '@cf/hooks/useGitSync'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
+import { useFFGitSyncContext } from '@cf/contexts/ff-git-sync-context/FFGitSyncContext'
 import { DetailPageTemplate, DetailPageTemplateProps } from '../DetailPageTemplate/DetailPageTemplate'
 import TargetManagementToolbar from '../TargetManagementToolbar/TargetManagementToolbar'
 
@@ -37,7 +37,7 @@ const TargetManagementDetailPageTemplate: FC<TargetManagementDetailPageTemplateP
   ...detailPageTemplateProps
 }) => {
   const { getString } = useStrings()
-  const gitSync = useGitSync()
+  const { isGitSyncActionsEnabled } = useFFGitSyncContext()
 
   const { withActiveEnvironment, activeEnvironment: environmentIdentifier } = useActiveEnvironment()
   const { accountId: accountIdentifier, orgIdentifier, projectIdentifier } = useParams<Record<string, string>>()
@@ -107,7 +107,7 @@ const TargetManagementDetailPageTemplate: FC<TargetManagementDetailPageTemplateP
       {...detailPageTemplateProps}
     >
       <div className={css.layout}>
-        {gitSync.isGitSyncActionsEnabled ? <TargetManagementToolbar gitSync={gitSync} /> : <div />}
+        {isGitSyncActionsEnabled ? <TargetManagementToolbar /> : <div />}
 
         <div className={css.contentLayout}>
           <div className={css.leftBar}>{leftBar}</div>

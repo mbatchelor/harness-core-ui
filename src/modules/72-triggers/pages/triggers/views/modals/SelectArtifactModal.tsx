@@ -146,6 +146,10 @@ const onSubmit = ({
     finalArtifact.spec.tag = replaceTriggerDefaultBuild({
       build: finalArtifact?.spec?.tag
     })
+  } else if (!isManifest && finalArtifact?.spec?.artifactPath) {
+    finalArtifact.spec.artifactPath = replaceTriggerDefaultBuild({
+      artifactPath: finalArtifact?.spec?.artifactPath
+    })
   }
 
   const { pipeline, selectedArtifact } = formikProps.values

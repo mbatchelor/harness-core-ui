@@ -93,7 +93,7 @@ function Wrapped(): React.ReactElement {
   const { addOrUpdateTemplate, removeTemplate } = useStageTemplateActions()
   return (
     <>
-      <button onClick={addOrUpdateTemplate}>Add Or Update Template</button>
+      <button onClick={() => addOrUpdateTemplate()}>Add Or Update Template</button>
       <button onClick={removeTemplate}>Remove Template</button>
     </>
   )
@@ -115,8 +115,6 @@ describe('useStageTemplateAction Test', () => {
     })
     expect(useTemplateSelector().getTemplate).toBeCalledWith({
       selectedChildType: 'CI',
-      selectedTemplateRef: undefined,
-      selectedVersionLabel: undefined,
       templateType: 'Stage'
     })
     expect(pipelineContextMock.updateStage).toBeCalledWith({

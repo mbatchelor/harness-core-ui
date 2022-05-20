@@ -49,15 +49,23 @@ module.exports = ({ enableGitOpsUI, enableSTO, enableChaosUI }) => {
     remotes.errortracking = "errortracking@[window.getApiBaseUrl('et/remoteEntry.js')]"
   }
 
+  const shared = {
+    '@harness/uicore': packageJSON.dependencies['@harness/uicore'],
+    ...mapValues(pick(packageJSON.dependencies, ExactSharedPackages), version => ({
+      singleton: true,
+      requiredVersion: version
+    }))
+  }
+
+  if (process.env.NODE_ENV === 'development' && packageJSON.dependencies['@harness/uicore']?.includes('yalc')) {
+    shared['@harness/uicore'] = {
+      requiredVersion: packageJSON.dependencies['@harness/uicore']
+    }
+  }
+
   return {
     name: 'nextgenui',
     remotes,
-    shared: {
-      '@harness/uicore': packageJSON.dependencies['@harness/uicore'],
-      ...mapValues(pick(packageJSON.dependencies, ExactSharedPackages), version => ({
-        singleton: true,
-        requiredVersion: version
-      }))
-    }
+    shared
   }
 }

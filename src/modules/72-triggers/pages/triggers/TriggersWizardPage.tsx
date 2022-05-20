@@ -14,11 +14,14 @@ import {
   Text,
   Switch,
   PageSpinner,
-  VisualYamlSelectedView as SelectedView
+  VisualYamlSelectedView as SelectedView,
+  useConfirmationDialog,
+  ButtonVariation,
+  Button
 } from '@wings-software/uicore'
-import { Color } from '@harness/design-system'
+import { Color, Intent } from '@harness/design-system'
 import { parse } from 'yaml'
-import { isEmpty, isUndefined, merge, cloneDeep, get, defaultTo, set } from 'lodash-es'
+import { isEmpty, isUndefined, merge, cloneDeep, defaultTo } from 'lodash-es'
 import { CompletionItemKind } from 'vscode-languageserver-types'
 import { Page, useToaster } from '@common/exports'
 import Wizard from '@common/components/Wizard/Wizard'
@@ -42,7 +45,6 @@ import {
   useGetSchemaYaml
 } from 'services/pipeline-ng'
 import {
-  CodebaseTypes,
   isCloneCodebaseEnabledAtLeastOneStage,
   isCodebaseFieldsRuntimeInputs,
   getPipelineWithoutCodebaseInputs
@@ -98,7 +100,8 @@ import {
   eventTypes,
   displayPipelineIntegrityResponse,
   getOrderedPipelineVariableValues,
-  clearUndefinedArtifactId
+  clearUndefinedArtifactId,
+  getModifiedTemplateValues
 } from './utils/TriggersWizardPageUtils'
 import {
   ArtifactTriggerConfigPanel,
@@ -253,9 +256,6 @@ const getArtifactManifestTriggerYaml = ({
   // Manually clear null or undefined artifact identifier
   newPipeline = clearUndefinedArtifactId(newPipeline)
 
-  // For CI Only with CLone Codebase Not Enabled
-  // if()
-  // getInputYamlWithoutCodebaseInputs
   // actions will be required thru validation
   const stringifyPipelineRuntimeInput = yamlStringify({
     pipeline: clearNullUndefined(newPipeline)
@@ -458,12 +458,33 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
       }
   >({ triggerType: triggerTypeOnNew })
 
+  const { openDialog, closeDialog } = useConfirmationDialog({
+    contentText: getString('triggers.updateTriggerDetails'),
+    intent: Intent.WARNING,
+    titleText: getString('triggers.updateTrigger'),
+    customButtons: (
+      <>
+        <Button variation={ButtonVariation.PRIMARY} text={getString('close')} onClick={() => closeDialog()} />
+      </>
+    )
+  })
+
   useEffect(() => {
     if (onEditInitialValues?.pipeline && template?.data?.inputSetTemplateYaml && mergedPipelineKey < 1) {
-      const newOnEditPipeline = merge(
+      let newOnEditPipeline = merge(
         parse(template?.data?.inputSetTemplateYaml || '')?.pipeline,
         onEditInitialValues.pipeline || {}
       )
+
+      /*this check is needed as when trigger is already present with 1 stage and then tries to add parallel stage,
+      we need to have correct yaml with both stages as a part of parallel*/
+      if (
+        newOnEditPipeline?.stages?.some((stages: { stage: any; parallel: any }) => stages?.stage && stages?.parallel)
+      ) {
+        openDialog() // give warning to update trigger
+        newOnEditPipeline = parse(template?.data?.inputSetTemplateYaml || '')?.pipeline
+      }
+
       const newPipeline = clearRuntimeInput(newOnEditPipeline)
       setOnEditInitialValues({
         ...onEditInitialValues,
@@ -1198,6 +1219,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
                 pipeline: { ...clearRuntimeInput(latestPipeline.pipeline) },
                 template: latestYamlTemplate,
                 originalPipeline: orgPipeline,
+                resolvedPipeline,
                 getString,
                 viewType: StepViewType.TriggerForm,
                 viewTypeMetadata: { isTrigger: true }
@@ -1306,7 +1328,8 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
     if (
       newPipeline?.template?.templateInputs &&
       isCodebaseFieldsRuntimeInputs(newPipeline.template.templateInputs as PipelineInfoConfig) &&
-      !isCloneCodebaseEnabledAtLeastOneStage(newPipeline.template.templateInputs as PipelineInfoConfig)
+      resolvedPipeline &&
+      !isCloneCodebaseEnabledAtLeastOneStage(resolvedPipeline as PipelineInfoConfig)
     ) {
       newPipeline = getPipelineWithoutCodebaseInputs(newPipeline)
     }
@@ -1358,7 +1381,14 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
   )
 
   useEffect(() => {
-    setInitialValues(Object.assign(getInitialValues(triggerTypeOnNew), onEditInitialValues))
+    let newInitialValues = Object.assign(getInitialValues(triggerTypeOnNew), onEditInitialValues)
+    if (onEditInitialValues?.identifier) {
+      newInitialValues = newInitialValues?.pipeline?.template
+        ? getModifiedTemplateValues(newInitialValues)
+        : newInitialValues
+    }
+
+    setInitialValues(newInitialValues)
   }, [onEditInitialValues, currentPipeline])
 
   useEffect(() => {
@@ -1380,7 +1410,8 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
         if (
           newOriginalPipeline?.template?.templateInputs &&
           isCodebaseFieldsRuntimeInputs(newOriginalPipeline.template.templateInputs as PipelineInfoConfig) &&
-          !isCloneCodebaseEnabledAtLeastOneStage(newOriginalPipeline.template.templateInputs as PipelineInfoConfig)
+          resolvedPipeline &&
+          !isCloneCodebaseEnabledAtLeastOneStage(resolvedPipeline)
         ) {
           const newOriginalPipelineWithoutCodebaseInputs = getPipelineWithoutCodebaseInputs(newOriginalPipeline)
           const newResolvedPipelineWithoutCodebaseInputs = getPipelineWithoutCodebaseInputs(newResolvedPipeline)
@@ -1624,59 +1655,6 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
     }
   )
 
-  const validateCICodebase = (
-    formData:
-      | FlatValidArtifactFormikValuesInterface
-      | FlatValidWebhookFormikValuesInterface
-      | FlatValidScheduleFormikValuesInterface
-  ): FormikErrors<Record<string, any>> => {
-    const pipeline = get(formData, 'resolvedPipeline') as PipelineInfoConfig
-    const isCloneCodebaseEnabledAtLeastAtOneStage = isCloneCodebaseEnabledAtLeastOneStage(pipeline)
-    if (!isCloneCodebaseEnabledAtLeastAtOneStage) {
-      return {}
-    }
-    if (
-      isEmpty(get(formData, 'pipeline.properties.ci.codebase.build.type')) &&
-      isEmpty(get(formData, 'pipeline.template.templateInputs.properties.ci.codebase.build.type'))
-    ) {
-      return {
-        'pipeline.properties.ci.codebase.build.type': getString(
-          'pipeline.failureStrategies.validation.ciCodebaseRequired'
-        )
-      }
-    }
-    const ciCodeBaseType = get(formData, 'pipeline.properties.ci.codebase.build.type')
-    if (
-      ciCodeBaseType === CodebaseTypes.branch &&
-      isEmpty(get(formData, 'pipeline.properties.ci.codebase.build.spec.branch'))
-    ) {
-      return {
-        'pipeline.properties.ci.codebase.build.spec.branch': getString(
-          'pipeline.failureStrategies.validation.gitBranchRequired'
-        )
-      }
-    } else if (
-      ciCodeBaseType === CodebaseTypes.tag &&
-      isEmpty(get(formData, 'pipeline.properties.ci.codebase.build.spec.tag'))
-    ) {
-      return {
-        'pipeline.properties.ci.codebase.build.spec.tag': getString(
-          'pipeline.failureStrategies.validation.gitTagRequired'
-        )
-      }
-    } else if (
-      ciCodeBaseType === CodebaseTypes.PR &&
-      isEmpty(get(formData, 'pipeline.properties.ci.codebase.build.spec.number'))
-    ) {
-      return {
-        'pipeline.properties.ci.codebase.build.spec.number': getString(
-          'pipeline.failureStrategies.validation.gitPRRequired'
-        )
-      }
-    }
-    return {}
-  }
-
   const renderErrorsStrip = (): JSX.Element => <ErrorsStrip formErrors={formErrors} />
 
   const getTriggerPipelineValues = (
@@ -1729,14 +1707,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
     })
     // https://github.com/formium/formik/issues/1392
     const errors: any = await { ...runPipelineFormErrors }
-    const ciCodebaseErrors = validateCICodebase(values)
-    if (!isEmpty(ciCodebaseErrors)) {
-      const [ciCodebaseErrorsEntry] = Object.entries(ciCodebaseErrors)
-      set(errors, ciCodebaseErrorsEntry[0], ciCodebaseErrorsEntry[1])
-      setErrors({ pipeline: errors?.pipeline })
-      setFormErrors({ pipeline: errors?.pipeline }) // error strip
-      return errors
-    } else if (!isEmpty(runPipelineFormErrors)) {
+    if (!isEmpty(runPipelineFormErrors)) {
       setErrors(runPipelineFormErrors)
       // To do: have errors outlines display
       return runPipelineFormErrors

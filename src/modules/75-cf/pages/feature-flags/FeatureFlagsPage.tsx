@@ -64,7 +64,7 @@ import FlagDialog from '@cf/components/CreateFlagDialog/FlagDialog'
 import SaveFlagToGitModal from '@cf/components/SaveFlagToGitModal/SaveFlagToGitModal'
 import { AUTO_COMMIT_MESSAGES } from '@cf/constants/GitSyncConstants'
 import GitSyncActions from '@cf/components/GitSyncActions/GitSyncActions'
-import { GitDetails, GitSyncFormValues, GIT_SYNC_ERROR_CODE, useGitSync, UseGitSync } from '@cf/hooks/useGitSync'
+import { GitDetails, GitSyncFormValues, GIT_SYNC_ERROR_CODE, UseGitSync } from '@cf/hooks/useGitSync'
 import { useGovernance, UseGovernancePayload } from '@cf/hooks/useGovernance'
 import usePlanEnforcement from '@cf/hooks/usePlanEnforcement'
 import FlagOptionsMenuButton from '@cf/components/FlagOptionsMenuButton/FlagOptionsMenuButton'
@@ -72,6 +72,7 @@ import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { useFeature } from '@common/hooks/useFeatures'
 import { FeatureWarningTooltip } from '@common/components/FeatureWarning/FeatureWarningWithTooltip'
 import imageURL from '@cf/images/Feature_Flags_Teepee.svg'
+import { useFFGitSyncContext } from '@cf/contexts/ff-git-sync-context/FFGitSyncContext'
 import { FeatureFlagStatus, FlagStatus } from './FlagStatus'
 import { FlagResult } from './FlagResult'
 import css from './FeatureFlagsPage.module.scss'
@@ -104,7 +105,9 @@ export const RenderColumnFlag: React.FC<RenderColumnFlagProps> = ({
 
   const [isSaveToggleModalOpen, setIsSaveToggleModalOpen] = useState(false)
 
-  const { gitSyncInitialValues } = gitSync.getGitSyncFormMeta(AUTO_COMMIT_MESSAGES.TOGGLED_FLAG)
+  const { gitSyncInitialValues, gitSyncValidationSchema } = gitSync.getGitSyncFormMeta(
+    AUTO_COMMIT_MESSAGES.TOGGLED_FLAG
+  )
 
   const [canToggle] = usePermission(
     {
@@ -317,6 +320,8 @@ export const RenderColumnFlag: React.FC<RenderColumnFlagProps> = ({
           <SaveFlagToGitModal
             flagName={data.name}
             flagIdentifier={data.identifier}
+            gitSyncInitialValues={gitSyncInitialValues}
+            gitSyncValidationSchema={gitSyncValidationSchema}
             onSubmit={handleFlagToggle}
             onClose={() => {
               setIsSaveToggleModalOpen(false)
@@ -476,7 +481,7 @@ const FeatureFlagsPage: React.FC = () => {
     [toggleFeatureFlag.loading, deleteFlag.loading]
   )
 
-  const gitSync = useGitSync()
+  const gitSync = useFFGitSyncContext()
 
   const governance = useGovernance()
 
@@ -582,17 +587,7 @@ const FeatureFlagsPage: React.FC = () => {
           <>
             <div className={css.leftToolbar}>
               <FlagDialog environment={environmentIdentifier} />
-              {gitSync?.isGitSyncActionsEnabled && (
-                <GitSyncActions
-                  isLoading={gitSync.gitSyncLoading || gitSyncing}
-                  branch={gitSync.gitRepoDetails?.branch || ''}
-                  repository={gitSync.gitRepoDetails?.repoIdentifier || ''}
-                  isAutoCommitEnabled={gitSync.isAutoCommitEnabled}
-                  isGitSyncPaused={gitSync.isGitSyncPaused}
-                  handleToggleAutoCommit={gitSync.handleAutoCommit}
-                  handleGitPause={gitSync.handleGitPause}
-                />
-              )}
+              {gitSync?.isGitSyncActionsEnabled && <GitSyncActions isLoading={gitSync.gitSyncLoading || gitSyncing} />}
             </div>
             <ExpandingSearchInput
               alwaysExpanded

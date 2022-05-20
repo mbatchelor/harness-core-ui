@@ -41,7 +41,9 @@ import {
   getSLODetailsForSLO_4,
   getSLODashboardWidgetsEmptyResponse,
   getSLODetailResponseSLOOutRange,
-  getSLODetailResponseSLIRecalculation
+  getSLODetailResponseSLIRecalculation,
+  getExecutionDetailv2,
+  mockedExecutionSummary
 } from '../../../support/85-cv/slos/constants'
 
 describe('CVSLODetailsPage', () => {
@@ -281,5 +283,53 @@ describe('CVSLODetailsPage', () => {
 
     cy.findAllByText('SLO recalculation in progress').should('have.length', 3)
     cy.findAllByText('SLO recalculation in progress').last().scrollIntoView()
+  })
+
+  it.only('check Deployment details', () => {
+    cy.intercept('GET', getSLODetails, responseSLODashboardDetailOfCalendarType)
+    cy.intercept('GET', getMonitoredServiceChangeEventSummary, monitoredServiceChangeEventSummaryResponse)
+    cy.intercept('GET', getChangeEventList, changeEventListResponse)
+
+    cy.contains('p', 'SLOs').click()
+    cy.contains('h2', 'SLO-1').click()
+
+    cy.contains('p', 'Service Details').should('be.visible')
+    cy.get('.bp3-card').contains('p', 'Changes').scrollIntoView().should('be.visible')
+
+    cy.intercept('GET', getChangeEventDetail, errorResponse)
+    cy.intercept('GET', getExecutionDetailv2, mockedExecutionSummary)
+
+    cy.intercept('GET', getMonitoredServiceOverAllHealthScore, getMonitoredServiceOverAllHealthScoreResponse)
+    cy.intercept('GET', getSLODashboardWidgets, getSLODashboardWidgetsResponse)
+    cy.intercept('GET', getSLODetailsForSLO_1, getSLODetailResponseSLIRecalculation)
+    cy.intercept('GET', getSLODetailsForSLO_2, getSLODetailResponseSLIRecalculation)
+    cy.intercept('GET', getSLODetailsForSLO_3, getSLODetailResponseSLIRecalculation)
+
+    cy.get('.TableV2--body').children().first().click()
+    cy.contains('p', 'Oops, something went wrong on our end. Please contact Harness Support.').should('be.visible')
+
+    cy.intercept('GET', getChangeEventDetail, changeEventDetailsResponse)
+
+    cy.contains('span', 'Retry').click()
+
+    cy.contains('p', 'Oops, something went wrong on our end. Please contact Harness Support.').should('not.exist')
+
+    cy.contains('p', 'Deployment of cvng in prod').should('be.visible')
+    cy.contains('span', '63QIXm3zSMi5bF56L4tulQ').should('be.visible')
+    cy.get('[data-icon="main-setup"]').next('p').should('contain.text', 'cvng')
+    cy.get('[data-icon="environments"]').next('p').should('contain.text', 'prod')
+    cy.contains('p', 'ABORTED').should('be.visible')
+    cy.contains('p', 'HarnessCDNextGen Deployment ').should('be.visible')
+
+    cy.contains('p', 'source').next('p').should('contain.text', 'HarnessCDNextGen')
+    cy.contains('p', 'artifactType').next('p').should('contain.text', 'DockerRegistry')
+    cy.contains('p', 'artifactTag').next('p').should('contain.text', 'praveen-cv-test')
+
+    cy.get('[icon="user"]').next('p').should('contain.text', 'trigger')
+    cy.contains('p', 'SCHEDULER_CRON').should('be.visible')
+    cy.get('[data-icon="calendar"]').should('be.visible')
+    cy.contains('p', 'Start: 05/04/2022 09:21 pm').should('be.visible')
+    cy.contains('p', 'Finished: 05/04/2022 09:24 pm').should('be.visible')
+    cy.contains('p', 'Duration: 2m 36s ').should('be.visible')
   })
 })

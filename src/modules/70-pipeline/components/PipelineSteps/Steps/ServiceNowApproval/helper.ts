@@ -83,10 +83,7 @@ export const processFormData = (values: ServiceNowApprovalData): ServiceNowAppro
     ...values,
     spec: {
       ...values.spec,
-      connectorRef:
-        getMultiTypeFromValue(values.spec.connectorRef as SelectOption) === MultiTypeInputType.FIXED
-          ? (values.spec.connectorRef as SelectOption)?.value?.toString()
-          : values.spec.connectorRef,
+      connectorRef: values.spec.connectorRef,
       approvalCriteria: getApprovalRejectionCriteriaForSubmit(values.spec.approvalCriteria),
       rejectionCriteria: getApprovalRejectionCriteriaForSubmit(values.spec.rejectionCriteria)
     }

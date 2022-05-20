@@ -72,9 +72,9 @@ describe('Environment Groups CRUD', () => {
     // interaction - open & close of row, view tags
     cy.intercept('POST', environmentGroupsCall, {
       fixture: 'ng/api/environmentGroups/environmentGroups.json'
-    })
-    cy.wait(4000)
-
+    }).as('environmentGroupsCall')
+    cy.visitPageAssertion()
+    cy.wait('@environmentGroupsCall')
     // open & close row
     cy.contains('p', 'testEnvGroup').should('be.visible')
     cy.contains('p', 'Id: testEnvGroup').should('be.visible')
@@ -96,9 +96,9 @@ describe('Environment Groups CRUD', () => {
   it('should be able to delete environment group', () => {
     cy.intercept('POST', environmentGroupsCall, {
       fixture: 'ng/api/environmentGroups/environmentGroups.json'
-    })
-    cy.wait(4000)
-
+    }).as('environmentGroupsCall')
+    cy.visitPageAssertion()
+    cy.wait('@environmentGroupsCall')
     cy.get('svg[data-icon="more"]').should('be.visible').click()
     cy.contains('div', 'Delete').click()
 
@@ -126,6 +126,7 @@ describe('Environment Groups CRUD', () => {
     cy.intercept('GET', environmentGroupYamlSchemaCall, {
       fixture: 'ng/api/environmentGroups/environmentGroupYamlSchema.json'
     })
+    cy.visitPageAssertion()
     cy.wait('@environmentGroupsCall').wait(1000)
 
     // edit

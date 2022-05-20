@@ -95,6 +95,11 @@ const mockedConnectorData = {
   }
 }
 
+jest.mock('@common/hooks/useFeatureFlag', () => ({
+  useFeatureFlag: jest.fn(() => true),
+  useFeatureFlags: jest.fn(() => ({}))
+}))
+
 jest.mock('services/lw', () => ({
   useAllServiceResources: jest.fn().mockImplementation(() => ({
     data: null,

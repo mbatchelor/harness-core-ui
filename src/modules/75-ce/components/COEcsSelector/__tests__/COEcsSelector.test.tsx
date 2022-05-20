@@ -196,7 +196,7 @@ describe('ECS Service Selector Modal', () => {
       fireEvent.click(clusterToSelect)
     })
 
-    const refreshBtn = getByText('Refresh')
+    const refreshBtn = getByText('ce.common.refresh')
     expect(refreshBtn).toBeDefined()
     act(() => {
       fireEvent.click(refreshBtn)

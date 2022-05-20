@@ -40,6 +40,9 @@
     <!-- deploymentType -->
     <!-- refinerProjectToken -->
     <!-- refinerFeedbackToken -->
+    <!-- helpPanelAccessToken -->
+    <!-- helpPanelSpace -->
+    <!-- helpPanelEnvironment -->
 
     <!-- adding bugsnag for SAAS build -->
     <% if (!__DEV__) { %>
@@ -65,6 +68,9 @@
     <% if (__DEV__) { %>
     <script>
       window.deploymentType = 'SAAS'
+      window.helpPanelAccessToken = '5EHT-ZBWYjweBLS62PNKf-vp3ZbXAylRUlPRPcHwqAg'
+      window.helpPanelSpace = 'jj62blws1bo9'
+      window.helpPanelEnvironment = 'QA'
     </script>
     <% } %>
     <!-- Enabling ng-auth-ui -->

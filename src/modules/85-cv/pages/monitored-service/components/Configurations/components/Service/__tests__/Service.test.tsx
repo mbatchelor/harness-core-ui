@@ -102,7 +102,16 @@ jest.mock('services/cv', () => ({
     .mockImplementation(() => ({ loading: false, error: null, data: editModeData, refetch: jest.fn() })),
   useGetMonitoredServiceYamlTemplate: jest
     .fn()
-    .mockImplementation(() => ({ loading: false, error: null, data: {}, refetch: fetchMonitoredServiceYAML }))
+    .mockImplementation(() => ({ loading: false, error: null, data: {}, refetch: fetchMonitoredServiceYAML })),
+  useGetNotificationRulesForMonitoredService: jest
+    .fn()
+    .mockImplementation(() => ({ data: {}, loading: false, error: null, refetch: jest.fn() })),
+  useSaveNotificationRuleData: jest
+    .fn()
+    .mockImplementation(() => ({ data: {}, loading: false, error: null, refetch: jest.fn() })),
+  useUpdateNotificationRuleData: jest
+    .fn()
+    .mockImplementation(() => ({ data: {}, loading: false, error: null, refetch: jest.fn() }))
 }))
 
 describe('Verify Service', () => {

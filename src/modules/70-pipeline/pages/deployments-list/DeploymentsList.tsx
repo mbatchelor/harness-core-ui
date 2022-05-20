@@ -18,6 +18,7 @@ import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInt
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { Page } from '@common/exports'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
+import type { StringsMap } from 'stringTypes'
 import css from './DeploymentsList.module.scss'
 
 export default function DeploymentsList(): React.ReactElement {
@@ -41,7 +42,18 @@ export default function DeploymentsList(): React.ReactElement {
     [projectIdentifier, orgIdentifier, accountId]
   )
 
-  const textIdentifier = module === 'ci' ? 'buildsText' : 'deploymentsText'
+  let textIdentifier: keyof StringsMap
+  switch (module) {
+    case 'ci':
+      textIdentifier = 'buildsText'
+      break
+    case 'sto':
+      textIdentifier = 'common.purpose.sto.continuous'
+      break
+    default:
+      textIdentifier = 'deploymentsText'
+  }
+
   return (
     <div className={css.main}>
       <Page.Header

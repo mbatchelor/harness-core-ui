@@ -6,7 +6,7 @@
  */
 
 import * as React from 'react'
-import classnames from 'classnames'
+import cx from 'classnames'
 import { Icon, Layout, Text, Button, ButtonVariation } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { defaultTo, get } from 'lodash-es'
@@ -28,8 +28,12 @@ export function StepGroupNode(props: any): JSX.Element {
   const [isNodeCollapsed, setNodeCollapsed] = React.useState(false)
   const CreateNode: React.FC<any> | undefined = props?.getNode?.(NodeType.CreateNode)?.component
   const DefaultNode: React.FC<any> | undefined = props?.getDefaultNode()?.component
-  const stepGroupData = defaultTo(props?.data?.stepGroup, props?.data?.step?.data?.stepGroup)
+  const stepGroupData = defaultTo(props?.data?.stepGroup, props?.data?.step?.data?.stepGroup) || props?.data?.step
   const stepsData = stepGroupData?.steps
+  const hasStepGroupChild = stepsData?.some((step: { step: { type: string } }) => {
+    const stepType = get(step, 'step.type')
+    return stepType === 'STEP_GROUP'
+  })
   const isNestedStepGroup = Boolean(get(props, 'data.step.data.isNestedGroup'))
 
   React.useEffect(() => {
@@ -59,15 +63,17 @@ export function StepGroupNode(props: any): JSX.Element {
             }}
             onDragLeave={() => allowAdd && setVisibilityOfAdd(false)}
             style={stepGroupData?.containerCss ? stepGroupData?.containerCss : undefined}
-            className={classnames(
+            className={cx(
               css.stepGroup,
               { [css.firstnode]: !props?.isParallelNode },
               { [css.marginBottom]: props?.isParallelNode },
-              { [css.nestedGroup]: isNestedStepGroup }
+              { [css.nestedGroup]: isNestedStepGroup },
+              { [css.stepGroupParent]: hasStepGroupChild },
+              { [css.stepGroupNormal]: !isNestedStepGroup && !hasStepGroupChild }
             )}
           >
             <div
-              className={classnames(
+              className={cx(
                 defaultCss.markerStart,
                 defaultCss.stepMarker,
                 defaultCss.stepGroupMarkerLeft,
@@ -77,7 +83,7 @@ export function StepGroupNode(props: any): JSX.Element {
               <SVGMarker />
             </div>
             <div
-              className={classnames(
+              className={cx(
                 defaultCss.markerEnd,
                 defaultCss.stepMarker,
                 defaultCss.stepGroupMarkerRight,
@@ -175,7 +181,7 @@ export function StepGroupNode(props: any): JSX.Element {
             </div>
             {!props.readonly && props?.identifier !== STATIC_SERVICE_GROUP_NAME && (
               <Button
-                className={classnames(css.closeNode, { [css.readonly]: props.readonly })}
+                className={cx(css.closeNode, { [css.readonly]: props.readonly })}
                 minimal
                 icon="cross"
                 variation={ButtonVariation.PRIMARY}
@@ -237,7 +243,7 @@ export function StepGroupNode(props: any): JSX.Element {
                   }
                 })
               }}
-              className={classnames(defaultCss.addNodeIcon, defaultCss.stepAddIcon, defaultCss.stepGroupAddIcon, {
+              className={cx(defaultCss.addNodeIcon, defaultCss.stepAddIcon, defaultCss.stepGroupAddIcon, {
                 [defaultCss.show]: showAddLink
               })}
             >
@@ -246,7 +252,7 @@ export function StepGroupNode(props: any): JSX.Element {
           )}
           {allowAdd && !props.readonly && CreateNode && (
             <CreateNode
-              className={classnames(
+              className={cx(
                 defaultCss.addNode,
                 { [defaultCss.visible]: showAdd },
                 { [defaultCss.marginBottom]: props?.isParallelNode }

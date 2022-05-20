@@ -5,10 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { render } from '@testing-library/react'
-import { useParams } from 'react-router-dom'
 import React from 'react'
+import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
+import routes from '@common/RouteDefinitions'
 import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
 
 import data from '../../pipeline-deployment-list/__tests__/execution-list.json'
@@ -79,21 +79,23 @@ jest.mock('services/cd-ng', () => ({
   })
 }))
 
-// eslint-disable-next-line jest-no-mock
-jest.mock('react-router-dom', () => ({
-  ...(jest.requireActual('react-router-dom') as any),
-  useParams: jest.fn()
-}))
+const testPath = routes.toDeployments({
+  accountId: ':accountId',
+  orgIdentifier: ':orgIdentifier',
+  projectIdentifier: ':projectIdentifier',
+  module: ':module'
+})
+const testParams = {
+  accountId: 'accountId',
+  orgIdentifier: 'orgIdentifier',
+  projectIdentifier: 'projectIdentifier',
+  module: 'cd'
+}
 
 describe('Pipeline Deployments List', () => {
   test('CD module', () => {
-    // eslint-disable-next-line
-    // @ts-ignore
-    useParams.mockImplementation(() => {
-      return { module: 'cd' }
-    })
     const { queryByText, queryAllByText } = render(
-      <TestWrapper>
+      <TestWrapper path={testPath} pathParams={testParams}>
         <DeploymentsList />
       </TestWrapper>
     )
@@ -103,18 +105,24 @@ describe('Pipeline Deployments List', () => {
   })
 
   test('CI module', () => {
-    // eslint-disable-next-line
-    // @ts-ignore
-    useParams.mockImplementation(() => {
-      return { module: 'ci' }
-    })
     const { queryByText, queryAllByText } = render(
-      <TestWrapper>
+      <TestWrapper path={testPath} pathParams={{ ...testParams, module: 'ci' }}>
         <DeploymentsList />
       </TestWrapper>
     )
 
     expect(queryByText('pipeline.noBuildsText')).toBeTruthy()
     expect(queryAllByText('buildsText')).toBeTruthy()
+  })
+
+  test('STO module', () => {
+    const { queryByText, queryAllByText } = render(
+      <TestWrapper path={testPath} pathParams={{ ...testParams, module: 'sto' }}>
+        <DeploymentsList />
+      </TestWrapper>
+    )
+
+    expect(queryByText('stoSteps.noScansText')).toBeTruthy()
+    expect(queryAllByText('common.purpose.sto.continuous')).toBeTruthy()
   })
 })

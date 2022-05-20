@@ -330,13 +330,10 @@ function CICodebaseInputSetFormInternal({
         // only deployment form as it instantiates build with ''
         set(newInitialValues, buildPath, codeBaseInputDefaultValue.build)
       }
-      if (isDepthRuntimeInput && typeof get(newInitialValues, codeBaseInputFieldFormName.depth)) {
+      if (isDepthRuntimeInput && !get(newInitialValues, codeBaseInputFieldFormName.depth)) {
         set(newInitialValues, codeBaseInputFieldFormName.depth, codeBaseInputDefaultValue.depth)
       }
-      if (
-        isSslVerifyRuntimeInput &&
-        typeof (get(newInitialValues, codeBaseInputFieldFormName.sslVerify) !== 'boolean')
-      ) {
+      if (isSslVerifyRuntimeInput && typeof get(newInitialValues, codeBaseInputFieldFormName.sslVerify) !== 'boolean') {
         set(newInitialValues, codeBaseInputFieldFormName.sslVerify, codeBaseInputDefaultValue.sslVerify)
       }
       if (isPrCloneStrategyRuntimeInput && !get(newInitialValues, codeBaseInputFieldFormName.prCloneStrategy)) {
@@ -558,7 +555,9 @@ function CICodebaseInputSetFormInternal({
                   ) : null}
                 </Layout.Horizontal>
               )}
-              {codebaseTypeError && formik.submitCount > 0 && <Text color={Color.RED_600}>{codebaseTypeError}</Text>}
+              {codebaseTypeError && (formik.submitCount > 0 || viewTypeMetadata?.isTrigger) && (
+                <Text color={Color.RED_600}>{codebaseTypeError}</Text>
+              )}
               <Container width={containerWidth}>
                 {codeBaseType === CodebaseTypes.branch ? renderCodeBaseTypeInput('branch') : null}
                 {codeBaseType === CodebaseTypes.tag ? renderCodeBaseTypeInput('tag') : null}

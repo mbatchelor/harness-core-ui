@@ -219,3 +219,34 @@ artifactRepoTooltip: Enter the name of the repository where the artifact source 
 serverlessDeployCommandOptions: Serverless Deploy Command Options
 artifactVersion: ARTIFACT VERSION
 useConnectorCredentials: 'Use Connector Credentials'
+serviceOverrides: Service Overrides
+serviceOverridesHelperText: Override existing variables or defined new variables based on the selected service
+configurationVariable: Configuration Variable
+overrideValue: Override Value
+overrideType: Override Type
+cloudFormation:
+  cfTemplateFile: Cloud Formation Template File
+  templateFile: Template File
+  specifyTemplateFile: Specify Template File
+  stackName: Stack Name
+  specifyCapabilities: Specify Capabilities
+  parameterFiles: Cloud Formation Parameter Files
+  parameterFileDetails: Parameter File Details
+  specifyParameterFiles: Specify Parameter Files...
+  inlineParameterFiles: CloudFormation Parameters Overrides
+  specifyInlineParameterFiles: Specify Inline Parameters...
+  continueStatus: Continue Based on Stack Statuses
+  paramFileConnector: Parameter File Connector
+  templateFileConnector: Template File Connector
+  templateFileStore: Template File Store
+  retrieveNames: Retrieve Names from template
+  awsURL: S3 URL
+  errors:
+    region: AWS Region is required
+    role: Role ARN required
+    stackName: Stack Name is required
+    name: Name cannot be empty
+    value: Value cannot be empty
+    templateBody: Template body required
+    awsURL: S3 url required
+    getParam: AWS Connector, Region and Template File are required to retrieve parameters

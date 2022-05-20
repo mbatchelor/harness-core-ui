@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useState } from 'react'
 import { Classes, Dialog } from '@blueprintjs/core'
 import cx from 'classnames'
 import { Layout, Card, Icon, Text, IconName, Button, ButtonVariation } from '@wings-software/uicore'
@@ -13,52 +13,55 @@ import { useModalHook } from '@harness/use-modal'
 
 import { merge } from 'lodash-es'
 import { useStrings } from 'framework/strings'
-
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import { ProvisionerTypes } from '../Common/ProvisionerConstants'
 
 import css from './InfraProvisioning.module.scss'
 
-const provisionerTypes: { name: string; icon: IconName; iconColor?: string; enabled: boolean }[] = [
-  {
-    name: ProvisionerTypes.Terraform,
-    icon: 'terraform-apply-new',
-    iconColor: '#5C4EE5',
-    enabled: true
-  },
-  {
-    name: ProvisionerTypes.CloudFormation,
-    icon: 'cloudformation',
-    enabled: false
-  },
-  {
-    name: ProvisionerTypes.ARM,
-    icon: 'arm',
-    enabled: false
-  },
-  {
-    name: ProvisionerTypes.Script,
-    icon: 'script',
-    enabled: false
-  }
-]
-
-interface ChooseProvisionerProps {
-  onSubmit: any
-  onClose: any
+interface ProvDialogProps {
+  onSubmit: (data: any) => void
+  onClose: () => void
+  hideModal: () => void
+  provData: any
 }
-const useChooseProvisioner = (props: ChooseProvisionerProps) => {
-  const { getString } = useStrings()
-  const [provData, setProvData] = React.useState()
 
+const ProvDialog = ({ onClose, hideModal, provData, onSubmit }: ProvDialogProps) => {
+  const { getString } = useStrings()
+  const isCloudFormationEnabled = useFeatureFlag(FeatureFlag.CLOUDFORMATION)
+  const [provisioner, setProvisioner] = useState<string>(ProvisionerTypes.Terraform)
   const modalProps = {
     isOpen: true,
     canEscapeKeyClose: true,
     canOutsideClickClose: true
   }
-  const ProvDialog = (): JSX.Element => (
+  const provisionerTypes: { name: ProvisionerTypes; icon: IconName; iconColor?: string; enabled: boolean }[] = [
+    {
+      name: ProvisionerTypes.Terraform,
+      icon: 'terraform-apply-new',
+      iconColor: '#5C4EE5',
+      enabled: true
+    },
+    {
+      name: ProvisionerTypes.CloudFormation,
+      icon: 'cloudformation',
+      enabled: isCloudFormationEnabled
+    },
+    {
+      name: ProvisionerTypes.ARM,
+      icon: 'arm',
+      enabled: false
+    },
+    {
+      name: ProvisionerTypes.Script,
+      icon: 'script',
+      enabled: false
+    }
+  ]
+  return (
     <Dialog
       onClose={() => {
-        props.onClose()
+        onClose()
         hideModal()
       }}
       enforceFocus={false}
@@ -81,9 +84,10 @@ const useChooseProvisioner = (props: ChooseProvisionerProps) => {
                 <Card
                   disabled={!type.enabled}
                   interactive={true}
-                  selected={type.name === ProvisionerTypes.Terraform}
-                  cornerSelected={type.name === ProvisionerTypes.Terraform}
+                  selected={type.name === provisioner}
+                  cornerSelected={type.name === provisioner}
                   className={cx({ [css.disabled]: !type.enabled }, css.squareCard)}
+                  onClick={() => setProvisioner(type.name)}
                 >
                   <Icon {...iconProps} />
                 </Card>
@@ -105,14 +109,28 @@ const useChooseProvisioner = (props: ChooseProvisionerProps) => {
           text={getString('cd.setUpProvisionerBtnText')}
           className={css.provisionerBtnText}
           onClick={() => {
-            props.onSubmit(provData)
+            const selectedProvisioner =
+              provisioner === ProvisionerTypes.CloudFormation ? 'CLOUD_FORMATION' : provisioner
+            onSubmit(merge(provData, { selectedProvisioner: selectedProvisioner.toUpperCase() }))
             hideModal()
           }}
         />
       </Layout.Vertical>
     </Dialog>
   )
-  const [showModal, hideModal] = useModalHook(() => <ProvDialog />, [provData])
+}
+
+interface ChooseProvisionerProps {
+  onSubmit: any
+  onClose: any
+}
+
+const useChooseProvisioner = ({ onSubmit, onClose }: ChooseProvisionerProps) => {
+  const [provData, setProvData] = useState()
+  const [showModal, hideModal] = useModalHook(
+    () => <ProvDialog onSubmit={onSubmit} onClose={onClose} hideModal={hideModal} provData={provData} />,
+    [provData]
+  )
 
   const open = (data?: any) => {
     setProvData(data)

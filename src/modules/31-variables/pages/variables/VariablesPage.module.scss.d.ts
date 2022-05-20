@@ -9,6 +9,5 @@
 declare const styles: {
   readonly header: string
   readonly listBody: string
-  readonly listPage: string
 }
 export default styles

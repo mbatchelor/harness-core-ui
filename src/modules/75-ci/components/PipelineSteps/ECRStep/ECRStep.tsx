@@ -34,6 +34,7 @@ export interface ECRStepSpec {
   account: string
   imageName: string
   tags: MultiTypeListType
+  baseImageConnectorRefs?: MultiTypeListType
   optimize?: boolean
   dockerfile?: string
   context?: string

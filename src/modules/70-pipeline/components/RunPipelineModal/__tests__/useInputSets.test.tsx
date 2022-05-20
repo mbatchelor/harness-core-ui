@@ -230,4 +230,45 @@ describe('<useInputSets /> tests', () => {
     expect(result.current.inputSet).toEqual(parse(mergedPipelineYaml))
     expect(result.current.parsedInputSetTemplateYaml).toEqual(parsed)
   })
+
+  test('git sync params are passed to API when available', async () => {
+    const getTemplateMock = jest.fn().mockResolvedValue({ data: {} })
+    const mergeMock = jest.fn().mockResolvedValue({ data: {} })
+    const repoIdentifier = 'REPO_IDENTIFIER'
+    const branch = 'BRANCH'
+
+    ;(useGetTemplateFromPipeline as jest.Mock).mockImplementation(() => ({
+      mutate: getTemplateMock
+    }))
+    ;(useGetMergeInputSetFromPipelineTemplateWithListInput as jest.Mock).mockImplementation(() => ({
+      mutate: mergeMock
+    }))
+
+    renderHook(useInputSets, {
+      initialProps: {
+        ...getInitialProps(),
+        repoIdentifier,
+        branch,
+        inputSetSelected: [{ value: 'test1', type: 'INPUT_SET', label: 'test1' }]
+      }
+    })
+
+    await waitFor(() => {
+      expect(getTemplateMock).toHaveBeenLastCalledWith(
+        expect.any(Object),
+        expect.objectContaining({
+          queryParams: expect.objectContaining({ repoIdentifier, branch })
+        })
+      )
+    })
+
+    await waitFor(() => {
+      expect(mergeMock).toHaveBeenLastCalledWith(
+        expect.any(Object),
+        expect.objectContaining({
+          queryParams: expect.objectContaining({ repoIdentifier, branch })
+        })
+      )
+    })
+  })
 })

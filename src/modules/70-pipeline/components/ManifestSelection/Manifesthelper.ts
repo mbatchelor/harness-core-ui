@@ -11,7 +11,7 @@ import { Connectors } from '@connectors/constants'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
 import { StringKeys, useStrings } from 'framework/strings'
 import { IdentifierSchemaWithOutName } from '@common/utils/Validation'
-import type { HelmVersionOptions, ManifestStores, ManifestTypes } from './ManifestInterface'
+import type { HelmVersionOptions, ManifestStores, ManifestTypes, PrimaryManifestType } from './ManifestInterface'
 
 export const ManifestDataType: Record<ManifestTypes, ManifestTypes> = {
   K8sManifest: 'K8sManifest',
@@ -24,6 +24,25 @@ export const ManifestDataType: Record<ManifestTypes, ManifestTypes> = {
   ServerlessAwsLambda: 'ServerlessAwsLambda'
 }
 
+export const ManifestToPathMap: Record<PrimaryManifestType, string> = {
+  K8sManifest: 'Values',
+  HelmChart: 'Values',
+  OpenshiftTemplate: 'OpenshiftParam',
+  Kustomize: 'KustomizePatches'
+}
+export const ManifestToPathLabelMap: Record<PrimaryManifestType, StringKeys> = {
+  K8sManifest: 'pipeline.manifestType.valuesYamlPath',
+  HelmChart: 'pipeline.manifestType.valuesYamlPath',
+  OpenshiftTemplate: 'pipeline.manifestType.paramsYamlPath',
+  Kustomize: 'pipeline.manifestTypeLabels.KustomizePatches'
+}
+export const ManifestToPathKeyMap: Record<PrimaryManifestType, string> = {
+  K8sManifest: 'valuesPaths',
+  HelmChart: 'valuesPaths',
+  OpenshiftTemplate: 'paramsPaths',
+  Kustomize: 'patchesPaths'
+}
+
 export const ManifestStoreMap: { [key: string]: ManifestStores } = {
   Git: 'Git',
   Github: 'Github',
@@ -31,7 +50,8 @@ export const ManifestStoreMap: { [key: string]: ManifestStores } = {
   Bitbucket: 'Bitbucket',
   Http: 'Http',
   S3: 'S3',
-  Gcs: 'Gcs'
+  Gcs: 'Gcs',
+  InheritFromManifest: 'InheritFromManifest'
 }
 
 export const allowedManifestTypes: Record<string, Array<ManifestTypes>> = {
@@ -54,6 +74,16 @@ export const manifestStoreTypes: Array<ManifestStores> = [
   ManifestStoreMap.GitLab,
   ManifestStoreMap.Bitbucket
 ]
+export const ManifestTypetoStoreMap: Record<ManifestTypes, ManifestStores[]> = {
+  K8sManifest: manifestStoreTypes,
+  Values: [...manifestStoreTypes, ManifestStoreMap.InheritFromManifest],
+  HelmChart: [...manifestStoreTypes, ManifestStoreMap.Http, ManifestStoreMap.S3, ManifestStoreMap.Gcs],
+  Kustomize: manifestStoreTypes,
+  OpenshiftTemplate: manifestStoreTypes,
+  OpenshiftParam: [...manifestStoreTypes, ManifestStoreMap.InheritFromManifest],
+  KustomizePatches: [...manifestStoreTypes, ManifestStoreMap.InheritFromManifest],
+  ServerlessAwsLambda: manifestStoreTypes
+}
 
 export const manifestTypeIcons: Record<ManifestTypes, IconName> = {
   K8sManifest: 'service-kubernetes',
@@ -89,7 +119,8 @@ export const ManifestIconByType: Record<ManifestStores, IconName> = {
   Bitbucket: 'bitbucket',
   Http: 'service-helm',
   S3: 'service-service-s3',
-  Gcs: 'gcs-step'
+  Gcs: 'gcs-step',
+  InheritFromManifest: 'custom-artifact'
 }
 
 export const ManifestStoreTitle: Record<ManifestStores, StringKeys> = {
@@ -99,7 +130,8 @@ export const ManifestStoreTitle: Record<ManifestStores, StringKeys> = {
   Bitbucket: 'pipeline.manifestType.bitBucketLabel',
   Http: 'pipeline.manifestType.httpHelmRepoConnectorLabel',
   S3: 'connectors.S3',
-  Gcs: 'connectors.GCS.fullName'
+  Gcs: 'connectors.GCS.fullName',
+  InheritFromManifest: 'pipeline.manifestType.InheritFromManifest'
 }
 
 export const ManifestToConnectorMap: Record<ManifestStores | string, ConnectorInfoDTO['type']> = {
@@ -112,7 +144,7 @@ export const ManifestToConnectorMap: Record<ManifestStores | string, ConnectorIn
   Gcs: Connectors.GCP
 }
 
-export const ManifestToConnectorLabelMap: Record<ManifestStores, StringKeys> = {
+export const ManifestToConnectorLabelMap: Record<Exclude<ManifestStores, 'InheritFromManifest'>, StringKeys> = {
   Git: 'pipeline.manifestType.gitConnectorLabel',
   Github: 'common.repo_provider.githubLabel',
   GitLab: 'common.repo_provider.gitlabLabel',

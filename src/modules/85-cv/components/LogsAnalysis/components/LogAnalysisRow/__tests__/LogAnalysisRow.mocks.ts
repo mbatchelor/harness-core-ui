@@ -190,3 +190,52 @@ export const mockLogsCall = {
   },
   responseMessages: []
 }
+
+export const mockServicePageLogsCall = {
+  metaData: {},
+  resource: {
+    totalClusters: 29,
+    eventCounts: [
+      {
+        clusterType: 'KNOWN_EVENT',
+        count: 24,
+        displayName: 'Known'
+      },
+      {
+        clusterType: 'UNKNOWN_EVENT',
+        count: 4,
+        displayName: 'Unknown'
+      },
+      {
+        clusterType: 'UNEXPECTED_FREQUENCY',
+        count: 1,
+        displayName: 'Unexpected Frequency'
+      }
+    ],
+    logAnalysisRadarCharts: {
+      totalPages: 3,
+      totalItems: 29,
+      pageItemCount: 10,
+      pageSize: 10,
+      content: [
+        {
+          message: '< Transfer-Encoding: chunked\r\n',
+          label: 0,
+          clusterId: 'abc',
+          risk: 'UNHEALTHY',
+          clusterType: 'UNEXPECTED_FREQUENCY',
+          count: 258,
+          frequencyData: [
+            {
+              count: 5,
+              timestamp: 23445
+            }
+          ]
+        }
+      ],
+      pageIndex: 0,
+      empty: false
+    }
+  },
+  responseMessages: []
+}

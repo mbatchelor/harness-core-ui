@@ -231,9 +231,11 @@ serviceNowUpdateStep:
     applyFromTemplate: Apply from template
     updateFields: Update Fields
 manifestType:
+  attachPath: + Attach / Edit {{manifestPath}}
   manifestTyperequired: Manifest Type is required
   gitConnectorLabel: 'Git'
   bitBucketLabel: 'Bitbucket'
+  InheritFromManifest: 'Inherit From Manifest'
   httpHelmRepoConnectorLabel: 'HTTP Helm'
   manifestIdentifier: Manifest Identifier
   manifestPlaceholder: Enter Manifest Identifier
@@ -280,6 +282,8 @@ manifestType:
   repoNamePlaceholder: Enter Repository Name
   serverlessConfigFilePath: Serverless Config File Path
   serverlessConfigFilePathPlaceholder: Enter Serverless Config File Path
+  valuesYamlPath: Values.yaml
+  paramsYamlPath: Openshift Parameters
   http:
     chartName: 'Chart Name'
     chartVersion: 'Chart Version'
@@ -482,7 +486,8 @@ pipelineInputPanel:
 artifactTriggerConfigPanel:
   artifact: 'Artifact'
   artifactRepository: '{{artifact}} Repository'
-  buildTag: 'Build/Tag'
+  buildTagArtifactPath: 'Build/Tag/ Artifact Path'
+  locationRepoPath: Location/Repo Path
   configureInput: 'Configure Input'
   listenOnNewArtifact: 'Listen on New {{artifact}}'
   plusSelect: '+ Select {{artifact}}'
@@ -496,6 +501,7 @@ artifactTriggerConfigPanel:
   runtimeInput: 'Runtime Input'
   chartVersionRuntimeInput: 'Some {{artifact}} references may be unselectable because {{ runTimeStr }} must be a runtime input.'
   artifactReferenceUnique: 'Some {{artifact}} references may not be available for selection because they must be unique and not from a previous stage'
+  tagArtifactPath: Tag or Artifact Path
 dashboards:
   failedBuilds: Failed Builds
   activeBuilds: Active Builds

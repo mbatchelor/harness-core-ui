@@ -33,7 +33,7 @@ interface StudioGitPopoverProps {
 
 const breakWord = 'break-word'
 
-export const GitDetails = (props: StudioGitPopoverProps): JSX.Element => {
+export function GitDetails(props: StudioGitPopoverProps): React.ReactElement {
   const { gitDetails, identifier, isReadonly, onGitBranchChange, entityType } = props
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { gitSyncRepos, loadingRepos } = useGitSyncStore()

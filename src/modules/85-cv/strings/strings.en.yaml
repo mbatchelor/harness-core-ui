@@ -478,6 +478,7 @@ monitoredServices:
     last3Days: Last 3 days
     last7Days: '{{ $.common.last7days }}'
     overallHealthScore: Overall Health Score
+    userMessage: To view anomalies, metrics and logs for a specific time window, click the time slot on the timeline. To expand or contract the window, simply drag the handles.
     noDataAvailableForHealthScore: No healthscore data available in the {{duration}}
     pleaseSelectAnotherTimeWindow: Please select another time window.
     selectTimeline: Select a timeline to see metric & logs data
@@ -508,6 +509,17 @@ monitoredServices:
   assignLabel: Select the services you want to apply the metric
   continuousVerification: Continuous Verification
 dependenciesHealthWithCount: Dependencies Health ({{ count }})
+notifications:
+  deleteNotificationWarning: Are you sure you want to delete notification ‘{{ name }}’ ?
+  errorBudgetPolicies: Error Budget Policies
+  newNotificationRule: New Notification Rule
+  notificationName: Notification Name
+  deleteNotification: Delete notfication {{ name }}
+  configureAlertConditions: Configure the alert conditions for which you want to be notified.
+  serviceHealth: Changes and Service Health
+  serviceHealthDescription: Focuses on changes to a service's code, configuration, behaviour, deployment and infrastructure.
+  sloDescription: Focuses on SLO target and error budget changes on a given SLO.
+  condition: Condition
 changeSource:
   alertText: Alert
   incident: Incident
@@ -784,7 +796,7 @@ updatedRemainingErrorBudget: Updated remaining Error Budget
 minutes: minutes
 noPreviousErrorBudgetResetHistoryAvailable: No previous Error Budget reset history available
 dateAndTime: Date/Time
-increaseWithPercentSign: 'Increase %'
+increaseInMinutes: 'Increase (minutes)'
 errorBudgetIsSuccessfullyReset: Error Budget is successfully reset
 queryTypeService: Service Based  (used for Health Score and SLI)
 queryTypeHost: Host Based (used for CV)

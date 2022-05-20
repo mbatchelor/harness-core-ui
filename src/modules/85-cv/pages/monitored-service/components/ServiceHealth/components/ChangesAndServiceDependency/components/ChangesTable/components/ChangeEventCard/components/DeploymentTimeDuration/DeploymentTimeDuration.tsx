@@ -9,30 +9,47 @@ import React from 'react'
 import moment from 'moment'
 import { Container, Layout, Text } from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
+import { ChangeSourceTypes } from '@cv/pages/ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer.constants'
 import { durationAsString } from './DeploymentTimeDuration.utils'
 import { TIME_FORMAT } from './DeploymentTimeDuration.constant'
 import css from './DeploymentTimeDuration.module.scss'
 
-export default function DeploymentTimeDuration({ startTime, endTime }: { startTime: number; endTime: number }) {
+export default function DeploymentTimeDuration({
+  startTime,
+  endTime,
+  type
+}: {
+  startTime: number
+  endTime: number
+  type?: keyof typeof ChangeSourceTypes
+}) {
   const { getString } = useStrings()
   const durationString = durationAsString(startTime, endTime)
   const timePassed = durationAsString(endTime, moment().valueOf())
+  const marginals = type === ChangeSourceTypes.HarnessCDNextGen ? { right: 'medium' } : undefined
 
   return (
     <Container className={css.main}>
       <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
-        <Text icon={'time'} iconProps={{ size: 12 }} font={{ size: 'small' }}>
+        {type === ChangeSourceTypes.HarnessCDNextGen && (
+          <Text icon={'time'} iconProps={{ size: 12 }} font={{ size: 'small' }} margin={marginals}>
+            {`Start: ${moment(startTime).format(TIME_FORMAT)}`}
+          </Text>
+        )}
+        <Text icon={'time'} iconProps={{ size: 12 }} font={{ size: 'small' }} margin={marginals}>
           {getString('cv.changeSource.changeSourceCard.finished')}
           {moment(endTime).format(TIME_FORMAT)}
         </Text>
-        <Text icon={'time'} iconProps={{ size: 12 }} font={{ size: 'small' }}>
+        <Text icon={'time'} iconProps={{ size: 12 }} font={{ size: 'small' }} margin={marginals}>
           {getString('common.durationPrefix')}
           {durationString}
         </Text>
-        <Text icon={'calendar'} iconProps={{ size: 12 }} font={{ size: 'small' }}>
-          {timePassed || 0}
-          {getString('cv.changeSource.changeSourceCard.ago')}
-        </Text>
+        {type !== ChangeSourceTypes.HarnessCDNextGen && (
+          <Text icon={'calendar'} iconProps={{ size: 12 }} font={{ size: 'small' }} margin={marginals}>
+            {timePassed || 0} &nbsp;
+            {getString('cv.changeSource.changeSourceCard.ago')}
+          </Text>
+        )}
       </Layout.Horizontal>
     </Container>
   )

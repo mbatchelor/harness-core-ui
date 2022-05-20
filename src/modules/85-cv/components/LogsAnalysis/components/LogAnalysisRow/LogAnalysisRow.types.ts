@@ -6,14 +6,20 @@
  */
 
 import type { SeriesColumnOptions } from 'highcharts'
-import type { LogData, PageLogAnalysisRadarChartListDTO } from 'services/cv'
+import type { GetDataError } from 'restful-react'
+import type {
+  LogData,
+  PageAnalyzedRadarChartLogDataDTO,
+  PageLogAnalysisRadarChartListDTO,
+  RestResponseAnalyzedRadarChartLogDataWithCountDTO,
+  RestResponseLogAnalysisRadarChartListWithCountDTO
+} from 'services/cv'
 
 export type LogAnalysisRowData = {
   clusterType: LogData['tag']
   message: string
   count: number
   messageFrequency: SeriesColumnOptions[]
-  // riskScore: number
   riskStatus: LogData['riskStatus']
   clusterId?: string
 }
@@ -23,16 +29,20 @@ export interface LogAnalysisRowProps {
   className?: string
   isErrorTracking?: boolean
   showPagination?: boolean
-  logResourceData?: PageLogAnalysisRadarChartListDTO
+  logResourceData?: PageLogAnalysisRadarChartListDTO | PageAnalyzedRadarChartLogDataDTO
   goToPage?(val: number): void
   selectedLog?: string | null
   resetSelectedLog?: () => void
   activityId?: string
+  isServicePage?: boolean
+  startTime?: number
+  endTime?: number
+  monitoredServiceIdentifier?: string
 }
 
 export interface LogAnalysisDataRowProps {
   rowData: LogAnalysisRowData
-  onSelect: (
+  onSelect?: (
     isSelected: boolean,
     selectedData: LogAnalysisRowData,
     index: number,
@@ -47,4 +57,10 @@ export interface LogAnalysisDataRowProps {
 export type CompareLogEventsInfo = {
   data: LogAnalysisRowData
   index: number
+}
+
+export interface LogsRowData {
+  logsData: RestResponseAnalyzedRadarChartLogDataWithCountDTO | RestResponseLogAnalysisRadarChartListWithCountDTO | null
+  logsLoading: boolean
+  logsError: GetDataError<unknown> | null
 }

@@ -17,6 +17,7 @@ import {
 } from '@wings-software/uicore'
 import { FieldArray, connect, FormikContextType } from 'formik'
 import { get } from 'lodash-es'
+import type { ConnectorInfoDTO } from 'services/cd-ng'
 import { ConfigureOptions, ConfigureOptionsProps } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useStrings } from 'framework/strings'
 import MultiTypeFieldSelector, {
@@ -32,6 +33,18 @@ interface MultiTypeListConfigureOptionsProps
   variableName?: ConfigureOptionsProps['variableName']
 }
 
+export interface ConnectorReferenceProps {
+  showConnectorRef?: boolean
+  connectorTypes?: ConnectorInfoDTO['type'] | ConnectorInfoDTO['type'][]
+  connectorRefRenderer?: ({
+    name,
+    connectorTypes
+  }: {
+    name: string
+    connectorTypes?: ConnectorReferenceProps['connectorTypes']
+  }) => JSX.Element
+}
+
 export interface MultiTypeListProps {
   name: string
   placeholder?: string
@@ -42,9 +55,10 @@ export interface MultiTypeListProps {
   formik?: FormikContextType<any>
   style?: React.CSSProperties
   disabled?: boolean
+  restrictToSingleEntry?: boolean
 }
 
-export const MultiTypeList = (props: MultiTypeListProps): React.ReactElement => {
+export const MultiTypeList = (props: MultiTypeListProps & ConnectorReferenceProps): React.ReactElement => {
   const {
     name,
     placeholder,
@@ -54,6 +68,10 @@ export const MultiTypeList = (props: MultiTypeListProps): React.ReactElement => 
     configureOptionsProps,
     formik,
     disabled,
+    showConnectorRef,
+    connectorTypes,
+    connectorRefRenderer,
+    restrictToSingleEntry,
     ...restProps
   } = props
 
@@ -91,17 +109,24 @@ export const MultiTypeList = (props: MultiTypeListProps): React.ReactElement => 
                 {Array.isArray(value) &&
                   value.map(({ id }, index: number) => (
                     <div className={cx(css.group, css.withoutAligning)} key={id}>
-                      <FormInput.MultiTextInput
-                        label=""
-                        name={`${name}[${index}].value`}
-                        placeholder={placeholder}
-                        multiTextInputProps={{
-                          allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
-                          ...multiTextInputProps
-                        }}
-                        style={{ flexGrow: 1 }}
-                        disabled={disabled}
-                      />
+                      {showConnectorRef ? (
+                        connectorRefRenderer?.({
+                          name: `${name}[${index}].value`,
+                          connectorTypes
+                        })
+                      ) : (
+                        <FormInput.MultiTextInput
+                          label=""
+                          name={`${name}[${index}].value`}
+                          placeholder={placeholder}
+                          multiTextInputProps={{
+                            allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
+                            ...multiTextInputProps
+                          }}
+                          style={{ flexGrow: 1 }}
+                          disabled={disabled}
+                        />
+                      )}
                       <Button
                         icon="main-trash"
                         iconProps={{ size: 20 }}
@@ -109,18 +134,21 @@ export const MultiTypeList = (props: MultiTypeListProps): React.ReactElement => 
                         onClick={() => remove(index)}
                         data-testid={`remove-${name}-[${index}]`}
                         disabled={disabled}
+                        className={cx({ [css.trashBtn]: showConnectorRef })}
                       />
                     </div>
                   ))}
-                <Button
-                  intent="primary"
-                  minimal
-                  text={getString('plusAdd')}
-                  data-testid={`add-${name}`}
-                  onClick={() => push({ id: uuid('', nameSpace()), value: '' })}
-                  disabled={disabled}
-                  style={{ padding: 0 }}
-                />
+                {restrictToSingleEntry && Array.isArray(value) && value?.length === 1 ? null : (
+                  <Button
+                    intent="primary"
+                    minimal
+                    text={getString('plusAdd')}
+                    data-testid={`add-${name}`}
+                    onClick={() => push({ id: uuid('', nameSpace()), value: '' })}
+                    disabled={disabled}
+                    style={{ padding: 0 }}
+                  />
+                )}
               </>
             )}
           />

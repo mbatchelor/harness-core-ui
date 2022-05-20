@@ -24,6 +24,7 @@ import { useStrings } from 'framework/strings'
 import MultiTypeFieldSelector, {
   MultiTypeFieldSelectorProps
 } from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
+import type { ConnectorReferenceProps } from '../MultiTypeList/MultiTypeList'
 import css from './MultiTypeListInputSet.module.scss'
 
 export type ListType = string[] | { [key: string]: string }[]
@@ -49,6 +50,7 @@ export interface MultiTypeListProps {
   formik?: FormikContextType<any>
   style?: React.CSSProperties
   disabled?: boolean
+  restrictToSingleEntry?: boolean
 }
 
 const generateNewValue: () => { id: string; value: string } = () => ({
@@ -56,7 +58,7 @@ const generateNewValue: () => { id: string; value: string } = () => ({
   value: ''
 })
 
-export const MultiTypeListInputSet = (props: MultiTypeListProps): React.ReactElement => {
+export const MultiTypeListInputSet = (props: MultiTypeListProps & ConnectorReferenceProps): React.ReactElement => {
   const {
     name,
     placeholder,
@@ -68,6 +70,10 @@ export const MultiTypeListInputSet = (props: MultiTypeListProps): React.ReactEle
     configureOptionsProps,
     formik,
     disabled,
+    restrictToSingleEntry,
+    showConnectorRef,
+    connectorTypes,
+    connectorRefRenderer,
     ...restProps
   } = props
 
@@ -183,20 +189,27 @@ export const MultiTypeListInputSet = (props: MultiTypeListProps): React.ReactEle
 
             return (
               <div className={css.group} key={id}>
-                <div style={{ flexGrow: 1 }}>
-                  <MultiTextInput
-                    name=""
-                    textProps={{ name: `${name}[${index}].value` }}
-                    value={valueValue}
-                    placeholder={placeholder}
-                    onChange={v => changeValue(id, v as any)}
-                    data-testid={`value-${name}-[${index}]`}
-                    intent={(touched || hasSubmitted) && error ? Intent.DANGER : Intent.NONE}
-                    disabled={disabled}
-                    allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]}
-                    {...multiTextInputProps}
-                  />
-                </div>
+                {showConnectorRef ? (
+                  connectorRefRenderer?.({
+                    name: `${name}.${index}`,
+                    connectorTypes
+                  })
+                ) : (
+                  <div style={{ flexGrow: 1 }}>
+                    <MultiTextInput
+                      name=""
+                      textProps={{ name: `${name}[${index}].value` }}
+                      value={valueValue}
+                      placeholder={placeholder}
+                      onChange={v => changeValue(id, v as any)}
+                      data-testid={`value-${name}-[${index}]`}
+                      intent={(touched || hasSubmitted) && error ? Intent.DANGER : Intent.NONE}
+                      disabled={disabled}
+                      allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]}
+                      {...multiTextInputProps}
+                    />
+                  </div>
+                )}
                 {!disabled && (
                   <Button
                     icon="main-trash"
@@ -211,7 +224,7 @@ export const MultiTypeListInputSet = (props: MultiTypeListProps): React.ReactEle
             )
           })}
 
-          {!disabled && (
+          {(restrictToSingleEntry && Array.isArray(value) && value?.length === 1) || disabled ? null : (
             <Button
               intent="primary"
               minimal

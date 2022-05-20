@@ -243,7 +243,7 @@ const RenderColumnMenu: Renderer<CellProps<UserGroupAggregateDTO>> = ({ row, col
         <CopyGroupForm closeModal={closeCopyGroupModal} identifier={identifier} />
       </Dialog>
     )
-  }, [])
+  }, [data])
 
   const handleDelete = (e: React.MouseEvent<HTMLElement, MouseEvent>): void => {
     e.stopPropagation()

@@ -120,7 +120,6 @@ const ManageResources: React.FC<ManageResourcesProps> = props => {
   const [selectedInstances, setSelectedInstances] = useState<InstanceDetails[]>(props.gatewayDetails.selectedInstances)
   const [selectedConnector, setSelectedConnector] = useState<ConnectorResponse | undefined>()
 
-  const isAwsProvider = Utils.isProviderAws(props.gatewayDetails.provider)
   const isAzureProvider = Utils.isProviderAzure(props.gatewayDetails.provider)
   const isGcpProvider = Utils.isProviderGcp(props.gatewayDetails.provider)
   const featureFlagsMap = useFeatureFlags()
@@ -157,7 +156,6 @@ const ManageResources: React.FC<ManageResourcesProps> = props => {
       return
     }
     const resourcesFetchMap: Record<string, () => void> = {
-      [RESOURCES.INSTANCES]: Utils.getConditionalResult(isAwsProvider, refreshInstances, undefined),
       [RESOURCES.ASG]: fetchAndSetAsgItems,
       [RESOURCES.KUBERNETES]: fetchAndSetConnectors
     }

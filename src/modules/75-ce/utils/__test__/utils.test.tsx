@@ -205,7 +205,7 @@ describe('test cases for anomalyUtils', () => {
   test('test cases for getCloudProviderFromFields', () => {
     expect(getCloudProviderFromFields(entityMap)).toBe(CloudProvider.GCP)
     expect(getCloudProviderFromFields({ ...entityMap, gcpProjectId: null })).toBe(CloudProvider.AWS)
-    expect(getCloudProviderFromFields({ ...entityMap, gcpProjectId: null, awsAccount: null })).toBe(
+    expect(getCloudProviderFromFields({ ...entityMap, gcpProjectId: null, awsUsageAccountId: null })).toBe(
       CloudProvider.CLUSTER
     )
   })

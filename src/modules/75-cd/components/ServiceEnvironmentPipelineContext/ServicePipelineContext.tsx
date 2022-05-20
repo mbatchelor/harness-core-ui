@@ -6,18 +6,23 @@
  */
 
 import React from 'react'
-import { cloneDeep, isEqual, noop } from 'lodash-es'
+import { cloneDeep, defaultTo, isEmpty, isEqual, merge, noop, set } from 'lodash-es'
 import { MultiTypeInputType, VisualYamlSelectedView as SelectedView } from '@wings-software/uicore'
+import produce from 'immer'
 import {
   PipelineContext,
   PipelineContextType
 } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import { yamlParse } from '@common/utils/YamlHelperMethods'
 import {
+  ActionReturnType,
+  DefaultNewPipelineId,
   initialState,
   PipelineContextActions,
-  PipelineReducer
+  PipelineReducer,
+  PipelineViewData
 } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
-import { useLocalStorage } from '@common/hooks'
+import { useLocalStorage, useQueryParams } from '@common/hooks'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { stagesCollection } from '@pipeline/components/PipelineStudio/Stages/StagesCollection'
 import { useStrings } from 'framework/strings'
@@ -26,15 +31,31 @@ import {
   getStageFromPipeline as _getStageFromPipeline,
   getStagePathFromPipeline as _getStagePathFromPipeline
 } from '@pipeline/components/PipelineStudio/PipelineContext/helpers'
-import type { PipelineInfoConfig, StageElementConfig, StageElementWrapperConfig } from 'services/cd-ng'
-import { PipelineStages, PipelineStagesProps } from '@pipeline/components/PipelineStages/PipelineStages'
-import { StageType } from '@pipeline/utils/stageHelpers'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
-import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+import {
+  getServiceV2Promise,
+  GetServiceV2QueryParams,
+  PipelineInfoConfig,
+  ServiceResponseDTO,
+  StageElementConfig,
+  StageElementWrapperConfig
+} from 'services/cd-ng'
 import type { PipelineSelectionState } from '@pipeline/components/PipelineStudio/PipelineQueryParamState/usePipelineQueryParam'
 import type { GetPipelineQueryParams } from 'services/pipeline-ng'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
+import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
+import { initialServiceState, DefaultNewStageName, DefaultNewStageId } from '../Services/utils/ServiceUtils'
+
+interface FetchServiceBoundProps {
+  dispatch: React.Dispatch<ActionReturnType>
+  queryParams: GetServiceV2QueryParams
+  serviceIdentifier: string
+}
+
+interface FetchServiceUnboundProps {
+  forceFetch?: boolean
+  forceUpdate?: boolean
+  signal?: AbortSignal
+}
 
 export interface ServicePipelineProviderProps {
   queryParams: GetPipelineQueryParams
@@ -42,22 +63,45 @@ export interface ServicePipelineProviderProps {
   onUpdatePipeline: (pipeline: PipelineInfoConfig) => void
   contextType: PipelineContextType
   isReadOnly: boolean
+  serviceIdentifier: string
+}
+const getServiceByIdentifier = (
+  queryParams: GetServiceV2QueryParams,
+  identifier: string,
+  signal?: AbortSignal
+): Promise<ServiceResponseDTO> => {
+  return getServiceV2Promise(
+    {
+      queryParams,
+      serviceIdentifier: identifier
+    },
+    signal
+  )
+    .then(response => {
+      if (response.status === 'SUCCESS' && response.data?.service) {
+        return response.data?.service
+      }
+      throw new Error()
+    })
+    .catch(error => {
+      throw new Error(error)
+    })
 }
 
 export function ServicePipelineProvider({
   queryParams,
   initialValue,
+  serviceIdentifier,
   onUpdatePipeline,
   isReadOnly,
   contextType,
   children
 }: React.PropsWithChildren<ServicePipelineProviderProps>): React.ReactElement {
   const allowableTypes = [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
-  const { licenseInformation } = useLicenseStore()
-  const isCDEnabled = useFeatureFlag(FeatureFlag.CDNG_ENABLED) && !!licenseInformation['CD']
-  const isCIEnabled = useFeatureFlag(FeatureFlag.CING_ENABLED) && !!licenseInformation['CI']
-  const isSTOEnabled = useFeatureFlag(FeatureFlag.SECURITY_STAGE)
+
+  const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
+  const scope = getScopeFromDTO(queryParams)
   const [state, dispatch] = React.useReducer(PipelineReducer, initialState)
   const [view, setView] = useLocalStorage<SelectedView>('pipeline_studio_view', SelectedView.VISUAL)
   const setSchemaErrorView = React.useCallback(flag => {
@@ -73,22 +117,9 @@ export function ServicePipelineProvider({
     [state.pipeline, state.pipeline?.stages]
   )
 
-  const renderPipelineStage = (args: Omit<PipelineStagesProps, 'children'>) => {
-    return (
-      <PipelineStages {...args}>
-        {stagesCollection.getStage(StageType.BUILD, isCIEnabled, getString)}
-        {stagesCollection.getStage(StageType.DEPLOY, isCDEnabled, getString)}
-        {stagesCollection.getStage(StageType.APPROVAL, true, getString)}
-        {stagesCollection.getStage(StageType.FEATURE, false, getString)}
-        {stagesCollection.getStage(StageType.SECURITY, isSTOEnabled, getString)}
-        {stagesCollection.getStage(StageType.PIPELINE, false, getString)}
-        {stagesCollection.getStage(StageType.CUSTOM, false, getString)}
-        {stagesCollection.getStage(StageType.Template, false, getString)}
-      </PipelineStages>
-    )
-  }
-
-  const updatePipeline = async (pipelineArg: PipelineInfoConfig | ((p: PipelineInfoConfig) => PipelineInfoConfig)) => {
+  const updatePipeline = async (
+    pipelineArg: PipelineInfoConfig | ((p: PipelineInfoConfig) => PipelineInfoConfig)
+  ): Promise<void> => {
     let pipeline = pipelineArg
     if (typeof pipelineArg === 'function') {
       if (state.pipeline) {
@@ -126,7 +157,64 @@ export function ServicePipelineProvider({
     [updatePipeline]
   )
 
-  const fetchPipeline = async () => {
+  const _fetchService = async (props: FetchServiceBoundProps, params: FetchServiceUnboundProps): Promise<void> => {
+    const { serviceIdentifier: identifier } = props
+    const { forceFetch = false, forceUpdate = false, signal } = params
+
+    dispatch(PipelineContextActions.fetching())
+    if (forceFetch && forceUpdate) {
+      const serviceDetails: ServiceResponseDTO = await getServiceByIdentifier(
+        { ...queryParams, ...(repoIdentifier && branch ? { repoIdentifier, branch } : {}) },
+        identifier,
+        signal
+      )
+      const serviceYaml = yamlParse(defaultTo(serviceDetails.yaml, ''))
+      const serviceData = merge(serviceYaml, initialServiceState)
+
+      const defaultPipeline = {
+        identifier: defaultTo(serviceDetails.identifier, DefaultNewPipelineId),
+        name: serviceDetails.name as string,
+        description: serviceDetails.description,
+        tags: serviceDetails.tags
+      }
+      const refetchedPipeline = produce({ ...defaultPipeline }, draft => {
+        if (!isEmpty(serviceData.service.serviceDefinition)) {
+          set(draft, 'stages[0].stage.name', DefaultNewStageName)
+          set(draft, 'stages[0].stage.identifier', DefaultNewStageId)
+          set(
+            draft,
+            'stages[0].stage.spec.serviceConfig.serviceDefinition',
+            cloneDeep(serviceData.service.serviceDefinition)
+          )
+          set(draft, 'stages[0].stage.spec.serviceConfig.serviceRef', serviceDetails.identifier)
+        }
+      })
+
+      dispatch(
+        PipelineContextActions.success({
+          error: '',
+          pipeline: refetchedPipeline,
+          originalPipeline: cloneDeep(refetchedPipeline),
+          isBEPipelineUpdated: false,
+          isUpdated: false
+        })
+      )
+      dispatch(PipelineContextActions.initialized())
+      onUpdatePipeline?.(refetchedPipeline as PipelineInfoConfig)
+    }
+  }
+
+  const fetchPipeline = _fetchService.bind(null, {
+    dispatch,
+    queryParams,
+    serviceIdentifier
+  })
+
+  const updatePipelineView = React.useCallback((data: PipelineViewData) => {
+    dispatch(PipelineContextActions.updatePipelineView({ pipelineView: data }))
+  }, [])
+
+  const fetchCurrentPipeline = async (): Promise<void> => {
     dispatch(
       PipelineContextActions.success({
         error: '',
@@ -159,9 +247,9 @@ export function ServicePipelineProvider({
     [state.pipeline, state.pipeline?.stages]
   )
 
-  const scope = getScopeFromDTO(queryParams)
   React.useEffect(() => {
-    fetchPipeline()
+    fetchCurrentPipeline()
+    setSelection({ stageId: initialValue.stages?.[0]?.stage?.identifier })
   }, [initialValue])
 
   return (
@@ -178,13 +266,14 @@ export function ServicePipelineProvider({
         setSchemaErrorView,
         stagesMap: stagesCollection.getAllStagesAttributes(getString),
         getStageFromPipeline,
-        renderPipelineStage,
-        fetchPipeline: Promise.resolve,
+        // eslint-disable-next-line react/display-name
+        renderPipelineStage: () => <div />,
+        fetchPipeline,
         updateGitDetails: Promise.resolve,
         updateEntityValidityDetails: Promise.resolve,
         updatePipeline,
         updateStage,
-        updatePipelineView: noop,
+        updatePipelineView,
         updateTemplateView: noop,
         pipelineSaved: noop,
         deletePipelineCache: Promise.resolve,

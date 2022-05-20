@@ -66,7 +66,12 @@ function pickExtraExpressionsFromMetadataMap(
  */
 export function useVariablesExpression(): { expressions: string[] } {
   const { variablesPipeline, metadataMap, serviceExpressionPropertiesList, initLoading } = usePipelineVariables()
-  const { metadataMap: templateMetadataMap, initLoading: templateInitLoading } = useTemplateVariables()
+  const {
+    originalTemplate,
+    variablesTemplate,
+    metadataMap: templateMetadataMap,
+    initLoading: templateInitLoading
+  } = useTemplateVariables()
   const [expressions, setExpressions] = useState<string[]>([])
   const [localStageKeys, setLocalStageKeys] = useState<string[]>([])
   const {
@@ -83,6 +88,16 @@ export function useVariablesExpression(): { expressions: string[] } {
       }
     }
   }, [variablesPipeline, initLoading, selectedStageId, metadataMap, getStageFromPipeline])
+
+  useEffect(() => {
+    if (!templateInitLoading && originalTemplate.type === 'Pipeline' && selectedStageId && !isEmpty(selectedStageId)) {
+      const stage = getStageFromPipeline(selectedStageId, variablesTemplate).stage
+      if (stage) {
+        const keys = traverseStageObject(stage, templateMetadataMap)
+        setLocalStageKeys(keys)
+      }
+    }
+  }, [variablesTemplate, templateInitLoading, selectedStageId, templateMetadataMap, getStageFromPipeline])
 
   useEffect(() => {
     if (!initLoading && !isEmpty(metadataMap)) {
@@ -108,21 +123,15 @@ export function useVariablesExpression(): { expressions: string[] } {
 
   useEffect(() => {
     if (!templateInitLoading && !isEmpty(templateMetadataMap)) {
-      const expression = sortedUniq(
-        sortBy(
-          map(templateMetadataMap, item => defaultTo(item.yamlProperties?.localName, '')).filter(p => p),
-          identity
-        )
-      )
-      const outputExpression = sortedUniq(
-        sortBy(
-          map(templateMetadataMap, item => defaultTo(item.yamlOutputProperties?.localName, '')).filter(p => p),
-          identity
-        )
+      const expression = pickExpressionsFromMetadataMap(templateMetadataMap, localStageKeys, 'yamlProperties')
+      const outputExpression = pickExpressionsFromMetadataMap(
+        templateMetadataMap,
+        localStageKeys,
+        'yamlOutputProperties'
       )
       setExpressions([...expression, ...outputExpression])
     }
-  }, [templateInitLoading, templateMetadataMap])
+  }, [templateInitLoading, templateMetadataMap, localStageKeys])
 
   return { expressions }
 }

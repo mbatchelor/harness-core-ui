@@ -11,7 +11,7 @@ import { defaultTo } from 'lodash-es'
 
 import { Button, ButtonVariation, Container, Heading, Icon, Layout, TableV2 } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
-import type { EnvironmentResponse, EnvironmentResponseDTO } from 'services/cd-ng'
+import type { EnvironmentResponse } from 'services/cd-ng'
 
 import { useDeepCompareEffect } from '@common/hooks'
 
@@ -32,20 +32,22 @@ export function EnvironmentList({
 }: {
   list: EnvironmentResponse[]
   showModal: () => void
-  onDeleteEnvironments: (environmentsToRemove: EnvironmentResponseDTO[]) => void
+  onDeleteEnvironments: (environmentsToRemove: EnvironmentResponse[]) => void
 }) {
   const { getString } = useStrings()
-  const [environmentsToRemove, setEnvironmentsToRemove] = useState<EnvironmentResponseDTO[]>([])
+  const [environmentsToRemove, setEnvironmentsToRemove] = useState<EnvironmentResponse[]>([])
 
   type CustomColumn<T extends Record<string, any>> = Column<T>
 
-  const onCheckboxSelect = (event: FormEvent<HTMLInputElement>, item: EnvironmentResponseDTO) => {
-    const identifier = item.identifier
+  const onCheckboxSelect = (event: FormEvent<HTMLInputElement>, item: EnvironmentResponse) => {
+    const identifier = item.environment?.identifier
     if ((event.target as any).checked && identifier) {
-      setEnvironmentsToRemove([...defaultTo(environmentsToRemove, []), item] as EnvironmentResponseDTO[])
+      setEnvironmentsToRemove([...defaultTo(environmentsToRemove, []), item])
     } else {
       setEnvironmentsToRemove([
-        ...environmentsToRemove.filter((selectedEnv: EnvironmentResponseDTO) => selectedEnv?.identifier !== identifier)
+        ...environmentsToRemove.filter(
+          (selectedEnv: EnvironmentResponse) => selectedEnv.environment?.identifier !== identifier
+        )
       ])
     }
   }
@@ -54,19 +56,17 @@ export function EnvironmentList({
     setEnvironmentsToRemove([])
   }, [list])
 
-  const envColumns: CustomColumn<EnvironmentResponseDTO>[] = useMemo(
+  const envColumns: CustomColumn<EnvironmentResponse>[] = useMemo(
     () => [
       {
         Header: getString('environment').toUpperCase(),
         id: 'name',
         width: '50%',
-        accessor: 'name',
         Cell: EnvironmentName
       },
       {
         Header: getString('typeLabel').toUpperCase(),
         id: 'type',
-        accessor: 'type',
         width: '15%',
         Cell: EnvironmentTypes
       },
@@ -96,10 +96,6 @@ export function EnvironmentList({
     [getString]
   )
 
-  const environments = list.map((environmentContent: EnvironmentResponse) => ({
-    ...environmentContent.environment,
-    lastModifiedAt: environmentContent.lastModifiedAt
-  }))
   const hasEnvs = Boolean(list.length)
   const emptyEnvs = Boolean(list.length === 0)
 
@@ -107,7 +103,7 @@ export function EnvironmentList({
     <>
       {hasEnvs && (
         <Container padding={{ top: 'medium' }} border={{ top: true }}>
-          <TableV2<EnvironmentResponseDTO> columns={envColumns} data={environments as EnvironmentResponseDTO[]} />
+          <TableV2<EnvironmentResponse> columns={envColumns} data={list} />
         </Container>
       )}
       {emptyEnvs && (

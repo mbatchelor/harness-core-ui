@@ -276,9 +276,7 @@ exports[`SegmentDetailsPage SegmentDetailsPage should render data correctly 1`] 
               <p
                 class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
                 style="--text-line-clamp: 1;"
-              >
-                
-              </p>
+              />
             </div>
             <div
               class="StyledProps--font StyledProps--main"
@@ -313,9 +311,7 @@ exports[`SegmentDetailsPage SegmentDetailsPage should render data correctly 1`] 
                       </span>
                       <p
                         class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey900"
-                      >
-                        
-                      </p>
+                      />
                       <div
                         class="StyledProps--font StyledProps--main gitStatusIcon"
                       >

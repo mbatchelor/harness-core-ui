@@ -23,7 +23,8 @@ import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import TargetManagementToolbar from '@cf/components/TargetManagementToolbar/TargetManagementToolbar'
-import { useGitSync } from '@cf/hooks/useGitSync'
+
+import { useFFGitSyncContext } from '@cf/contexts/ff-git-sync-context/FFGitSyncContext'
 import { TargetSettings } from './target-settings/TargetSettings'
 import { FlagSettings } from './flag-settings/FlagSettings'
 
@@ -116,7 +117,7 @@ export const TargetDetailPage: React.FC = () => {
     }
   })
 
-  const gitSync = useGitSync()
+  const gitSync = useFFGitSyncContext()
 
   useDocumentTitle(label)
 
@@ -172,7 +173,7 @@ export const TargetDetailPage: React.FC = () => {
       metaData={{ environment: environment?.data?.name as string }}
     >
       <Layout.Vertical height="100%" className={css.gitSyncContainer}>
-        {gitSync.isGitSyncActionsEnabled && <TargetManagementToolbar gitSync={gitSync} />}
+        {gitSync.isGitSyncActionsEnabled && <TargetManagementToolbar />}
         <Layout.Horizontal height="100%">
           <TargetSettings target={target as Target} />
           <FlagSettings target={target} gitSync={gitSync} />

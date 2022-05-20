@@ -147,7 +147,7 @@ describe('Validate common HealthSource Utils', () => {
       analysis: {
         ...BaseHealthSourceMetricDefinitionMock.analysis,
         riskProfile: {
-          category: 'PERFORMANCE',
+          category: 'Performance',
           metricType: 'INFRA',
           thresholdTypes: ['ACT_WHEN_LOWER']
         }
@@ -177,7 +177,7 @@ describe('Validate common HealthSource Utils', () => {
           enabled: false
         },
         riskProfile: {
-          category: 'PERFORMANCE',
+          category: 'Performance',
           metricType: 'INFRA',
           thresholdTypes: ['ACT_WHEN_LOWER', 'ACT_WHEN_HIGHER']
         }

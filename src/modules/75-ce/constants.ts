@@ -200,3 +200,8 @@ export const channelImgMap = {
   DEFAULT: '',
   PAGERDUTY: 'service-pagerduty'
 }
+
+export enum RulesMode {
+  ACTIVE = 'ACTIVE MODE',
+  DRY = 'DRY RUN MODE'
+}

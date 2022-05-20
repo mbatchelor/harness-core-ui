@@ -263,7 +263,7 @@ exports[`Artifact Trigger Config Panel  tests Renders/snapshots edit render 1`] 
                         <span
                           class="StyledProps--font StyledProps--main textHeading StyledProps--inline"
                         >
-                          COMMON.LOCATION
+                          PIPELINE.ARTIFACTTRIGGERCONFIGPANEL.LOCATIONREPOPATH
                         </span>
                       </div>
                     </p>

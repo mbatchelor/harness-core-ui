@@ -1,0 +1,11 @@
+.tableTitle {
+  font-size: var(--font-medium) !important;
+  color: var(--black) !important;
+  margin: var(--spacing-small) !important;
+  font-weight: bold !important;
+}
+
+.notificationsContainer {
+  max-height: 600px;
+  overflow-y: scroll;
+}

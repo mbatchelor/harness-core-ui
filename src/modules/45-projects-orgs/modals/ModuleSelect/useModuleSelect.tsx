@@ -17,7 +17,7 @@ import { getModuleLink } from '@projects-orgs/components/ModuleListCard/ModuleLi
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { getModuleDescriptionsForModuleSelectionDialog, getModuleFullLengthTitle } from '@projects-orgs/utils/utils'
-import { getModuleIcon } from '@common/utils/utils'
+import { getModuleIcon, isCommunityPlan, isOnPrem } from '@common/utils/utils'
 import {
   Project,
   StartFreeLicenseQueryParams,
@@ -160,7 +160,8 @@ const GoToModuleBtn: React.FC<GoToModuleBtnProps> = props => {
   const getBtnText = (): string => {
     if (
       !licenseInformation[selectedModuleName] &&
-      getModulesWithSubscriptionsRoutesMap({ selectedModuleName, projectData, accountId }).has(selectedModuleName)
+      getModulesWithSubscriptionsRoutesMap({ selectedModuleName, projectData, accountId }).has(selectedModuleName) &&
+      !isOnPrem()
     ) {
       if (FREE_PLAN_ENABLED) {
         return getString('common.startFreePlan')
@@ -177,7 +178,8 @@ const GoToModuleBtn: React.FC<GoToModuleBtnProps> = props => {
         if (
           projectData &&
           projectData.orgIdentifier &&
-          (licenseInformation[selectedModuleName] ||
+          (isOnPrem() ||
+            licenseInformation[selectedModuleName] ||
             !getModulesWithSubscriptionsRoutesMap({ selectedModuleName, projectData, accountId }).has(
               selectedModuleName
             ))
@@ -206,6 +208,8 @@ export const useModuleSelectModal = ({
   onCloseModal
 }: UseModuleSelectModalProps): UseModuleSelectModalReturn => {
   const { getString } = useStrings()
+  const history = useHistory()
+  const { accountId } = useParams<AccountPathProps>()
 
   const [selectedModuleName, setSelectedModuleName] = React.useState<ModuleName>()
   const [projectData, setProjectData] = React.useState<Project>()
@@ -319,9 +323,27 @@ export const useModuleSelectModal = ({
     },
     [showModal]
   )
+  const communityEditionCDHomeRedirect = (projectDataLocal: Project): void => {
+    if (projectDataLocal?.orgIdentifier) {
+      history.push(
+        getModuleLink({
+          module: ModuleName.CD,
+          orgIdentifier: projectDataLocal?.orgIdentifier,
+          projectIdentifier: projectDataLocal.identifier,
+          accountId
+        })
+      )
+    }
+  }
 
   return {
-    openModuleSelectModal: (projectDataLocal: Project) => open(projectDataLocal),
+    openModuleSelectModal: (projectDataLocal: Project) => {
+      if (isCommunityPlan()) {
+        communityEditionCDHomeRedirect(projectDataLocal)
+      } else {
+        open(projectDataLocal)
+      }
+    },
     closeModuleSelectModal: hideModal
   }
 }

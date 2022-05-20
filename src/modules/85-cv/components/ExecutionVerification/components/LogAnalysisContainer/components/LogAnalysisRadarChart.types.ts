@@ -11,6 +11,7 @@ export interface LogAnalysisRadarChartProps {
   clusterChartError?: GetDataError<unknown> | null
   refetchClusterAnalysis?: () => void
   logsLoading?: boolean
+  showBaseline?: boolean
 }
 
 export interface MultiRangeSliderProps {
@@ -37,3 +38,5 @@ export interface MarkerOption {
   pointPlacement: string
   clusterId?: string
 }
+
+export type CommonChartProperties = 'chart' | 'title' | 'legend' | 'pane' | 'xAxis' | 'boost'

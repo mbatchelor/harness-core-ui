@@ -1,4 +1,5 @@
 newVariable: New Variable
+editVar: Edit Variable
 defaultValue: Default Value
 allowedValues: Allowed Values
 noVariableFound: No Variable Found

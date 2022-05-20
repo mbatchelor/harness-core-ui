@@ -272,135 +272,28 @@ exports[`Unit tests for ServiceHealth Verify if all the fields are rendered corr
       </div>
     </div>
     <div
-      class="StyledProps--font StyledProps--main StyledProps--margin-bottom-medium"
+      class="bp3-card bp3-elevation-0 Card--card noServiceImageCard"
+      data-testid="analysis-image-view"
     >
       <div
-        class="bp3-card bp3-elevation-0 Card--card header"
-      >
-        <h2
-          class="StyledProps--font StyledProps--font-h2 StyledProps--main StyledProps--font-variation-h6 StyledProps--padding-bottom-small"
-          level="2"
-        >
-          cv.monitoredServices.serviceHealth.metricsAndLogs
-        </h2>
-        <div
-          class="Layout--horizontal StyledProps--main"
-        >
-          <button
-            class="bp3-button Button--button StyledProps--font StyledProps--main Button--withLeftIcon Button--variation Button--variation-link"
-            type="button"
-          >
-            <span
-              class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-black"
-              data-icon="api-docs"
-            >
-              <svg
-                fill="currentColor"
-                height="20"
-                viewBox="0 0 24 24"
-                width="20"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  clip-rule="evenodd"
-                  d="M4.5 3.415a.5.5 0 01.5-.5h11a.5.5 0 01.4.2l3 4a.5.5 0 01.1.3v14a.5.5 0 01-.5.5h-2.13a.5.5 0 010-1h1.63V7.58l-2.75-3.666H5.5v10.532a.5.5 0 01-1 0V3.415z"
-                  fill="#fff"
-                  fill-rule="evenodd"
-                />
-                <path
-                  clip-rule="evenodd"
-                  d="M8.5 9.915a.5.5 0 01.5-.5h6a.5.5 0 010 1H9a.5.5 0 01-.5-.5zm0 3a.5.5 0 01.5-.5h6a.5.5 0 010 1H9a.5.5 0 01-.5-.5z"
-                  fill="#fff"
-                  fill-rule="evenodd"
-                  opacity="0.5"
-                />
-                <path
-                  d="M5.006 21.587h-1.15l1.493-4.424h1.423l1.493 4.424h-1.15l-1.038-3.31h-.035l-1.036 3.31zm-.154-1.741h2.402v.812H4.852v-.813zm4.218 1.741v-4.424h1.827c.331 0 .617.064.858.194.242.128.428.308.56.538.13.229.196.495.196.8 0 .305-.067.572-.201.8a1.347 1.347 0 01-.568.53 1.913 1.913 0 01-.877.188H9.737v-.843h.93a.87.87 0 00.403-.084.578.578 0 00.248-.235.728.728 0 00.085-.357.708.708 0 00-.085-.354.566.566 0 00-.248-.233.896.896 0 00-.404-.082h-.527v3.562h-1.07zm5.365-4.424v4.424h-1.069v-4.424h1.07z"
-                  fill="#fff"
-                />
-              </svg>
-            </span>
-            <span
-              class="bp3-button-text"
-            >
-              cv.externalAPICalls
-            </span>
-          </button>
-          <button
-            class="bp3-button Button--button StyledProps--font StyledProps--main Button--withLeftIcon Button--variation Button--variation-link"
-            type="button"
-          >
-            <span
-              class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall"
-              data-icon="audit-trail"
-            >
-              <svg
-                fill="none"
-                height="20"
-                viewBox="0 0 68 68"
-                width="20"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M14.167 8.5h31.166l8.5 11.333V59.5H14.167v-51z"
-                  stroke="#383946"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2.833"
-                />
-                <g
-                  opacity="0.3"
-                >
-                  <mask
-                    fill="#fff"
-                    id="audit-trail_svg__a"
-                  >
-                    <path
-                      clip-rule="evenodd"
-                      d="M25.5 25.5a1.417 1.417 0 000 2.833h17a1.417 1.417 0 100-2.833h-17zm-1.417 9.917c0-.783.635-1.417 1.417-1.417h17a1.417 1.417 0 010 2.833h-17a1.417 1.417 0 01-1.417-1.416zm0 8.5c0-.783.635-1.417 1.417-1.417h17a1.417 1.417 0 010 2.833h-17a1.417 1.417 0 01-1.417-1.416z"
-                      fill-rule="evenodd"
-                    />
-                  </mask>
-                  <path
-                    d="M26.917 26.917c0 .782-.635 1.416-1.417 1.416v-5.666a4.25 4.25 0 00-4.25 4.25h5.667zM25.5 25.5c.782 0 1.417.634 1.417 1.417H21.25a4.25 4.25 0 004.25 4.25V25.5zm17 0h-17v5.667h17V25.5zm-1.417 1.417c0-.783.635-1.417 1.417-1.417v5.667a4.25 4.25 0 004.25-4.25h-5.667zm1.417 1.416a1.417 1.417 0 01-1.417-1.416h5.667a4.25 4.25 0 00-4.25-4.25v5.666zm-17 0h17v-5.666h-17v5.666zm0 2.834a4.25 4.25 0 00-4.25 4.25h5.667c0 .782-.635 1.416-1.417 1.416v-5.666zm17 0h-17v5.666h17v-5.666zm4.25 4.25a4.25 4.25 0 00-4.25-4.25v5.666a1.417 1.417 0 01-1.417-1.416h5.667zm-4.25 4.25a4.25 4.25 0 004.25-4.25h-5.667c0-.783.635-1.417 1.417-1.417v5.667zm-17 0h17V34h-17v5.667zm-4.25-4.25a4.25 4.25 0 004.25 4.25V34c.782 0 1.417.634 1.417 1.417H21.25zm4.25 4.25a4.25 4.25 0 00-4.25 4.25h5.667c0 .782-.635 1.416-1.417 1.416v-5.666zm17 0h-17v5.666h17v-5.666zm4.25 4.25a4.25 4.25 0 00-4.25-4.25v5.666a1.417 1.417 0 01-1.417-1.416h5.667zm-4.25 4.25a4.25 4.25 0 004.25-4.25h-5.667c0-.783.635-1.417 1.417-1.417v5.667zm-17 0h17V42.5h-17v5.667zm-4.25-4.25a4.25 4.25 0 004.25 4.25V42.5c.782 0 1.417.634 1.417 1.417H21.25z"
-                    fill="currentColor"
-                    mask="url(#audit-trail_svg__a)"
-                  />
-                </g>
-              </svg>
-            </span>
-            <span
-              class="bp3-button-text"
-            >
-              cv.executionLogs
-            </span>
-          </button>
-        </div>
-      </div>
-      <div
-        class="bp3-card bp3-elevation-0 Card--card noServiceImageCard"
-        data-testid="analysis-image-view"
+        class="StyledProps--font StyledProps--main NoDataCard--noDataCard noDataCardContainer StyledProps--flex StyledProps--flex-align-center-center"
       >
         <div
-          class="StyledProps--font StyledProps--main NoDataCard--noDataCard noDataCardContainer StyledProps--flex StyledProps--flex-align-center-center"
+          class="Layout--vertical Layout--layout-spacing-medium StyledProps--main noDataCard"
+          style="align-items: center; margin-top: -48px; width: 470px;"
         >
+          <img
+            class="noServiceImage"
+            src="test-file-stub"
+          />
+          <p
+            class="StyledProps--font StyledProps--main NoDataCard--message StyledProps--font-align-center StyledProps--color StyledProps--color-grey600"
+          >
+            cv.monitoredServices.serviceHealth.selectTimeline
+          </p>
           <div
-            class="Layout--vertical Layout--layout-spacing-medium StyledProps--main noDataCard"
-            style="align-items: center; margin-top: -48px; width: 470px;"
-          >
-            <img
-              class="noServiceImage"
-              src="test-file-stub"
-            />
-            <p
-              class="StyledProps--font StyledProps--main NoDataCard--message StyledProps--font-align-center StyledProps--color StyledProps--color-grey600"
-            >
-              cv.monitoredServices.serviceHealth.selectTimeline
-            </p>
-            <div
-              class="NoDataCard--buttonContainer"
-            />
-          </div>
+            class="NoDataCard--buttonContainer"
+          />
         </div>
       </div>
     </div>

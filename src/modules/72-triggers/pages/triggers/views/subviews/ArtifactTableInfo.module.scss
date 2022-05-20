@@ -12,6 +12,7 @@
 .textHeading {
   font-size: var(--font-size-small) !important;
   color: var(--grey-800) !important;
+  word-break: normal;
 }
 .selectArtifactTable {
   > div:not(:first-child) {

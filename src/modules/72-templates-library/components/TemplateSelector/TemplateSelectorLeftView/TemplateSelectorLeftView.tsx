@@ -39,6 +39,7 @@ import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { stagesCollection } from '@pipeline/components/PipelineStudio/Stages/StagesCollection'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { getScopeOptions } from '@templates-library/components/TemplateSelector/TemplateSelectorLeftView/TemplateSelectorLeftViewUtils'
+import { areTemplatesSame } from '@pipeline/utils/templateUtils'
 import css from './TemplateSelectorLeftView.module.scss'
 
 export interface TemplateSelectorLeftViewProps {
@@ -53,7 +54,12 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
       }
     }
   } = usePipelineContext()
-  const { templateType, selectedChildType, allChildTypes = [], selectedTemplateRef } = data?.selectorData || {}
+  const {
+    templateType,
+    selectedChildType,
+    allChildTypes = [],
+    selectedTemplate: defaultTemplate
+  } = data?.selectorData || {}
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateSummaryResponse | undefined>()
   const { getString } = useStrings()
   const [page, setPage] = useState(0)
@@ -154,12 +160,20 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
   })
 
   useEffect(() => {
-    setTemplate(selectedTemplate)
+    if (areTemplatesSame(selectedTemplate, defaultTemplate)) {
+      setTemplate(defaultTemplate)
+    } else {
+      setTemplate(selectedTemplate)
+    }
   }, [selectedTemplate])
 
   useEffect(() => {
-    setSelectedTemplate(templateData?.data?.content?.find(template => template.identifier === selectedTemplateRef))
-  }, [selectedTemplateRef, templateData?.data?.content])
+    const findTemplate = templateData?.data?.content?.find(template => {
+      const areSame = areTemplatesSame(template, defaultTemplate)
+      return areSame
+    })
+    setSelectedTemplate(findTemplate)
+  }, [templateData?.data?.content])
 
   useEffect(() => {
     if (loading) {
@@ -260,7 +274,7 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
                   data={templateData?.data}
                   gotoPage={setPage}
                   onSelect={setSelectedTemplate}
-                  selectedIdentifier={selectedTemplate?.identifier}
+                  selectedTemplate={selectedTemplate}
                   view={view}
                 />
               </Container>

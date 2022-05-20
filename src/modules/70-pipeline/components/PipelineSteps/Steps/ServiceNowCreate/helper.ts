@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/05/PolyForm-Free-Trial-1.0.0.txt.
  */
 
-import { getMultiTypeFromValue, MultiSelectOption, MultiTypeInputType, SelectOption } from '@wings-software/uicore'
+import type { MultiSelectOption, SelectOption } from '@wings-software/uicore'
 import type { FormikProps } from 'formik'
 import { isEmpty } from 'lodash-es'
 import type { ServiceNowFieldAllowedValueNG, ServiceNowFieldNG, ServiceNowFieldValueNG } from 'services/cd-ng'
@@ -98,10 +98,7 @@ export const processFormData = (values: ServiceNowCreateData): ServiceNowCreateD
       spec: {
         delegateSelectors: values.spec.delegateSelectors,
         useServiceNowTemplate: false,
-        connectorRef:
-          getMultiTypeFromValue(values.spec.connectorRef as SelectOption) === MultiTypeInputType.FIXED
-            ? (values.spec.connectorRef as SelectOption)?.value?.toString()
-            : values.spec.connectorRef,
+        connectorRef: values.spec.connectorRef,
         ticketType: values.spec.ticketType,
         fields: processFieldsForSubmit(values)
       }
@@ -111,10 +108,7 @@ export const processFormData = (values: ServiceNowCreateData): ServiceNowCreateD
       spec: {
         delegateSelectors: values.spec.delegateSelectors,
         useServiceNowTemplate: true,
-        connectorRef:
-          getMultiTypeFromValue(values.spec.connectorRef as SelectOption) === MultiTypeInputType.FIXED
-            ? (values.spec.connectorRef as SelectOption)?.value?.toString()
-            : values.spec.connectorRef,
+        connectorRef: values.spec.connectorRef,
         ticketType: values.spec.ticketType,
         fields: [],
         templateName: values.spec.templateName
@@ -147,7 +141,9 @@ export const processInitialValues = (values: ServiceNowCreateData): ServiceNowCr
         ?.find(field => field.name === ServiceNowStaticFields.short_description)
         ?.value.toString() as string,
       fields: omitDescNShortDesc(values.spec.fields),
-      templateName: values.spec.templateName
+      templateName: values.spec.templateName,
+      selectedFields: [],
+      templateFields: []
     }
   }
 }

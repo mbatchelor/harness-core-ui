@@ -43,7 +43,7 @@ export const DynatraceHealthSourceSpecMock: DynatraceHealthSourceSpec = {
           enabled: true
         },
         riskProfile: {
-          category: 'PERFORMANCE',
+          category: 'Performance',
           metricType: 'INFRA',
           thresholdTypes: []
         }
@@ -80,7 +80,7 @@ const mockMetricInfosMap: Map<string, DynatraceMetricInfo> = new Map([
       sli: true,
       continuousVerification: false,
       healthScore: true,
-      riskCategory: 'PERFORMANCE/INFRA',
+      riskCategory: 'Performance/INFRA',
       lowerBaselineDeviation: false,
       higherBaselineDeviation: false,
       isManualQuery: undefined,

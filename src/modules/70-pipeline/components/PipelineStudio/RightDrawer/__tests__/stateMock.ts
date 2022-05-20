@@ -249,7 +249,7 @@ const pipelineContextMock: PipelineContextInterface = {
   setSelectedSectionId: (_selectedSectionId: string | undefined) => undefined,
   setSelection: jest.fn(),
   getStagePathFromPipeline: () => '',
-  setTemplateTypes: () => undefined
+  setTemplateTypes: jest.fn()
 }
 
 export const updateStageFnArg1 = {

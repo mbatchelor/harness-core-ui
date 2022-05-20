@@ -60,7 +60,6 @@ interface PrerequisiteEntry {
   feature: string
   variation: string
 }
-
 export const FlagPrerequisites: React.FC<FlagPrerequisitesProps> = props => {
   const { featureFlag, refetchFlag, gitSync, setGovernanceMetadata } = props
   const { showError } = useToaster()
@@ -223,9 +222,11 @@ export const FlagPrerequisites: React.FC<FlagPrerequisitesProps> = props => {
       : getString('cf.addPrerequisites.addPrerequisitesHeading')
     const updateSelect = (e: React.FormEvent<HTMLInputElement>): void => {
       const _searchTerm = (e?.target as HTMLInputElement)?.value || ''
-      if (_searchTerm !== searchTerm) {
+      if (_searchTerm && _searchTerm !== searchTerm) {
         setSearchTerm(_searchTerm)
         fetchFlags({ queryParams: { ...queryParams, name: _searchTerm } })
+      } else {
+        fetchFlags()
       }
     }
     const updateSelectFromVariation = (entry: PrerequisiteEntry): void => {
@@ -253,7 +254,7 @@ export const FlagPrerequisites: React.FC<FlagPrerequisitesProps> = props => {
               })}
             >
               {formikProps => (
-                <Form>
+                <Form data-testid="prerequisites-form">
                   <FieldArray name="prerequisites">
                     {arrayHelpers => {
                       return (
@@ -261,56 +262,59 @@ export const FlagPrerequisites: React.FC<FlagPrerequisitesProps> = props => {
                           {formikProps.values.prerequisites.map((elem, i) => {
                             return (
                               <Layout.Horizontal flex key={`prereq-${i}`}>
-                                <FormInput.Select
-                                  name={`prerequisites.${i}.feature`}
-                                  placeholder={getString('cf.addPrerequisites.selectFlag')}
-                                  items={
-                                    featureList?.map((flag: Feature) => ({
-                                      label: flag.name,
-                                      value: flag.identifier
-                                    })) ||
-                                    (formikProps?.values?.prerequisites[i]?.feature
-                                      ? [
-                                          {
-                                            label: formikProps.values.prerequisites[i].feature,
-                                            value: formikProps.values.prerequisites[i].feature
-                                          }
-                                        ]
-                                      : [])
-                                  }
-                                  selectProps={{
-                                    inputProps: {
-                                      onFocus: updateSelect,
-                                      onInput: updateSelect
-                                    }
-                                  }}
-                                />
-
-                                <FormInput.Select
-                                  name={`prerequisites.${i}.variation`}
-                                  placeholder={getString('cf.addPrerequisites.selectVariation')}
-                                  items={
-                                    featureList
-                                      ?.find(ff => ff.identifier === elem.feature)
-                                      ?.variations?.map((v: Variation) => ({
-                                        label: v.name?.length ? v.name : v.identifier,
-                                        value: v.identifier
+                                <div data-testid={`prerequisites-dropdown-${i}`}>
+                                  <FormInput.Select
+                                    name={`prerequisites.${i}.feature`}
+                                    placeholder={getString('cf.addPrerequisites.selectFlag')}
+                                    items={
+                                      featureList?.map((flag: Feature) => ({
+                                        label: flag.name,
+                                        value: flag.identifier
                                       })) ||
-                                    (formikProps?.values?.prerequisites[i]?.variation
-                                      ? [
-                                          {
-                                            label: formikProps.values.prerequisites[i].variation,
-                                            value: formikProps.values.prerequisites[i].variation
-                                          }
-                                        ]
-                                      : [])
-                                  }
-                                  selectProps={{
-                                    inputProps: {
-                                      onFocus: () => updateSelectFromVariation(elem)
+                                      (formikProps?.values?.prerequisites[i]?.feature
+                                        ? [
+                                            {
+                                              label: formikProps.values.prerequisites[i].feature,
+                                              value: formikProps.values.prerequisites[i].feature
+                                            }
+                                          ]
+                                        : [])
                                     }
-                                  }}
-                                />
+                                    selectProps={{
+                                      inputProps: {
+                                        onFocus: updateSelect,
+                                        onInput: updateSelect
+                                      }
+                                    }}
+                                  />
+                                </div>
+                                <div data-testid={`prerequisites-variations-dropdown-${i}`}>
+                                  <FormInput.Select
+                                    name={`prerequisites.${i}.variation`}
+                                    placeholder={getString('cf.addPrerequisites.selectVariation')}
+                                    items={
+                                      featureList
+                                        ?.find(ff => ff.identifier === elem.feature)
+                                        ?.variations?.map((v: Variation) => ({
+                                          label: v.name?.length ? v.name : v.identifier,
+                                          value: v.identifier
+                                        })) ||
+                                      (formikProps?.values?.prerequisites[i]?.variation
+                                        ? [
+                                            {
+                                              label: formikProps.values.prerequisites[i].variation,
+                                              value: formikProps.values.prerequisites[i].variation
+                                            }
+                                          ]
+                                        : [])
+                                    }
+                                    selectProps={{
+                                      inputProps: {
+                                        onFocus: () => updateSelectFromVariation(elem)
+                                      }
+                                    }}
+                                  />
+                                </div>
                               </Layout.Horizontal>
                             )
                           })}
@@ -319,6 +323,7 @@ export const FlagPrerequisites: React.FC<FlagPrerequisitesProps> = props => {
                             intent="primary"
                             text={getString('cf.shared.prerequisites')}
                             icon="small-plus"
+                            data-testid="prerequisites-button"
                             onClick={() => {
                               arrayHelpers.push({ feature: '', variations: [''] })
                             }}

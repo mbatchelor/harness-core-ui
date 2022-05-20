@@ -8,13 +8,10 @@
 import React from 'react'
 import { parse } from 'yaml'
 import { useParams } from 'react-router-dom'
-import { isEmpty, merge, set } from 'lodash-es'
+import { merge, set } from 'lodash-es'
 import { SelectorData, TemplateDrawerTypes } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
-import {
-  findAllByKey,
-  getTemplateTypesByRef,
-  usePipelineContext
-} from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import { findAllByKey, usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import { getTemplateTypesByRef } from '@pipeline/utils/templateUtils'
 import type { TemplateSummaryResponse } from 'services/template-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 
@@ -48,22 +45,20 @@ export function useTemplateSelector(): TemplateActionsReturnType {
     (template: TemplateSummaryResponse, isCopied: boolean) => {
       if (isCopied) {
         const templateRefs = findAllByKey('templateRef', parse(template?.yaml || '')?.template.spec)
-        if (!isEmpty(templateRefs)) {
-          getTemplateTypesByRef(
-            {
-              accountIdentifier: accountId,
-              orgIdentifier: orgIdentifier,
-              projectIdentifier: projectIdentifier,
-              templateListType: 'Stable',
-              repoIdentifier: gitDetails.repoIdentifier,
-              branch: gitDetails.branch,
-              getDefaultFromOtherRepo: true
-            },
-            templateRefs
-          ).then(resp => {
-            setTemplateTypes(merge(templateTypes, resp))
-          })
-        }
+        getTemplateTypesByRef(
+          {
+            accountIdentifier: accountId,
+            orgIdentifier: orgIdentifier,
+            projectIdentifier: projectIdentifier,
+            templateListType: 'Stable',
+            repoIdentifier: gitDetails.repoIdentifier,
+            branch: gitDetails.branch,
+            getDefaultFromOtherRepo: true
+          },
+          templateRefs
+        ).then(resp => {
+          setTemplateTypes(merge(templateTypes, resp))
+        })
       } else if (template?.identifier && template?.childType) {
         set(templateTypes, template.identifier, template.childType)
         setTemplateTypes(templateTypes)

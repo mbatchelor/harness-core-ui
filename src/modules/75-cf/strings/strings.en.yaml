@@ -322,6 +322,7 @@ segments:
   pageDescription: Target Groups allow you to serve flag variations to a list of targets in bulk.
 environments:
   title: '{{ $.environments }}'
+  environmentID: 'Id:'
   empty: 'There are currently no environments'
   modifiedBy: 'Modified by'
   adminEnvironments: 'Admin: Environments'

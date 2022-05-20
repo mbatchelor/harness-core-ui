@@ -89,7 +89,7 @@ const getRedirectionUrl = (accountId: string, source: string | undefined): strin
   return source === 'signup' ? onboardingUrl : dashboardUrl
 }
 
-const LOCAL_FF_PREFERENCE_STORE_ENABLED = true
+const LOCAL_FF_PREFERENCE_STORE_ENABLED = false
 
 export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React.ReactElement {
   const { showError } = useToaster()
@@ -164,7 +164,7 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
   const telemetry = useTelemetryInstance()
   useEffect(() => {
     if (userInfo?.data?.email && telemetry.initialized) {
-      telemetry.identify(userInfo?.data?.email)
+      telemetry.identify({ userId: userInfo?.data?.email })
     }
     updatePreferenceStore({ currentUserInfo: userInfo?.data })
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -190,9 +190,14 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
 
   // update gitSyncEnabled when selectedProject changes
   useEffect(() => {
-    if (projectIdentifier) {
+    // For gitSync, using path params instead of project/org from PreferenceFramework
+    if (projectIdentifierFromPath) {
       isGitSyncEnabledPromise({
-        queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier }
+        queryParams: {
+          accountIdentifier: accountId,
+          orgIdentifier: orgIdentifierFromPath,
+          projectIdentifier: projectIdentifierFromPath
+        }
       }).then((response: GitEnabledDTO) => {
         setState(prevState => ({
           ...prevState,
@@ -208,7 +213,7 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
       }))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.selectedProject, projectIdentifier, orgIdentifier, state.isGitSyncEnabled])
+  }, [state.selectedProject, projectIdentifierFromPath, orgIdentifierFromPath, state.isGitSyncEnabled])
 
   // set selectedOrg when orgDetails are fetched
   useEffect(() => {

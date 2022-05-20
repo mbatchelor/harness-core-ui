@@ -460,7 +460,7 @@ exports[`TriggersWizardPage Triggers tests Payload/Values Comparison Existing Tr
                                           class="bp3-input"
                                           name="pipeline.variables[1].value"
                                           type="text"
-                                          value=""
+                                          value="1"
                                         />
                                       </div>
                                       <span
@@ -538,7 +538,7 @@ exports[`TriggersWizardPage Triggers tests Payload/Values Comparison Existing Tr
                                               placeholder="Search..."
                                               style="padding-right: 0px;"
                                               type="text"
-                                              value=""
+                                              value="val1"
                                             />
                                             <span
                                               class="bp3-input-action"

@@ -61,13 +61,14 @@ export default function CustomiseHealthSource({
   const submitData = async (formdata: any, healthSourcePayload: UpdatedHealthSource): Promise<void> => {
     if (shouldRenderAtVerifyStep) {
       const healthSourceList = createHealthsourceList(formdata, healthSourcePayload)
-      const { identifier, name, description = '', tags = {} } = formdata?.monitoredServiceRef
+      const { identifier, name, description = '', tags = {} } = formdata?.monitoredServiceRef || {}
       try {
         const payload: MonitoredServiceDTO = {
           orgIdentifier: params.orgIdentifier,
           projectIdentifier: params.projectIdentifier,
           serviceRef: sourceData.serviceRef,
           environmentRef: sourceData.environmentRef,
+          ...(sourceData?.notificationRuleRefs && { notificationRuleRefs: sourceData?.notificationRuleRefs }),
           identifier: identifier?.trim(),
           name,
           description,

@@ -145,7 +145,8 @@ function DeleteCheckbox({ row, column }: any) {
     <Checkbox
       onClick={event => column.onCheckboxSelect(event, row?.original)}
       checked={column.environmentsToRemove.some(
-        (selectedEnv: EnvironmentResponse) => (selectedEnv as any).identifier === row?.original?.identifier
+        (selectedEnv: EnvironmentResponse) =>
+          (selectedEnv as any).environment.identifier === row?.original?.environment.identifier
       )}
     />
   )

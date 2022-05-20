@@ -248,7 +248,7 @@ export function GCOMetricsHealthSource(props: GCOMetricsHealthSourceProps): JSX.
           healthScore = false,
           continuousVerification = false,
           riskCategory = ''
-        } = formikProps?.values
+        } = formikProps.values
 
         const currentSelectedMetricDetail = metricDefinitions?.find(
           (metricDefinition: StackdriverDefinition) =>

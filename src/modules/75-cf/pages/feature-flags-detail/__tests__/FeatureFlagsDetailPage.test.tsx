@@ -9,6 +9,7 @@ import React from 'react'
 import { getAllByText, getByText, render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import mockImport from 'framework/utils/mockImport'
+import { FFGitSyncProvider } from '@cf/contexts/ff-git-sync-context/FFGitSyncContext'
 import FeatureFlagsDetailPage from '../FeatureFlagsDetailPage'
 import mockEnvironments from '../../environments/__tests__/mockEnvironments'
 import mockFeatureFlag from './mockFeatureFlag'
@@ -222,7 +223,9 @@ describe('FeatureFlagsDetailPage', () => {
         path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/onboarding/detail"
         pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
       >
-        <FeatureFlagsDetailPage />
+        <FFGitSyncProvider>
+          <FeatureFlagsDetailPage />
+        </FFGitSyncProvider>
       </TestWrapper>
     )
 

@@ -20,7 +20,7 @@ export const deploymentTypeLabel: Record<ServiceDefinition['type'], StringKeys> 
 export const deploymentTypeIcon: Record<string, IconName> = {
   Kubernetes: 'service-kubernetes',
   NativeHelm: 'service-helm',
-  ServerlessAwsLambda: 'service-serverless-aws',
+  ServerlessAwsLambda: 'service-serverless',
   Ssh: 'secret-ssh',
   WinRm: 'command-winrm'
 }

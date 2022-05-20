@@ -19,9 +19,38 @@ export const mockedHealthSourcesData = {
         identifier: 'Appd_Health_source',
         name: 'Appd Health source',
         type: 'APP_DYNAMICS'
+      },
+      {
+        identifier: 'service_prod/custommetric',
+        name: 'custommetric',
+        type: 'CUSTOM_HEALTH_METRIC',
+        verificationType: 'TIME_SERIES'
       }
     ]
   }
+}
+
+export const healthSourceMock = {
+  metaData: {},
+  resource: [
+    {
+      identifier: 'GCO_Health_source',
+      name: 'GCO Health source',
+      type: 'STACKDRIVER_LOG'
+    },
+    {
+      identifier: 'Appd_Health_source',
+      name: 'Appd Health source',
+      type: 'APP_DYNAMICS'
+    },
+    {
+      identifier: 'service_prod/custommetric',
+      name: 'custommetric',
+      type: 'CUSTOM_HEALTH_METRIC',
+      verificationType: 'TIME_SERIES'
+    }
+  ],
+  responseMessages: []
 }
 
 export const mockedClustersData = {

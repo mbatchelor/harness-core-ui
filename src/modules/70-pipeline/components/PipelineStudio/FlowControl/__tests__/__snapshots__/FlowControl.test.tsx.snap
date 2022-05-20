@@ -43,7 +43,8 @@ exports[`FlowControl tests should render fine 1`] = `
             data-tooltip-id="pipelineVariables"
           >
             <p
-              class="StyledProps--font StyledProps--main StyledProps--font-variation-h4"
+              class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-h4"
+              style="--text-line-clamp: 1; width: 300px;"
             >
               stage1
               : 

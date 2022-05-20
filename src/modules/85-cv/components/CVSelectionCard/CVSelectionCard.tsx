@@ -9,7 +9,7 @@ import React, { useState } from 'react'
 import { Card, Icon, CardBody, Container, Layout, Text, CardProps } from '@wings-software/uicore'
 import cx from 'classnames'
 import { Color } from '@harness/design-system'
-import type { IconProps } from '@wings-software/uicore/dist/icons/Icon'
+import type { IconProps } from '@harness/icons'
 import css from './CVSelectionCard.module.scss'
 
 export interface CVSelectionCardProps {

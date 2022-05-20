@@ -37,6 +37,7 @@ import HelmAdvancedStepSection from '../HelmAdvancedStepSection'
 
 import { helmVersions, ManifestDataType, ManifestIdentifierValidation } from '../../Manifesthelper'
 import { handleCommandFlagsSubmitData } from '../ManifestUtils'
+import DragnDropPaths from '../../DragnDropPaths'
 import css from '../ManifestWizardSteps.module.scss'
 import helmcss from '../HelmWithGIT/HelmWithGIT.module.scss'
 
@@ -109,6 +110,10 @@ function HelmWithGcs({
         chartVersion: initialValues.spec?.chartVersion,
         chartName: initialValues.spec?.chartName,
         skipResourceVersioning: initialValues?.spec?.skipResourceVersioning,
+        valuesPaths:
+          typeof initialValues?.spec?.valuesPaths === 'string'
+            ? initialValues?.spec?.valuesPaths
+            : initialValues?.spec?.valuesPaths?.map((path: string) => ({ path, uuid: uuid(path, nameSpace()) })),
         commandFlags: initialValues.spec?.commandFlags?.map((commandFlag: { commandType: string; flag: string }) => ({
           commandType: commandFlag.commandType,
           flag: commandFlag.flag
@@ -141,6 +146,10 @@ function HelmWithGcs({
               folderPath: formData?.folderPath
             }
           },
+          valuesPaths:
+            typeof formData?.valuesPaths === 'string'
+              ? formData?.valuesPaths
+              : formData?.valuesPaths?.map((path: { path: string }) => path.path),
           chartName: formData?.chartName,
           chartVersion: formData?.chartVersion,
           helmVersion: formData?.helmVersion,
@@ -170,6 +179,16 @@ function HelmWithGcs({
           chartName: Yup.string().trim().required(getString('pipeline.manifestType.http.chartNameRequired')),
           helmVersion: Yup.string().trim().required(getString('pipeline.manifestType.helmVersionRequired')),
           bucketName: Yup.mixed().required(getString('pipeline.manifestType.bucketNameRequired')),
+          valuesPaths: Yup.lazy((value): Yup.Schema<unknown> => {
+            if (getMultiTypeFromValue(value as any) === MultiTypeInputType.FIXED) {
+              return Yup.array().of(
+                Yup.object().shape({
+                  path: Yup.string().min(1).required(getString('pipeline.manifestType.pathRequired'))
+                })
+              )
+            }
+            return Yup.string().required(getString('pipeline.manifestType.pathRequired'))
+          }),
           commandFlags: Yup.array().of(
             Yup.object().shape({
               flag: Yup.string().when('commandType', {
@@ -371,6 +390,16 @@ function HelmWithGcs({
                   />
                 </div>
               </Layout.Horizontal>
+              <div className={helmcss.halfWidth}>
+                <DragnDropPaths
+                  formik={formik}
+                  expressions={expressions}
+                  allowableTypes={allowableTypes}
+                  fieldPath="valuesPaths"
+                  pathLabel={getString('pipeline.manifestType.valuesYamlPath')}
+                  placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
+                />
+              </div>
 
               <Accordion
                 activeId={isActiveAdvancedStep ? getString('advancedTitle') : ''}

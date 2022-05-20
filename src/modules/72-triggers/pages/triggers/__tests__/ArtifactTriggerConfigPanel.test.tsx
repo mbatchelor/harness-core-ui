@@ -535,7 +535,12 @@ describe('Artifact Trigger Config Panel  tests', () => {
         expect(document.body.querySelector('[class*="ArtifactTriggerConfigPanel"] [data-name="plusAdd"]')).toBeNull()
       )
       await waitFor(() =>
-        expect(queryByText(container, result.current.getString('common.location').toUpperCase())).not.toBeNull()
+        expect(
+          queryByText(
+            container,
+            result.current.getString('pipeline.artifactTriggerConfigPanel.locationRepoPath').toUpperCase()
+          )
+        ).not.toBeNull()
       )
       //   !todo: update snapshot so that it shows table
       expect(container).toMatchSnapshot()

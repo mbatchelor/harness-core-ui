@@ -11,13 +11,15 @@ declare const styles: {
   readonly confirmText: string
   readonly ctaContainer: string
   readonly flex: string
-  readonly header: string
   readonly identifier: string
   readonly infoSection: string
   readonly layout: string
   readonly link: string
   readonly name: string
   readonly radioSelector: string
+  readonly searchAndFilterWrapper: string
+  readonly searchContainer: string
+  readonly sectionSeparator: string
   readonly table: string
   readonly testBtn: string
   readonly testConnectionPop: string

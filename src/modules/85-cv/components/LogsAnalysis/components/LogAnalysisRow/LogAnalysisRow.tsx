@@ -10,9 +10,13 @@ import { Container, Text, Icon, Layout, Pagination } from '@wings-software/uicor
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
-import { LogAnalysisRadarChartListDTO, useGetVerifyStepDeploymentLogAnalysisRadarChartResult } from 'services/cv'
+import {
+  LogAnalysisRadarChartListDTO,
+  useGetAllRadarChartLogsData,
+  useGetVerifyStepDeploymentLogAnalysisRadarChartResult
+} from 'services/cv'
 import { getSingleLogData } from '@cv/components/ExecutionVerification/components/LogAnalysisContainer/LogAnalysis.utils'
-import type { AccountPathProps, PipelinePathProps } from '@common/interfaces/RouteInterfaces'
+import type { PipelinePathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getEventTypeColor, getEventTypeLightColor } from '@cv/utils/CommonUtils'
 import { LogAnalysisRiskAndJiraModal } from './components/LogAnalysisRiskAndJiraModal/LogAnalysisRiskAndJiraModal'
 import type {
@@ -21,7 +25,12 @@ import type {
   CompareLogEventsInfo,
   LogAnalysisRowData
 } from './LogAnalysisRow.types'
-import { getEventTypeFromClusterType, isNoLogSelected, onClickErrorTrackingRow } from './LogAnalysisRow.utils'
+import {
+  getCorrectLogsData,
+  getEventTypeFromClusterType,
+  isNoLogSelected,
+  onClickErrorTrackingRow
+} from './LogAnalysisRow.utils'
 import css from './LogAnalysisRow.module.scss'
 
 function ColumnHeaderRow(): JSX.Element {
@@ -98,8 +107,20 @@ function DataRow(props: LogAnalysisDataRowProps): JSX.Element {
 }
 
 export function LogAnalysisRow(props: LogAnalysisRowProps): JSX.Element {
-  const { data = [], isErrorTracking, logResourceData, selectedLog, activityId, resetSelectedLog, goToPage } = props
-  const [dataToCompare, setDataToCompare] = useState<CompareLogEventsInfo[]>([])
+  const {
+    data = [],
+    isErrorTracking,
+    logResourceData,
+    selectedLog,
+    activityId,
+    resetSelectedLog,
+    goToPage,
+    isServicePage,
+    startTime,
+    endTime,
+    monitoredServiceIdentifier
+  } = props
+  const [dataToCompare] = useState<CompareLogEventsInfo[]>([])
 
   const [riskEditModalData, setRiskEditModalData] = useState<{
     showDrawer: boolean
@@ -109,13 +130,13 @@ export function LogAnalysisRow(props: LogAnalysisRowProps): JSX.Element {
     selectedRowData: null
   })
 
-  const { accountId } = useParams<AccountPathProps>()
+  const { orgIdentifier, projectIdentifier, accountId } = useParams<ProjectPathProps>()
 
   const {
-    data: logsData,
-    loading: logsLoading,
-    error: logsError,
-    refetch: fetchLogAnalysis
+    data: verifyStepLogsData,
+    loading: verifyStepLogsLoading,
+    error: verifyStepLogsError,
+    refetch: fetchLogAnalysisVerifyScreen
   } = useGetVerifyStepDeploymentLogAnalysisRadarChartResult({
     verifyStepExecutionId: activityId as string,
     queryParams: {
@@ -127,15 +148,57 @@ export function LogAnalysisRow(props: LogAnalysisRowProps): JSX.Element {
     lazy: true
   })
 
+  const {
+    data: serviceScreenLogsData,
+    refetch: fetchLogAnalysisServiceScreen,
+    loading: serviceScreenLogsLoading,
+    error: serviceScreenLogsError
+  } = useGetAllRadarChartLogsData({
+    queryParams: {
+      orgIdentifier,
+      projectIdentifier,
+      accountId,
+      startTime: startTime as number,
+      endTime: endTime as number,
+      monitoredServiceIdentifier
+    },
+    queryParamStringifyOptions: {
+      arrayFormat: 'repeat'
+    },
+    lazy: true
+  })
+
+  const logsDataToDrawer = useMemo(() => {
+    return getCorrectLogsData(
+      serviceScreenLogsData,
+      verifyStepLogsData,
+      serviceScreenLogsLoading,
+      verifyStepLogsLoading,
+      serviceScreenLogsError,
+      verifyStepLogsError,
+      isServicePage
+    )
+  }, [
+    isServicePage,
+    serviceScreenLogsData,
+    verifyStepLogsData,
+    serviceScreenLogsLoading,
+    verifyStepLogsLoading,
+    serviceScreenLogsError,
+    verifyStepLogsError
+  ])
+
+  const { logsData, logsLoading, logsError } = logsDataToDrawer
+
   useEffect(() => {
     let drawerData: LogAnalysisRowData = {} as LogAnalysisRowData
 
-    if (!logsLoading && logsData) {
+    if (!logsLoading && logsData && logsData.resource?.logAnalysisRadarCharts?.content?.length) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       const dataToDrawer = logsData.resource?.logAnalysisRadarCharts?.content[0]
 
-      drawerData = getSingleLogData(dataToDrawer as LogAnalysisRadarChartListDTO)
+      drawerData = getSingleLogData(dataToDrawer as LogAnalysisRadarChartListDTO, isServicePage)
 
       setRiskEditModalData({
         showDrawer: true,
@@ -144,14 +207,35 @@ export function LogAnalysisRow(props: LogAnalysisRowProps): JSX.Element {
     }
   }, [logsData])
 
-  const retryLogsCall = useCallback(() => {
-    fetchLogAnalysis({
-      queryParams: {
-        accountId,
-        clusterId: selectedLog as string
+  const fetchLogData = useCallback(
+    queryParams => {
+      if (isServicePage) {
+        fetchLogAnalysisServiceScreen({
+          queryParams: {
+            ...queryParams,
+            startTime: startTime as number,
+            endTime: endTime as number,
+            monitoredServiceIdentifier,
+            orgIdentifier,
+            projectIdentifier
+          }
+        })
+      } else {
+        fetchLogAnalysisVerifyScreen({
+          queryParams
+        })
       }
+    },
+    [fetchLogAnalysisServiceScreen, fetchLogAnalysisVerifyScreen, isServicePage]
+  )
+
+  const retryLogsCall = useCallback(() => {
+    // This is callback for highcharts cluster click, so it is skipped from coverage
+    /* istanbul ignore next */ fetchLogData({
+      accountId,
+      clusterId: selectedLog as string
     })
-  }, [fetchLogAnalysis, accountId, selectedLog])
+  }, [fetchLogData, accountId, selectedLog])
 
   const onDrawerHide = useCallback(() => {
     setRiskEditModalData({
@@ -173,15 +257,13 @@ export function LogAnalysisRow(props: LogAnalysisRowProps): JSX.Element {
           selectedRowData: data[selectedIndex]
         })
       } else {
-        fetchLogAnalysis({
-          queryParams: {
-            accountId,
-            clusterId: selectedLog as string
-          }
+        fetchLogData({
+          accountId,
+          clusterId: selectedLog as string
         })
       }
     }
-  }, [accountId, data, fetchLogAnalysis, onDrawerHide, selectedLog])
+  }, [accountId, data, fetchLogData, onDrawerHide, selectedLog])
 
   useEffect(() => {
     if (logsLoading) {
@@ -192,19 +274,6 @@ export function LogAnalysisRow(props: LogAnalysisRowProps): JSX.Element {
     }
   }, [logsLoading])
 
-  const onCompareSelectCallback = useCallback(
-    (isSelect: boolean, selectedData: LogAnalysisRowData, index: number) => {
-      let updatedDataToCompare = [...dataToCompare]
-      if (!isSelect) {
-        updatedDataToCompare = updatedDataToCompare.filter(d => d.index !== index)
-      } else {
-        if (updatedDataToCompare.length === 2) updatedDataToCompare.pop()
-        updatedDataToCompare.unshift({ data: selectedData, index })
-      }
-      setDataToCompare(updatedDataToCompare)
-    },
-    [dataToCompare]
-  )
   const selectedIndices = useMemo(() => new Set(dataToCompare.map(d => d.index)), [dataToCompare])
 
   const onDrawerOpen = useCallback((selectedIndex: number) => {
@@ -237,7 +306,6 @@ export function LogAnalysisRow(props: LogAnalysisRowProps): JSX.Element {
               key={`${clusterType}-${count}-${message.substring(0, 10)}-${index}`}
               rowData={row}
               index={index}
-              onSelect={onCompareSelectCallback}
               onDrawOpen={onDrawerOpen}
               isSelected={selectedIndices.has(index)}
               isErrorTracking={isErrorTracking}

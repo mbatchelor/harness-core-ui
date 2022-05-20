@@ -26,9 +26,9 @@
 
 .summaryCharts {
   background-color: var(--grey-0);
-  width: 100%;
   padding: var(--spacing-medium);
   border-radius: 4px;
+  width: 350px;
 
   .cols {
     display: grid;
@@ -55,4 +55,26 @@
 
 .costCard {
   background-color: var(--red-100);
+}
+
+.noResultsContainer {
+  height: calc(100vh - 400px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.summaryError {
+  height: 200px;
+}
+
+.sortingIcon {
+  padding-left: var(--spacing-small) !important;
+}
+
+.sortingColumn {
+  display: flex;
+  cursor: pointer;
+  align-items: center;
 }

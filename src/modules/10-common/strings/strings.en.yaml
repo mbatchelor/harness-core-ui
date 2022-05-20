@@ -389,6 +389,7 @@ totalLines: 'Total lines'
 newLines: 'New lines'
 unsavedChanges: You may have unsaved changes
 readonlyPermissions: You have read-only permissions
+viewAndExecutePermissions: You have View and Execute permission only
 newVersion: There is a new version of this branch
 confictOccured: '{{name}} has committed since you started editing.'
 resolveConflict: Resolve the conflicts before Saving.
@@ -398,7 +399,6 @@ savedSuccessfully: Saved Successfully
 submittingRequest: Submitting request and pushing changes to Git
 submittingRequestToGitViaDelegate: Submitting request and pushing changes to Git from Delegate
 local: Local
-location: Location
 subscribed: Subscribed
 overSubscribed: Oversubscribed
 unlimited: Unlimited
@@ -863,6 +863,10 @@ environmentGroups:
     message: Create a new Environment Group to start configuring the deployment
 noSearchResultsFound: No results found for '{{searchTerm}}'.
 searchOther: Please search something else.
-
-# Chaos Module
 chaosText: Chaos
+plusAddName: + Add {{name}}
+addName: Add {{name}}
+editName: Edit {{name}}
+selectName: Select {{name}}
+override: Override
+plusNewName: + New {{name}}

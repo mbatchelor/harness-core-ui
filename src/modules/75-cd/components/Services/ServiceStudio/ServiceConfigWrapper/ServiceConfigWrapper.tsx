@@ -16,11 +16,16 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { PipelineContextType } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
-import { DefaultPipeline } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
+import { DefaultNewPipelineId } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import { sanitize } from '@common/utils/JSONUtils'
 import { yamlParse } from '@common/utils/YamlHelperMethods'
-import type { PipelineInfoConfig, ServiceResponseDTO } from 'services/cd-ng'
-import { initialServiceState, DefaultNewStageName, DefaultNewStageId } from '../../utils/ServiceUtils'
+import type { NGServiceConfig, PipelineInfoConfig, ServiceResponseDTO } from 'services/cd-ng'
+import {
+  initialServiceState,
+  DefaultNewStageName,
+  DefaultNewStageId,
+  setNameIDDescription
+} from '../../utils/ServiceUtils'
 import ServiceStudioDetails from '../ServiceStudioDetails'
 
 interface ServiceConfigurationWrapperProps {
@@ -43,31 +48,40 @@ function ServiceConfigurationWrapper({ serviceResponse }: ServiceConfigurationWr
   })
   const isReadonly = !isEdit
 
-  const serviceYaml = React.useMemo(() => yamlParse<any>(defaultTo(serviceResponse.yaml, '')), [serviceResponse.yaml])
+  const serviceYaml = React.useMemo(
+    () => yamlParse<NGServiceConfig>(defaultTo(serviceResponse.yaml, '')),
+    [serviceResponse.yaml]
+  )
   const serviceData = merge(serviceYaml, initialServiceState)
 
-  const currentPipeline = React.useMemo(
-    () =>
-      produce({ ...DefaultPipeline }, draft => {
-        if (!isEmpty(serviceData.service.serviceDefinition)) {
-          set(draft, 'stages[0].stage.name', DefaultNewStageName)
-          set(draft, 'stages[0].stage.identifier', DefaultNewStageId)
-          set(
-            draft,
-            'stages[0].stage.spec.serviceConfig.serviceDefinition',
-            cloneDeep(serviceData.service.serviceDefinition)
-          )
-          set(draft, 'stages[0].stage.spec.serviceConfig.serviceRef', serviceResponse.identifier)
-        }
-      }),
-    [serviceData.service.serviceDefinition, serviceResponse?.name]
-  )
+  const currentPipeline = React.useMemo(() => {
+    const defaultPipeline = {
+      name: serviceResponse.name,
+      identifier: defaultTo(serviceResponse.identifier, DefaultNewPipelineId),
+      description: serviceResponse.description,
+      tags: serviceResponse.tags
+    }
+    return produce({ ...defaultPipeline }, draft => {
+      if (!isEmpty(serviceData.service.serviceDefinition)) {
+        set(draft, 'stages[0].stage.name', DefaultNewStageName)
+        set(draft, 'stages[0].stage.identifier', DefaultNewStageId)
+        set(
+          draft,
+          'stages[0].stage.spec.serviceConfig.serviceDefinition',
+          cloneDeep(serviceData.service.serviceDefinition)
+        )
+        set(draft, 'stages[0].stage.spec.serviceConfig.serviceRef', serviceResponse.identifier)
+      }
+    })
+  }, [serviceData, serviceResponse])
 
   const [currentService, setCurrentService] = React.useState(serviceData)
 
-  const onUpdatePipeline = async (pipelineConfig: PipelineInfoConfig) => {
+  const onUpdatePipeline = async (pipelineConfig: PipelineInfoConfig): Promise<void> => {
     const stage = get(pipelineConfig, 'stages[0].stage.spec.serviceConfig.serviceDefinition')
     sanitize(stage, { removeEmptyArray: false, removeEmptyObject: false, removeEmptyString: false })
+
+    setNameIDDescription(serviceData.service, pipelineConfig)
     set(serviceData, 'service.serviceDefinition', stage)
     setCurrentService(serviceData)
   }
@@ -77,6 +91,7 @@ function ServiceConfigurationWrapper({ serviceResponse }: ServiceConfigurationWr
       queryParams={{ accountIdentifier: accountId, orgIdentifier, projectIdentifier, repoIdentifier, branch }}
       initialValue={currentPipeline as PipelineInfoConfig}
       onUpdatePipeline={onUpdatePipeline}
+      serviceIdentifier={serviceId}
       contextType={PipelineContextType.Pipeline}
       isReadOnly={isReadonly}
     >

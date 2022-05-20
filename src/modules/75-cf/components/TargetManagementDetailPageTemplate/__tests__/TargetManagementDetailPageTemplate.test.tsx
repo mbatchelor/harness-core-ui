@@ -14,6 +14,7 @@ import { TestWrapper } from '@common/utils/testUtils'
 import type { Segment, Target } from 'services/cf'
 import * as gitSync from '@cf/hooks/useGitSync'
 import * as useDocumentTitle from '@common/hooks/useDocumentTitle'
+import { FFGitSyncProvider } from '@cf/contexts/ff-git-sync-context/FFGitSyncContext'
 import TargetManagementDetailPageTemplate, {
   TargetManagementDetailPageTemplateProps
 } from '../TargetManagementDetailPageTemplate'
@@ -46,7 +47,14 @@ const renderComponent = (
 ): RenderResult =>
   render(
     <TestWrapper>
-      <TargetManagementDetailPageTemplate item={mockTarget} openDeleteDialog={jest.fn()} leftBar={<div />} {...props} />
+      <FFGitSyncProvider>
+        <TargetManagementDetailPageTemplate
+          item={mockTarget}
+          openDeleteDialog={jest.fn()}
+          leftBar={<div />}
+          {...props}
+        />
+      </FFGitSyncProvider>
     </TestWrapper>
   )
 

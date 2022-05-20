@@ -8,22 +8,16 @@
 import React, { ReactElement, useState } from 'react'
 import { Text, Container, Icon, Layout } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
+import { useFFGitSyncContext } from '@cf/contexts/ff-git-sync-context/FFGitSyncContext'
 import BranchSettingsButton from './BranchSettingsButton'
 import css from './GitSyncActions.module.scss'
 
 export interface GitSyncActionsProps {
-  isLoading: boolean
-  branch: string
-  repository: string
-  isAutoCommitEnabled: boolean
-  isGitSyncPaused: boolean
-  handleToggleAutoCommit: (newAutoCommitValue: boolean) => Promise<void>
-  handleGitPause: (newGitPauseValue: boolean) => Promise<void>
+  isLoading?: boolean
 }
 
-const GitSyncActions = (props: GitSyncActionsProps): ReactElement => {
-  const { repository } = props
-
+const GitSyncActions = ({ isLoading }: GitSyncActionsProps): ReactElement => {
+  const { gitRepoDetails } = useFFGitSyncContext()
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
 
   return (
@@ -31,12 +25,16 @@ const GitSyncActions = (props: GitSyncActionsProps): ReactElement => {
       <Container className={css.gitRepoText}>
         <Icon name="repository" />
         <Text lineClamp={1} color={Color.BLACK}>
-          {repository}
+          {gitRepoDetails?.repoIdentifier}
         </Text>
       </Container>
 
       <Container>
-        <BranchSettingsButton isSettingsOpen={isSettingsOpen} setIsSettingsOpen={setIsSettingsOpen} {...props} />
+        <BranchSettingsButton
+          isSettingsOpen={isSettingsOpen}
+          setIsSettingsOpen={setIsSettingsOpen}
+          isLoading={isLoading}
+        />
       </Container>
     </Layout.Horizontal>
   )

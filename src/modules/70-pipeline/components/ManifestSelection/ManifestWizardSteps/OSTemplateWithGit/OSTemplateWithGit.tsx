@@ -21,6 +21,7 @@ import {
 import cx from 'classnames'
 import { Form } from 'formik'
 import * as Yup from 'yup'
+import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import { FontVariation } from '@harness/design-system'
 import { get, isEmpty, set } from 'lodash-es'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
@@ -38,6 +39,7 @@ import {
 } from '../../Manifesthelper'
 import GitRepositoryName from '../GitRepositoryName/GitRepositoryName'
 import { getRepositoryName } from '../ManifestUtils'
+import DragnDropPaths from '../../DragnDropPaths'
 import css from '../ManifestWizardSteps.module.scss'
 import templateCss from './OSTemplateWithGit.module.scss'
 
@@ -82,7 +84,7 @@ function OpenShiftTemplateWithGit({
     const specValues = get(initialValues, 'spec.store.spec', null)
 
     if (specValues) {
-      const values = {
+      return {
         ...specValues,
         identifier: initialValues.identifier,
         paths: specValues.paths,
@@ -91,10 +93,12 @@ function OpenShiftTemplateWithGit({
           getMultiTypeFromValue(specValues?.paths) === MultiTypeInputType.RUNTIME
             ? specValues.paths
             : specValues.paths[0],
+        paramsPaths:
+          typeof initialValues?.spec?.paramsPaths === 'string'
+            ? initialValues?.spec?.paramsPaths
+            : initialValues?.spec?.paramsPaths?.map((path: string) => ({ path, uuid: uuid(path, nameSpace()) })),
         skipResourceVersioning: initialValues?.spec?.skipResourceVersioning
       }
-
-      return values
     }
     return {
       identifier: '',
@@ -122,6 +126,10 @@ function OpenShiftTemplateWithGit({
                 getMultiTypeFromValue(formData?.path) === MultiTypeInputType.RUNTIME ? formData?.path : [formData?.path]
             }
           },
+          paramsPaths:
+            typeof formData?.paramsPaths === 'string'
+              ? formData?.paramsPaths
+              : formData?.paramsPaths?.map((path: { path: string }) => path.path),
           skipResourceVersioning: formData?.skipResourceVersioning
         }
       }
@@ -171,6 +179,16 @@ function OpenShiftTemplateWithGit({
               return true
             }
             return !isEmpty(value) && value?.length > 0
+          }),
+          paramsPaths: Yup.lazy((value): Yup.Schema<unknown> => {
+            if (getMultiTypeFromValue(value as any) === MultiTypeInputType.FIXED) {
+              return Yup.array().of(
+                Yup.object().shape({
+                  path: Yup.string().min(1).required(getString('pipeline.manifestType.pathRequired'))
+                })
+              )
+            }
+            return Yup.string().required(getString('pipeline.manifestType.pathRequired'))
           })
         })}
         onSubmit={formData => {
@@ -300,6 +318,16 @@ function OpenShiftTemplateWithGit({
                   )}
                 </div>
               </Layout.Horizontal>
+              <div className={templateCss.halfWidth}>
+                <DragnDropPaths
+                  formik={formik}
+                  expressions={expressions}
+                  allowableTypes={allowableTypes}
+                  fieldPath="paramsPaths"
+                  pathLabel={getString('pipeline.manifestType.paramsYamlPath')}
+                  placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
+                />
+              </div>
               <Accordion
                 activeId={isActiveAdvancedStep ? getString('advancedTitle') : ''}
                 className={cx(templateCss.advancedStepOpen)}

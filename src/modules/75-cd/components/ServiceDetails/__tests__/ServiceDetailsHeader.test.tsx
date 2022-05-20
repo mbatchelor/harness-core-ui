@@ -89,7 +89,7 @@ describe('DeploymentTypes in serviceDetailsHeader ', () => {
   test('render ServerlessAwsLambda deployment type', () => {
     responseData.data.deploymentTypes = ['ServerlessAwsLambda']
     const { container } = renderSetup()
-    expect(container.querySelector('[data-icon="service-serverless-aws"]')).toBeTruthy()
+    expect(container.querySelector('[data-icon="service-serverless"]')).toBeTruthy()
   })
 
   test('render Ssh deployment type', () => {

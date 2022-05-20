@@ -83,6 +83,7 @@ const TargetingRulesTab = ({
     initialValues,
     variations: featureFlagData.variations,
     featureFlagIdentifier: featureFlagData.identifier,
+    featureFlagName: featureFlagData.name,
     refetchFlag
   })
 

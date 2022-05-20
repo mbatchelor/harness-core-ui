@@ -11,7 +11,7 @@ import {
   getAllowedValuesFromTemplate
 } from '../CIUtils'
 
-describe('Test StepUtils', () => {
+describe('Test CIUtils', () => {
   test('Test shouldRenderRunTimeInputView method', () => {
     expect(shouldRenderRunTimeInputView('sample-value')).not.toBeTruthy()
     expect(shouldRenderRunTimeInputView('<+input>')).toBeTruthy()

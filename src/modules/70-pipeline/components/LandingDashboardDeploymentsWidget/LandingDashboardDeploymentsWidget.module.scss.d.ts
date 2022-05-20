@@ -28,6 +28,7 @@ declare const styles: {
   readonly noDataContainer: string
   readonly noDataIcon: string
   readonly runningExecutions: string
+  readonly serviceTooltipRowLabel: string
   readonly servicesByDropdown: string
   readonly summaryCard: string
   readonly summaryCardsContainer: string

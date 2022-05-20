@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { Icon, Layout, Text } from '@wings-software/uicore'
-import type { IconProps } from '@wings-software/uicore/dist/icons/Icon'
+import type { IconProps } from '@harness/icons'
 import cx from 'classnames'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'

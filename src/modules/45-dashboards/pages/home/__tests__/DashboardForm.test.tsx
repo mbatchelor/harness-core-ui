@@ -45,7 +45,7 @@ describe('DashboardForm', () => {
       .mockImplementation(() => ({ data: mockEmptyGetFolderResponse, loading: false } as any))
   })
   afterEach(() => {
-    jest.spyOn(customDashboardServices, 'useGetFolders').mockReset()
+    jest.spyOn(customDashboardServices, 'useGetFolder').mockReset()
   })
 
   test('it should display a Dashboard Form with continue button', () => {

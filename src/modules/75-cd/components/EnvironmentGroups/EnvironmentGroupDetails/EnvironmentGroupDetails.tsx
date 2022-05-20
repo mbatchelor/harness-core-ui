@@ -37,7 +37,6 @@ import {
   EnvironmentGroupResponse,
   EnvironmentGroupResponseDTO,
   EnvironmentResponse,
-  EnvironmentResponseDTO,
   updateEnvironmentGroupPromise,
   useGetEnvironmentGroup,
   useGetYamlSchema
@@ -144,7 +143,7 @@ export default function EnvironmentGroupDetails() {
     setUpdateLoading(true)
     clear()
     try {
-      const body = yamlStringify(
+      const valuesYaml = yamlStringify(
         JSON.parse(
           JSON.stringify({
             environmentGroup: { ...values }
@@ -153,11 +152,14 @@ export default function EnvironmentGroupDetails() {
       )
 
       const response = await updateEnvironmentGroupPromise({
-        body,
+        body: {
+          identifier: values.identifier,
+          orgIdentifier: values.orgIdentifier,
+          projectIdentifier: values.projectIdentifier,
+          yaml: valuesYaml
+        },
         queryParams: {
-          accountIdentifier: accountId,
-          orgIdentifier,
-          projectIdentifier
+          accountIdentifier: accountId
         },
         envGroupIdentifier: environmentGroupIdentifier,
         requestOptions: { headers: { 'Content-Type': 'application/yaml' } }
@@ -223,14 +225,14 @@ export default function EnvironmentGroupDetails() {
     setSelectedTabId(tabId)
   }
 
-  const onDeleteEnvironments = (environmentsToRemove: EnvironmentResponseDTO[]) => {
+  const onDeleteEnvironments = (environmentsToRemove: EnvironmentResponse[]) => {
     // istanbul ignore else
     if (environmentsToRemove.length) {
       onUpdate({
         ...formikRef?.current?.values,
         envIdentifiers: difference(
           selectedEnvs.map(/* istanbul ignore next */ env => defaultTo(env?.environment?.identifier, '')),
-          environmentsToRemove?.map(/* istanbul ignore next */ env => defaultTo(env?.identifier, ''))
+          environmentsToRemove?.map(/* istanbul ignore next */ env => defaultTo(env?.environment?.identifier, ''))
         )
       })
     }

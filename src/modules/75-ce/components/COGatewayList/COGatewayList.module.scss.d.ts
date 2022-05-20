@@ -22,6 +22,7 @@ declare const styles: {
   readonly headerLayout: string
   readonly layout: string
   readonly link: string
+  readonly modeToggle: string
   readonly notAllowed: string
   readonly pageContainer: string
   readonly refreshIconContainer: string

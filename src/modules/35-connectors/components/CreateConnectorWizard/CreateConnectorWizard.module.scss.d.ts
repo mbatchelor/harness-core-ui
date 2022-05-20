@@ -8,6 +8,7 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly connectorForm: string
+  readonly contentContainer: string
   readonly createConnectorWizard: string
   readonly credForm: string
   readonly credWrapper: string
@@ -21,6 +22,7 @@ declare const styles: {
   readonly heading: string
   readonly headingIntermediate: string
   readonly headingStepTwo: string
+  readonly helpPanelContainer: string
   readonly howToProceed: string
   readonly iconConnector: string
   readonly incluster: string

@@ -69,11 +69,14 @@ export const DelegateListing: React.FC = () => {
     } as GetDelegateTokensQueryParams
   })
 
-  const pageTokens = useMemo(() => {
+  const filteredTokens = useMemo(() => {
     const tokens = get(tokensResponse, 'resource', [])
-    const searchedTokens = tokens.filter(token => token?.name?.toLowerCase().includes(searchString.toLowerCase()))
-    return searchedTokens.splice(page * delegatesPerPage, (page + 1) * delegatesPerPage)
-  }, [tokensResponse, page, searchString])
+    return tokens.filter(token => token?.name?.toLowerCase().includes(searchString.toLowerCase()))
+  }, [tokensResponse, searchString])
+
+  const pageTokens = useMemo(() => {
+    return filteredTokens.slice(page * delegatesPerPage, (page + 1) * delegatesPerPage)
+  }, [filteredTokens, page])
 
   const getTokens = () => {
     const queryParams = {
@@ -163,7 +166,7 @@ export const DelegateListing: React.FC = () => {
   }
 
   const pagination = useMemo(() => {
-    const itemCount = get(tokensResponse, 'resource', []).length
+    const itemCount = filteredTokens.length
     return {
       itemCount,
       pageSize: delegatesPerPage,
@@ -171,7 +174,7 @@ export const DelegateListing: React.FC = () => {
       pageIndex: page,
       gotoPage: setPage
     }
-  }, [page, setPage, pageTokens])
+  }, [page, setPage, filteredTokens])
 
   const columns: CustomColumn<DelegateTokenDetails>[] = useMemo(
     () => [
@@ -288,7 +291,7 @@ export const DelegateListing: React.FC = () => {
           />
         ) : (
           <Container className={css.delegateListContainer}>
-            {pageTokens.length ? (
+            {filteredTokens.length ? (
               <TableV2<DelegateTokenDetails>
                 sortable={true}
                 className={css.table}

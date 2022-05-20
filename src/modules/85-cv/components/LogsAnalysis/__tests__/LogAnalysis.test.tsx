@@ -6,23 +6,30 @@
  */
 
 import React from 'react'
-import userEvent from '@testing-library/user-event'
 import { render, waitFor, screen, fireEvent, act } from '@testing-library/react'
 import * as cvServices from 'services/cv'
-import { TestWrapper } from '@common/utils/testUtils'
-import LogAnalysis from '@cv/components/LogsAnalysis/LogAnalysis'
-import {
-  mockedClustersData,
-  mockedHealthSourcesData
-} from '@cv/pages/monitored-service/components/ServiceHealth/components/MetricsAndLogs/__tests__/MetricsAndLogs.mock'
-import { LogAnalysisProps, LogEvents } from '../LogAnalysis.types'
-import { mockedLogAnalysisData } from './LogAnalysis.mocks'
+import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
+import { accountPathProps, projectPathProps } from '@common/utils/routeUtils'
+import routes from '@common/RouteDefinitions'
+import { LogAnalysisContent } from '@cv/components/LogsAnalysis/LogAnalysis'
+import { healthSourceMock } from '@cv/pages/monitored-service/components/ServiceHealth/components/MetricsAndLogs/__tests__/MetricsAndLogs.mock'
+import type { LogAnalysisProps } from '../LogAnalysis.types'
+import { logsListData, logsRadarChartData } from './LogAnalysis.mocks'
 import { mockLogsCall } from '../components/LogAnalysisRow/__tests__/LogAnalysisRow.mocks'
+
+const testWrapperProps: TestWrapperProps = {
+  path: routes.toCVAddMonitoringServicesSetup({ ...accountPathProps, ...projectPathProps }),
+  pathParams: {
+    accountId: 'testAcc',
+    projectIdentifier: 'project1',
+    orgIdentifier: 'testOrg'
+  }
+}
 
 const WrapperComponent = (props: LogAnalysisProps): JSX.Element => {
   return (
-    <TestWrapper>
-      <LogAnalysis {...props} />
+    <TestWrapper {...testWrapperProps}>
+      <LogAnalysisContent {...props} />
     </TestWrapper>
   )
 }
@@ -36,20 +43,16 @@ jest.spyOn(cvServices, 'useGetVerifyStepDeploymentLogAnalysisRadarChartResult').
 jest.mock('highcharts-react-official', () => () => <></>)
 const fetchLogAnalysis = jest.fn()
 const fetchClusterData = jest.fn()
-let useGetAllLogsClusterDataQueryParams: cvServices.GetAllLogsClusterDataQueryParams | undefined
-let useGetAllLogsDataQueryParams: cvServices.GetAllLogsDataQueryParams | undefined
 
 jest.mock('services/cv', () => ({
-  useGetAllLogsData: jest.fn().mockImplementation(props => {
-    useGetAllLogsDataQueryParams = props.queryParams
-    return { data: mockedLogAnalysisData, loading: false, error: null, refetch: fetchLogAnalysis }
+  useGetAllRadarChartLogsData: jest.fn().mockImplementation(() => {
+    return { data: logsListData, loading: false, error: null, refetch: fetchLogAnalysis }
   }),
   useGetAllHealthSourcesForMonitoredServiceIdentifier: jest.fn().mockImplementation(() => {
-    return { data: mockedHealthSourcesData, error: null, loading: false }
+    return { data: healthSourceMock, error: null, loading: false }
   }),
-  useGetAllLogsClusterData: jest.fn().mockImplementation(props => {
-    useGetAllLogsClusterDataQueryParams = props.queryParams
-    return { data: mockedClustersData, error: null, loading: false, refetch: fetchClusterData }
+  useGetAllRadarChartLogsClusterData: jest.fn().mockImplementation(() => {
+    return { data: logsRadarChartData, error: null, loading: false, refetch: fetchClusterData }
   }),
   useGetVerifyStepDeploymentLogAnalysisRadarChartResult: jest.fn().mockImplementation(() => {
     return {
@@ -76,71 +79,239 @@ describe('Unit tests for LogAnalysisContainer', () => {
 
     // Verify if number of records returned by the api for the first page matches with the number of records shown in the Logs Table
     await waitFor(() =>
-      expect(screen.getAllByTestId('logs-data-row')).toHaveLength(mockedLogAnalysisData.resource.content.length)
+      expect(screen.getAllByTestId('logs-data-row')).toHaveLength(
+        logsListData.resource.logAnalysisRadarCharts.content.length
+      )
     )
   })
 
-  test('Verify if Filtering by cluster type works correctly', async () => {
-    const { container, getByText, getAllByText } = render(<WrapperComponent {...props} />)
-
-    const clusterTypeFilterDropdown = container.querySelector(
-      'input[placeholder="pipeline.verification.logs.filterByClusterType"]'
-    ) as HTMLInputElement
-
-    expect(clusterTypeFilterDropdown).toBeTruthy()
-
-    // verify default filter is unknownEvent
-    expect(clusterTypeFilterDropdown.value).toBe('cv.unknown')
-
-    // Clicking the filter dropdown
-    const selectCaret = container
-      .querySelector(`[placeholder="pipeline.verification.logs.filterByClusterType"] + [class*="bp3-input-action"]`)
-      ?.querySelector('[data-icon="chevron-down"]')
-    await waitFor(() => {
-      fireEvent.click(selectCaret!)
+  test('Verify if Filtering by cluster and health source type works correctly', async () => {
+    const useGetAllRadarChartLogsData = jest.spyOn(cvServices, 'useGetAllRadarChartLogsData').mockReturnValue({
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      data: logsListData,
+      refetch: jest.fn()
     })
 
-    // Selecting Known event cluster type
-    const typeToSelect = await getByText('cv.known')
-    act(() => {
-      fireEvent.click(typeToSelect)
-    })
-    expect(clusterTypeFilterDropdown.value).toBe('cv.known')
-
-    // Verifying if correct number of records are shown for Known event type.
-    const knownClusterTypeMockedData = mockedLogAnalysisData.resource.content.filter(el => el.logData.tag === 'KNOWN')
-    await waitFor(() => expect(getAllByText('Known')).toHaveLength(knownClusterTypeMockedData.length))
-
-    // Selecting UnKnown event cluster type
-    const unknownEventTypeSelected = await getByText('cv.unknown')
-    act(() => {
-      fireEvent.click(unknownEventTypeSelected)
-    })
-    expect(clusterTypeFilterDropdown.value).toBe('cv.unknown')
-
-    // Verifying if correct number of records are shown for unKnown event type.
-    const unknownClusterTypeMockedData = mockedLogAnalysisData.resource.content.filter(
-      el => el.logData.tag === 'UNKNOWN'
-    )
-    await waitFor(() => expect(getAllByText('Unknown')).toHaveLength(unknownClusterTypeMockedData.length))
-  })
-
-  test('it should not pass field clusterTypes to BE for event type All', () => {
+    const useGetAllRadarChartLogsClusterData = jest
+      .spyOn(cvServices, 'useGetAllRadarChartLogsClusterData')
+      .mockReturnValue({
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        data: logsRadarChartData,
+        refetch: jest.fn()
+      })
     render(<WrapperComponent {...props} />)
 
-    const clusterTypeFilterDropdown = screen.getByPlaceholderText(
-      'pipeline.verification.logs.filterByClusterType'
-    ) as HTMLInputElement
+    // verify default filter is unknownEvent
+    expect((screen.getByTestId('cv.known') as HTMLInputElement).checked).toBe(true)
+    expect((screen.getByTestId('cv.unknown') as HTMLInputElement).checked).toBe(true)
+    expect((screen.getByTestId('cv.unexpectedFrequency') as HTMLInputElement).checked).toBe(true)
 
-    expect(clusterTypeFilterDropdown.value).toBe('cv.unknown')
-    expect(useGetAllLogsClusterDataQueryParams?.clusterTypes).toEqual([LogEvents.UNKNOWN])
-    expect(useGetAllLogsDataQueryParams?.clusterTypes).toEqual([LogEvents.UNKNOWN])
+    fireEvent.click(screen.getByTestId('cv.known'))
 
-    userEvent.click(clusterTypeFilterDropdown)
-    userEvent.click(screen.getByText('auditTrail.allEvents'))
+    await waitFor(() =>
+      expect(useGetAllRadarChartLogsData).toHaveBeenCalledWith({
+        queryParamStringifyOptions: { arrayFormat: 'repeat' },
+        queryParams: {
+          accountId: 'testAcc',
+          clusterTypes: ['UNKNOWN_EVENT', 'UNEXPECTED_FREQUENCY'],
+          endTime: 1630595011443,
+          healthSources: undefined,
+          maxAngle: 360,
+          minAngle: 0,
+          monitoredServiceIdentifier: 'monitored_service_identifier',
+          orgIdentifier: 'testOrg',
+          pageNumber: 0,
+          pageSize: 10,
+          projectIdentifier: 'project1',
+          startTime: 1630594988077
+        }
+      })
+    )
 
-    expect(clusterTypeFilterDropdown.value).toBe('auditTrail.allEvents')
-    expect(useGetAllLogsClusterDataQueryParams).not.toHaveProperty('clusterTypes')
-    expect(useGetAllLogsDataQueryParams).not.toHaveProperty('clusterTypes')
+    await waitFor(() =>
+      expect(useGetAllRadarChartLogsClusterData).toHaveBeenCalledWith({
+        queryParamStringifyOptions: { arrayFormat: 'repeat' },
+        queryParams: {
+          accountId: 'testAcc',
+          clusterTypes: ['UNKNOWN_EVENT', 'UNEXPECTED_FREQUENCY'],
+          endTime: 1630595011443,
+          healthSources: undefined,
+          monitoredServiceIdentifier: 'monitored_service_identifier',
+          orgIdentifier: 'testOrg',
+          projectIdentifier: 'project1',
+          startTime: 1630594988077
+        }
+      })
+    )
+
+    fireEvent.click(screen.getByTestId(/HealthSource_MultiSelect_DropDown/))
+    await waitFor(() => expect(document.querySelector('[class*="menuItem"]')).not.toBeNull())
+
+    fireEvent.click(screen.getByText(/custommetric/))
+
+    await waitFor(() =>
+      expect(useGetAllRadarChartLogsData).toHaveBeenCalledWith({
+        queryParamStringifyOptions: { arrayFormat: 'repeat' },
+        queryParams: {
+          accountId: 'testAcc',
+          clusterTypes: ['UNKNOWN_EVENT', 'UNEXPECTED_FREQUENCY'],
+          endTime: 1630595011443,
+          healthSources: ['service_prod/custommetric'],
+          maxAngle: 360,
+          minAngle: 0,
+          monitoredServiceIdentifier: 'monitored_service_identifier',
+          orgIdentifier: 'testOrg',
+          pageNumber: 0,
+          pageSize: 10,
+          projectIdentifier: 'project1',
+          startTime: 1630594988077
+        }
+      })
+    )
+
+    await waitFor(() =>
+      expect(useGetAllRadarChartLogsClusterData).toHaveBeenCalledWith({
+        queryParamStringifyOptions: { arrayFormat: 'repeat' },
+        queryParams: {
+          accountId: 'testAcc',
+          clusterTypes: ['UNKNOWN_EVENT', 'UNEXPECTED_FREQUENCY'],
+          endTime: 1630595011443,
+          healthSources: ['service_prod/custommetric'],
+          monitoredServiceIdentifier: 'monitored_service_identifier',
+          orgIdentifier: 'testOrg',
+          projectIdentifier: 'project1',
+          startTime: 1630594988077
+        }
+      })
+    )
+
+    fireEvent.click(screen.getByTestId('cv.known'))
+
+    await waitFor(() =>
+      expect(useGetAllRadarChartLogsData).toHaveBeenCalledWith({
+        queryParamStringifyOptions: { arrayFormat: 'repeat' },
+        queryParams: {
+          accountId: 'testAcc',
+          clusterTypes: ['KNOWN_EVENT', 'UNKNOWN_EVENT', 'UNEXPECTED_FREQUENCY'],
+          endTime: 1630595011443,
+          healthSources: undefined,
+          maxAngle: 360,
+          minAngle: 0,
+          monitoredServiceIdentifier: 'monitored_service_identifier',
+          orgIdentifier: 'testOrg',
+          pageNumber: 0,
+          pageSize: 10,
+          projectIdentifier: 'project1',
+          startTime: 1630594988077
+        }
+      })
+    )
+
+    await waitFor(() =>
+      expect(useGetAllRadarChartLogsClusterData).toHaveBeenCalledWith({
+        queryParamStringifyOptions: { arrayFormat: 'repeat' },
+        queryParams: {
+          accountId: 'testAcc',
+          clusterTypes: ['KNOWN_EVENT', 'UNKNOWN_EVENT', 'UNEXPECTED_FREQUENCY'],
+          endTime: 1630595011443,
+          healthSources: undefined,
+          monitoredServiceIdentifier: 'monitored_service_identifier',
+          orgIdentifier: 'testOrg',
+          projectIdentifier: 'project1',
+          startTime: 1630594988077
+        }
+      })
+    )
+  })
+
+  test('should call API with correct minmax data', async () => {
+    const useGetAllRadarChartLogsData = jest.spyOn(cvServices, 'useGetAllRadarChartLogsData').mockReturnValue({
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      data: logsListData,
+      refetch: jest.fn()
+    })
+
+    render(<WrapperComponent {...props} />)
+
+    expect(screen.getByTestId('MinMaxSlider_MinInput')).toBeInTheDocument()
+
+    fireEvent.change(screen.getByTestId('MinMaxSlider_MinInput'), {
+      target: { value: '20' }
+    })
+
+    act(() => {
+      jest.advanceTimersByTime(300)
+    })
+
+    await waitFor(() =>
+      expect(useGetAllRadarChartLogsData).toHaveBeenCalledWith({
+        queryParamStringifyOptions: { arrayFormat: 'repeat' },
+        queryParams: {
+          accountId: 'testAcc',
+          clusterTypes: ['KNOWN_EVENT', 'UNKNOWN_EVENT', 'UNEXPECTED_FREQUENCY'],
+          endTime: 1630595011443,
+          healthSources: undefined,
+          maxAngle: 360,
+          minAngle: 20,
+          monitoredServiceIdentifier: 'monitored_service_identifier',
+          orgIdentifier: 'testOrg',
+          pageNumber: 0,
+          pageSize: 10,
+          projectIdentifier: 'project1',
+          startTime: 1630594988077
+        }
+      })
+    )
+  })
+
+  test('should show loader when both the APIs are loading', () => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    jest.spyOn(cvServices, 'useGetAllRadarChartLogsData').mockReturnValue({
+      data: null,
+      loading: true,
+      refetch: jest.fn()
+    })
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    jest.spyOn(cvServices, 'useGetAllRadarChartLogsClusterData').mockReturnValue({
+      data: null,
+      loading: true,
+      refetch: jest.fn()
+    })
+    render(<WrapperComponent {...props} />)
+
+    expect(screen.getByTestId('LogAnalysis-loading-spinner')).toBeInTheDocument()
+  })
+
+  test('should render error UI if logs API fails', () => {
+    const logAnalysisRefetch = jest.fn()
+
+    const errorObj = {
+      message: 'Failed to fetch: Failed to fetch',
+      data: 'Failed to fetch'
+    }
+
+    jest
+      .spyOn(cvServices, 'useGetAllRadarChartLogsData')
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      .mockReturnValue({
+        data: {},
+        error: errorObj,
+        refetch: logAnalysisRefetch
+      })
+
+    render(<WrapperComponent {...props} />)
+
+    expect(screen.getByText('"Failed to fetch"')).toBeInTheDocument()
+
+    fireEvent.click(screen.getByRole('button', { name: 'Retry' }))
+
+    expect(logAnalysisRefetch).toHaveBeenCalled()
   })
 })

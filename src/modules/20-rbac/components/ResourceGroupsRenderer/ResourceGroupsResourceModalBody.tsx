@@ -30,6 +30,7 @@ const ResourceGroupsResourceModalBody: React.FC<RbacResourceModalProps> = ({
   const { data, loading } = useMutateAsGet(useGetFilterResourceGroupList, {
     body: { accountIdentifier, orgIdentifier, projectIdentifier, searchTerm },
     queryParams: {
+      accountIdentifier,
       pageIndex: page,
       pageSize: 10
     }

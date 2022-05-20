@@ -11,23 +11,19 @@ import cx from 'classnames'
 import { PopoverPosition } from '@blueprintjs/core'
 import { Text, Container, Button, Icon } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
+import { useFFGitSyncContext } from '@cf/contexts/ff-git-sync-context/FFGitSyncContext'
 import SettingsMenu from './SettingsMenu'
 import BranchStatusIcon from './BranchStatusIcon'
 import css from './GitSyncActions.module.scss'
 
 interface BranchSettingsProps {
+  isLoading?: boolean
   isSettingsOpen: boolean
-  handleToggleAutoCommit: (newAutoCommitValue: boolean) => void
-  handleGitPause: (newGitPauseValue: boolean) => void
   setIsSettingsOpen: (isOpen: boolean) => void
-  branch: string
-  isLoading: boolean
-  isAutoCommitEnabled: boolean
-  isGitSyncPaused: boolean
 }
 
-const BranchSettingsButton = (props: BranchSettingsProps): ReactElement => {
-  const { isSettingsOpen, setIsSettingsOpen, branch } = props
+const BranchSettingsButton = ({ isSettingsOpen, setIsSettingsOpen, isLoading }: BranchSettingsProps): ReactElement => {
+  const { gitRepoDetails } = useFFGitSyncContext()
 
   return (
     <Button
@@ -41,12 +37,12 @@ const BranchSettingsButton = (props: BranchSettingsProps): ReactElement => {
         isOpen: isSettingsOpen,
         onInteraction: nextOpenState => setIsSettingsOpen(nextOpenState)
       }}
-      tooltip={<SettingsMenu {...props} />}
+      tooltip={<SettingsMenu />}
     >
       <Container className={css.branchActionButtonWrapper}>
         <Icon name="git-new-branch" size={15} />
-        <Text color={Color.GREY_900}>{branch}</Text>
-        <BranchStatusIcon {...props} />
+        <Text color={Color.GREY_900}>{gitRepoDetails?.branch}</Text>
+        <BranchStatusIcon isSettingsOpen={isSettingsOpen} isLoading={isLoading} />
       </Container>
     </Button>
   )

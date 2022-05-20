@@ -25,7 +25,7 @@ import { useToaster } from '@common/components'
 import { useQueryParams } from '@common/hooks'
 import { useSignup, SignupDTO } from 'services/cd-ng'
 import AuthLayout from '@common/components/AuthLayout/AuthLayout'
-import AppStorage from 'framework/utils/AppStorage'
+import SecureStorage from 'framework/utils/SecureStorage'
 import type { RestResponseUserInfo } from 'services/cd-ng'
 
 import AuthFooter, { AuthPage } from '@common/components/AuthLayout/AuthFooter/AuthFooter'
@@ -38,10 +38,10 @@ interface SignupForm {
 }
 
 const setToken = async (response: RestResponseUserInfo): Promise<void> => {
-  AppStorage.set('token', response.resource?.token)
-  AppStorage.set('acctId', response.resource?.defaultAccountId)
-  AppStorage.set('uuid', response.resource?.uuid)
-  AppStorage.set('lastTokenSetTime', +new Date())
+  SecureStorage.set('token', response.resource?.token)
+  SecureStorage.set('acctId', response.resource?.defaultAccountId)
+  SecureStorage.set('uuid', response.resource?.uuid)
+  SecureStorage.set('lastTokenSetTime', Date.now())
 }
 
 const SignupPage: React.FC = () => {

@@ -16,7 +16,11 @@ import { getErrorMessage } from '@cv/utils/CommonUtils'
 import { useStrings } from 'framework/strings'
 import type { LogAnalysisRadarChartProps } from './LogAnalysisRadarChart.types'
 import MultiRangeSlider from './MinMaxSlider'
-import getLogAnalysisSpiderChartOptions, { getRadarChartSeries } from './LogAnalysisRadarChart.utils'
+import {
+  getRadarChartSeries,
+  getLogAnalysisSpiderChartOptions,
+  getLogAnalysisSpiderChartOptionsWithoutBaseline
+} from './LogAnalysisRadarChart.utils'
 import styles from '../LogAnalysis.module.scss'
 
 Boost(Highcharts)
@@ -29,7 +33,8 @@ const LogAnalysisRadarChart: React.FC<LogAnalysisRadarChartProps> = ({
   onRadarPointClick,
   clusterChartError,
   refetchClusterAnalysis,
-  logsLoading
+  logsLoading,
+  showBaseline = true
 }) => {
   const radarChartSeries = getRadarChartSeries(clusterChartData?.resource || [])
 
@@ -46,8 +51,18 @@ const LogAnalysisRadarChart: React.FC<LogAnalysisRadarChartProps> = ({
   const { getString } = useStrings()
 
   const handleRadarPointClick = useCallback((pointClusterId: string) => {
+    // As it is related to Highcharts cluster click, it is ignored for coverage
+    /* istanbul ignore next */
     onRadarPointClick(pointClusterId)
   }, [])
+
+  const highchartsConfigOptions = useMemo(() => {
+    if (showBaseline) {
+      return getLogAnalysisSpiderChartOptions(filteredSeries, filteredAngle, handleRadarPointClick)
+    } else {
+      return getLogAnalysisSpiderChartOptionsWithoutBaseline(filteredSeries, filteredAngle, handleRadarPointClick)
+    }
+  }, [showBaseline, filteredSeries, filteredAngle, handleRadarPointClick])
 
   if (clusterChartLoading) {
     return (
@@ -74,10 +89,7 @@ const LogAnalysisRadarChart: React.FC<LogAnalysisRadarChartProps> = ({
   } else {
     return (
       <>
-        <HighchartsReact
-          highcharts={Highcharts}
-          options={getLogAnalysisSpiderChartOptions(filteredSeries, filteredAngle, handleRadarPointClick)}
-        />
+        <HighchartsReact highcharts={Highcharts} options={highchartsConfigOptions} />
         <MultiRangeSlider min={0} max={360} step={30} onChange={handleAngleChange} />
         <Layout.Horizontal>
           <Icon margin={{ right: 'small' }} name="main-issue" color={Color.PRIMARY_7} />

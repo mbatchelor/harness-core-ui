@@ -8,7 +8,7 @@
 import React from 'react'
 import { Card, Container, HarnessDocTooltip, Layout } from '@wings-software/uicore'
 import { produce } from 'immer'
-import { set, isEmpty } from 'lodash-es'
+import { set, isEmpty, unset } from 'lodash-es'
 import { StepActions } from '@common/constants/TrackingConstants'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
@@ -76,6 +76,9 @@ const DeployAdvancedSpecifications: React.FC<AdvancedSpecifications> = ({ childr
                   if (pipelineStage && pipelineStage.stage) {
                     const stageData = produce(pipelineStage, draft => {
                       set(draft, 'stage.delegateSelectors', valuePassed)
+                      if (isEmpty(valuePassed) || valuePassed[0] === '') {
+                        unset(draft.stage, 'delegateSelectors')
+                      }
                     })
                     /* istanbul ignore else */
                     if (stageData.stage) {

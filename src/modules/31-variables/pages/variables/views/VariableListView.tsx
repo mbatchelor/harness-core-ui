@@ -18,6 +18,7 @@ import {
   useDeleteVariable,
   VariableResponseDTO
 } from 'services/cd-ng'
+import DescriptionPopover from '@common/components/DescriptionPopover.tsx/DescriptionPopover'
 import { getValueFromVariableAndValidationType } from '@variables/utils/VariablesUtils'
 
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
@@ -42,10 +43,12 @@ export const RenderColumnVariable: Renderer<CellProps<VariableResponseDTO>> = ({
   return (
     <Layout.Horizontal>
       <Layout.Vertical>
-        <Text color={Color.BLACK} lineClamp={1} width={230}>
-          {data.name}
-        </Text>
-
+        <Layout.Horizontal width={230}>
+          <Text color={Color.BLACK} lineClamp={1}>
+            {data.name}
+          </Text>
+          {data.description && <DescriptionPopover text={data.description} />}
+        </Layout.Horizontal>
         <Text color={Color.GREY_600} font={{ variation: FontVariation.SMALL }} width={230} lineClamp={1}>
           {`${getString('common.ID')}: ${data.identifier}`}
         </Text>
@@ -75,7 +78,7 @@ export const RenderColumnValue: Renderer<CellProps<VariableResponseDTO>> = ({ ro
   const data = row.original.variable
 
   return (
-    <Text color={Color.GREY_600} font={{ variation: FontVariation.FORM_INPUT_TEXT }}>
+    <Text color={Color.GREY_600} font={{ variation: FontVariation.FORM_INPUT_TEXT }} lineClamp={1}>
       {getValueFromVariableAndValidationType(data)}
     </Text>
   )

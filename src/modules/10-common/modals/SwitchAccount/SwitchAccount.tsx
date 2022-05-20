@@ -34,7 +34,7 @@ import { useStrings } from 'framework/strings'
 import routes from '@common/RouteDefinitions'
 import type { UseGetMockData } from '@common/utils/testUtils'
 import { getLoginPageURL } from 'framework/utils/SessionUtils'
-import AppStorage from 'framework/utils/AppStorage'
+import SecureStorage from 'framework/utils/SecureStorage'
 import css from './SwitchAccount.module.scss'
 
 interface SwitchAccountProps {
@@ -95,7 +95,7 @@ const SwitchAccount: React.FC<SwitchAccountProps> = ({ searchString = '', mock }
             search: `?returnUrl=${encodeURIComponent(getLoginPageURL({ returnUrl }))}`
           })
         } else if (response.resource) {
-          AppStorage.set('acctId', account.uuid)
+          SecureStorage.set('acctId', account.uuid)
           // this needs to be a server-redirect to support cluster isolation
           window.location.href = window.location.pathname
         } else {

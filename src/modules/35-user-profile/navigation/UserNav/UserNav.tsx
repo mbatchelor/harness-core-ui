@@ -15,7 +15,7 @@ import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { SidebarLink } from '@common/navigation/SideNav/SideNav'
 import { useStrings } from 'framework/strings'
 import { useLogout1 } from 'services/portal'
-import AppStorage from 'framework/utils/AppStorage'
+import SecureStorage from 'framework/utils/SecureStorage'
 import { useToaster } from '@common/exports'
 import { getLoginPageURL } from 'framework/utils/SessionUtils'
 import { returnUrlParams } from '@common/utils/routeUtils'
@@ -25,7 +25,7 @@ export default function UserNav(): React.ReactElement {
   const { accountId } = useParams<AccountPathProps>()
   const history = useHistory()
   const { mutate: logout } = useLogout1({
-    userId: AppStorage.get('uuid'),
+    userId: SecureStorage.get('uuid') as string,
     requestOptions: { headers: { 'content-type': 'application/json' } }
   })
   const { getString } = useStrings()
@@ -36,7 +36,7 @@ export default function UserNav(): React.ReactElement {
       // BE is not publishing correct types for logout response yet
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const response: any = await logout()
-      AppStorage.clear()
+      SecureStorage.clear()
       if (response?.resource?.logoutUrl) {
         // if BE returns a logoutUrl, redirect there. Used by some customers in onprem
         window.location.href = response.resource.logoutUrl

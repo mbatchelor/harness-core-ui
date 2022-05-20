@@ -12,3 +12,8 @@ export interface SLOTargetAndBudgetPolicyProps {
   formikProps: FormikProps<SLOForm>
   children: JSX.Element
 }
+
+export interface NotificationToToggle {
+  identifier: string
+  enabled: boolean
+}

@@ -18,7 +18,8 @@ import {
   StackedSummaryInterface,
   StackedSummaryTable,
   handleZeroOrInfinityTrend,
-  renderTrend
+  renderTrend,
+  IconName
 } from '@wings-software/uicore'
 import { useParams } from 'react-router-dom'
 import { FontVariation, Color } from '@harness/design-system'
@@ -31,7 +32,7 @@ import {
   TimeRangeToDays,
   DashboardTimeRange
 } from '@common/factories/LandingDashboardContext'
-import { String, useStrings } from 'framework/strings'
+import { String, StringKeys, useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import {
   ChartType,
@@ -324,16 +325,33 @@ function LandingDashboardDeploymentsNoContentWidget(
   return <></>
 }
 
+const renderServiceTooltipRow = (iconName: IconName, label: StringKeys, value?: string) => {
+  if (!value) {
+    return <></>
+  }
+  return (
+    <Layout.Horizontal padding={{ top: 'small' }} flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
+      <Icon name={iconName} color={Color.GREY_300} margin={{ right: 'xsmall' }} />
+      <Layout.Horizontal className={css.serviceTooltipRowLabel}>
+        <Text inline color={Color.GREY_300}>
+          <String stringID={label} />
+        </Text>
+        <Text color={Color.GREY_300} margin={{ right: 'xsmall' }}>
+          :
+        </Text>
+      </Layout.Horizontal>
+
+      <Text color={Color.WHITE}>{value}</Text>
+    </Layout.Horizontal>
+  )
+}
+
 const renderTooltipForServiceLabel = (service: ActiveServiceInfo): JSX.Element => {
   return (
     <Layout.Vertical padding="medium" spacing="small">
       <Text color={Color.WHITE}>{service?.serviceInfo?.serviceName ?? ''}</Text>
-      <Text icon="nav-project" iconProps={{ color: Color.GREY_300 }} color={Color.GREY_300}>
-        {service?.projectInfo?.projectName ?? ''}
-      </Text>
-      <Text icon="union" iconProps={{ color: Color.GREY_300 }} color={Color.GREY_300}>
-        {service?.orgInfo?.orgName ?? ''}
-      </Text>
+      {renderServiceTooltipRow('nav-project', 'projectLabel', service?.projectInfo?.projectName)}
+      {renderServiceTooltipRow('union', 'common.org', service?.orgInfo?.orgName)}
     </Layout.Vertical>
   )
 }

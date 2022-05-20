@@ -22,7 +22,11 @@ const SaveFlagToGitSubFormModal = ({ title, onSubmit, onClose }: SaveFlagToGitSu
 
   return (
     <Dialog enforceFocus={false} isOpen={true} onClose={onClose} title="">
-      <Container id="save-flag-to-git-modal-body" padding={{ bottom: 'xlarge', left: 'xlarge', right: 'xlarge' }}>
+      <Container
+        id="save-flag-to-git-modal-body"
+        data-testid="save-flag-to-git-modal-body"
+        padding={{ bottom: 'xlarge', left: 'xlarge', right: 'xlarge' }}
+      >
         <SaveFlagToGitSubForm title={title} />
         <Layout.Horizontal spacing="small" style={{ alignItems: 'center' }} padding={{ top: 'xxlarge' }}>
           <Button

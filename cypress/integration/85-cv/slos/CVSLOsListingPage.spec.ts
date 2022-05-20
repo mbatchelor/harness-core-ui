@@ -204,11 +204,11 @@ describe('CVSLOsListingPage', () => {
     cy.contains('span', '"Increase Error Budget by" is required').should('be.visible')
     cy.contains('span', 'Reason is required').should('be.visible')
 
-    cy.fillField('errorBudgetIncrementPercentage', '100')
+    cy.fillField('errorBudgetIncrementMinutes', '100')
     cy.fillField('reason', 'REASON')
 
-    cy.findByTestId('updated-error-budget').should('have.text', '208')
-    cy.findByTestId('updated-remaining-error-budget').should('have.text', '208')
+    cy.findByTestId('updated-error-budget').should('have.text', '204')
+    cy.findByTestId('updated-remaining-error-budget').should('have.text', '204')
     cy.findByTestId('updated-remaining-error-budget-percentage').should('have.text', '100.00')
 
     cy.intercept('POST', resetErrorBudget, { statusCode: 200 })
@@ -241,7 +241,7 @@ describe('CVSLOsListingPage', () => {
 
     cy.contains('p', 'Oops, something went wrong on our end. Please contact Harness Support.').should('be.visible')
 
-    cy.fillField('errorBudgetIncrementPercentage', '100')
+    cy.fillField('errorBudgetIncrementMinutes', '100')
     cy.fillField('reason', 'REASON')
 
     cy.intercept('POST', resetErrorBudget, errorResponse)

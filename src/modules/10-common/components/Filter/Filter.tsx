@@ -113,7 +113,7 @@ const FilterRef = <T, U extends FilterInterface>(props: FilterProps<T, U>, filte
     )
   }
 
-  const { name, filterVisibility, identifier } = initialFilter?.metadata
+  const { name, filterVisibility, identifier } = initialFilter?.metadata || {}
   const isUpdate = (name !== '' && filterVisibility !== undefined) as boolean
 
   return (

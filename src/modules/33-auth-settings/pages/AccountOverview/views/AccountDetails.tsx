@@ -9,7 +9,6 @@ import React from 'react'
 import { Button, ButtonVariation, Container, Layout, Text, PageError, PageSpinner } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
-import { truncate } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { StringsMap } from 'stringTypes'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
@@ -54,7 +53,9 @@ const AccountDetails: React.FC = () => {
     />
   ) : (
     <React.Fragment>
-      <Text color={Color.GREY_800}>{truncate(accountData?.name)}</Text>
+      <Text width={185} lineClamp={1} color={Color.GREY_800}>
+        {accountData?.name}
+      </Text>
       <RbacButton
         variation={ButtonVariation.LINK}
         icon="Edit"

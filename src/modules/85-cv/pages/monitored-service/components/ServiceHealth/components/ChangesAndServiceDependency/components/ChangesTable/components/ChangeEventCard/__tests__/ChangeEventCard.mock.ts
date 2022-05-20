@@ -83,6 +83,30 @@ export const HarnessNextGenMockData = {
   },
   responseMessages: []
 }
+export const HarnessNextGenMockDataWithoutMetadata = {
+  metaData: {
+    pipelinePath: 'https://harness.io'
+  },
+  resource: {
+    id: 'FHj1QjXMTNySJF2mz4d5Bw',
+    accountId: 'kmpySmUISimoRrJL6NL73w',
+    orgIdentifier: 'default',
+    projectIdentifier: 'DevProject',
+    serviceIdentifier: 'service1',
+    monitoredServiceIdentifier: 'monitored_service_identifier',
+    serviceName: 'service1',
+    envIdentifier: 'env1',
+    environmentName: 'env1',
+    name: 'CD Nextgen - service1 - test',
+    changeSourceIdentifier: 'cdNg',
+    eventTime: 1633853633448,
+    metadata: {},
+    category: 'Deployment' as any,
+    type: 'HarnessCDNextGen' as any
+  },
+
+  responseMessages: []
+}
 
 export const HarnessCDMockData = {
   metaData: {},

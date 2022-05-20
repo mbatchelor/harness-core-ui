@@ -5,9 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-export const ProvisionerTypes = {
-  Terraform: 'Terraform',
-  CloudFormation: 'CloudFormation',
-  ARM: 'ARM',
-  Script: 'Script'
+export enum ProvisionerTypes {
+  Terraform = 'Terraform',
+  CloudFormation = 'CloudFormation',
+  ARM = 'ARM',
+  Script = 'Script'
 }

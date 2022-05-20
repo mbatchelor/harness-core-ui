@@ -12,3 +12,30 @@
     }
   }
 }
+
+.sectionSeparator {
+  width: 100%;
+  height: 1px;
+  background: var(--grey-200);
+}
+
+.searchAndFilterWrapper {
+  margin-bottom: var(--spacing-medium) !important;
+  .searchContainer {
+    width: 100%;
+    :global(.bp3-icon) {
+      color: var(--primary-7);
+    }
+
+    input[type='search'] {
+      border-color: transparent;
+    }
+  }
+}
+
+.filterLabel {
+  margin-bottom: var(--spacing-small) !important;
+  &.emptyLabel {
+    height: 16px;
+  }
+}

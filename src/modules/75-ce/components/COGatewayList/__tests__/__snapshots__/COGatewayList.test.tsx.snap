@@ -140,6 +140,30 @@ exports[`Test COGatewayList able to search through the list 1`] = `
       data-name="page-body"
     >
       <div
+        class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-center StyledProps--flex-alignItems-center StyledProps--padding-medium"
+      >
+        <div
+          class="PillToggle--optionBtns modeToggle"
+        >
+          <div
+            class="PillToggle--item PillToggle--selected"
+            data-name="toggle-option-one"
+            role="button"
+            tabindex="0"
+          >
+            ce.co.activeMode
+          </div>
+          <div
+            class="PillToggle--item"
+            data-name="toggle-option-two"
+            role="button"
+            tabindex="0"
+          >
+            ce.co.dryRunMode
+          </div>
+        </div>
+      </div>
+      <div
         class="StyledProps--font StyledProps--main StyledProps--padding-small"
       >
         <div>
@@ -263,6 +287,59 @@ exports[`Test COGatewayList able to search through the list 1`] = `
                 </div>
               </div>
             </div>
+            <div
+              class="Layout--vertical Layout--layout-spacing-huge StyledProps--main StyledProps--padding-small"
+              style="flex: 1;"
+            >
+              <div
+                class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+              >
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-center"
+                >
+                  <img
+                    src="test-file-stub"
+                    width="20"
+                  />
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-variation-h6 StyledProps--color StyledProps--color-grey500"
+                  >
+                    ce.co.reducedEmissions
+                  </p>
+                </div>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-h3"
+                >
+                  <span>
+                    ce.common.emissionUnitHTML
+                  </span>
+                </p>
+              </div>
+              <div
+                class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+              >
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-center"
+                >
+                  <img
+                    src="test-file-stub"
+                    width="20"
+                  />
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-variation-h6 StyledProps--color StyledProps--color-grey500"
+                  >
+                    ce.co.totalEmissions
+                  </p>
+                </div>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-h3 StyledProps--color StyledProps--color-grey500"
+                >
+                  <span>
+                    ce.common.emissionUnitHTML
+                  </span>
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -353,7 +430,7 @@ exports[`Test COGatewayList able to search through the list 1`] = `
             <p
               class="StyledProps--font StyledProps--main"
             >
-              Refresh
+              common.refresh
             </p>
           </div>
           <div
@@ -1892,6 +1969,30 @@ exports[`Test COGatewayList clicking on a row should open info drawer 1`] = `
       data-name="page-body"
     >
       <div
+        class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-center StyledProps--flex-alignItems-center StyledProps--padding-medium"
+      >
+        <div
+          class="PillToggle--optionBtns modeToggle"
+        >
+          <div
+            class="PillToggle--item PillToggle--selected"
+            data-name="toggle-option-one"
+            role="button"
+            tabindex="0"
+          >
+            ce.co.activeMode
+          </div>
+          <div
+            class="PillToggle--item"
+            data-name="toggle-option-two"
+            role="button"
+            tabindex="0"
+          >
+            ce.co.dryRunMode
+          </div>
+        </div>
+      </div>
+      <div
         class="StyledProps--font StyledProps--main StyledProps--padding-small"
       >
         <div>
@@ -2015,6 +2116,59 @@ exports[`Test COGatewayList clicking on a row should open info drawer 1`] = `
                 </div>
               </div>
             </div>
+            <div
+              class="Layout--vertical Layout--layout-spacing-huge StyledProps--main StyledProps--padding-small"
+              style="flex: 1;"
+            >
+              <div
+                class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+              >
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-center"
+                >
+                  <img
+                    src="test-file-stub"
+                    width="20"
+                  />
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-variation-h6 StyledProps--color StyledProps--color-grey500"
+                  >
+                    ce.co.reducedEmissions
+                  </p>
+                </div>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-h3"
+                >
+                  <span>
+                    ce.common.emissionUnitHTML
+                  </span>
+                </p>
+              </div>
+              <div
+                class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+              >
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-center"
+                >
+                  <img
+                    src="test-file-stub"
+                    width="20"
+                  />
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-variation-h6 StyledProps--color StyledProps--color-grey500"
+                  >
+                    ce.co.totalEmissions
+                  </p>
+                </div>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-h3 StyledProps--color StyledProps--color-grey500"
+                >
+                  <span>
+                    ce.common.emissionUnitHTML
+                  </span>
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -2080,7 +2234,7 @@ exports[`Test COGatewayList clicking on a row should open info drawer 1`] = `
             <p
               class="StyledProps--font StyledProps--main"
             >
-              Refresh
+              common.refresh
             </p>
           </div>
           <div
@@ -3619,6 +3773,30 @@ exports[`Test COGatewayList clicking on refresh button refetch all rules 1`] = `
       data-name="page-body"
     >
       <div
+        class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-center StyledProps--flex-alignItems-center StyledProps--padding-medium"
+      >
+        <div
+          class="PillToggle--optionBtns modeToggle"
+        >
+          <div
+            class="PillToggle--item PillToggle--selected"
+            data-name="toggle-option-one"
+            role="button"
+            tabindex="0"
+          >
+            ce.co.activeMode
+          </div>
+          <div
+            class="PillToggle--item"
+            data-name="toggle-option-two"
+            role="button"
+            tabindex="0"
+          >
+            ce.co.dryRunMode
+          </div>
+        </div>
+      </div>
+      <div
         class="StyledProps--font StyledProps--main StyledProps--padding-small"
       >
         <div>
@@ -3742,6 +3920,59 @@ exports[`Test COGatewayList clicking on refresh button refetch all rules 1`] = `
                 </div>
               </div>
             </div>
+            <div
+              class="Layout--vertical Layout--layout-spacing-huge StyledProps--main StyledProps--padding-small"
+              style="flex: 1;"
+            >
+              <div
+                class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+              >
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-center"
+                >
+                  <img
+                    src="test-file-stub"
+                    width="20"
+                  />
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-variation-h6 StyledProps--color StyledProps--color-grey500"
+                  >
+                    ce.co.reducedEmissions
+                  </p>
+                </div>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-h3"
+                >
+                  <span>
+                    ce.common.emissionUnitHTML
+                  </span>
+                </p>
+              </div>
+              <div
+                class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+              >
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-center"
+                >
+                  <img
+                    src="test-file-stub"
+                    width="20"
+                  />
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-variation-h6 StyledProps--color StyledProps--color-grey500"
+                  >
+                    ce.co.totalEmissions
+                  </p>
+                </div>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-h3 StyledProps--color StyledProps--color-grey500"
+                >
+                  <span>
+                    ce.common.emissionUnitHTML
+                  </span>
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -3807,7 +4038,7 @@ exports[`Test COGatewayList clicking on refresh button refetch all rules 1`] = `
             <p
               class="StyledProps--font StyledProps--main"
             >
-              Refresh
+              common.refresh
             </p>
           </div>
           <div
@@ -5751,6 +5982,30 @@ exports[`Test COGatewayList renders without crashing 1`] = `
       data-name="page-body"
     >
       <div
+        class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-center StyledProps--flex-alignItems-center StyledProps--padding-medium"
+      >
+        <div
+          class="PillToggle--optionBtns modeToggle"
+        >
+          <div
+            class="PillToggle--item PillToggle--selected"
+            data-name="toggle-option-one"
+            role="button"
+            tabindex="0"
+          >
+            ce.co.activeMode
+          </div>
+          <div
+            class="PillToggle--item"
+            data-name="toggle-option-two"
+            role="button"
+            tabindex="0"
+          >
+            ce.co.dryRunMode
+          </div>
+        </div>
+      </div>
+      <div
         class="StyledProps--font StyledProps--main StyledProps--padding-small"
       >
         <div>
@@ -5874,6 +6129,59 @@ exports[`Test COGatewayList renders without crashing 1`] = `
                 </div>
               </div>
             </div>
+            <div
+              class="Layout--vertical Layout--layout-spacing-huge StyledProps--main StyledProps--padding-small"
+              style="flex: 1;"
+            >
+              <div
+                class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+              >
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-center"
+                >
+                  <img
+                    src="test-file-stub"
+                    width="20"
+                  />
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-variation-h6 StyledProps--color StyledProps--color-grey500"
+                  >
+                    ce.co.reducedEmissions
+                  </p>
+                </div>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-h3"
+                >
+                  <span>
+                    ce.common.emissionUnitHTML
+                  </span>
+                </p>
+              </div>
+              <div
+                class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+              >
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-center"
+                >
+                  <img
+                    src="test-file-stub"
+                    width="20"
+                  />
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-variation-h6 StyledProps--color StyledProps--color-grey500"
+                  >
+                    ce.co.totalEmissions
+                  </p>
+                </div>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-h3 StyledProps--color StyledProps--color-grey500"
+                >
+                  <span>
+                    ce.common.emissionUnitHTML
+                  </span>
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -5939,7 +6247,7 @@ exports[`Test COGatewayList renders without crashing 1`] = `
             <p
               class="StyledProps--font StyledProps--main"
             >
-              Refresh
+              common.refresh
             </p>
           </div>
           <div

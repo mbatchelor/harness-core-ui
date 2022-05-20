@@ -7,11 +7,13 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly accordion: string
   readonly configCard: string
   readonly dialogStyles: string
   readonly environmentDetailsBody: string
   readonly environmentDetailsHeader: string
   readonly label: string
+  readonly sectionCard: string
   readonly tagsPopover: string
   readonly thumbnailSelect: string
 }

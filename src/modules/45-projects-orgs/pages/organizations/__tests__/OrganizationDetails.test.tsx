@@ -92,7 +92,7 @@ describe('Organization Details', () => {
       screen.getByTestId('location').innerHTML.endsWith(routes.toOrganizations({ accountId: 'testAcc' }))
     ).toBeTruthy()
   })
-  // eslint-disable-next-line jest/no-disabled-tests
+  // eslint-disable-next-line jest/no-disabled-tests, jest/expect-expect
   test.skip('Route Resources', async () => {
     const resources = screen.getByText('resources')
     fireEvent.click(resources)

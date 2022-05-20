@@ -196,9 +196,7 @@ exports[`FeatureFlagsDetailPage FeatureFlagsDetailPage should render data correc
               <p
                 class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
                 style="--text-line-clamp: 1;"
-              >
-                
-              </p>
+              />
             </div>
             <div
               class="StyledProps--font StyledProps--main"
@@ -233,9 +231,7 @@ exports[`FeatureFlagsDetailPage FeatureFlagsDetailPage should render data correc
                       </span>
                       <p
                         class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey900"
-                      >
-                        
-                      </p>
+                      />
                       <div
                         class="StyledProps--font StyledProps--main gitStatusIcon"
                       >

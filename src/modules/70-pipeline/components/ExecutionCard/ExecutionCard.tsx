@@ -17,6 +17,8 @@ import { UserLabel, Duration, TimeAgoPopover } from '@common/exports'
 import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/ExecutionStatusLabel'
 import ExecutionActions from '@pipeline/components/ExecutionActions/ExecutionActions'
 import { String, useStrings } from 'framework/strings'
+import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import routes from '@common/RouteDefinitions'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { usePermission } from '@rbac/hooks/usePermission'
@@ -24,7 +26,7 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ExecutionStatus, isExecutionIgnoreFailed, isExecutionNotStarted } from '@pipeline/utils/statusHelpers'
 import executionFactory from '@pipeline/factories/ExecutionFactory'
-import { hasCDStage, hasCIStage, StageType } from '@pipeline/utils/stageHelpers'
+import { hasCDStage, hasCIStage, hasSTOStage, StageType } from '@pipeline/utils/stageHelpers'
 import { mapTriggerTypeToStringID } from '@pipeline/utils/triggerUtils'
 import GitPopover from '@pipeline/components/GitPopover/GitPopover'
 import { CardVariant } from '@pipeline/utils/constants'
@@ -109,10 +111,13 @@ export default function ExecutionCard(props: ExecutionCardProps): React.ReactEle
   const { orgIdentifier, projectIdentifier, accountId, module } = useParams<PipelineType<ProjectPathProps>>()
   const history = useHistory()
   const { getString } = useStrings()
+  const SECURITY = useFeatureFlag(FeatureFlag.SECURITY)
   const HAS_CD = hasCDStage(pipelineExecution)
   const HAS_CI = hasCIStage(pipelineExecution)
+  const HAS_STO = hasSTOStage(pipelineExecution)
   const cdInfo = executionFactory.getCardInfo(StageType.DEPLOY)
   const ciInfo = executionFactory.getCardInfo(StageType.BUILD)
+  const stoInfo = executionFactory.getCardInfo(StageType.SECURITY)
 
   const [canEdit, canExecute] = usePermission(
     {
@@ -259,6 +264,17 @@ export default function ExecutionCard(props: ExecutionCardProps): React.ReactEle
                   <Icon name={cdInfo.icon} size={20} className={css.moduleIcon} />
                   {React.createElement<ExecutionCardInfoProps>(cdInfo.component, {
                     data: defaultTo(pipelineExecution?.moduleInfo?.cd, {}),
+                    nodeMap: defaultTo(pipelineExecution?.layoutNodeMap, {}),
+                    startingNodeId: defaultTo(pipelineExecution?.startingNodeId, ''),
+                    variant
+                  })}
+                </div>
+              ) : null}
+              {SECURITY && HAS_STO && stoInfo ? (
+                <div className={css.moduleData}>
+                  <Icon name={stoInfo.icon} size={20} className={css.moduleIcon} />
+                  {React.createElement<ExecutionCardInfoProps<PipelineExecutionSummary>>(stoInfo.component, {
+                    data: defaultTo(pipelineExecution, {}),
                     nodeMap: defaultTo(pipelineExecution?.layoutNodeMap, {}),
                     startingNodeId: defaultTo(pipelineExecution?.startingNodeId, ''),
                     variant

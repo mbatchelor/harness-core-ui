@@ -9,8 +9,17 @@
   flex-grow: 1;
   display: flex;
   border-radius: 6px;
+  background: var(--form-bg);
   [class*='StepWizard-'] {
     width: 100%;
+  }
+  .contentContainer {
+    display: flex;
+  }
+  .helpPanelContainer {
+    display: flex;
+    align-items: center;
+    margin-right: var(--spacing-xxlarge);
   }
   :global {
     .bp3-progress-bar {
@@ -322,6 +331,6 @@
 }
 .crossIcon {
   position: absolute;
-  right: var(--spacing-large);
-  top: var(--spacing-large);
+  right: var(--spacing-small);
+  top: var(--spacing-small);
 }

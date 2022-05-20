@@ -6,14 +6,15 @@
  */
 
 import { useParams } from 'react-router-dom'
-import { useToaster } from '@harness/uicore'
 import patch from '@cf/utils/instructions'
-import { PatchFeatureQueryParams, usePatchFeature, Variation } from 'services/cf'
+import { PatchFeatureQueryParams, PatchOperation, usePatchFeature, Variation } from 'services/cf'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import { showToaster } from '@cf/utils/CFUtils'
 import { useStrings } from 'framework/strings'
-import useRBACError from '@rbac/utils/useRBACError/useRBACError'
-import type { ErrorHandlerProps } from '@rbac/utils/utils'
+import { AUTO_COMMIT_MESSAGES } from '@cf/constants/GitSyncConstants'
+import { useFFGitSyncContext } from '@cf/contexts/ff-git-sync-context/FFGitSyncContext'
+import useResponseError from '@cf/hooks/useResponseError'
+import { useGovernance } from '@cf/hooks/useGovernance'
 import {
   FormVariationMap,
   TargetingRuleItemStatus,
@@ -24,6 +25,7 @@ import {
 import { PatchFeatureFlagUtils } from '../utils/PatchFeatureFlagUtils'
 export interface UsePatchFeatureFlagProps {
   featureFlagIdentifier: string
+  featureFlagName: string
   initialValues: TargetingRulesFormValues
   variations: Variation[]
   refetchFlag: () => Promise<unknown>
@@ -36,14 +38,18 @@ interface UsePatchFeatureFlagReturn {
 
 const usePatchFeatureFlag = ({
   featureFlagIdentifier,
+  featureFlagName,
   initialValues,
   refetchFlag
 }: UsePatchFeatureFlagProps): UsePatchFeatureFlagReturn => {
   const { projectIdentifier, orgIdentifier, accountId: accountIdentifier } = useParams<Record<string, string>>()
   const { activeEnvironment: environmentIdentifier } = useActiveEnvironment()
-  const { getRBACErrorMessage } = useRBACError()
-  const { showError } = useToaster()
+  const { handleError: handleGovernanceError, isGovernanceError } = useGovernance()
+
+  const { handleResponseError } = useResponseError()
+
   const { getString } = useStrings()
+  const { saveWithGit } = useFFGitSyncContext()
 
   const { mutate: patchFeature, loading } = usePatchFeature({
     identifier: featureFlagIdentifier as string,
@@ -144,17 +150,30 @@ const usePatchFeatureFlag = ({
         }
       })
 
-    // submit request
-    patch.feature.onPatchAvailable(async data => {
+    const handleSave = async (data: PatchOperation): Promise<void> => {
       try {
-        await patchFeature(data)
+        const response = await patchFeature(data)
+        if (isGovernanceError(response)) {
+          handleGovernanceError(response)
+        }
         patch.feature.reset()
         await refetchFlag()
         showToaster(getString('cf.messages.flagUpdated'))
       } catch (error: unknown) {
         patch.feature.reset()
-        showError(getRBACErrorMessage(error as ErrorHandlerProps))
+        handleResponseError(error)
       }
+    }
+
+    // submit request
+    patch.feature.onPatchAvailable(async formData => {
+      saveWithGit(
+        featureFlagName,
+        featureFlagIdentifier,
+        AUTO_COMMIT_MESSAGES.UPDATED_FLAG_TARGETING,
+        formData,
+        handleSave
+      )
     })
   }
   return {

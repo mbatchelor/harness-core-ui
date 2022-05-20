@@ -16,7 +16,7 @@ import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorRef
 import { SidecarArtifact, useGetBuildDetailsForNexusArtifactWithYaml } from 'services/cd-ng'
 
 import { ArtifactToConnectorMap, ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
-import { repositoryFormat, shouldFetchTagsSource } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
+import { repositoryFormat } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
@@ -26,7 +26,8 @@ import {
   getYamlData,
   isArtifactSourceRuntime,
   isFieldfromTriggerTabDisabled,
-  resetTags
+  resetTags,
+  shouldFetchTagsSource
 } from '../artifactSourceUtils'
 import ArtifactTagRuntimeField from '../ArtifactSourceRuntimeFields/ArtifactTagRuntimeField'
 import css from '../../K8sServiceSpec.module.scss'
@@ -61,7 +62,7 @@ const Content = (props: NexusRenderContent): JSX.Element => {
   const { getString } = useStrings()
   const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')
   const { expressions } = useVariablesExpression()
-  const [lastQueryData, setLastQueryData] = useState({ artifactPaths: '', repository: '' })
+  const [lastQueryData, setLastQueryData] = useState({ connectorRef: '', artifactPaths: '', repository: '' })
   const {
     data: nexusTagsData,
     loading: fetchingTags,
@@ -112,14 +113,20 @@ const Content = (props: NexusRenderContent): JSX.Element => {
 
   const fetchTags = (): void => {
     if (canFetchTags()) {
-      setLastQueryData({ artifactPaths: artifactPathValue, repository: repositoryValue })
+      setLastQueryData({
+        connectorRef: connectorRefValue,
+        artifactPaths: artifactPathValue,
+        repository: repositoryValue
+      })
       refetch()
     }
   }
   const canFetchTags = (): boolean => {
     return !!(
-      (lastQueryData.artifactPaths !== artifactPathValue || lastQueryData.repository !== repositoryValue) &&
-      shouldFetchTagsSource(connectorRefValue, [artifactPathValue, repositoryValue])
+      (lastQueryData.connectorRef != connectorRefValue ||
+        lastQueryData.artifactPaths !== artifactPathValue ||
+        lastQueryData.repository !== repositoryValue) &&
+      shouldFetchTagsSource([connectorRefValue, artifactPathValue, repositoryValue])
     )
   }
 

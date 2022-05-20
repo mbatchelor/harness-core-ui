@@ -60,7 +60,7 @@ export default function DeploymentsHealthCards(props: any) {
     if (data?.data?.healthDeploymentInfo) {
       const ret: any = {}
       if (data?.data?.healthDeploymentInfo?.total) {
-        const { countList, production, nonProduction } = data?.data?.healthDeploymentInfo?.total
+        const { countList, production, nonProduction } = data?.data?.healthDeploymentInfo?.total || {}
         if (countList?.length) {
           ret.totalChartOptions = merge({}, defaultChartOptions, primaryChartOptions, {
             chart: {

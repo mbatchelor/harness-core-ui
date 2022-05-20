@@ -79,10 +79,14 @@ export function DefaultLinkSegmentWidget(props: DefaultLinkSegmentWidgetProps): 
   const [point, setPoint] = React.useState({ x: 0, y: 0 })
 
   React.useEffect(() => {
-    if (pathRef.current) {
-      const totalLength = (pathRef.current.getTotalLength?.() || 0) * 0.5
-      const position = pathRef.current.getPointAtLength?.(totalLength) || { x: 0, y: 0 }
-      setPoint({ x: position.x, y: position.y })
+    try {
+      if (pathRef.current) {
+        const totalLength = (pathRef.current.getTotalLength?.() || 0) * 0.5
+        const position = pathRef.current.getPointAtLength?.(totalLength) || { x: 0, y: 0 }
+        setPoint({ x: position.x, y: position.y })
+      }
+    } catch (_e) {
+      // do nothing
     }
   }, [pathRef])
 

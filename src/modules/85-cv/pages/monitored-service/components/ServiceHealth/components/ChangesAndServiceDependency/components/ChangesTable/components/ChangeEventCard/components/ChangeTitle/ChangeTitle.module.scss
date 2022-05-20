@@ -21,11 +21,27 @@
     // margin-left: var(--spacing-xxxlarge) !important;
     white-space: nowrap !important;
   }
-
+  .redirectButtonPipeline {
+    height: 24px !important;
+    min-width: 124px !important;
+    font-size: x-small !important;
+    margin-left: var(--spacing-xxxlarge) !important;
+    white-space: nowrap !important;
+    align-self: center;
+  }
   .addEllipsis {
     width: 300px;
     overflow-x: hidden;
     white-space: nowrap !important;
     text-overflow: ellipsis;
   }
+}
+
+.horizontalMargin {
+  margin-top: (--spacing-xsmall) !important;
+}
+
+.padding {
+  padding-top: var(--spacing-medium);
+  padding-bottom: var(--spacing-medium);
 }

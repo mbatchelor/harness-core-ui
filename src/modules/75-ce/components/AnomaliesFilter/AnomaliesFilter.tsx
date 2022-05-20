@@ -12,6 +12,8 @@ import { QlceViewFilterOperator } from 'services/ce/services'
 import { allCloudProvidersList } from '@ce/constants'
 import PerspectiveTimeRangePicker from '@ce/components/PerspectiveTimeRangePicker/PerspectiveTimeRangePicker'
 import type { setTimeRangeFn } from '@ce/types'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import css from '../../pages/anomalies-overview/AnomaliesOverviewPage.module.scss'
 
 interface AnomalyFiltersProps {
@@ -26,22 +28,27 @@ interface AnomalyFiltersProps {
 
 const AnomalyFilters: React.FC<AnomalyFiltersProps> = ({ filters, setFilters, timeRange, setTimeRange }) => {
   const { getString } = useStrings()
+  const isDevFeature = useFeatureFlag(FeatureFlag.CCM_DEV_TEST)
 
   return (
     <Layout.Horizontal spacing="large" className={css.header}>
       <Layout.Horizontal spacing="large" style={{ alignItems: 'center' }}></Layout.Horizontal>
       <FlexExpander />
-      <DropDown
-        placeholder={getString('ce.anomalyDetection.filters.groupByCloudProvidersPlaceholder')}
-        filterable={false}
-        onChange={option => {
-          setFilters('CLOUD_PROVIDER', QlceViewFilterOperator.In, option.value)
-        }}
-        addClearBtn={true}
-        value={filters ? filters['CLOUD_PROVIDER']?.value : /* istanbul ignore next */ null}
-        items={allCloudProvidersList}
-      />
-      <Text border={{ right: true, color: 'grey300' }} />
+      {isDevFeature ? (
+        <>
+          <DropDown
+            placeholder={getString('ce.anomalyDetection.filters.groupByCloudProvidersPlaceholder')}
+            filterable={false}
+            onChange={option => {
+              setFilters('CLOUD_PROVIDER', QlceViewFilterOperator.In, option.value)
+            }}
+            addClearBtn={true}
+            value={filters ? filters['CLOUD_PROVIDER']?.value : /* istanbul ignore next */ null}
+            items={allCloudProvidersList}
+          />
+          <Text border={{ right: true, color: 'grey300' }} />
+        </>
+      ) : null}
       <PerspectiveTimeRangePicker timeRange={timeRange} setTimeRange={setTimeRange} />
     </Layout.Horizontal>
   )

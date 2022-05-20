@@ -37,3 +37,54 @@
     flex-grow: 2;
   }
 }
+
+.mainTabPanel {
+  background-color: var(--white);
+  padding: var(--spacing-medium) !important;
+  border-radius: 4px;
+  box-shadow: var(--elevation-2);
+  height: 700px !important;
+  overflow-y: hidden;
+
+  &:global(.bp3-tab-panel[role='tabpanel']) {
+    margin-top: var(--spacing-small) !important;
+    margin-bottom: var(--spacing-medium) !important;
+  }
+
+  &.mainTabPanelLogs {
+    padding-bottom: var(--spacing-huge) !important;
+  }
+}
+
+.metricsLogsTab {
+  position: relative;
+  :global(.bp3-tabs) {
+    :global(.bp3-tab-list[role='tablist']) {
+      background-color: transparent !important;
+      border-bottom: none !important;
+      padding: 0 !important;
+
+      :global(.bp3-tab-indicator) {
+        display: none !important;
+      }
+
+      [aria-selected='true'] {
+        background-color: var(--primary-9) !important;
+        color: var(--white);
+        border-radius: 20px;
+        padding: var(--spacing-xsmall) var(--spacing-large);
+
+        &:hover {
+          color: var(--white) !important;
+        }
+      }
+    }
+  }
+
+  .logsCTAContainer {
+    position: absolute;
+    right: 0;
+    top: var(--spacing-medium);
+    z-index: 20;
+  }
+}

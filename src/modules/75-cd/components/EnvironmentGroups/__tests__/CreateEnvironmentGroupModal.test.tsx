@@ -82,11 +82,14 @@ describe('Create Environment Group Modal', () => {
 
     await waitFor(() =>
       expect(cdNgServices.createEnvironmentGroupPromise).toHaveBeenCalledWith({
-        body: 'environmentGroup:\n  name: Env Group 1\n  identifier: Env_Group_1\n  description: ""\n  tags: {}\n  orgIdentifier: dummy\n  projectIdentifier: dummy\n  envIdentifiers:\n    - Environment_1\n',
-        queryParams: {
-          accountIdentifier: 'dummy',
+        body: {
+          identifier: 'Env_Group_1',
           orgIdentifier: 'dummy',
-          projectIdentifier: 'dummy'
+          projectIdentifier: 'dummy',
+          yaml: 'environmentGroup:\n  name: Env Group 1\n  identifier: Env_Group_1\n  description: ""\n  tags: {}\n  orgIdentifier: dummy\n  projectIdentifier: dummy\n  envIdentifiers:\n    - Environment_1\n'
+        },
+        queryParams: {
+          accountIdentifier: 'dummy'
         },
         requestOptions: {
           headers: {
@@ -127,11 +130,14 @@ describe('Create Environment Group Modal', () => {
 
     await waitFor(() =>
       expect(cdNgServices.createEnvironmentGroupPromise).toHaveBeenCalledWith({
-        body: 'environmentGroup:\n  name: Env Group 1\n  identifier: Env_Group_1\n  description: ""\n  tags: {}\n  orgIdentifier: dummy\n  projectIdentifier: dummy\n  envIdentifiers:\n    - Environment_1\n',
-        queryParams: {
-          accountIdentifier: 'dummy',
+        body: {
+          identifier: 'Env_Group_1',
           orgIdentifier: 'dummy',
-          projectIdentifier: 'dummy'
+          projectIdentifier: 'dummy',
+          yaml: 'environmentGroup:\n  name: Env Group 1\n  identifier: Env_Group_1\n  description: ""\n  tags: {}\n  orgIdentifier: dummy\n  projectIdentifier: dummy\n  envIdentifiers:\n    - Environment_1\n'
+        },
+        queryParams: {
+          accountIdentifier: 'dummy'
         },
         requestOptions: {
           headers: {

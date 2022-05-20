@@ -77,7 +77,11 @@ const MetricsAnalysisContent: React.FC<MetricsAnalysisContentProps> = ({
 
   if (loading) {
     return (
-      <Container flex={{ align: 'center-center' }} className={css.loadingContainer}>
+      <Container
+        flex={{ align: 'center-center' }}
+        className={css.loadingContainer}
+        data-testid="MetricsAnalysis-loading"
+      >
         <Icon name="steps-spinner" color={Color.GREY_400} size={30} />
       </Container>
     )
@@ -96,8 +100,8 @@ const MetricsAnalysisContent: React.FC<MetricsAnalysisContentProps> = ({
   const timeSeriesInfo = generatePointsForTimeSeries(data.resource.content, startTime, endTime)
 
   return (
-    <div className={css.content}>
-      <div>
+    <>
+      <div className={css.content}>
         {timeSeriesInfo.map(({ groupName, metricName, metricDataList, dataSourceType }) => {
           return (
             metricName &&
@@ -122,10 +126,9 @@ const MetricsAnalysisContent: React.FC<MetricsAnalysisContentProps> = ({
         pageCount={totalPages}
         itemCount={totalItems}
         pageIndex={pageIndex}
-        className={css.maxPaginationWidth}
         gotoPage={index => refetch({ queryParams: { ...queryParams, page: index } })}
       />
-    </div>
+    </>
   )
 }
 
@@ -147,7 +150,7 @@ const MetricsAnalysisContainer: React.FC<MetricsAnalysisProps> = ({
           items={metricTypeOptions(getString)}
           className={css.maxDropDownWidth}
           defaultSelectedItem={metricTypeOptions(getString)[1]}
-          onChange={item => setIsAnomalous(item.value === MetricTypes.ANOMALOUS)}
+          /* istanbul ignore next */ onChange={item => setIsAnomalous(item.value === MetricTypes.ANOMALOUS)}
         />
         <HealthSourceDropDown
           verificationType={VerificationType.TIME_SERIES}

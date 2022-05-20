@@ -14,6 +14,7 @@ declare const styles: {
   readonly logAnalysisRow: string
   readonly logsAnalysisFilters: string
   readonly logsTab: string
+  readonly logsTabServiceScreen: string
   readonly noData: string
   readonly radarChartTypeIndicator: string
   readonly tableContent: string

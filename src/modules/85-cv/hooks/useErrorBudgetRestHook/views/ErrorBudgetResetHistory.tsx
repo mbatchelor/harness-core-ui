@@ -50,11 +50,12 @@ const RenderRemainingErrorBudget: Renderer<CellProps<SLOErrorBudgetResetDTO>> = 
 }
 
 const RenderIncreasedErrorBudget: Renderer<CellProps<SLOErrorBudgetResetDTO>> = ({ row }) => {
-  const { errorBudgetIncrementPercentage } = row.original
+  const { getString } = useStrings()
+  const { errorBudgetIncrementMinutes } = row.original
 
   return (
     <Text color={Color.BLACK} font={{ variation: FontVariation.SMALL }}>
-      {errorBudgetIncrementPercentage} %
+      {errorBudgetIncrementMinutes} {getString('cv.minutes')}
     </Text>
   )
 }
@@ -144,9 +145,9 @@ const ErrorBudgetResetHistory: React.FC<ErrorBudgetResetHistoryProps> = ({ servi
             Cell: RenderRemainingErrorBudget
           },
           {
-            Header: getString('cv.increaseWithPercentSign'),
-            id: 'errorBudgetIncrementPercentage',
-            accessor: 'errorBudgetIncrementPercentage',
+            Header: getString('cv.increaseInMinutes'),
+            id: 'errorBudgetIncrementMinutes',
+            accessor: 'errorBudgetIncrementMinutes',
             Cell: RenderIncreasedErrorBudget
           },
           {

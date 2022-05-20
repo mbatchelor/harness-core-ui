@@ -30,7 +30,6 @@ import { Position } from '@blueprintjs/core'
 import { Budget, useGetLastPeriodCost, useGetForecastCostForPeriod } from 'services/ce'
 import formatCost from '@ce/utils/formatCost'
 import CEChart from '@ce/components/CEChart/CEChart'
-import { todayInUTC } from '@ce/utils/momentUtils'
 import { useStrings } from 'framework/strings'
 import { BudgetPeriod } from 'services/ce/services'
 import { useTelemetry } from '@common/hooks/useTelemetry'
@@ -309,7 +308,7 @@ const SetBudgetAmount: React.FC<StepProps<BudgetStepData> & Props> = props => {
   }
 
   const [lastPeriodCostVar, setLastCostPeriodCostVar] = useState({
-    startTime: startTime || get(prevStepData, 'startTime') || Number(todayInUTC().startOf('month').format('x')),
+    startTime: startTime || get(prevStepData, 'startTime') || Number(moment().startOf('month').format('x')),
     period: period || get(prevStepData, 'period') || 'MONTHLY'
   })
 
@@ -396,7 +395,7 @@ const SetBudgetAmount: React.FC<StepProps<BudgetStepData> & Props> = props => {
           type: type || get(prevStepData, 'type') || 'PREVIOUS_PERIOD_SPEND',
           budgetAmount: budgetAmount || get(prevStepData, 'budgetAmount') || 0,
           period: period || get(prevStepData, 'period') || 'MONTHLY',
-          startTime: startTime || get(prevStepData, 'startTime') || Number(todayInUTC().startOf('month').format('x')),
+          startTime: startTime || get(prevStepData, 'startTime') || Number(moment().startOf('month').format('x')),
           growthRate: growthRate || get(prevStepData, 'growthRate') || 0,
           growthRateCheck: !!growthRate || !!get(prevStepData, 'growthRate')
         }}

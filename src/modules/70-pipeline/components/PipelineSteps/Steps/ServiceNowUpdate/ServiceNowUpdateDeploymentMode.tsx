@@ -42,9 +42,7 @@ function FormContent(formContentProps: ServiceNowUpdateDeploymentModeFormContent
     allowableTypes,
     initialValues,
     refetchServiceNowTicketTypes,
-
     fetchingServiceNowTicketTypes,
-
     serviceNowTicketTypesFetchError,
     serviceNowTicketTypesResponse
   } = formContentProps
@@ -67,6 +65,12 @@ function FormContent(formContentProps: ServiceNowUpdateDeploymentModeFormContent
 
   const connectorRefFixedValue = getGenuineValue(
     initialValues.spec?.connectorRef || (inputSetData?.allValues?.spec?.connectorRef as string)
+  )
+  const descriptionFieldIndex = template?.spec?.fields?.findIndex(
+    field => field.name === ServiceNowStaticFields.description
+  )
+  const shortDescriptionFieldIndex = template?.spec?.fields?.findIndex(
+    field => field.name === ServiceNowStaticFields.short_description
   )
   const [serviceNowTicketTypesOptions, setServiceNowTicketTypesOptions] = React.useState<
     ServiceNowTicketTypeSelectOption[]
@@ -187,7 +191,7 @@ function FormContent(formContentProps: ServiceNowUpdateDeploymentModeFormContent
           }}
           label={getString('description')}
           className={css.deploymentViewMedium}
-          name={`${prefix}spec.description`}
+          name={`${prefix}spec.fields[${descriptionFieldIndex}].value`}
           disabled={isApprovalStepFieldDisabled(readonly)}
           placeholder={getString('common.descriptionPlaceholder')}
         />
@@ -202,7 +206,7 @@ function FormContent(formContentProps: ServiceNowUpdateDeploymentModeFormContent
           }}
           label={getString('pipeline.serviceNowCreateStep.shortDescription')}
           className={css.deploymentViewMedium}
-          name={`${prefix}spec.shortDescription`}
+          name={`${prefix}spec.fields[${shortDescriptionFieldIndex}].value`}
           disabled={isApprovalStepFieldDisabled(readonly)}
           placeholder={getString('pipeline.serviceNowCreateStep.shortDescriptionPlaceholder')}
         />

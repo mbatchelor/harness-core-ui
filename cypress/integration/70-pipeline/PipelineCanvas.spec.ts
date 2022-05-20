@@ -230,7 +230,18 @@ describe('GIT SYNC ENABLED', () => {
   })
 })
 
-describe.skip('Execution Stages', () => {
+describe('Execution Stages', () => {
+  const visitExecutionStageWithAssertion = (): void => {
+    cy.visit(pipelineStudioRoute, {
+      timeout: 30000
+    })
+    cy.wait(2000)
+    cy.visitPageAssertion()
+    cy.wait('@inputSetsTemplateCall', { timeout: 30000 })
+    cy.wait('@pipelineDetails', { timeout: 30000 })
+    cy.wait(2000)
+  }
+
   beforeEach(() => {
     cy.on('uncaught:exception', () => {
       // returning false here prevents Cypress from
@@ -250,6 +261,8 @@ describe.skip('Execution Stages', () => {
     cy.intercept('GET', pipelineDetails, { fixture: 'pipeline/api/inputSet/pipelineDetails' }).as('pipelineDetails')
     cy.intercept('POST', applyTemplatesCall, { fixture: 'pipeline/api/inputSet/applyTemplatesCall' })
     cy.intercept('GET', inputSetsCall, { fixture: 'pipeline/api/inputSet/emptyInputSetsList' }).as('emptyInputSetList')
+
+    visitExecutionStageWithAssertion()
   })
 
   const stepFieldSelection = function (stepName: string, resourceName: StepResourceObject[]): void {
@@ -295,7 +308,12 @@ describe.skip('Execution Stages', () => {
       .within(() => {
         cy.get('span[data-icon="zoom-out"]').click()
         cy.get('p[data-name="node-name"]').contains('Add step').click({ force: true })
-        cy.get('[data-testid=addStepPipeline]').should('be.visible').click({ force: true })
+        cy.wait(1000)
+        cy.get('[class*="ExecutionGraph-module_add-step-popover"]', { withinSubject: null })
+          .should('be.visible')
+          .within(() => {
+            cy.contains('span', 'Add Step').should('be.visible').click({ force: true })
+          })
         cy.wait(500)
       })
     cy.wait('@stepLibrary').wait(500)
@@ -316,10 +334,6 @@ describe.skip('Execution Stages', () => {
 
   Object.entries<ValidObject>(stepsData).forEach(([key, value]) => {
     it(`Stage Steps - ${key}`, () => {
-      cy.visit(pipelineStudioRoute, { timeout: 30000 })
-      cy.wait('@inputSetsTemplateCall')
-      cy.wait('@pipelineDetails')
-      cy.wait(2000)
       cy.get(`div[data-testid="pipeline-studio"]`, {
         timeout: 5000
       }).should('be.visible')
@@ -330,7 +344,7 @@ describe.skip('Execution Stages', () => {
   })
 })
 
-describe('ServerlessAwsLambda as deployment type', () => {
+describe.only('ServerlessAwsLambda as deployment type', () => {
   beforeEach(() => {
     cy.on('uncaught:exception', () => {
       // returning false here prevents Cypress from
@@ -362,6 +376,7 @@ describe('ServerlessAwsLambda as deployment type', () => {
 
   it(`fixed values to region and stage in infrastructure tab`, () => {
     cy.visit(pipelineStudioRoute, { timeout: 30000 })
+    cy.visitPageAssertion()
     cy.get(`div[data-testid="pipeline-studio"]`, {
       timeout: 5000
     }).should('be.visible')
@@ -385,6 +400,7 @@ describe('ServerlessAwsLambda as deployment type', () => {
 
   it(`runtime values to region, stage in infrastructure tab`, () => {
     cy.visit(pipelineStudioRoute, { timeout: 30000 })
+    cy.visitPageAssertion()
     cy.get(`div[data-testid="pipeline-studio"]`, {
       timeout: 5000
     }).should('be.visible')
@@ -419,6 +435,7 @@ describe('ServerlessAwsLambda as deployment type', () => {
 
     // Visit Pipeline Studio
     cy.visit(pipelineStudioRoute, { timeout: 30000 })
+    cy.visitPageAssertion()
     cy.get(`div[data-testid="pipeline-studio"]`, {
       timeout: 5000
     }).should('be.visible')
@@ -481,6 +498,7 @@ describe('ServerlessAwsLambda as deployment type', () => {
 
     // Visit Pipeline Studio
     cy.visit(pipelineStudioRoute, { timeout: 30000 })
+    cy.visitPageAssertion()
     cy.get(`div[data-testid="pipeline-studio"]`, {
       timeout: 5000
     }).should('be.visible')
@@ -536,6 +554,7 @@ describe('Input Sets', () => {
   })
 
   it('Input Set Creation & Deletion', () => {
+    cy.visitPageAssertion()
     cy.wait('@emptyInputSetList')
     cy.wait(1000)
     cy.contains('span', '+ New Input Set').should('be.visible')

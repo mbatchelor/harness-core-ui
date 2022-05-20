@@ -10,7 +10,7 @@ import { render, waitFor, screen, fireEvent } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as cvService from 'services/cv'
 import { LogAnalysisRow } from '../LogAnalysisRow'
-import { mockedLogAnalysisData, mockLogsCall } from './LogAnalysisRow.mocks'
+import { mockedLogAnalysisData, mockLogsCall, mockServicePageLogsCall } from './LogAnalysisRow.mocks'
 import type { LogAnalysisRowData, LogAnalysisRowProps } from '../LogAnalysisRow.types'
 import * as utils from '../LogAnalysisRow.utils'
 
@@ -31,12 +31,20 @@ const WrapperComponent = (props: LogAnalysisRowProps): JSX.Element => {
 }
 
 const fetchLogsAnalysisData = jest.fn()
+const fetchLogsAnalysisDataForServicePage = jest.fn()
 
 jest.spyOn(cvService, 'useGetVerifyStepDeploymentLogAnalysisRadarChartResult').mockReturnValue({
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   data: mockLogsCall,
   refetch: fetchLogsAnalysisData
+})
+
+jest.spyOn(cvService, 'useGetAllRadarChartLogsData').mockReturnValue({
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  data: mockServicePageLogsCall,
+  refetch: fetchLogsAnalysisDataForServicePage
 })
 
 describe('Unit tests for LogAnalysisRow', () => {
@@ -113,6 +121,36 @@ describe('Unit tests for LogAnalysisRow', () => {
     expect(fetchLogsAnalysisData).toHaveBeenCalledWith({
       queryParams: { accountId: '1234_accountId', clusterId: 'def' }
     })
+    expect(screen.queryByTestId('LogAnalysis_detailsDrawer')).toBeInTheDocument()
+  })
+
+  test('should make service page API call to fetch logs data if the data is not already present', () => {
+    const resetSelectedLog = jest.fn()
+
+    const props = {
+      ...initialProps,
+      startTime: 33,
+      endTime: 6786,
+      monitoredServiceIdentifier: 'sdfs',
+      isServicePage: true,
+      selectedLog: 'tyu',
+      resetSelectedLog
+    }
+
+    render(<WrapperComponent {...props} />)
+
+    expect(fetchLogsAnalysisDataForServicePage).toHaveBeenCalledWith({
+      queryParams: {
+        accountId: '1234_accountId',
+        clusterId: 'tyu',
+        endTime: 6786,
+        monitoredServiceIdentifier: 'sdfs',
+        startTime: 33,
+        orgIdentifier: '1234_ORG',
+        projectIdentifier: '1234_project'
+      }
+    })
+
     expect(screen.queryByTestId('LogAnalysis_detailsDrawer')).toBeInTheDocument()
   })
 })

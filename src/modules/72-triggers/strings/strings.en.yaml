@@ -34,6 +34,7 @@ cannotParseTriggersData: 'Cannot parse trigger data'
 cannotParseTriggersYaml: 'Cannot parse trigger YAML'
 cannotParseInputYaml: 'Cannot parse inputYaml in trigger YAML'
 cannotParseInputValues: 'Cannot parse pipeline input values'
+updateTriggerDetails: 'Your trigger has been overwritten because you have updated your pipeline. You may go to Pipeline Input and update your trigger.'
 validation:
   triggerName: 'Trigger Name is required.'
   identifier: '{{$.validation.identifierRequired}}'

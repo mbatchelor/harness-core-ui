@@ -7,13 +7,13 @@
 
 import type React from 'react'
 import type {
-  DeployServiceProps,
-  NewEditServiceModalProps
-} from '@cd/components/PipelineSteps/DeployServiceStep/DeployServiceStep'
-import type {
   DeployEnvironmentProps,
   NewEditEnvironmentModalProps
 } from '@cd/components/PipelineSteps/DeployEnvStep/DeployEnvStep'
+import type {
+  DeployServiceProps,
+  NewEditServiceModalProps
+} from '@cd/components/PipelineSteps/DeployServiceStep/DeployServiceInterface'
 
 export interface GitOpsCustomMicroFrontendProps {
   customComponents: {

@@ -13,6 +13,7 @@ declare const styles: {
   readonly logClusterNoDataImage: string
   readonly logsAnalysisFilters: string
   readonly logsAnalysisNoData: string
+  readonly logsAnalysisNoDataServicePage: string
   readonly noData: string
   readonly noDataContainer: string
 }

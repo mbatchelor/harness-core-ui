@@ -15,7 +15,6 @@ import { returnUrlParams } from '@common/utils/routeUtils'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import AppErrorBoundary from 'framework/utils/AppErrorBoundary/AppErrorBoundary'
 import { useStrings } from 'framework/strings'
-import AppStorage from 'framework/utils/AppStorage'
 import { getLoginPageURL } from 'framework/utils/SessionUtils'
 import { GitSyncStoreProvider, GitSyncStoreContext, useGitSyncStore } from 'framework/GitRepoStore/GitSyncStoreContext'
 import { AppStoreContext, useAppStore } from 'framework/AppStore/AppStoreContext'
@@ -26,6 +25,7 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useGetSchemaYaml } from 'services/pipeline-ng'
 import { useGetListOfBranchesWithStatus } from 'services/cd-ng'
 import SessionToken from 'framework/utils/SessionToken'
+import { global401HandlerUtils } from '@common/utils/global401HandlerUtils'
 
 // Due to some typing complexity, governance/App is lazily imported
 // from a .js file for now
@@ -50,11 +50,7 @@ export const GovernanceRemoteComponentMounter = props => {
           baseRoutePath={path}
           accountId={params.accountId}
           on401={() => {
-            AppStorage.clear()
-            history.push({
-              pathname: routes.toRedirect(),
-              search: returnUrlParams(getLoginPageURL({ returnUrl: window.location.href }))
-            })
+            global401HandlerUtils(history)
           }}
           hooks={{
             usePermission,

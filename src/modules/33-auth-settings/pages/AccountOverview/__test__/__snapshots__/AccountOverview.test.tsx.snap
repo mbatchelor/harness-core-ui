@@ -37,7 +37,8 @@ exports[`Account Overview Page Rendering should render properly 1`] = `
           common.accountName
         </p>
         <p
-          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey800"
+          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey800"
+          style="--text-line-clamp: 1; width: 185px;"
         >
           account name
         </p>

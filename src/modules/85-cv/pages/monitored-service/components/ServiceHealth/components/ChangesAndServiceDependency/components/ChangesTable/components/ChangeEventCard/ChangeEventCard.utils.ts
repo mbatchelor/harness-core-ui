@@ -49,12 +49,15 @@ export const createChangeInfoData = (metadata: ChangeEventMetadata | undefined) 
 }
 
 export const createChangeTitleData = (resource: CustomChangeEventDTO | undefined) => {
-  const { name, id = '', type, metadata } = resource || {}
+  const { name, id = '', type, metadata, serviceIdentifier, envIdentifier } = resource || {}
   return {
     name,
     type,
     executionId: id,
-    url: metadata?.pipelinePath
+    url: metadata?.pipelinePath,
+    serviceIdentifier,
+    envIdentifier,
+    status: metadata?.status
   }
 }
 

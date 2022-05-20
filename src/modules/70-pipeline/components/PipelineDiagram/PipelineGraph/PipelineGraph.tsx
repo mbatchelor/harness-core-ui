@@ -68,8 +68,8 @@ function PipelineGraph({
   graphLinkClassname
 }: PipelineGraphProps): React.ReactElement {
   const [svgPath, setSvgPath] = useState<SVGPathRecord[]>([])
-  const [isLoading, setLoading] = useState<boolean>(false)
-  const [resetScale, setScaleReset] = useState<null | number>(null)
+
+  const [shouldDelayRender, setDelayRender] = useState<boolean>(false)
   const [treeRectangle, setTreeRectangle] = useState<DOMRect | void>()
   const [state, setState] = useState<PipelineGraphState[]>(data)
   const [graphScale, setGraphScale] = useState(INITIAL_ZOOM_LEVEL)
@@ -96,28 +96,21 @@ function PipelineGraph({
     const rectBoundary = treeContainer?.getBoundingClientRect()
     setTreeRectangle(rectBoundary)
   }
-
   useLayoutEffect(() => {
     setState(data)
   }, [treeRectangle, data])
 
   useLayoutEffect(() => {
-    redrawSVGLinks()
-  }, [state])
+    shouldDelayRender ? renderSVGLinksDelayed() : redrawSVGLinks()
+  }, [state, graphScale])
 
   const redrawSVGLinks = (): void => {
     setSVGLinks()
   }
 
-  React.useEffect(() => {
-    if (resetScale !== null) {
-      setTimeout(() => {
-        setGraphScale(resetScale)
-        setLoading(false)
-      }, 500)
-      setScaleReset(null)
-    }
-  }, [resetScale])
+  const renderSVGLinksDelayed = (): void => {
+    setTimeout(redrawSVGLinks, 300)
+  }
 
   const setSVGLinks = (): void => {
     const lastNode = state?.[state?.length - 1]
@@ -152,22 +145,35 @@ function PipelineGraph({
   }, [])
 
   const handleScaleToFit = (): void => {
-    setGraphScale(getScaleToFitValue(canvasRef.current as unknown as HTMLElement))
+    setPosition(DEFAULT_POSITION)
+
+    setGraphScale(
+      getScaleToFitValue(
+        canvasRef.current as unknown as HTMLElement,
+        document.querySelector(parentSelector as string) as HTMLElement,
+        DEFAULT_POSITION.x,
+        DEFAULT_POSITION.y
+      )
+    )
+    setDelayRender(true)
   }
   const onDrag = (_e: DraggableEvent, dragData: DraggableData): void => {
+    if (position.x === dragData.x && position.y == dragData.y) {
+      return
+    }
     setPosition({ x: dragData.x, y: dragData.y })
     setDragging(false)
+    redrawSVGLinks()
   }
   const resetGraphState = (): void => {
     setGraphScale(INITIAL_ZOOM_LEVEL)
     setPosition(DEFAULT_POSITION)
   }
-  const Loader = loaderComponent
   return (
     <GraphConfigStore.Provider
       value={{
         graphScale,
-        isLoading,
+
         showEndNode,
         parentSelector,
         loaderComponent,
@@ -180,7 +186,6 @@ function PipelineGraph({
         graphLinkClassname
       }}
     >
-      {isLoading && Loader && <Loader />}
       <div id="draggable-parent" className={css.draggableParent} ref={draggableRef}>
         <Draggable
           scale={graphScale}

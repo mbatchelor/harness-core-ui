@@ -186,8 +186,8 @@ resourceGroup:
   confirmDeleteTitle: 'Delete Resource Group'
   deletedMessage: 'Resource Group {{name}} deleted'
   limitAccess: 'To limit access to specific set of {{name}}, add them as a list.'
+  resourceFilterSelection: In this scope, users get access to all resources within a resource type selected.
   selectResourceGroup: 'Select Resource Group'
-  add: '+ Add {{name}}'
   all: 'All {{name}}'
   noResourceGroupTypes: 'No Resource Group types available'
   builtInResourceGroup: 'Built in resource-group'
@@ -228,3 +228,15 @@ scopeItems:
   projectOnly: Project only
   accountAll: All (including all Organizations and Projects)
   orgAll: All (including all Projects)
+  specificOrgsAndProjects: Specified Organizations (and their Projects)
+  specificProjects: Specified Projects
+  allProjects: All Projects
+resourceScope:
+  label: Resource Scope
+  select: Select Resource Scope
+  selectOrg: Select Organization
+  selectOrgsandProjects: + Add Organization (and its Projects)
+  includeAccResources: Include Account-level Resources
+  includeOrgResources: Include Organization-level Resources
+  includeProjResources: Include Project-level Resources
+  noProjects: No Projects

@@ -189,7 +189,7 @@
     height: 14px !important;
     padding: 0 !important;
     align-items: center;
-    z-index: 1;
+    z-index: 100;
     cursor: pointer;
     &::after {
       content: '';
@@ -300,11 +300,11 @@
     top: 68px !important;
   }
   &.diamondStageLeft {
-    left: -9px !important;
+    left: -20px !important;
     top: 9px !important;
   }
   &.diamondStep {
-    left: -9px !important;
+    left: -20px !important;
     top: 22px !important;
   }
 }
@@ -331,10 +331,11 @@
     top: 68px !important;
   }
   &.diamondStageRight {
-    right: -9px !important;
+    right: -20px !important;
     top: 9px !important;
   }
   &.diamondStep {
+    right: -20px !important;
     top: 22px !important;
   }
 }
@@ -422,5 +423,5 @@
 }
 .render-popover {
   min-width: 140px;
-  z-index: 100 !important;
+  z-index: 3 !important;
 }

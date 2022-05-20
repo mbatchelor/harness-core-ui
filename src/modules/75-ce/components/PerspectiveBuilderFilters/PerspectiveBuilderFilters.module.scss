@@ -19,10 +19,12 @@
   background-color: var(--white);
   z-index: 2;
 
+  .bottomPadding {
+    padding-bottom: var(--spacing-small);
+  }
+
   .filters {
     display: grid;
-    width: 100%;
-    align-items: center;
 
     &.withAndOperation {
       grid-template-columns: 1fr 43px;
@@ -50,6 +52,6 @@
 }
 
 .andOperator {
-  margin: 0px var(--spacing-small) !important;
+  margin: 0 var(--spacing-small) 0 var(--spacing-xsmall) !important;
   color: var(--blue-500);
 }

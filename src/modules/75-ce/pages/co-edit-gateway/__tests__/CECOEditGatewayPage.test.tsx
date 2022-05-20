@@ -175,6 +175,11 @@ const testParams = { accountId: 'accountId', orgIdentifier: 'orgIdentifier', pro
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
+jest.mock('@common/hooks/useFeatureFlag', () => ({
+  useFeatureFlag: jest.fn(() => true),
+  useFeatureFlags: jest.fn(() => ({}))
+}))
+
 jest.mock('services/lw', () => ({
   useRouteDetails: jest.fn().mockImplementation(() => ({ data: mockedRouteDetails, loading: false })),
   useAllServiceResources: jest.fn().mockImplementation(() => ({ data: mockedData, loading: false })),
@@ -206,6 +211,9 @@ jest.mock('services/lw', () => ({
     mutate: jest.fn()
   })),
   useDeleteStaticSchedule: jest.fn().mockImplementation(() => ({
+    mutate: jest.fn()
+  })),
+  useToggleRuleMode: jest.fn().mockImplementation(() => ({
     mutate: jest.fn()
   }))
 }))

@@ -9,6 +9,8 @@
   display: flex;
   flex-direction: row;
   min-height: 72px;
+  border-bottom: 1px solid var(--grey-200);
+  margin-bottom: var(--spacing-small);
 
   span[data-icon='spinner'] {
     align-self: center;

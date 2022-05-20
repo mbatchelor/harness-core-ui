@@ -10,7 +10,7 @@ export const calculateErrorBudgetByIncrement = (currentErrorBudget: number, incr
     return '--'
   }
 
-  return Math.floor(currentErrorBudget + currentErrorBudget * (increment / 100)).toLocaleString()
+  return Math.floor(currentErrorBudget + increment).toLocaleString()
 }
 
 export const calculateRemainingErrorBudgetByIncrement = (
@@ -23,8 +23,8 @@ export const calculateRemainingErrorBudgetByIncrement = (
     return '--'
   }
 
-  const updatedErrorBudget = Math.floor(currentErrorBudget + currentErrorBudget * (increment / 100))
-  const updatedRemainingErrorBudget = Math.floor(remainingErrorBudget + currentErrorBudget * (increment / 100))
+  const updatedErrorBudget = Math.floor(currentErrorBudget + increment)
+  const updatedRemainingErrorBudget = Math.floor(remainingErrorBudget + increment)
 
   if (returnInPercentage) {
     return ((updatedRemainingErrorBudget / updatedErrorBudget) * 100).toFixed(2)

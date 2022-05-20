@@ -102,7 +102,11 @@ function K8sValuesManifest({
         paths:
           typeof specValues.paths === 'string'
             ? specValues.paths
-            : specValues.paths?.map((path: string) => ({ path, uuid: uuid(path, nameSpace()) }))
+            : specValues.paths?.map((path: string) => ({ path, uuid: uuid(path, nameSpace()) })),
+        valuesPaths:
+          typeof initialValues?.spec?.valuesPaths === 'string'
+            ? initialValues?.spec?.valuesPaths
+            : initialValues?.spec?.valuesPaths?.map((path: string) => ({ path, uuid: uuid(path, nameSpace()) }))
       }
     }
     return {
@@ -132,7 +136,11 @@ function K8sValuesManifest({
                   ? formData?.paths
                   : formData?.paths?.map((path: { path: string }) => path.path)
             }
-          }
+          },
+          valuesPaths:
+            typeof formData?.valuesPaths === 'string'
+              ? formData?.valuesPaths
+              : formData?.valuesPaths?.map((path: { path: string }) => path.path)
         }
       }
     }
@@ -178,6 +186,16 @@ function K8sValuesManifest({
             then: Yup.string().trim().required(getString('validation.commitId'))
           }),
           paths: Yup.lazy((value): Yup.Schema<unknown> => {
+            if (getMultiTypeFromValue(value as any) === MultiTypeInputType.FIXED) {
+              return Yup.array().of(
+                Yup.object().shape({
+                  path: Yup.string().min(1).required(getString('pipeline.manifestType.pathRequired'))
+                })
+              )
+            }
+            return Yup.string().required(getString('pipeline.manifestType.pathRequired'))
+          }),
+          valuesPaths: Yup.lazy((value): Yup.Schema<unknown> => {
             if (getMultiTypeFromValue(value as any) === MultiTypeInputType.FIXED) {
               return Yup.array().of(
                 Yup.object().shape({
@@ -304,12 +322,26 @@ function K8sValuesManifest({
                       </div>
                     )}
                   </Layout.Horizontal>
-                  <DragnDropPaths
-                    formik={formik}
-                    selectedManifest={selectedManifest}
-                    expressions={expressions}
-                    allowableTypes={allowableTypes}
-                  />
+                  <div className={css.halfWidth}>
+                    <DragnDropPaths
+                      formik={formik}
+                      expressions={expressions}
+                      allowableTypes={allowableTypes}
+                      fieldPath="paths"
+                      pathLabel={getString('fileFolderPathText')}
+                      placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
+                    />
+                    {selectedManifest === ManifestDataType.K8sManifest && (
+                      <DragnDropPaths
+                        formik={formik}
+                        expressions={expressions}
+                        allowableTypes={allowableTypes}
+                        fieldPath="valuesPaths"
+                        pathLabel={getString('pipeline.manifestType.valuesYamlPath')}
+                        placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
+                      />
+                    )}
+                  </div>
 
                   {showAdvancedSection(selectedManifest) && (
                     <Accordion

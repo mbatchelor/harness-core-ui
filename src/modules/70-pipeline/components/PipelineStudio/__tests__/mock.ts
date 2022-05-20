@@ -414,3 +414,125 @@ export const templateWithRuntimeTimeout = {
     }
   ]
 }
+
+export const pipelineTemplateOriginalPipeline = {
+  name: 'ci-codebase-all-fields-runtime',
+  identifier: 'cicodebaseallfieldsruntime',
+  template: {
+    templateRef: 'cicodebaseallfields',
+    versionLabel: 'v1',
+    templateInputs: {
+      properties: {
+        ci: {
+          codebase: {
+            connectorRef: '<+input>',
+            repoName: '<+input>',
+            build: '<+input>',
+            depth: '<+input>',
+            sslVerify: '<+input>',
+            prCloneStrategy: '<+input>',
+            resources: {
+              limits: {
+                memory: '<+input>',
+                cpu: '<+input>'
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  tags: {},
+  projectIdentifier: 'projectIdentifier',
+  orgIdentifier: 'default'
+}
+
+export const pipelineTemplateTemplate = {
+  identifier: 'cicodebaseallfieldsruntime',
+  template: {
+    templateInputs: {
+      properties: {
+        ci: {
+          codebase: {
+            connectorRef: '<+input>',
+            repoName: '<+input>',
+            build: '<+input>',
+            depth: '<+input>',
+            sslVerify: '<+input>',
+            prCloneStrategy: '<+input>',
+            resources: {
+              limits: {
+                memory: '<+input>',
+                cpu: '<+input>'
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+export const pipelineTemplateResolvedPipeline = {
+  name: 'ci-codebase-all-fields-runtime',
+  identifier: 'cicodebaseallfieldsruntime',
+  properties: {
+    ci: {
+      codebase: {
+        connectorRef: '<+input>',
+        repoName: '<+input>',
+        build: '<+input>',
+        depth: '<+input>',
+        sslVerify: '<+input>',
+        prCloneStrategy: '<+input>',
+        resources: {
+          limits: {
+            memory: '<+input>',
+            cpu: '<+input>'
+          }
+        }
+      }
+    }
+  },
+  stages: [
+    {
+      stage: {
+        identifier: 'stage1',
+        type: 'CI',
+        name: 'stage1',
+        spec: {
+          cloneCodebase: true,
+          infrastructure: {
+            type: 'KubernetesDirect',
+            spec: {
+              connectorRef: 'account.CItestK8sConnectorYL1agYpudC',
+              namespace: 'default',
+              automountServiceAccountToken: true,
+              nodeSelector: {}
+            }
+          },
+          execution: {
+            steps: [
+              {
+                step: {
+                  identifier: 'run_step',
+                  type: 'Run',
+                  name: 'run step',
+                  spec: {
+                    connectorRef: 'account.CItestDockerConnectorBNcmp5A5Ml',
+                    image: 'alpine',
+                    shell: 'Sh',
+                    command: "echo 'hi'"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  tags: {},
+  projectIdentifier: 'projectIdentifier',
+  orgIdentifier: 'default'
+}

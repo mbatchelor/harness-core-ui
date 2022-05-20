@@ -23,9 +23,9 @@ import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import usePlanEnforcement from '@cf/hooks/usePlanEnforcement'
 import TargetManagementToolbar from '@cf/components/TargetManagementToolbar/TargetManagementToolbar'
-import { useGitSync } from '@cf/hooks/useGitSync'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { useFFGitSyncContext } from '@cf/contexts/ff-git-sync-context/FFGitSyncContext'
 import { FlagsUseSegment } from './flags-use-segment/FlagsUseSegment'
 import { SegmentSettings } from './segment-settings/SegmentSettings'
 
@@ -130,7 +130,7 @@ export const SegmentDetailPage: React.FC = () => {
 
   useDocumentTitle(label)
 
-  const gitSync = useGitSync()
+  const gitSync = useFFGitSyncContext()
 
   const loading = segmentLoading || envLoading
   const error = segmentError || envError
@@ -189,7 +189,7 @@ export const SegmentDetailPage: React.FC = () => {
       metaData={{ environment: envData?.data?.name as string }}
     >
       <Layout.Vertical height="100%" className={css.gitSyncContainer}>
-        {gitSync.isGitSyncActionsEnabled && <TargetManagementToolbar gitSync={gitSync} />}
+        {gitSync.isGitSyncActionsEnabled && <TargetManagementToolbar />}
         <Layout.Horizontal height="100%">
           <FlagsUseSegment gitSync={gitSync} />
           <SegmentSettings onUpdate={refetch} segment={segment} />

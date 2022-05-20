@@ -4,7 +4,7 @@ import {
   pipelinesExecutionDelegateRoute
 } from '../../support/70-pipeline/constants'
 
-describe.skip('Delegate Selection on Execution View', () => {
+describe('Delegate Selection on Execution View', () => {
   beforeEach(() => {
     cy.on('uncaught:exception', () => {
       // returning false here prevents Cypress from
@@ -25,6 +25,7 @@ describe.skip('Delegate Selection on Execution View', () => {
 
   it('Able to click Delegate list for both task', () => {
     cy.wait(2000)
+    cy.visitPageAssertion('[class^=ExecutionLandingPage-module_header]')
     cy.wait('@selectedExecution', { timeout: 10000 })
     cy.get('span[data-icon="rolling"]').should('be.visible').click({ force: true })
     cy.wait(1000)

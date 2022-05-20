@@ -8,6 +8,7 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
+import { RulesMode } from '@ce/constants'
 import COGatewayCumulativeAnalytics from '../COGatewayCumulativeAnalytics'
 
 const testParams = { accountId: 'accountId', orgIdentifier: 'orgIdentifier', projectIdentifier: 'projectIdentifier' }
@@ -76,7 +77,7 @@ describe('Cumulative Analytics tests', () => {
   test('render component', () => {
     const { container } = render(
       <TestWrapper pathParams={testParams}>
-        <COGatewayCumulativeAnalytics data={mockedResponse} loadingData={false} />
+        <COGatewayCumulativeAnalytics data={mockedResponse} loadingData={false} mode={RulesMode.ACTIVE} />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()

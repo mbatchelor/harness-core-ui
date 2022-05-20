@@ -95,7 +95,7 @@ export function StepPalette({ onSelect, stepsFactory, stepPaletteModuleInfos }: 
     const toShow: StepCategory[] = []
     fromApi?.forEach(stepCat => {
       if (stepCat?.stepCategories?.length) {
-        toShow.push(...stepCat?.stepCategories)
+        toShow.push(...(stepCat?.stepCategories || []))
       }
     })
     if (toShow) {

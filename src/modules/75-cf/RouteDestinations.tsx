@@ -72,6 +72,7 @@ import { OnboardingPage } from './pages/onboarding/OnboardingPage'
 import { OnboardingDetailPage } from './pages/onboarding/OnboardingDetailPage'
 import CFTrialHomePage from './pages/home/CFTrialHomePage'
 import FeatureFlagsLandingPage from './pages/feature-flags/FeatureFlagsLandingPage'
+import { FFGitSyncProvider } from './contexts/ff-git-sync-context/FFGitSyncContext'
 
 featureFactory.registerFeaturesByModule('cf', {
   features: [FeatureIdentifier.MAUS],
@@ -200,7 +201,9 @@ const CFRoutes: FC = () => {
         exact
         pageName={PAGE_NAME.FeatureFlagsLandingPage}
       >
-        <FeatureFlagsLandingPage />
+        <FFGitSyncProvider>
+          <FeatureFlagsLandingPage />
+        </FFGitSyncProvider>
       </RouteWithLayout>
 
       <RouteWithLayout
@@ -214,7 +217,9 @@ const CFRoutes: FC = () => {
         exact
         pageName={PAGE_NAME.FeatureFlagsDetailPage}
       >
-        <FeatureFlagsDetailPage />
+        <FFGitSyncProvider>
+          <FeatureFlagsDetailPage />
+        </FFGitSyncProvider>
       </RouteWithLayout>
 
       <RouteWithLayout
@@ -228,7 +233,7 @@ const CFRoutes: FC = () => {
         exact
         pageName={FFM_1512 ? PAGE_NAME.TargetGroupDetailPage : PAGE_NAME.SegmentDetailPage}
       >
-        {FFM_1512 ? <TargetGroupDetailPage /> : <SegmentDetailPage />}
+        <FFGitSyncProvider> {FFM_1512 ? <TargetGroupDetailPage /> : <SegmentDetailPage />}</FFGitSyncProvider>
       </RouteWithLayout>
 
       <RouteWithLayout
@@ -242,7 +247,7 @@ const CFRoutes: FC = () => {
         exact
         pageName={FFM_1827 ? PAGE_NAME.TargetDetailPage : PAGE_NAME.LegacyTargetDetailPage}
       >
-        {FFM_1827 ? <TargetDetailPage /> : <LegacyTargetDetailPage />}
+        <FFGitSyncProvider> {FFM_1827 ? <TargetDetailPage /> : <LegacyTargetDetailPage />} </FFGitSyncProvider>
       </RouteWithLayout>
 
       <RouteWithLayout
@@ -260,7 +265,9 @@ const CFRoutes: FC = () => {
         exact
         pageName={PAGE_NAME.SegmentsPage}
       >
-        <SegmentsPage />
+        <FFGitSyncProvider>
+          <SegmentsPage />
+        </FFGitSyncProvider>
       </RouteWithLayout>
 
       <RouteWithLayout
@@ -280,7 +287,9 @@ const CFRoutes: FC = () => {
         exact
         pageName={PAGE_NAME.EnvironmentsPage}
       >
-        <EnvironmentsPage />
+        <FFGitSyncProvider>
+          <EnvironmentsPage />
+        </FFGitSyncProvider>
       </RouteWithLayout>
 
       <RouteWithLayout
@@ -290,7 +299,9 @@ const CFRoutes: FC = () => {
         exact
         pageName={PAGE_NAME.EnvironmentDetails}
       >
-        <EnvironmentDetails />
+        <FFGitSyncProvider>
+          <EnvironmentDetails />
+        </FFGitSyncProvider>
       </RouteWithLayout>
 
       <RouteWithLayout

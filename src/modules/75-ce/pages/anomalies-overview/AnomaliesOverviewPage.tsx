@@ -102,13 +102,21 @@ const AnomaliesOverviewPage: React.FC = () => {
     isCloseButtonShown: true
   }
 
-  const { mutate: getAnomaliesList, loading: isListFetching } = useListAnomalies({
+  const {
+    mutate: getAnomaliesList,
+    error: isAnomaliesListError,
+    loading: isListFetching
+  } = useListAnomalies({
     queryParams: {
       accountIdentifier: accountId
     }
   })
 
-  const { mutate: getAnomalySummary, loading: isSummaryDataFetching } = useGetAnomalyWidgetsData({
+  const {
+    mutate: getAnomalySummary,
+    loading: isSummaryDataFetching,
+    error: isAnomaliesSummaryError
+  } = useGetAnomalyWidgetsData({
     queryParams: {
       accountIdentifier: accountId
     }
@@ -269,12 +277,15 @@ const AnomaliesOverviewPage: React.FC = () => {
             cloudProvidersWiseData={cloudProvidersWiseData}
             statusWiseData={statusWiseData}
             allDefaultProviders={(ccmData?.ccmMetaData || {}) as CcmMetaData}
+            isAnomaliesSummaryError={Boolean(isAnomaliesSummaryError)}
           />
           <AnomaliesListGridView
+            searchText={searchText}
             timeRange={timeRange}
             listData={listData}
             sortByObj={sortByObj}
             setSortByObj={setSortByObj}
+            isAnomaliesListError={Boolean(isAnomaliesListError)}
           />
         </Container>
       </PageBody>

@@ -10,7 +10,7 @@ import { useHistory, useParams } from 'react-router-dom'
 import { Layout } from '@wings-software/uicore'
 import { Tabs, Tab } from '@blueprintjs/core'
 import routes from '@common/RouteDefinitions'
-import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { SidebarLink } from '@common/navigation/SideNav/SideNav'
 import { ProjectSelector } from '@projects-orgs/components/ProjectSelector/ProjectSelector'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
@@ -71,6 +71,12 @@ const TabPanel: React.FC<TabPanelProps> = ({ isProjectMode }) => {
   // Telemetry?
 
   const showLinks = !isProjectMode || projectIdentifier
+  const params: ProjectPathProps & ModulePathParams & { accountId: string } = {
+    accountId,
+    projectIdentifier,
+    orgIdentifier,
+    module: 'sto'
+  }
 
   return (
     <Layout.Vertical spacing="small" className={isProjectMode ? css.projectPanel : undefined}>
@@ -93,22 +99,10 @@ const TabPanel: React.FC<TabPanelProps> = ({ isProjectMode }) => {
         <React.Fragment>
           {isProjectMode ? (
             <>
-              <SidebarLink
-                label={getString('overview')}
-                to={routes.toSTOProjectOverview({
-                  accountId,
-                  projectIdentifier,
-                  orgIdentifier
-                })}
-              />
-              <SidebarLink
-                label={getString('stoSteps.targets.testTargets')}
-                to={routes.toSTOProjectTargets({
-                  accountId,
-                  projectIdentifier,
-                  orgIdentifier
-                })}
-              />
+              <SidebarLink label={getString('overview')} to={routes.toSTOProjectOverview(params)} />
+              <SidebarLink label={getString('common.purpose.sto.continuous')} to={routes.toDeployments(params)} />
+              <SidebarLink label={getString('pipelines')} to={routes.toPipelines(params)} />
+              <SidebarLink label={getString('stoSteps.targets.testTargets')} to={routes.toSTOProjectTargets(params)} />
             </>
           ) : (
             <>

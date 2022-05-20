@@ -21,8 +21,6 @@ import type { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineSt
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { StageType } from '@pipeline/utils/stageHelpers'
 import type { StepElementConfig } from 'services/cd-ng'
-import useCurrentModule from '@common/hooks/useCurrentModule'
-import { ModuleName } from 'framework/types/ModuleName'
 import { SaveTemplateButton } from '@pipeline/components/PipelineStudio/SaveTemplateButton/SaveTemplateButton'
 import type { TemplateStepNode } from 'services/pipeline-ng'
 import { TemplateBar } from '@pipeline/components/PipelineStudio/TemplateBar/TemplateBar'
@@ -81,7 +79,6 @@ export function StepCommands(
   const advancedConfRef = React.useRef<FormikProps<unknown> | null>(null)
   const isTemplateStep = !!(step as TemplateStepNode)?.template
   const { module } = useParams<ModulePathParams>()
-  const { isModule } = useCurrentModule()
 
   async function handleTabChange(newTab: StepCommandTabs, prevTab: StepCommandTabs): Promise<void> {
     if (prevTab === StepCommandTabs.StepConfiguration && stepRef.current) {
@@ -217,8 +214,6 @@ export function StepCommands(
     }
   }
 
-  const showAdvancedTab = isModule(ModuleName.CF) ? false : stageType !== StageType.FEATURE
-
   return (
     <div className={cx(css.stepCommand, className)}>
       {stepType === StepType.Template && onUseTemplate && onRemoveTemplate ? (
@@ -238,29 +233,26 @@ export function StepCommands(
               title={isStepGroup ? getString('stepGroupConfiguration') : getString('stepConfiguration')}
               panel={getStepWidgetWithFormikRef()}
             />
-            {showAdvancedTab && (
-              <Tab
-                id={StepCommandTabs.Advanced}
-                title={getString('advancedTitle')}
-                panel={
-                  <AdvancedStepsWithRef
-                    step={step}
-                    isReadonly={isReadonly}
-                    stepsFactory={stepsFactory}
-                    allowableTypes={allowableTypes}
-                    onChange={onChange}
-                    onUpdate={onUpdate}
-                    hiddenPanels={hiddenPanels}
-                    isStepGroup={isStepGroup}
-                    hasStepGroupAncestor={hasStepGroupAncestor}
-                    ref={advancedConfRef}
-                    stageType={stageType}
-                    stepType={stepType}
-                  />
-                }
-              />
-            )}
-
+            <Tab
+              id={StepCommandTabs.Advanced}
+              title={getString('advancedTitle')}
+              panel={
+                <AdvancedStepsWithRef
+                  step={step}
+                  isReadonly={isReadonly}
+                  stepsFactory={stepsFactory}
+                  allowableTypes={allowableTypes}
+                  onChange={onChange}
+                  onUpdate={onUpdate}
+                  hiddenPanels={hiddenPanels}
+                  isStepGroup={isStepGroup}
+                  hasStepGroupAncestor={hasStepGroupAncestor}
+                  ref={advancedConfRef}
+                  stageType={stageType}
+                  stepType={stepType}
+                />
+              }
+            />
             {templatesEnabled &&
             !isStepGroup &&
             viewType === StepCommandsViews.Pipeline &&

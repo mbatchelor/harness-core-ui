@@ -11,3 +11,4 @@ export enum PeriodTypeEnum {
 }
 
 export const dateFormatSLOTarget = 'YYYY-MM-DD'
+export const flexStart = 'flex-start'

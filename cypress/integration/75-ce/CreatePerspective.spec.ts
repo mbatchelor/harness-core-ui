@@ -90,11 +90,8 @@ describe('CCM Budget Creation flow', () => {
     cy.contains('div', 'Common > Region').should('exist')
 
     cy.wait('@gqlFetchPerspectiveFiltersValueQuery')
-    cy.contains('div', 'Select Values').click()
+    cy.get(`.bp3-tag-input-values`).type('us-east-1,us-west-1,sa-east-1').type('{enter}')
 
-    cy.contains('label', 'us-east-1').click()
-    cy.contains('label', 'us-west-1').click()
-    cy.contains('label', 'sa-east-1').click()
     cy.get('body').click(600, 10)
 
     cy.contains('span', 'Next').click()

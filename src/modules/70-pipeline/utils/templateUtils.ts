@@ -5,23 +5,32 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { defaultTo, get, isEmpty, set, unset } from 'lodash-es'
+import { defaultTo, get, isEmpty, isEqual, set, unset } from 'lodash-es'
 import produce from 'immer'
 import { parse } from 'yaml'
 import type { PipelineInfoConfig, StageElementConfig, StepElementConfig, TemplateLinkConfig } from 'services/cd-ng'
 import type { TemplateSummaryResponse } from 'services/template-ng'
-import { getIdentifierFromValue, getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
+import {
+  getIdentifierFromValue,
+  getScopeFromDTO,
+  getScopeFromValue
+} from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import type { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import type { TemplateStepNode } from 'services/pipeline-ng'
 import type { StageType } from '@pipeline/utils/stageHelpers'
 import type { StepOrStepGroupOrTemplateStepData } from '@pipeline/components/PipelineStudio/StepCommands/StepCommandTypes'
 import { generateRandomString } from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraphUtil'
+import {
+  getTemplateListPromise,
+  GetTemplateListQueryParams,
+  ResponsePageTemplateSummaryResponse
+} from 'services/template-ng'
 
 export const TEMPLATE_INPUT_PATH = 'template.templateInputs'
 
 export const getTemplateNameWithLabel = (template?: TemplateSummaryResponse): string => {
-  return `${(template as TemplateSummaryResponse)?.name} (${defaultTo(template?.versionLabel, 'Stable')})`
+  return `${template?.name} (${defaultTo(template?.versionLabel, 'Stable')})`
 }
 
 export const getScopeBasedTemplateRef = (template: TemplateSummaryResponse): string => {
@@ -85,4 +94,68 @@ export const createStepNodeFromTemplate = (template: TemplateSummaryResponse, is
           set(draft, 'template.versionLabel', template.versionLabel)
         }
       })) as unknown as StepElementConfig
+}
+
+export const getTemplateTypesByRef = (
+  params: GetTemplateListQueryParams,
+  templateRefs: string[]
+): Promise<{ [key: string]: string }> => {
+  const scopedTemplates = templateRefs.reduce((a: { [key: string]: string[] }, b) => {
+    const identifier = getIdentifierFromValue(b)
+    const scope = getScopeFromValue(b)
+    if (a[scope]) {
+      a[scope].push(identifier)
+    } else {
+      a[scope] = [identifier]
+    }
+    return a
+  }, {})
+  const promises: Promise<ResponsePageTemplateSummaryResponse>[] = []
+  Object.keys(scopedTemplates).forEach(scope => {
+    promises.push(
+      getTemplateListPromise({
+        body: {
+          filterType: 'Template',
+          templateIdentifiers: scopedTemplates[scope]
+        },
+        queryParams: {
+          ...params,
+          projectIdentifier: scope === Scope.PROJECT ? params.projectIdentifier : undefined,
+          orgIdentifier: scope === Scope.PROJECT || scope === Scope.ORG ? params.orgIdentifier : undefined,
+          repoIdentifier: params.repoIdentifier,
+          branch: params.branch,
+          getDefaultFromOtherRepo: true
+        }
+      })
+    )
+  })
+  return Promise.all(promises)
+    .then(responses => {
+      const templateTypes = {}
+      responses.forEach(response => {
+        response.data?.content?.forEach(item => {
+          set(templateTypes, item.identifier || '', parse(item.yaml || '').template.spec.type)
+        })
+      })
+      return templateTypes
+    })
+    .catch(_ => {
+      return {}
+    })
+}
+
+export const areTemplatesSame = (template1?: TemplateSummaryResponse, template2?: TemplateSummaryResponse): boolean => {
+  return (
+    isEqual(template1?.name, template2?.name) &&
+    isEqual(template1?.identifier, template2?.identifier) &&
+    isEqual(template1?.projectIdentifier, template2?.projectIdentifier) &&
+    isEqual(template1?.orgIdentifier, template2?.orgIdentifier)
+  )
+}
+
+export const areTemplatesEqual = (
+  template1?: TemplateSummaryResponse,
+  template2?: TemplateSummaryResponse
+): boolean => {
+  return areTemplatesSame(template1, template2) && isEqual(template1?.versionLabel, template2?.versionLabel)
 }

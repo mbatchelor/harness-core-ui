@@ -67,7 +67,7 @@ export const getServiceNowCreateEditModePropsWithValues = (): ServiceNowCreateSt
     timeout: '1d',
     spec: {
       useServiceNowTemplate: false,
-      connectorRef: 'c1d1',
+      connectorRef: 'cid1',
       ticketType: 'INCIDENT',
       fieldType: FieldType.ConfigureFields,
       templateName: '<+input>',

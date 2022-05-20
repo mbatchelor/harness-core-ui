@@ -1,0 +1,32 @@
+/*
+ * Copyright 2021 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+@import 'src/modules/85-sto-steps/styles/severity';
+
+.main {
+  @include severityColors();
+}
+
+.label {
+  display: inline-block;
+  height: 18px;
+  padding: 0.2em calc(var(--spacing-3) - 2px) 0 var(--spacing-3);
+  font-size: var(--font-size-small);
+  background-color: var(--grey-100);
+  border-top-left-radius: 0.7em;
+  border-bottom-left-radius: 0.7em;
+}
+
+.value {
+  display: inline-block;
+  height: 18px;
+  padding: 0 var(--spacing-3) 0 calc(var(--spacing-3) - 2px);
+  background-color: var(--grey-200);
+  color: var(--grey-900);
+  border-top-right-radius: 0.7em;
+  border-bottom-right-radius: 0.7em;
+}

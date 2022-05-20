@@ -200,6 +200,7 @@ function FormContent({
           projectIdentifier={projectIdentifier}
           orgIdentifier={orgIdentifier}
           multiTypeProps={{ expressions, allowableTypes }}
+          setRefValue
           type="ServiceNow"
           enableConfigureOptions={false}
           selected={formik?.values?.spec.connectorRef as string}

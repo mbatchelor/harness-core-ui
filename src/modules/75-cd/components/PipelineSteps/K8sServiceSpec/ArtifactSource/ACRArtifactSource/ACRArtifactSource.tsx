@@ -337,9 +337,13 @@ const Content = (props: ACRRenderContent): JSX.Element => {
                 ) => {
                   resetTags(formik, `${path}.artifacts.${artifactPath}.spec.tag`)
                   if (value?.value && type === MultiTypeInputType.FIXED) {
+                    const connectorRef = defaultTo(
+                      get(formik?.values, `${path}.artifacts.${artifactPath}.spec.connectorRef`),
+                      artifact?.spec?.connectorRef
+                    )
                     refetchRegistries({
                       queryParams: {
-                        connectorRef: get(formik?.values, `${path}.artifacts.${artifactPath}.spec.connectorRef`),
+                        connectorRef,
                         accountIdentifier: accountId,
                         orgIdentifier,
                         projectIdentifier,
@@ -389,13 +393,21 @@ const Content = (props: ACRRenderContent): JSX.Element => {
                   resetTags(formik.values, `${path}.artifacts.${artifactPath}.spec.tag`)
 
                   if (value?.value && type === MultiTypeInputType.FIXED) {
+                    const connectorRef = defaultTo(
+                      get(formik?.values, `${path}.artifacts.${artifactPath}.spec.connectorRef`),
+                      artifact?.spec?.connectorRef
+                    )
+                    const subscriptionId = defaultTo(
+                      get(formik.values, `${path}.artifacts.${artifactPath}.spec.subscriptionId`),
+                      artifact?.spec?.subscriptionId
+                    )
                     refetchRepositories({
                       queryParams: {
-                        connectorRef: get(formik.values, `${path}.artifacts.${artifactPath}.spec.connectorRef`),
+                        connectorRef,
                         accountIdentifier: accountId,
                         orgIdentifier,
                         projectIdentifier,
-                        subscriptionId: get(formik.values, `${path}.artifacts.${artifactPath}.spec.subscriptionId`)
+                        subscriptionId
                       },
                       pathParams: {
                         registry: getValue(value)

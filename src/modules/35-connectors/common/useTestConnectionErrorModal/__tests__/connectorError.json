@@ -1,0 +1,30 @@
+{
+  "errorSummary": "Verify if the roleArn and externalId are entered correctly. For more information, refer to the documentation.",
+  "errors": [
+    {
+      "code": "HINT",
+      "level": "INFO",
+      "message": "Verify if the roleArn and externalId are entered correctly. For more information, refer to the documentation.",
+      "exception": null,
+      "failureTypes": []
+    },
+    {
+      "code": "EXPLANATION",
+      "level": "INFO",
+      "message": "Either the arn:aws:iam::890436954479:role/harnessCERole doesn't exist or Harness isn't a trusted entity on it or wrong externalId.",
+      "exception": null,
+      "failureTypes": []
+    },
+    {
+      "code": "INVALID_REQUEST",
+      "level": "ERROR",
+      "message": "Invalid request: User: arn:aws:iam::108817434118:user/qa-data-pipeline-dont-delete is not authorized to perform: sts:AssumeRole on resource: arn:aws:iam::890436954479:role/harnessCERole",
+      "exception": null,
+      "failureTypes": []
+    }
+  ],
+  "lastTestedAt": 0,
+  "status": "FAILURE",
+  "testedAt": 1652355851631,
+  "useErrorHandler": true
+}

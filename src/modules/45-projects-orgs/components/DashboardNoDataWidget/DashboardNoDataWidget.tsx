@@ -8,7 +8,7 @@
 import React from 'react'
 import { Icon, Layout, Text } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
-import type { IconProps } from '@wings-software/uicore/dist/icons/Icon'
+import type { IconProps } from '@harness/icons'
 import { NavLink } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 

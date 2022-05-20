@@ -24,7 +24,7 @@ export function createGCOLogsHealthSourcePayload(setupSource: GCOMonitoringSourc
     }
   }
 
-  for (const entry of setupSource?.mappedServicesAndEnvs?.entries()) {
+  for (const entry of setupSource?.mappedServicesAndEnvs?.entries() || []) {
     const { metricName, query, serviceInstance, messageIdentifier }: MapGCOLogsQueryToService = entry[1]
     gcoLogsPayload.spec.queries.push({
       name: metricName,

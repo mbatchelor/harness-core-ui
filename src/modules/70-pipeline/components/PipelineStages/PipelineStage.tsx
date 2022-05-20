@@ -7,7 +7,7 @@
 
 import React from 'react'
 import type { IconName } from '@wings-software/uicore'
-import type { IconProps } from '@wings-software/uicore/dist/icons/Icon'
+import type { IconProps } from '@harness/icons'
 
 export interface PipelineStageProps<T = Record<string, unknown>> {
   name: string

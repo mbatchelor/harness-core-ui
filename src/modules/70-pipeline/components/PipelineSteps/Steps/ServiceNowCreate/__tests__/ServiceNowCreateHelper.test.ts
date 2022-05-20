@@ -17,7 +17,7 @@ describe('ServiceNow Create process form data tests', () => {
       timeout: '10m',
       type: 'ServiceNowCreate',
       spec: {
-        connectorRef: { label: 'conn', value: 'conn' },
+        connectorRef: 'conn',
         fieldType: FieldType.ConfigureFields,
         useServiceNowTemplate: false,
         ticketType: { label: 'Incident', value: 'INCIDENT', key: 'INCIDENT' },
@@ -173,7 +173,7 @@ describe('ServiceNow Create process form data tests', () => {
       timeout: '10m',
       type: 'ServiceNowCreate',
       spec: {
-        connectorRef: { label: 'conn', value: 'conn' },
+        connectorRef: 'conn',
         fieldType: FieldType.CreateFromTemplate,
         useServiceNowTemplate: true,
         ticketType: { label: 'Incident', value: 'INCIDENT', key: 'INCIDENT' },

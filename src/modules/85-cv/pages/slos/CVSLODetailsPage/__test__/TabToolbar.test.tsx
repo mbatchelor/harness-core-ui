@@ -80,7 +80,7 @@ describe('TabToolbar', () => {
     setFieldValue({
       container: dialogContainer!,
       type: InputTypes.TEXTFIELD,
-      fieldId: 'errorBudgetIncrementPercentage',
+      fieldId: 'errorBudgetIncrementMinutes',
       value: '100'
     })
 
@@ -109,7 +109,7 @@ describe('TabToolbar', () => {
       expect(resetErrorBudget).toBeCalledWith(
         {
           errorBudgetAtReset: 101,
-          errorBudgetIncrementPercentage: 100,
+          errorBudgetIncrementMinutes: 100,
           reason: 'REASON',
           remainingErrorBudgetAtReset: -1124
         },

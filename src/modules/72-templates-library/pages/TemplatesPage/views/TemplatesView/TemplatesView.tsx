@@ -15,7 +15,7 @@ import { TemplatesListView } from '@templates-library/pages/TemplatesPage/views/
 
 export interface TemplatesViewProps {
   data: PageTemplateSummaryResponse
-  selectedIdentifier?: string
+  selectedTemplate?: TemplateSummaryResponse
   gotoPage: (pageNumber: number) => void
   onSelect: (template: TemplateSummaryResponse) => void
   onPreview?: (template: TemplateSummaryResponse) => void

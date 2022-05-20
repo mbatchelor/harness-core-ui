@@ -115,15 +115,6 @@ export const shouldFetchTags = (
   )
 }
 
-export const shouldFetchTagsSource = (connectorRefValue: any, queryParamList: Array<string>): boolean => {
-  return (
-    !isEmpty(connectorRefValue) &&
-    getMultiTypeFromValue(connectorRefValue) === MultiTypeInputType.FIXED &&
-    checkIfQueryParamsisNotEmpty(queryParamList) &&
-    queryParamList.every(query => getMultiTypeFromValue(query) === MultiTypeInputType.FIXED)
-  )
-}
-
 export const getFinalArtifactObj = (
   formData: ImagePathTypes & { connectorId?: string },
   isSideCar: boolean

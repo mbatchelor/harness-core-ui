@@ -44,7 +44,7 @@ const renderComponent = (props: FolderCardProps): RenderResult => {
 }
 
 const openContextMenu = async (element: HTMLElement): Promise<void> => {
-  const folderCard = element.querySelector('.dashboardCard')!
+  const folderCard = element.querySelector('.card')!
   const button = within(folderCard as HTMLElement).getByRole(`button`)!
 
   act(() => {

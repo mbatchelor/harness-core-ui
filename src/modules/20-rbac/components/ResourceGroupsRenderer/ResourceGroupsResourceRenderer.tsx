@@ -24,6 +24,7 @@ const ResourceGroupsResourceRenderer: React.FC<RbacResourceRendererProps> = ({
   const { data, loading } = useMutateAsGet(useGetFilterResourceGroupList, {
     body: { accountIdentifier, orgIdentifier, projectIdentifier, identifierFilter: identifiers },
     queryParams: {
+      accountIdentifier,
       pageIndex: 0,
       pageSize: identifiers.length
     }

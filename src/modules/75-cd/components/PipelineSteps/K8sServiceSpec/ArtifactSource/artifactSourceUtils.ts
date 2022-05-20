@@ -25,7 +25,7 @@ import type {
   NexusBuildDetailsDTO,
   PipelineInfoConfig
 } from 'services/cd-ng'
-import { RegistryHostNames } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
+import { checkIfQueryParamsisNotEmpty, RegistryHostNames } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import type { ArtifactType } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { clearRuntimeInputValue } from '../K8sServiceSpecHelper'
 
@@ -41,6 +41,10 @@ export const resetTags = (formik: FormikValues, tagPath: string): void => {
   if (getMultiTypeFromValue(tagValue) === MultiTypeInputType.FIXED && tagValue?.length) {
     formik.setFieldValue(tagPath, '')
   }
+}
+
+export const shouldFetchTagsSource = (queryParamList: Array<string>): boolean => {
+  return checkIfQueryParamsisNotEmpty(queryParamList)
 }
 
 export const fromPipelineInputTriggerTab = (formik: FormikValues, fromTrigger = false): boolean => {
@@ -104,7 +108,7 @@ export const getPrimaryInitialValues = (
 ): { type: ArtifactType; spec: ArtifactConfig } | undefined => {
   if (stageIdentifier === formik?.values?.stageId) {
     const initialArtifactValue = get(initialValues, `artifacts.${artifactPath}`)
-    const { selectedArtifact } = formik?.values
+    const { selectedArtifact } = formik?.values || {}
 
     if (initialArtifactValue && isEmpty(selectedArtifact.identifier)) {
       /*
@@ -131,7 +135,7 @@ export const getSidecarInitialValues = (
 ): { identifier: string; type: ArtifactType; spec: ArtifactConfig } | undefined => {
   if (stageIdentifier === formik?.values?.stageId) {
     const initialArtifactValue = get(initialValues, `artifacts.${artifactPath}`)
-    const { selectedArtifact } = formik?.values
+    const { selectedArtifact } = formik?.values || {}
 
     if (initialArtifactValue && selectedArtifact.identifier === initialArtifactValue.identifier) {
       /*

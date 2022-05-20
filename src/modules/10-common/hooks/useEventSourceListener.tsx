@@ -43,13 +43,13 @@ interface EventSourceListenerProps<T> {
   lazy?: boolean
 }
 
-export const useEventSourceListener = <T extends unknown>({
+export function useEventSourceListener<T = unknown>({
   url,
   event,
   lazy = false,
   queryParams,
   queryParamStringifyOptions
-}: EventSourceListenerProps<T>): EventSourceListenerReturn => {
+}: EventSourceListenerProps<T>): EventSourceListenerReturn {
   const [init, setInit] = useState<boolean>(false)
   const { accountId } = useParams<AccountPathProps>()
   const history = useHistory()

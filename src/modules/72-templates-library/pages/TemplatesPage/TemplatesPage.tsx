@@ -232,7 +232,7 @@ export default function TemplatesPage(): React.ReactElement {
                   gotoPage={setPage}
                   data={templateData?.data}
                   onSelect={setSelectedTemplate}
-                  selectedIdentifier={selectedTemplate?.identifier}
+                  selectedTemplate={selectedTemplate}
                   onPreview={setSelectedTemplate}
                   onOpenEdit={goToTemplateStudio}
                   onOpenSettings={identifier => {

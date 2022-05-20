@@ -73,7 +73,7 @@ export const DatadogMetricsHealthSourceMock = {
             enabled: false
           },
           riskProfile: {
-            category: 'PERFORMANCE',
+            category: 'Performance',
             metricType: 'INFRA',
             thresholdTypes: []
           }
@@ -115,7 +115,7 @@ const mockMetricDefinitionsMap: Map<string, DatadogMetricInfo> = new Map([
       metricName: 'mock_metric_name',
       metricTags: [],
       query: 'mock_query',
-      riskCategory: 'PERFORMANCE/INFRA',
+      riskCategory: 'Performance/INFRA',
       serviceInstanceIdentifierTag: undefined,
       continuousVerification: false,
       healthScore: false,

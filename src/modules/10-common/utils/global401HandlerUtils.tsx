@@ -7,12 +7,12 @@
 
 import type { History } from 'history'
 import routes from '@common/RouteDefinitions'
-import AppStorage from 'framework/utils/AppStorage'
+import SecureStorage from 'framework/utils/SecureStorage'
 import { getLoginPageURL } from 'framework/utils/SessionUtils'
 import { returnUrlParams } from './routeUtils'
 
 export const global401HandlerUtils = (history: History) => {
-  AppStorage.clear()
+  SecureStorage.clear()
   history.push({
     pathname: routes.toRedirect(),
     search: returnUrlParams(getLoginPageURL({ returnUrl: window.location.href }))

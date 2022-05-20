@@ -4,8 +4,9 @@ import {
   delegatesListAPI,
   connectorsListAPI
 } from '../../support/35-connectors/constants'
+import { pageHeaderClassName } from '../../support/70-pipeline/constants'
 
-describe.skip('Connectors list', () => {
+describe('Connectors list', () => {
   beforeEach(() => {
     cy.on('uncaught:exception', () => {
       // returning false here prevents Cypress from
@@ -23,13 +24,14 @@ describe.skip('Connectors list', () => {
       'connectorsCatalogue'
     )
     cy.wait(1000)
+    cy.visitPageAssertion(pageHeaderClassName)
     cy.wait('@connectorsCatalogue')
 
     cy.contains('p', 'There are no connectors in your project').should('be.visible')
     cy.contains('span', 'Create a Connector').should('be.visible')
     cy.contains('span', 'Create a Connector').click()
 
-    cy.contains('span', 'Cloud Providers').should('be.visible')
+    cy.contains('div', 'Cloud Providers').should('be.visible')
     cy.contains('section', 'GCP').should('be.visible')
     cy.contains('section', 'GCP').click()
 
@@ -83,6 +85,7 @@ describe.skip('Connectors list', () => {
       'connectorsCatalogue'
     )
     cy.wait(1000)
+    cy.visitPageAssertion(pageHeaderClassName)
     cy.wait('@connectorsList')
     cy.wait(1000)
 

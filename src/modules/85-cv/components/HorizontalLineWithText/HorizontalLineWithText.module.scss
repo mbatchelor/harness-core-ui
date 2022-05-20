@@ -1,0 +1,24 @@
+.separator {
+  display: flex;
+  align-items: center;
+}
+
+.separator h2 {
+  padding: 0 2rem; /* creates the space */
+}
+
+.separator .line {
+  flex: 1;
+  height: 1px;
+  background-color: var(--grey-300) !important;
+}
+
+.separatorText {
+  height: 20px;
+  width: 44px;
+  border-radius: var(--spacing-small);
+  background-color: #eff8fe;
+  color: var(--primary-7) !important;
+  text-align: center;
+  border: 1px solid var(--grey-300);
+}

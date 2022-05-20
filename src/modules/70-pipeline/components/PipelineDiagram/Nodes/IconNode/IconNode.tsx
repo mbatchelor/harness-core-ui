@@ -12,6 +12,8 @@ import { Text, IconName, Icon, Button, ButtonVariation } from '@wings-software/u
 import { Color } from '@harness/design-system'
 import { DiagramDrag, DiagramType, Event } from '@pipeline/components/Diagram'
 import { PipelineGraphType, NodeType, BaseReactComponentProps } from '../../types'
+import AddLinkNode from '../DefaultNode/AddLinkNode/AddLinkNode'
+import { getPositionOfAddIcon } from '../utils'
 import cssDefault from '../DefaultNode/DefaultNode.module.scss'
 import css from './IconNode.module.scss'
 
@@ -31,6 +33,19 @@ export function IconNode(props: IconNodeProps): React.ReactElement {
     setVisibilityOfAdd(visibility)
   }
   const isSelectedNode = (): boolean => props.isSelected || props.id === props?.selectedNodeId
+  const onDropEvent = (event: React.DragEvent) => {
+    event.stopPropagation()
+
+    props?.fireEvent?.({
+      type: Event.DropNodeEvent,
+      target: event.target,
+      data: {
+        entityType: DiagramType.Default,
+        node: JSON.parse(event.dataTransfer.getData(DiagramDrag.NodeDrag)),
+        destination: props
+      }
+    })
+  }
   return (
     <div
       className={cx(cssDefault.defaultNode, css.iconNodeContainer)}
@@ -76,27 +91,10 @@ export function IconNode(props: IconNodeProps): React.ReactElement {
           }
         })
       }}
-      onMouseEnter={event => {
-        event.stopPropagation()
-        props?.fireEvent?.({
-          type: Event.MouseEnterNode,
-          target: event.target,
-          data: { ...props }
-        })
-      }}
-      onMouseLeave={event => {
-        event.stopPropagation()
-
-        props?.fireEvent?.({
-          type: Event.MouseLeaveNode,
-          target: event.target,
-          data: { ...props }
-        })
-      }}
     >
       <div
         id={props.id}
-        className={cx(cssDefault.defaultCard, css.iconNode, { [cssDefault.selected]: isSelectedNode() })}
+        className={cx(cssDefault.defaultCard, 'icon-node', css.iconNode, { [cssDefault.selected]: isSelectedNode() })}
         data-nodeid={props.id}
         draggable={!props.readonly}
         onDragStart={event => {
@@ -114,9 +112,28 @@ export function IconNode(props: IconNodeProps): React.ReactElement {
           event.preventDefault()
           event.stopPropagation()
         }}
+        onMouseEnter={event => {
+          event.stopPropagation()
+          props?.fireEvent?.({
+            type: Event.MouseEnterNode,
+            target: event.target,
+            data: { ...props }
+          })
+        }}
+        onMouseLeave={event => {
+          event.stopPropagation()
+
+          props?.fireEvent?.({
+            type: Event.MouseLeaveNode,
+            target: event.target,
+            data: { ...props }
+          })
+        }}
       >
         <div>
-          {props.isInComplete && <Icon className={css.inComplete} size={12} name={'warning-sign'} color="orange500" />}
+          {props.data.isInComplete && (
+            <Icon className={css.inComplete} size={12} name={'warning-sign'} color="orange500" />
+          )}
           {!props.readonly && (
             <Button
               className={cx(cssDefault.closeNode)}
@@ -158,6 +175,8 @@ export function IconNode(props: IconNodeProps): React.ReactElement {
         <CreateNode
           onMouseOver={() => setAddVisibility(true)}
           onMouseLeave={() => setAddVisibility(false)}
+          onDragOver={() => setAddVisibility(true)}
+          onDrop={onDropEvent}
           onClick={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
             event.stopPropagation()
             props?.fireEvent?.({
@@ -186,38 +205,16 @@ export function IconNode(props: IconNodeProps): React.ReactElement {
         />
       ) : null}
       {!props.isParallelNode && !props.readonly && (
-        <div
-          data-linkid={props?.identifier}
-          onClick={event => {
-            event.stopPropagation()
-            props?.fireEvent?.({
-              type: Event.AddLinkClicked,
-              target: event.target,
-              data: {
-                entityType: DiagramType.Link,
-                node: props,
-                prevNodeIdentifier: props?.prevNodeIdentifier,
-                parentIdentifier: props?.parentIdentifier,
-                identifier: props?.identifier
-              }
-            })
-          }}
-          onDragOver={event => {
-            event.stopPropagation()
-            event.preventDefault()
-          }}
-          onDrop={event => {
-            event.stopPropagation()
-            props?.fireEvent?.({
-              type: Event.DropLinkEvent,
-              target: event.target,
-              data: {
-                entityType: DiagramType.Link,
-                node: JSON.parse(event.dataTransfer.getData(DiagramDrag.NodeDrag)),
-                destination: props
-              }
-            })
-          }}
+        <AddLinkNode<IconNodeProps>
+          nextNode={props?.nextNode}
+          style={{ left: getPositionOfAddIcon(props) }}
+          parentIdentifier={props?.parentIdentifier}
+          isParallelNode={props.isParallelNode}
+          readonly={props.readonly}
+          data={props}
+          fireEvent={props?.fireEvent}
+          identifier={props?.identifier}
+          prevNodeIdentifier={props.prevNodeIdentifier as string}
           className={cx(
             cssDefault.addNodeIcon,
             cssDefault.left,
@@ -228,44 +225,21 @@ export function IconNode(props: IconNodeProps): React.ReactElement {
               [cssDefault.stageAddIcon]: props.data.graphType === PipelineGraphType.STAGE_GRAPH
             }
           )}
-        >
-          <Icon name="plus" color={Color.WHITE} />
-        </div>
+        />
       )}
       {(props?.nextNode?.nodeType === NodeType.StepGroupNode || (!props?.nextNode && props?.parentIdentifier)) &&
         !props.isParallelNode && (
-          <div
-            data-linkid={props?.identifier}
-            onClick={event => {
-              event.stopPropagation()
-              props?.fireEvent?.({
-                type: Event.AddLinkClicked,
-                target: event.target,
-                data: {
-                  prevNodeIdentifier: props?.prevNodeIdentifier,
-                  parentIdentifier: props?.parentIdentifier,
-                  entityType: DiagramType.Link,
-                  identifier: props?.identifier,
-                  node: props
-                }
-              })
-            }}
-            onDragOver={event => {
-              event.stopPropagation()
-              event.preventDefault()
-            }}
-            onDrop={event => {
-              event.stopPropagation()
-              props?.fireEvent?.({
-                type: Event.DropLinkEvent,
-                target: event.target,
-                data: {
-                  entityType: DiagramType.Link,
-                  node: JSON.parse(event.dataTransfer.getData(DiagramDrag.NodeDrag)),
-                  destination: props
-                }
-              })
-            }}
+          <AddLinkNode<IconNodeProps>
+            nextNode={props?.nextNode}
+            style={{ right: getPositionOfAddIcon(props, true) }}
+            parentIdentifier={props?.parentIdentifier}
+            isParallelNode={props.isParallelNode}
+            readonly={props.readonly}
+            data={props}
+            fireEvent={props?.fireEvent}
+            identifier={props?.identifier}
+            prevNodeIdentifier={props.prevNodeIdentifier as string}
+            isRightAddIcon={true}
             className={cx(
               cssDefault.addNodeIcon,
               cssDefault.right,
@@ -276,9 +250,7 @@ export function IconNode(props: IconNodeProps): React.ReactElement {
                 [cssDefault.stageAddIcon]: props.data.graphType === PipelineGraphType.STAGE_GRAPH
               }
             )}
-          >
-            <Icon name="plus" color={Color.WHITE} />
-          </div>
+          />
         )}
     </div>
   )

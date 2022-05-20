@@ -6,7 +6,7 @@
  */
 
 import type { IconName } from '@wings-software/uicore'
-import type { IconProps } from '@wings-software/uicore/dist/icons/Icon'
+import type { IconProps } from '@harness/icons'
 import { Connectors } from '@connectors/constants'
 import { StringUtils } from '@common/exports'
 import type { StringKeys } from 'framework/strings'

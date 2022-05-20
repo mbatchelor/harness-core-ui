@@ -40,7 +40,17 @@
     }
   }
 }
-
+.valuesList {
+  margin: 0 36px;
+  width: 93%;
+  .valuesListItem {
+    padding: var(--spacing-small);
+    background-color: var(--grey-100);
+  }
+  .addValuesYaml {
+    padding-left: 0 !important;
+  }
+}
 .addManifest {
   padding: 0px !important;
 }
@@ -84,4 +94,8 @@
 }
 .borderRadius {
   border-radius: 4px;
+}
+
+.addManifestPathBtn {
+  margin: 10px !important;
 }

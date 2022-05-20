@@ -6,8 +6,7 @@
  */
 
 import React, { useCallback } from 'react'
-import { defaultTo } from 'lodash-es'
-import { FieldArray, FieldArrayRenderProps } from 'formik'
+import { FieldArray, FieldArrayRenderProps, FormikValues } from 'formik'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import {
   Layout,
@@ -22,49 +21,30 @@ import {
 
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd'
 import { useStrings } from 'framework/strings'
-import type { StringsMap } from 'framework/strings/StringsContext'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
-import type { ManifestTypes } from '@pipeline/components/ManifestSelection/ManifestInterface'
-import { isServerlessManifestType } from '@pipeline/utils/stageHelpers'
 
-import { ManifestDataType } from './Manifesthelper'
 import css from './ManifestWizardSteps/K8sValuesManifest/ManifestDetails.module.scss'
 
 export interface DragnDropPathsProps {
-  formik: any
-  expressions: any
+  formik: FormikValues
+  expressions: string[]
   allowableTypes: MultiTypeInputType[]
-  selectedManifest?: ManifestTypes | null
-  pathLabel?: string
   allowOnlyOneFilePath?: boolean
+  pathLabel: string
+  fieldPath: string
+  placeholder: string
 }
 
 const defaultValueToReset = [{ path: '', uuid: uuid('', nameSpace()) }]
 
-const getFileFolderPath = (
-  getString: (key: keyof StringsMap, vars?: Record<string, any> | undefined) => string,
-  selectedManifest?: ManifestTypes | null,
-  pathLabel?: string
-): string => {
-  if (pathLabel) {
-    return pathLabel
-  }
-  if (selectedManifest === ManifestDataType.K8sManifest) {
-    return getString('fileFolderPathText')
-  }
-  if (isServerlessManifestType(defaultTo(selectedManifest, null))) {
-    return getString('common.git.folderPath')
-  }
-  return getString('common.git.filePath')
-}
-
 function DragnDropPaths({
   formik,
-  selectedManifest,
   expressions,
   allowableTypes,
   pathLabel,
-  allowOnlyOneFilePath = false
+  fieldPath,
+  placeholder,
+  allowOnlyOneFilePath
 }: DragnDropPathsProps): React.ReactElement {
   const { getString } = useStrings()
   const onDragStart = useCallback((event: React.DragEvent<HTMLDivElement>, index: number) => {
@@ -112,26 +92,26 @@ function DragnDropPaths({
         if (!result.destination) {
           return
         }
-        const res = Array.from(formik.values.paths)
+        const res = Array.from(formik.values[fieldPath])
         const [removed] = res.splice(result.source.index, 1)
         res.splice(result.destination.index, 0, removed)
-        formik.setFieldValue('paths', res as any)
+        formik.setFieldValue(fieldPath, res)
       }}
     >
       <Droppable droppableId="droppable">
         {(provided, _snapshot) => (
-          <div className={css.halfWidth} {...provided.droppableProps} ref={provided.innerRef}>
+          <div {...provided.droppableProps} ref={provided.innerRef}>
             <MultiTypeFieldSelector
               defaultValueToReset={defaultValueToReset}
               allowedTypes={allowableTypes.filter(allowedType => allowedType !== MultiTypeInputType.EXPRESSION)}
-              name={'paths'}
-              label={<Text>{getFileFolderPath(getString, selectedManifest, pathLabel)}</Text>}
+              name={fieldPath}
+              label={<Text>{pathLabel}</Text>}
             >
               <FieldArray
-                name="paths"
+                name={fieldPath}
                 render={arrayHelpers => (
                   <Layout.Vertical>
-                    {formik.values?.paths?.map((draggablepath: { path: string; uuid: string }, index: number) => (
+                    {formik.values?.[fieldPath]?.map((draggablepath: { path: string; uuid: string }, index: number) => (
                       <Draggable key={draggablepath.uuid} draggableId={draggablepath.uuid} index={index}>
                         {providedDrag => (
                           <Layout.Horizontal
@@ -161,12 +141,8 @@ function DragnDropPaths({
                               )}
                               <FormInput.MultiTextInput
                                 label={''}
-                                placeholder={
-                                  selectedManifest === ManifestDataType.K8sManifest
-                                    ? getString('pipeline.manifestType.manifestPathPlaceholder')
-                                    : getString('pipeline.manifestType.pathPlaceholder')
-                                }
-                                name={`paths[${index}].path`}
+                                placeholder={placeholder}
+                                name={`${fieldPath}[${index}].path`}
                                 style={{ width: 275 }}
                                 multiTextInputProps={{
                                   expressions,
@@ -176,7 +152,7 @@ function DragnDropPaths({
                                 }}
                               />
                             </Layout.Horizontal>
-                            {formik.values?.paths?.length > 1 && (
+                            {formik.values?.[fieldPath]?.length > 1 && (
                               <Button minimal icon="main-trash" onClick={() => arrayHelpers.remove(index)} />
                             )}
                           </Layout.Horizontal>

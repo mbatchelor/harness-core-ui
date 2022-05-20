@@ -8,7 +8,7 @@
 import React from 'react'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
+import { TestWrapper } from '@common/utils/testUtils'
 import { LogTypes, MonitoredServiceLogContentProps } from '@cv/hooks/useLogContentHook/useLogContentHook.types'
 import MetricsAndLogs from '../MetricsAndLogs'
 import type { MetricsAndLogsProps } from '../MetricsAndLogs.types'
@@ -54,7 +54,8 @@ describe('Unit tests for MetricsAndLogs', () => {
       serviceIdentifier: 'service-identifier',
       environmentIdentifier: 'env-identifier',
       startTime: 1630594988077,
-      endTime: 1630595011443
+      endTime: 1630595011443,
+      isErrorTrackingEnabled: true
     }
     const { getByTestId } = render(<WrapperComponent {...props} />)
     expect(getByTestId('analysis-view')).toBeTruthy()
@@ -66,36 +67,52 @@ describe('Unit tests for MetricsAndLogs', () => {
       serviceIdentifier: 'service-identifier',
       environmentIdentifier: 'env-identifier',
       startTime: 0,
-      endTime: 0
+      endTime: 0,
+      isErrorTrackingEnabled: true
     }
     const { getByTestId } = render(<WrapperComponent {...props} />)
     expect(getByTestId('analysis-image-view')).toBeTruthy()
   })
 
-  test('should open the LogContent modal and render MonitoredServiceLog with type ApiCallLog by clicking the External Api call link', async () => {
-    render(
-      <TestWrapper>
-        <MetricsAndLogs
-          monitoredServiceIdentifier={'1234'}
-          serviceIdentifier={'service 1'}
-          environmentIdentifier={'env 1'}
-          startTime={0}
-          endTime={0}
-        />
-      </TestWrapper>
-    )
+  test('should open correct dialog when clicking external API button', async () => {
+    const props = {
+      monitoredServiceIdentifier: 'monitored_service_identifier',
+      serviceIdentifier: 'service-identifier',
+      environmentIdentifier: 'env-identifier',
+      startTime: 1630594988077,
+      endTime: 1630595011443,
+      isErrorTrackingEnabled: true
+    }
+    render(<WrapperComponent {...props} />)
 
     expect(screen.getByText('cv.externalAPICalls')).toBeInTheDocument()
 
     userEvent.click(screen.getByText('cv.externalAPICalls'))
 
-    const dialog = findDialogContainer()
-
     await waitFor(() => {
       expect(screen.getByText(LogTypes.ApiCallLog)).toBeInTheDocument()
       expect(screen.queryByText(LogTypes.ExecutionLog)).not.toBeInTheDocument()
     })
+  })
 
-    userEvent.click(dialog?.querySelector('[data-icon="Stroke"]')!)
+  test('should open correct dialog when clicking external API button', async () => {
+    const props = {
+      monitoredServiceIdentifier: 'monitored_service_identifier',
+      serviceIdentifier: 'service-identifier',
+      environmentIdentifier: 'env-identifier',
+      startTime: 1630594988077,
+      endTime: 1630595011443,
+      isErrorTrackingEnabled: true
+    }
+    render(<WrapperComponent {...props} />)
+
+    expect(screen.getByText('cv.executionLogs')).toBeInTheDocument()
+
+    userEvent.click(screen.getByText('cv.executionLogs'))
+
+    await waitFor(() => {
+      expect(screen.getByText(LogTypes.ExecutionLog)).toBeInTheDocument()
+      expect(screen.queryByText(LogTypes.ApiCallLog)).not.toBeInTheDocument()
+    })
   })
 })

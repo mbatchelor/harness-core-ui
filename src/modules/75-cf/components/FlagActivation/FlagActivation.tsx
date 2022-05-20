@@ -132,9 +132,8 @@ const FlagActivation: React.FC<FlagActivationProps> = props => {
 
   const FFM_1513 = useFeatureFlag(FeatureFlag.FFM_1513)
 
-  const { gitSyncValidationSchema, gitSyncInitialValues } = gitSync?.getGitSyncFormMeta(
-    AUTO_COMMIT_MESSAGES.UPDATED_FLAG_RULES
-  )
+  const { gitSyncValidationSchema, gitSyncInitialValues } =
+    gitSync?.getGitSyncFormMeta(AUTO_COMMIT_MESSAGES.UPDATED_FLAG_RULES) || {}
 
   const initialValues = useMemo(
     () =>

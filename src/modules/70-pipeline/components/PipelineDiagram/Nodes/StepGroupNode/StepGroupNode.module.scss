@@ -55,7 +55,7 @@
 
   .horizontalBar {
     position: absolute;
-    top: 46px;
+    top: 45px;
     height: 64px;
     opacity: 0;
     left: 0;
@@ -82,14 +82,16 @@
   border: dashed 1px var(--primary-4);
 
   &.firstnode {
-    top: -47px;
+    top: -46px;
+
     &.nestedGroup {
-      top: -37px;
+      top: -10px;
       .horizontalBar {
         top: 36px;
       }
+
       .markerStart {
-        top: 58px !important;
+        top: 60px !important;
       }
       :global(#tree-container) {
         top: -10px !important;
@@ -97,6 +99,24 @@
       svg {
         top: -10px !important;
       }
+    }
+  }
+  .nestedGroup {
+    top: -10px;
+    :global(.default-node) {
+      top: 0px !important;
+    }
+  }
+
+  &.stepGroupNormal {
+    :global(.default-node) {
+      top: -1px !important;
+    }
+    :global(.diamond-node) {
+      top: -1px !important;
+    }
+    :global(.icon-node) {
+      top: -1px !important;
     }
   }
 
@@ -129,6 +149,22 @@
 
         stroke: #f79400 !important;
       }
+    }
+  }
+
+  &.stepGroupParent {
+    top: -74px;
+    .horizontalBar {
+      top: 73px;
+    }
+    .markerStart {
+      top: 96px !important;
+    }
+    .markerEnd {
+      top: 96px !important;
+    }
+    :global(.default-node) {
+      top: 27px;
     }
   }
 }

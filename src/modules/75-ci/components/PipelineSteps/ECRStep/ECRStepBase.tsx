@@ -119,6 +119,7 @@ export const ECRStepBase = (
                       stepViewType={stepViewType}
                       readonly={readonly}
                       enableFields={{
+                        'spec.baseImageConnectorRefs': { type: [Connectors.DOCKER] },
                         'spec.optimize': { shouldHide: buildInfrastructureType === 'VM' },
                         'spec.dockerfile': {},
                         'spec.context': {},

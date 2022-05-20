@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { defaultTo, isEqual } from 'lodash-es'
+import { defaultTo } from 'lodash-es'
 import { parse } from 'yaml'
 import produce from 'immer'
 import { useCallback } from 'react'
@@ -13,10 +13,10 @@ import type { PipelineInfoConfig } from 'services/cd-ng'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useTemplateSelector } from '@pipeline/utils/useTemplateSelector'
 import { createTemplate } from '@pipeline/utils/templateUtils'
-import { getIdentifierFromValue } from '@common/components/EntityReference/EntityReference'
+import type { TemplateSummaryResponse } from 'services/template-ng'
 
 interface TemplateActionsReturnType {
-  addOrUpdateTemplate: () => Promise<void>
+  addOrUpdateTemplate: (selectedTemplate?: TemplateSummaryResponse) => Promise<void>
   removeTemplate: () => Promise<void>
 }
 
@@ -27,29 +27,22 @@ export function usePipelineTemplateActions(): TemplateActionsReturnType {
   } = usePipelineContext()
   const { getTemplate } = useTemplateSelector()
 
-  const addOrUpdateTemplate = useCallback(async () => {
-    const { template, isCopied } = await getTemplate({
-      templateType: 'Pipeline',
-      ...(pipeline.template && {
-        selectedTemplateRef: getIdentifierFromValue(pipeline.template.templateRef),
-        selectedVersionLabel: pipeline.template.versionLabel
+  const addOrUpdateTemplate = useCallback(
+    async (selectedTemplate?: TemplateSummaryResponse) => {
+      const { template, isCopied } = await getTemplate({
+        templateType: 'Pipeline',
+        selectedTemplate
       })
-    })
-    if (
-      !isCopied &&
-      isEqual(pipeline?.template?.templateRef, template.identifier) &&
-      isEqual(pipeline?.template?.versionLabel, template.versionLabel)
-    ) {
-      return
-    }
-    const processNode = isCopied
-      ? produce(defaultTo(parse(template?.yaml || '')?.template.spec, {}) as PipelineInfoConfig, draft => {
-          draft.name = defaultTo(pipeline?.name, '')
-          draft.identifier = defaultTo(pipeline?.identifier, '')
-        })
-      : createTemplate(pipeline, template)
-    await updatePipeline(processNode)
-  }, [pipeline.template, getTemplate, updatePipeline])
+      const processNode = isCopied
+        ? produce(defaultTo(parse(template?.yaml || '')?.template.spec, {}) as PipelineInfoConfig, draft => {
+            draft.name = defaultTo(pipeline?.name, '')
+            draft.identifier = defaultTo(pipeline?.identifier, '')
+          })
+        : createTemplate(pipeline, template)
+      await updatePipeline(processNode)
+    },
+    [pipeline.template, getTemplate, updatePipeline]
+  )
 
   const removeTemplate = useCallback(async () => {
     const node = pipeline

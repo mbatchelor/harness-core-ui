@@ -108,8 +108,7 @@ export interface SelectorData {
   templateType: TemplateType
   selectedChildType?: string
   allChildTypes?: string[]
-  selectedTemplateRef?: string
-  selectedVersionLabel?: string
+  selectedTemplate?: TemplateSummaryResponse
   onSubmit?: (template: TemplateSummaryResponse, isCopied: boolean) => void
   onCancel?: () => void
 }

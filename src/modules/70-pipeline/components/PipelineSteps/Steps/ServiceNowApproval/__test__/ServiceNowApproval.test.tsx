@@ -187,7 +187,7 @@ describe('ServiceNow Approval tests', () => {
         onUpdate={props.onUpdate}
       />
     )
-
+    expect(container).toMatchSnapshot('Find the connector')
     const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
     fireEvent.change(queryByNameAttribute('name')!, { target: { value: 'serviceNow approval step' } })
     expect(queryByDisplayValue('10m')).toBeTruthy()
@@ -205,7 +205,7 @@ describe('ServiceNow Approval tests', () => {
       timeout: '10m',
       type: 'ServiceNowApproval',
       spec: {
-        connectorRef: 'cid1',
+        connectorRef: 'c1d1',
         ticketNumber: 'itd1',
         ticketType: 'pid1',
         approvalCriteria: {

@@ -46,7 +46,6 @@ export const getServiceNowApprovalEditModePropsWithValues = (): ServiceNowApprov
     identifier: '',
     spec: {
       connectorRef: 'c1d1',
-
       ticketType: 'pid1',
       ticketNumber: 'itd1',
       approvalCriteria: {
@@ -179,7 +178,7 @@ export const mockConnectorResponse: UseGetMockData<ResponseConnectorResponse> = 
     status: 'SUCCESS',
     metaData: null as unknown as undefined,
     data: {
-      connector: { name: 'c1', identifier: 'cid1', type: 'ServiceNow', spec: {} }
+      connector: { name: 'c1', identifier: 'c1d1', type: 'ServiceNow', spec: {} }
     }
   }
 }

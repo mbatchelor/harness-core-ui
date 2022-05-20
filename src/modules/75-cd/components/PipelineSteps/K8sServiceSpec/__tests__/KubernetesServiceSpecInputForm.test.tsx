@@ -216,6 +216,52 @@ describe('DOCKER', () => {
     // Should call the fetch tags, cannot assert on the API
     expect(container).toMatchSnapshot('fetch tags docker')
   })
+
+  test(`renders the tag component if other values is expression`, async () => {
+    const { container } = render(
+      <TestWrapper>
+        <StepWidget<K8SDirectServiceStep>
+          factory={factory}
+          allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
+          initialValues={{}}
+          type={StepType.K8sServiceSpec}
+          stepViewType={StepViewType.InputSet}
+          template={{
+            artifacts: {
+              primary: {
+                type: 'DockerRegistry',
+                spec: {
+                  tag: RUNTIME_INPUT_VALUE
+                }
+              },
+              sidecars: []
+            },
+            manifests: [],
+            variables: []
+          }}
+          customStepProps={{
+            allValues: {
+              artifacts: {
+                primary: {
+                  type: 'DockerRegistry',
+                  spec: {
+                    connectorRef: 'connectorRef',
+                    imagePath: '<+imagePath>'
+                  }
+                }
+              }
+            }
+          }}
+        />
+      </TestWrapper>
+    )
+    // Should fetch tags on click
+    const tagInput = container.querySelector('.bp3-input') as HTMLInputElement
+    act(() => {
+      tagInput?.focus()
+    })
+    expect(container).toMatchSnapshot('fetch tags docker if dependent fields are expression')
+  })
 })
 
 describe('ECR', () => {
@@ -338,6 +384,54 @@ describe('ECR', () => {
     })
     expect(container).toMatchSnapshot('fetch tags ecr')
   })
+
+  test(`renders the tag component if other values are expression`, async () => {
+    const { container } = render(
+      <TestWrapper>
+        <StepWidget<K8SDirectServiceStep>
+          factory={factory}
+          allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
+          initialValues={{}}
+          type={StepType.K8sServiceSpec}
+          stepViewType={StepViewType.InputSet}
+          template={{
+            artifacts: {
+              primary: {
+                type: 'Ecr',
+                spec: {
+                  tag: RUNTIME_INPUT_VALUE
+                }
+              },
+              sidecars: []
+            },
+            manifests: [],
+            variables: []
+          }}
+          customStepProps={{
+            allValues: {
+              artifacts: {
+                primary: {
+                  type: 'Ecr',
+                  spec: {
+                    connectorRef: 'connectorRef',
+                    imagePath: '<+imagePath>',
+                    region: '<+region>'
+                  }
+                }
+              }
+            }
+          }}
+        />
+      </TestWrapper>
+    )
+
+    // Should fetch tags on click
+    const tagInput = container.querySelector('.bp3-input') as HTMLInputElement
+    act(() => {
+      tagInput?.focus()
+    })
+    expect(container).toMatchSnapshot('fetch tags ecr if dependent fields are expression')
+  })
 })
 
 describe('GCR', () => {
@@ -459,6 +553,54 @@ describe('GCR', () => {
       tagInput?.focus()
     })
     expect(container).toMatchSnapshot('fetch tags gcr')
+  })
+
+  test(`renders the tag component if other values are fixed`, async () => {
+    const { container } = render(
+      <TestWrapper>
+        <StepWidget<K8SDirectServiceStep>
+          factory={factory}
+          allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
+          initialValues={{}}
+          type={StepType.K8sServiceSpec}
+          stepViewType={StepViewType.InputSet}
+          template={{
+            artifacts: {
+              primary: {
+                type: 'Gcr',
+                spec: {
+                  tag: RUNTIME_INPUT_VALUE
+                }
+              },
+              sidecars: []
+            },
+            manifests: [],
+            variables: []
+          }}
+          customStepProps={{
+            allValues: {
+              artifacts: {
+                primary: {
+                  type: 'Gcr',
+                  spec: {
+                    connectorRef: 'connectorRef',
+                    imagePath: '<+imagePath>',
+                    registryHostname: '<+registryHostname>'
+                  }
+                }
+              }
+            }
+          }}
+        />
+      </TestWrapper>
+    )
+
+    // Should fetch tags on click
+    const tagInput = container.querySelector('.bp3-input') as HTMLInputElement
+    act(() => {
+      tagInput?.focus()
+    })
+    expect(container).toMatchSnapshot('fetch tags gcr if dependent fields are expression')
   })
 })
 

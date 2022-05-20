@@ -10,6 +10,7 @@ import { queryByText, render, fireEvent } from '@testing-library/react'
 import { Provider } from 'urql'
 import { fromValue } from 'wonka'
 import { TestWrapper } from '@common/utils/testUtils'
+import * as FeatureFlag from '@common/hooks/useFeatureFlag'
 import AnomaliesFilter from '../AnomaliesFilter'
 
 const params = {
@@ -20,6 +21,7 @@ const params = {
 
 describe('test case for anomalies detection overview page', () => {
   test('should be able to render the overview dashboard', async () => {
+    jest.spyOn(FeatureFlag, 'useFeatureFlag').mockReturnValue(true)
     const responseState = {
       executeQuery: () => {
         return fromValue({})

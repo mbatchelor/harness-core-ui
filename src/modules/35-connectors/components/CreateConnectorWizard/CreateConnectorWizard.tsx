@@ -48,7 +48,7 @@ import CreateCeGcpConnector from '../CreateConnector/CEGcpConnector/CreateCeGcpC
 import CreateCustomHealthConnector from '../CreateConnector/CustomHealthConnector/CreateCustomHealthConnector'
 import CreateErrorTrackingConnector from '../CreateConnector/ErrorTrackingConnector/CreateErrorTrackingConnector'
 import CreateAzureConnector from '../CreateConnector/AzureConnector/CreateAzureConnector'
-import css from './CreateConnectorWizard.module.scss'
+import { ConnectorWizardContextProvider } from './ConnectorWizardContext'
 
 interface CreateConnectorWizardProps {
   accountId: string
@@ -179,8 +179,8 @@ export const ConnectorWizard: React.FC<CreateConnectorWizardProps> = props => {
 
 export const CreateConnectorWizard: React.FC<CreateConnectorWizardProps> = props => {
   return (
-    <div className={css.createConnectorWizard}>
+    <ConnectorWizardContextProvider>
       <ConnectorWizard {...props} />
-    </div>
+    </ConnectorWizardContextProvider>
   )
 }

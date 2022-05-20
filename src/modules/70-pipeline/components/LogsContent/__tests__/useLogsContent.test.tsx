@@ -76,7 +76,7 @@ describe('useLogsContent tests', () => {
 
     expect(startStream).toHaveBeenCalledWith({
       queryParams: { accountId: undefined, key: 'logKey1' },
-      headers: { Authorization: null, 'X-Harness-Token': 'logs_token' },
+      headers: { Authorization: '', 'X-Harness-Token': 'logs_token' },
       key: 'logKey1'
     })
   })

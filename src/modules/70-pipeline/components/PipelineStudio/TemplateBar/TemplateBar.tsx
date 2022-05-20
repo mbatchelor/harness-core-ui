@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { defaultTo } from 'lodash-es'
+import { defaultTo, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { Container, Icon, IconName, Layout, Popover, Text, useConfirmationDialog } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
@@ -19,7 +19,7 @@ import { useFeature } from '@common/hooks/useFeatures'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import routes from '@common/RouteDefinitions'
 import type { PipelineType, ProjectPathProps, GitQueryParams } from '@common/interfaces/RouteInterfaces'
-import { useGetTemplate } from 'services/template-ng'
+import { TemplateSummaryResponse, useGetTemplate } from 'services/template-ng'
 import {
   getIdentifierFromValue,
   getScopeBasedProjectPathParams,
@@ -40,7 +40,7 @@ interface TemplateMenuItem {
 
 export interface TemplateBarProps {
   templateLinkConfig: TemplateLinkConfig
-  onOpenTemplateSelector: () => void
+  onOpenTemplateSelector: (selectedTemplate?: TemplateSummaryResponse) => void
   onRemoveTemplate: () => Promise<void>
   className?: string
 }
@@ -61,7 +61,7 @@ export function TemplateBar(props: TemplateBarProps): JSX.Element {
 
   const readyOnly = isReadonly || !enabled
 
-  const { data } = useGetTemplate({
+  const { data, loading } = useGetTemplate({
     templateIdentifier: getIdentifierFromValue(templateLinkConfig.templateRef),
     queryParams: {
       ...getScopeBasedProjectPathParams(params, scope),
@@ -72,7 +72,10 @@ export function TemplateBar(props: TemplateBarProps): JSX.Element {
     }
   })
 
-  const selectedTemplate = data?.data
+  const selectedTemplate = React.useMemo(
+    () => (data?.data ? { ...data.data, versionLabel: templateLinkConfig.versionLabel } : undefined),
+    [data?.data]
+  )
 
   const { openDialog: openRemoveTemplateDialog } = useConfirmationDialog({
     intent: Intent.DANGER,
@@ -135,7 +138,7 @@ export function TemplateBar(props: TemplateBarProps): JSX.Element {
             {
               icon: 'command-switch',
               label: getString('pipeline.changeTemplateLabel'),
-              onClick: onOpenTemplateSelector
+              onClick: () => onOpenTemplateSelector(selectedTemplate)
             },
             {
               icon: 'main-trash',
@@ -166,9 +169,16 @@ export function TemplateBar(props: TemplateBarProps): JSX.Element {
     >
       <Layout.Horizontal spacing={'small'} flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
         <Icon size={11} color={Color.WHITE} name={'template-library'} />
-        <Text style={{ flexGrow: 1 }} font={{ size: 'small' }} color={Color.WHITE}>
-          {selectedTemplate ? `Using Template: ${getTemplateNameWithLabel(selectedTemplate)}` : getString('loading')}
-        </Text>
+        {loading && (
+          <Text style={{ flexGrow: 1 }} font={{ size: 'small' }} color={Color.WHITE}>
+            {getString('loading')}
+          </Text>
+        )}
+        {!loading && !isEmpty(selectedTemplate) && (
+          <Text style={{ flexGrow: 1 }} font={{ size: 'small' }} color={Color.WHITE}>
+            {`Using Template: ${getTemplateNameWithLabel(selectedTemplate)}`}
+          </Text>
+        )}
         <Popover
           isOpen={menuOpen}
           onInteraction={nextOpenState => {
@@ -176,7 +186,7 @@ export function TemplateBar(props: TemplateBarProps): JSX.Element {
           }}
           position={Position.BOTTOM_RIGHT}
           className={css.main}
-          disabled={!selectedTemplate}
+          disabled={isEmpty(selectedTemplate)}
           portalClassName={css.popover}
         >
           <Icon

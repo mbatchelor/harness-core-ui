@@ -95,27 +95,6 @@ export const useMutateCreateSignedUrl = (
   return { mutate, loading, error }
 }
 
-export interface CloneDashboardResponseResource {
-  id: string
-  folder_id: string
-}
-
-export interface CloneDashboardResponse {
-  mutate: (props: { dashboardId: string }) => Promise<CloneDashboardResponseResource>
-  loading: boolean
-}
-
-export const useCloneDashboard = (accountId: string): CloneDashboardResponse => {
-  const { mutate, loading } = useMutate({
-    verb: 'POST',
-    path: 'gateway/dashboard/clone',
-    queryParams: {
-      accountId: accountId
-    }
-  })
-  return { mutate, loading }
-}
-
 export interface DeleteDashboardResponseResource {
   id: string
   folder_id: string

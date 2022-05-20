@@ -7,7 +7,7 @@
 
 import React, { Dispatch, SetStateAction, useState } from 'react'
 import type { CellProps, Column, Renderer } from 'react-table'
-import { Text, Icon, TableV2, Layout, Button } from '@wings-software/uicore'
+import { Text, Icon, TableV2, Layout, Button, Container } from '@wings-software/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import qs from 'qs'
 import { Link, useParams } from 'react-router-dom'
@@ -26,6 +26,9 @@ import type { CloudProvider, TimeRangeFilterType } from '@ce/types'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import NoResults from '@ce/images/no-results.svg'
+import EmptyView from '@ce/images/empty-state.svg'
+import AnomaliesError from '@ce/images/anomalies-error.svg'
 import css from '../../pages/anomalies-overview/AnomaliesOverviewPage.module.scss'
 
 const getResourceIcon = (cloudProvider: string) => {
@@ -57,6 +60,8 @@ interface ListProps {
   sortByObj: SortByObjInterface
   setSortByObj: Dispatch<SetStateAction<SortByObjInterface>>
   timeRange: TimeRangeFilterType
+  searchText?: string
+  isAnomaliesListError?: boolean | null
 }
 
 interface AnomaliesMenu {
@@ -146,26 +151,69 @@ const getServerSortProps = ({
     let newOrder: orderType | undefined
     const sortName = accessor
 
-    /* istanbul ignore next */
-    if (sortName === sortByObj.sort && sortByObj.order) {
-      newOrder = sortByObj.order === 'DESC' ? 'ASC' : 'DESC'
-    } else {
-      // no saved state for sortBy of the same sort type
-      newOrder = 'ASC'
-    }
-
     return {
       enableServerSort: true,
       isServerSorted: sortByObj.sort === accessor,
       isServerSortedDesc: sortByObj.order === 'DESC',
-      getSortedColumn: ({ sort }: { sort?: sortType }) => {
-        setSortByObj({ sort, order: newOrder })
+      getSortedColumn: () => {
+        if (sortName === sortByObj.sort && sortByObj.order) {
+          newOrder = sortByObj.order === 'DESC' ? 'ASC' : 'DESC'
+        } else {
+          // no saved state for sortBy of the same sort type
+          newOrder = 'ASC'
+        }
+        setSortByObj({ sort: sortName, order: newOrder })
       }
     }
   }
 }
 
-const AnomaliesListGridView: React.FC<ListProps> = ({ listData, sortByObj, setSortByObj, timeRange }) => {
+const getSortIcon = (columnName: string, sortByObj: SortByObjInterface) => {
+  if (columnName === sortByObj.sort) {
+    if (sortByObj.order === 'DESC') {
+      return <Icon name="main-caret-down" size={10} color={Color.PRIMARY_7} className={css.sortingIcon} />
+    } else {
+      return <Icon name="main-caret-up" size={10} color={Color.PRIMARY_7} className={css.sortingIcon} />
+    }
+  } else {
+    return <Icon name="main-sort" size={12} color={Color.GREY_1000} className={css.sortingIcon} />
+  }
+}
+
+const map: Record<string, string> = {
+  AZURE: 'defaultAzurePerspectiveId',
+  AWS: 'defaultAwsPerspectiveId',
+  GCP: 'defaultGcpPerspectiveId',
+  CLUSTER: 'defaultClusterPerspectiveId'
+}
+
+export const handleErrorComponent = (
+  imgSrc: string,
+  errorMsg: string,
+  errorDesc: string,
+  wrapperClassname: string = css.noResultsContainer
+) => {
+  return (
+    <Container className={wrapperClassname}>
+      <img src={imgSrc} />
+      <Text font={{ variation: FontVariation.SMALL_BOLD }} color={Color.GREY_500}>
+        {errorMsg}
+      </Text>
+      <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_500}>
+        {errorDesc}
+      </Text>
+    </Container>
+  )
+}
+
+const AnomaliesListGridView: React.FC<ListProps> = ({
+  listData,
+  sortByObj,
+  setSortByObj,
+  timeRange,
+  searchText,
+  isAnomaliesListError = false
+}) => {
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
 
@@ -187,29 +235,34 @@ const AnomaliesListGridView: React.FC<ListProps> = ({ listData, sortByObj, setSo
 
   const CostCell: Renderer<CellProps<AnomalyData>> = ({ row }) => {
     const actualAmount = row.original.anomalousSpend as number
+
+    return (
+      <Text font={{ variation: FontVariation.BODY2 }} color={Color.BLACK}>
+        {formatCost(actualAmount)}
+      </Text>
+    )
+  }
+
+  const VariantCell: Renderer<CellProps<AnomalyData>> = ({ row }) => {
     const trend = row.original.anomalousSpendPercentage
 
     return (
-      <Layout.Horizontal style={{ alignItems: 'baseline' }} spacing="small">
-        <Text font={{ variation: FontVariation.BODY2 }} color={Color.BLACK}>
-          {formatCost(actualAmount)}
-        </Text>
+      <>
         {trend ? (
-          <Text font={{ variation: FontVariation.TINY }} color={Color.RED_600}>
+          <Text font={{ variation: FontVariation.BODY }} color={Color.RED_600}>
             {getString('ce.anomalyDetection.trend', {
               trend: trend
             })}
           </Text>
-        ) : /* istanbul ignore next */ null}
-      </Layout.Horizontal>
+        ) : (
+          <Text
+            font={{ variation: FontVariation.BODY }}
+            color={Color.GREY_500}
+            tooltipProps={{ dataTooltipId: 'trendNotApplicable' }}
+          >{`(${getString('na')})`}</Text>
+        )}
+      </>
     )
-  }
-
-  const map: Record<string, string> = {
-    AZURE: 'defaultAzurePerspectiveId',
-    AWS: 'defaultAwsPerspectiveId',
-    GCP: 'defaultGcpPerspectiveId',
-    CLUSTER: 'defaultClusterPerspectiveId'
   }
 
   const ResourceCell: Renderer<CellProps<AnomalyData>> = ({ row }) => {
@@ -267,22 +320,6 @@ const AnomaliesListGridView: React.FC<ListProps> = ({ listData, sortByObj, setSo
     )
   }
 
-  const StatusCell: Renderer<CellProps<AnomalyData>> = ({ row }) => {
-    const status = row.original.status
-    const stausRelativeTime = row.original.statusRelativeTime
-
-    return (
-      <Layout.Vertical spacing="small">
-        <Text font={{ variation: FontVariation.BODY }} color={Color.ORANGE_700}>
-          {status}
-        </Text>
-        <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_600}>
-          {stausRelativeTime}
-        </Text>
-      </Layout.Vertical>
-    )
-  }
-
   const MenuCell: Renderer<CellProps<AnomalyData>> = ({ row }) => {
     return <AnomaliesMenu anomalyId={row.original.id || /* istanbul ignore next */ ''} />
   }
@@ -291,8 +328,13 @@ const AnomaliesListGridView: React.FC<ListProps> = ({ listData, sortByObj, setSo
     () => [
       {
         Header: (
-          <Text font={{ variation: FontVariation.TABLE_HEADERS }}>
+          <Text
+            font={{ variation: FontVariation.TABLE_HEADERS }}
+            tooltipProps={{ dataTooltipId: 'anomalyDate' }}
+            className={css.sortingColumn}
+          >
             {getString('ce.anomalyDetection.tableHeaders.date')}
+            {getSortIcon('ANOMALY_TIME', sortByObj)}
           </Text>
         ),
         accessor: 'time',
@@ -300,15 +342,20 @@ const AnomaliesListGridView: React.FC<ListProps> = ({ listData, sortByObj, setSo
         width: '20%',
         serverSortProps: getServerSortProps({
           enableServerSort: true,
-          accessor: 'TIME',
+          accessor: 'ANOMALY_TIME',
           sortByObj,
           setSortByObj
         })
       },
       {
         Header: (
-          <Text font={{ variation: FontVariation.TABLE_HEADERS }}>
+          <Text
+            font={{ variation: FontVariation.TABLE_HEADERS }}
+            tooltipProps={{ dataTooltipId: 'anomalousSpend' }}
+            className={css.sortingColumn}
+          >
             {getString('ce.anomalyDetection.tableHeaders.anomalousSpend')}
+            {getSortIcon('ANOMALOUS_SPEND', sortByObj)}
           </Text>
         ),
         accessor: 'actualAmount',
@@ -316,14 +363,24 @@ const AnomaliesListGridView: React.FC<ListProps> = ({ listData, sortByObj, setSo
         width: '20%',
         serverSortProps: getServerSortProps({
           enableServerSort: true,
-          accessor: 'ACTUAL_COST',
+          accessor: 'ANOMALOUS_SPEND',
           sortByObj,
           setSortByObj
         })
       },
       {
         Header: (
-          <Text font={{ variation: FontVariation.TABLE_HEADERS }}>
+          <Text font={{ variation: FontVariation.TABLE_HEADERS }} tooltipProps={{ dataTooltipId: 'anomalousVariant' }}>
+            {getString('ce.anomalyDetection.tableHeaders.anomalousVariant')}
+          </Text>
+        ),
+        accessor: 'anomalousSpendPercentage',
+        Cell: VariantCell,
+        width: '20%'
+      },
+      {
+        Header: (
+          <Text font={{ variation: FontVariation.TABLE_HEADERS }} tooltipProps={{ dataTooltipId: 'anomalyResource' }}>
             {getString('ce.anomalyDetection.tableHeaders.resource')}
           </Text>
         ),
@@ -332,33 +389,37 @@ const AnomaliesListGridView: React.FC<ListProps> = ({ listData, sortByObj, setSo
         width: '35%'
       },
       {
-        Header: (
-          <Text font={{ variation: FontVariation.TABLE_HEADERS }}>
-            {getString('ce.anomalyDetection.tableHeaders.status')}
-          </Text>
-        ),
-        accessor: 'status',
-        Cell: StatusCell,
-        width: '20%',
-        serverSortProps: getServerSortProps({
-          enableServerSort: true,
-          accessor: 'STATUS',
-          sortByObj,
-          setSortByObj
-        })
-      },
-      {
         Header: ' ',
         width: '5%',
         Cell: MenuCell
       }
     ],
-    [timeRange.to, timeRange.from]
+    [timeRange.to, timeRange.from, sortByObj]
   )
+
+  if (searchText && listData && !listData.length) {
+    return handleErrorComponent(
+      NoResults,
+      getString('noSearchResultsFoundPeriod'),
+      getString('ce.anomalyDetection.noSearchResults')
+    )
+  }
+
+  if (isAnomaliesListError) {
+    return handleErrorComponent(
+      AnomaliesError,
+      getString('ce.anomalyDetection.listFetchingError'),
+      getString('ce.anomalyDetection.listFetchingErrorDesc')
+    )
+  }
 
   /* istanbul ignore next */
   if (!listData || !listData.length) {
-    return null
+    return handleErrorComponent(
+      EmptyView,
+      getString('ce.anomalyDetection.noData'),
+      getString('ce.anomalyDetection.checkLater')
+    )
   }
 
   return (

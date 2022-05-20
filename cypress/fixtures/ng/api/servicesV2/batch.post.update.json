@@ -1,0 +1,30 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "totalPages": 1,
+    "totalItems": 1,
+    "pageItemCount": 1,
+    "pageSize": 1,
+    "content": [
+      {
+        "service": {
+          "accountId": "kmpySmUISimoRrJL6NL73w",
+          "identifier": "testService",
+          "orgIdentifier": "default",
+          "name": "NewtestService",
+          "description": "Test Service Description",
+          "deleted": false,
+          "tags": { "serviceTag": "" },
+          "version": 0,
+          "yaml": "service:\n  name: \"NewtestService\"\n  identifier: \"testService\"\n  orgIdentifier: \"default\"\n  projectIdentifier: \"project1\"\n  description: \"Test Service Description\"\n  tags:\n    serviceTag: \"\"\n"
+        },
+        "createdAt": 1631598821564,
+        "lastModifiedAt": 1631598821564
+      }
+    ],
+    "pageIndex": 0,
+    "empty": false
+  },
+  "metaData": null,
+  "correlationId": "a5362518-6451-412d-ac6d-89af022f4f22"
+}

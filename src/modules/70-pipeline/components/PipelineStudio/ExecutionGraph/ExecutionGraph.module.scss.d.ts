@@ -13,6 +13,7 @@ declare const styles: {
   readonly canvasButtons: string
   readonly container: string
   readonly graphLink: string
+  readonly portalVisibility: string
   readonly rollbackBanner: string
 }
 export default styles

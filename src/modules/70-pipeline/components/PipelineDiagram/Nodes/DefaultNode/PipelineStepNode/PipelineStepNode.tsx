@@ -56,8 +56,21 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
   }
 
   const stepIcon = defaultTo(defaultTo(stepData?.icon, props?.icon), props?.data?.step?.icon)
+  const onDropEvent = (event: React.DragEvent) => {
+    event.stopPropagation()
+
+    props?.fireEvent?.({
+      type: Event.DropNodeEvent,
+      target: event.target,
+      data: {
+        entityType: DiagramType.Default,
+        node: JSON.parse(event.dataTransfer.getData(DiagramDrag.NodeDrag)),
+        destination: props
+      }
+    })
+  }
   // const isPrevNodeParallel = !!defaultTo(props.prevNode?.children?.length, 1)
-  const isTemplateNode = props.data.isTemplateNode
+  const isTemplateNode = props?.data?.isTemplateNode
   return (
     <div
       className={cx(defaultCss.defaultNode, 'default-node', {
@@ -102,19 +115,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
           setAddVisibility(false)
         }
       }}
-      onDrop={event => {
-        event.stopPropagation()
-
-        props?.fireEvent?.({
-          type: Event.DropNodeEvent,
-          target: event.target,
-          data: {
-            entityType: DiagramType.Default,
-            node: JSON.parse(event.dataTransfer.getData(DiagramDrag.NodeDrag)),
-            destination: props
-          }
-        })
-      }}
+      onDrop={onDropEvent}
     >
       {!isServiceStep && (
         <div className={cx(defaultCss.markerStart, defaultCss.stepMarker, defaultCss.stepMarkerLeft)}>
@@ -175,7 +176,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
         }}
       >
         <div className="execution-running-animation" />
-        {props.data.isInComplete && (
+        {props?.data?.isInComplete && (
           <Icon className={defaultCss.inComplete} size={12} name={'warning-sign'} color="orange500" />
         )}
         {stepIcon && (
@@ -275,6 +276,8 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
       {allowAdd && CreateNode && !props.readonly && !isServiceStep && (
         <CreateNode
           onMouseOver={() => setAddVisibility(true)}
+          onDragOver={() => setAddVisibility(true)}
+          onDrop={onDropEvent}
           onMouseLeave={() => setAddVisibility(false)}
           onClick={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
             event.stopPropagation()
@@ -315,7 +318,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
       {!props?.nextNode && !isServiceStep && props?.parentIdentifier && !props.readonly && !props.isParallelNode && (
         <AddLinkNode<PipelineStepNodeProps>
           nextNode={props?.nextNode}
-          style={{ right: getPositionOfAddIcon(props) }}
+          style={{ right: getPositionOfAddIcon(props, true) }}
           parentIdentifier={props?.parentIdentifier}
           isParallelNode={props.isParallelNode}
           readonly={props.readonly}

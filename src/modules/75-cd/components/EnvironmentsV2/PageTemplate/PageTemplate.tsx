@@ -174,7 +174,7 @@ export default function PageTemplate({
         {state === STATUS.error && (
           <Page.Error message={getErrorInfoFromErrorObject(defaultTo(error, {}))} onClick={refetch} />
         )}
-        {state === STATUS.ok && (
+        {state === STATUS.ok && !noData && (
           <Layout.Horizontal
             flex={{ justifyContent: 'space-between' }}
             padding={{ top: 'large', right: 'xlarge', left: 'xlarge' }}
@@ -195,7 +195,7 @@ export default function PageTemplate({
         )}
         {state === STATUS.ok ? (
           noData ? (
-            <Container flex={{ align: 'center-center' }} height="100%">
+            <Container flex={{ align: 'center-center' }}>
               <Container flex style={{ flexDirection: 'column' }}>
                 {emptyContent}
               </Container>

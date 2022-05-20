@@ -27,6 +27,7 @@ import type { ExecutionPageQueryParams } from '@pipeline/utils/types'
 import type { ModulePathParams, ExecutionPathProps } from '@common/interfaces/RouteInterfaces'
 import { addHotJarSuppressionAttribute } from '@common/utils/utils'
 import { isExecutionComplete } from '@pipeline/utils/statusHelpers'
+import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { useLogsContent } from './useLogsContent'
 import { GroupedLogsWithRef as GroupedLogs } from './components/GroupedLogs'
 import { SingleSectionLogsWithRef as SingleSectionLogs } from './components/SingleSectionLogs'
@@ -107,6 +108,11 @@ export interface LogsContentProps {
   isWarning?: boolean
 }
 
+export enum SavedExecutionViewTypes {
+  GRAPH = 'graph',
+  LOG = 'log'
+}
+
 export function LogsContent(props: LogsContentProps): React.ReactElement {
   const { mode, toConsoleView = '', errorMessage, isWarning } = props
   const pathParams = useParams<ExecutionPathProps & ModulePathParams>()
@@ -122,7 +128,10 @@ export function LogsContent(props: LogsContentProps): React.ReactElement {
   const isSingleSectionLogs = state.units.length === 1
 
   const virtuosoRef = React.useRef<null | GroupedVirtuosoHandle | VirtuosoHandle>(null)
-
+  const { setPreference: setSavedExecutionView } = usePreferenceStore<string | undefined>(
+    PreferenceScope.USER,
+    'executionViewType'
+  )
   /* istanbul ignore next */
   function getSectionName(index: number): string {
     return getString('pipeline.logs.sectionName', { index })
@@ -230,7 +239,11 @@ export function LogsContent(props: LogsContentProps): React.ReactElement {
             </Link>
           ) : null}
           {mode === 'step-details' ? (
-            <Link className={css.toConsoleView} to={toConsoleView}>
+            <Link
+              className={css.toConsoleView}
+              onClick={() => setSavedExecutionView(SavedExecutionViewTypes.LOG)}
+              to={toConsoleView}
+            >
               <StrTemplate stringID="consoleView" />
             </Link>
           ) : null}

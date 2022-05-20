@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { render, findByText, fireEvent, waitFor, findAllByText } from '@testing-library/react'
+import { render, findByText, fireEvent, waitFor, findAllByText, getByText } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import {
   PipelineContext,
@@ -14,6 +15,7 @@ import {
 } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import ArtifactsSelection from '../ArtifactsSelection'
 import pipelineContextMock from './pipelineContext.json'
+import pipelineContextWithoutArtifactsMock from './pipelineContextWithoutArtifacts.json'
 import connectorsData from './connectors_mock.json'
 import ArtifactListView from '../ArtifactListView/ArtifactListView'
 import type { ArtifactListViewProps } from '../ArtifactInterface'
@@ -32,9 +34,14 @@ const fetchConnectors = (): Promise<unknown> => Promise.resolve({})
 
 jest.mock('services/cd-ng', () => ({
   useGetConnectorListV2: jest.fn().mockImplementation(() => ({ mutate: fetchConnectors })),
-
   useGetConnector: jest.fn().mockImplementation(() => {
     return { data: {}, refetch: jest.fn(), error: null }
+  }),
+  useGetBuildDetailsForArtifactoryArtifact: jest.fn().mockImplementation(() => {
+    return { data: {}, refetch: jest.fn(), error: null, loading: false }
+  }),
+  useGetRepositoriesDetailsForArtifactory: jest.fn().mockImplementation(() => {
+    return { data: {}, refetch: jest.fn(), error: null, loading: false }
   })
 }))
 
@@ -43,7 +50,7 @@ describe('ArtifactsSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ArtifactsSelection deploymentType="Kubernetes" isForOverrideSets={false} />
+          <ArtifactsSelection deploymentType="Kubernetes" />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -55,7 +62,7 @@ describe('ArtifactsSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ArtifactsSelection deploymentType="Kubernetes" isForOverrideSets={false} />
+          <ArtifactsSelection deploymentType="Kubernetes" />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -67,11 +74,7 @@ describe('ArtifactsSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ArtifactsSelection
-            deploymentType="Kubernetes"
-            isForOverrideSets={true}
-            identifierName={'overrideSetIdentifier'}
-          />
+          <ArtifactsSelection deploymentType="Kubernetes" />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -88,34 +91,11 @@ describe('ArtifactsSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ArtifactsSelection
-            deploymentType="Kubernetes"
-            isForOverrideSets={false}
-            identifierName={'overrideSetIdentifier'}
-            isPropagating={true}
-          />
+          <ArtifactsSelection deploymentType="Kubernetes" isPropagating={true} />
         </PipelineContext.Provider>
       </TestWrapper>
     )
 
-    const addPrimaryArtifact = await findByText(container, 'pipelineSteps.serviceTab.artifactList.addPrimary')
-    expect(addPrimaryArtifact).toBeDefined()
-  })
-
-  test(`renders artifact when  isForPredefinedSets is true`, async () => {
-    const { container } = render(
-      <TestWrapper>
-        <PipelineContext.Provider value={getContextValue()}>
-          <ArtifactsSelection
-            deploymentType="Kubernetes"
-            isForOverrideSets={false}
-            identifierName={'overrideSetIdentifier'}
-            isPropagating={false}
-            isForPredefinedSets={true}
-          />
-        </PipelineContext.Provider>
-      </TestWrapper>
-    )
     const addPrimaryArtifact = await findByText(container, 'pipelineSteps.serviceTab.artifactList.addPrimary')
     expect(addPrimaryArtifact).toBeDefined()
   })
@@ -124,14 +104,7 @@ describe('ArtifactsSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ArtifactsSelection
-            deploymentType="Kubernetes"
-            isForOverrideSets={false}
-            identifierName={'identifierName'}
-            isPropagating={false}
-            isForPredefinedSets={false}
-            overrideSetIdentifier={'overrideSetIdentifier'}
-          />
+          <ArtifactsSelection deploymentType="Kubernetes" isPropagating={false} />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -142,7 +115,7 @@ describe('ArtifactsSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ArtifactsSelection deploymentType="Kubernetes" isForOverrideSets={false} isForPredefinedSets={false} />
+          <ArtifactsSelection deploymentType="Kubernetes" />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -162,7 +135,7 @@ describe('ArtifactsSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ArtifactsSelection deploymentType="Kubernetes" isForOverrideSets={false} isForPredefinedSets={false} />
+          <ArtifactsSelection deploymentType="Kubernetes" />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -183,7 +156,7 @@ describe('ArtifactsSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ArtifactsSelection deploymentType="Kubernetes" isForOverrideSets={false} />
+          <ArtifactsSelection deploymentType="Kubernetes" />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -279,7 +252,6 @@ describe('ArtifactsSelection tests', () => {
       fetchedConnectorResponse: connectorsData.data as any,
       accountId: 'test',
       refetchConnectors: jest.fn(),
-      overrideSetIdentifier: '',
       isReadonly: false
     }
     const { container } = render(
@@ -312,7 +284,6 @@ describe('ArtifactsSelection tests', () => {
       fetchedConnectorResponse: connectorsData.data as any,
       accountId: 'test',
       refetchConnectors: jest.fn(),
-      overrideSetIdentifier: '',
       isReadonly: false
     }
     const { container } = render(
@@ -345,7 +316,6 @@ describe('ArtifactsSelection tests', () => {
       fetchedConnectorResponse: connectorsData.data as any,
       accountId: 'test',
       refetchConnectors: jest.fn(),
-      overrideSetIdentifier: '',
       isReadonly: false
     }
     const { container } = render(
@@ -365,7 +335,7 @@ describe('ArtifactsSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ArtifactsSelection deploymentType="Kubernetes" isForOverrideSets={false} />
+          <ArtifactsSelection deploymentType="Kubernetes" />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -375,5 +345,161 @@ describe('ArtifactsSelection tests', () => {
     const remove = container.querySelectorAll('[data-icon="main-trash"]')[1]
 
     expect(remove).toBeDefined()
+  })
+
+  test('is artifacts type list containing all types for Kubernetes for activated NG_AZURE, NG_NEXUS_ARTIFACTORY and CUSTOM_ARTIFACT_NG', async () => {
+    const { container } = render(
+      <TestWrapper
+        defaultAppStoreValues={{
+          featureFlags: { NG_AZURE: true, NG_NEXUS_ARTIFACTORY: true, CUSTOM_ARTIFACT_NG: true }
+        }}
+      >
+        <PipelineContext.Provider value={getContextValue()}>
+          <ArtifactsSelection deploymentType="Kubernetes" />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+    const addFileButton = await findByText(container, 'pipelineSteps.serviceTab.artifactList.addSidecar')
+    expect(addFileButton).toBeDefined()
+    fireEvent.click(addFileButton)
+    const portal = document.getElementsByClassName('bp3-dialog')[0]
+    const artifactLabel = await waitFor(() => findByText(portal as HTMLElement, 'connectors.specifyArtifactRepoType'))
+    expect(artifactLabel).toBeDefined()
+    const nexus = await container.querySelector('input[value="Nexus3Registry"]')
+    expect(nexus).toBeDefined()
+    const artifactory = await container.querySelector('input[value="ArtifactoryRegistry"]')
+    expect(artifactory).toBeDefined()
+    const acr = await container.querySelector('input[value="Acr"]')
+    expect(acr).toBeDefined()
+  })
+
+  test('is artifacts type list containing all types for NativeHelm for activated NG_AZURE, NG_NEXUS_ARTIFACTORY and CUSTOM_ARTIFACT_NG', async () => {
+    const { container } = render(
+      <TestWrapper
+        defaultAppStoreValues={{
+          featureFlags: { NG_AZURE: true, NG_NEXUS_ARTIFACTORY: true, CUSTOM_ARTIFACT_NG: true }
+        }}
+      >
+        <PipelineContext.Provider value={getContextValue()}>
+          <ArtifactsSelection deploymentType="NativeHelm" />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+    const addSidecarButton = await findByText(container, 'pipelineSteps.serviceTab.artifactList.addSidecar')
+    expect(addSidecarButton).toBeDefined()
+    fireEvent.click(addSidecarButton)
+    const portal = document.getElementsByClassName('bp3-dialog')[0]
+    const artifactLabel = await waitFor(() => findByText(portal as HTMLElement, 'connectors.specifyArtifactRepoType'))
+    expect(artifactLabel).toBeDefined()
+    const nexus = await container.querySelector('input[value="Nexus3Registry"]')
+    expect(nexus).toBeDefined()
+    const artifactory = await container.querySelector('input[value="ArtifactoryRegistry"]')
+    expect(artifactory).toBeDefined()
+    const acr = await container.querySelector('input[value="Acr"]')
+    expect(acr).toBeDefined()
+  })
+
+  test('is artifacts type list containing all types for NativeHelm for activated NG_AZURE, NG_NEXUS_ARTIFACTORY and CUSTOM_ARTIFACT_NG', async () => {
+    const { container } = render(
+      <TestWrapper
+        defaultAppStoreValues={{
+          featureFlags: { NG_AZURE: true, NG_NEXUS_ARTIFACTORY: true, CUSTOM_ARTIFACT_NG: true }
+        }}
+      >
+        <PipelineContext.Provider value={getContextValue()}>
+          <ArtifactsSelection deploymentType="NativeHelm" />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+    const addSidecarButton = await findByText(container, 'pipelineSteps.serviceTab.artifactList.addSidecar')
+    expect(addSidecarButton).toBeDefined()
+    fireEvent.click(addSidecarButton)
+    const portal = document.getElementsByClassName('bp3-dialog')[0]
+    const artifactLabel = await waitFor(() => findByText(portal as HTMLElement, 'connectors.specifyArtifactRepoType'))
+    expect(artifactLabel).toBeDefined()
+    const nexus = await container.querySelector('input[value="Nexus3Registry"]')
+    expect(nexus).toBeDefined()
+    const artifactory = await container.querySelector('input[value="ArtifactoryRegistry"]')
+    expect(artifactory).toBeDefined()
+    const acr = await container.querySelector('input[value="Acr"]')
+    expect(acr).toBeDefined()
+  })
+
+  test('is artifacts type list containing all types for ServerlessAwsLambda for activated NG_AZURE, NG_NEXUS_ARTIFACTORY and CUSTOM_ARTIFACT_NG', async () => {
+    const context = {
+      ...pipelineContextWithoutArtifactsMock,
+      getStageFromPipeline: jest.fn(() => {
+        return { stage: pipelineContextWithoutArtifactsMock.state.pipeline.stages[0], parent: undefined }
+      })
+    } as any
+
+    const { container } = render(
+      <TestWrapper
+        defaultAppStoreValues={{
+          featureFlags: { NG_AZURE: true, NG_NEXUS_ARTIFACTORY: true, CUSTOM_ARTIFACT_NG: true }
+        }}
+      >
+        <PipelineContext.Provider value={context}>
+          <ArtifactsSelection deploymentType="ServerlessAwsLambda" />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+
+    const addPrimaryButton = await findByText(container, 'pipelineSteps.serviceTab.artifactList.addPrimary')
+    expect(addPrimaryButton).toBeDefined()
+    fireEvent.click(addPrimaryButton)
+    const portal = document.getElementsByClassName('bp3-dialog')[0]
+    const artifactLabel = await waitFor(() => findByText(portal as HTMLElement, 'connectors.specifyArtifactRepoType'))
+    expect(artifactLabel).toBeDefined()
+    const artifactory = await container.querySelector('input[value="ArtifactoryRegistry"]')
+    expect(artifactory).toBeDefined()
+    const nexus = await container.querySelector('input[value="Nexus3Registry"]')
+    expect(nexus).toBeNull()
+    const acr = await container.querySelector('input[value="Acr"]')
+    expect(acr).toBeNull()
+  })
+
+  test('clicking on Create Artifactory Connector should open create dialog properly', async () => {
+    const context = {
+      ...pipelineContextWithoutArtifactsMock,
+      getStageFromPipeline: jest.fn(() => {
+        return { stage: pipelineContextWithoutArtifactsMock.state.pipeline.stages[0], parent: undefined }
+      })
+    } as any
+
+    const { container } = render(
+      <TestWrapper
+        defaultAppStoreValues={{
+          featureFlags: { NG_AZURE: true, NG_NEXUS_ARTIFACTORY: true, CUSTOM_ARTIFACT_NG: true }
+        }}
+      >
+        <PipelineContext.Provider value={context}>
+          <ArtifactsSelection deploymentType="ServerlessAwsLambda" />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+
+    const addPrimaryButton = await findByText(container, 'pipelineSteps.serviceTab.artifactList.addPrimary')
+    expect(addPrimaryButton).toBeDefined()
+    fireEvent.click(addPrimaryButton)
+
+    const portal = document.getElementsByClassName('bp3-dialog')[0] as HTMLElement
+    const firstStepTitle = await waitFor(() => findByText(portal, 'connectors.specifyArtifactRepoType'))
+    expect(firstStepTitle).toBeDefined()
+    const artifactoryTileText = getByText(portal, 'connectors.artifactory.artifactoryLabel')
+    expect(artifactoryTileText).toBeDefined()
+    userEvent.click(artifactoryTileText!)
+    const continueButton = getByText(portal, 'continue').parentElement as HTMLElement
+    await waitFor(() => expect(continueButton).not.toBeDisabled())
+    userEvent.click(continueButton)
+
+    const artifactRepoLabel = await findByText(portal, 'Artifactory connector')
+    expect(artifactRepoLabel).toBeDefined()
+    const newConnectorButton = getByText(portal, 'newLabel Artifactory connector')
+    userEvent.click(newConnectorButton!)
+
+    const overviewTitle = await findAllByText(portal, 'overview')
+    expect(overviewTitle).toHaveLength(2)
+    expect(getByText(portal, 'name')).toBeDefined()
   })
 })

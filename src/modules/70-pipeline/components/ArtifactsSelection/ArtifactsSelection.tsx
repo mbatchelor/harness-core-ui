@@ -17,7 +17,7 @@ import get from 'lodash-es/get'
 import set from 'lodash-es/set'
 
 import { Dialog, IDialogProps, Classes } from '@blueprintjs/core'
-import type { IconProps } from '@wings-software/uicore/dist/icons/Icon'
+import type { IconProps } from '@harness/icons'
 import { merge } from 'lodash-es'
 import {
   useGetConnectorListV2,
@@ -27,8 +27,7 @@ import {
   PrimaryArtifact,
   StageElementConfig,
   ArtifactConfig,
-  SidecarArtifact,
-  ArtifactOverrideSetWrapper
+  SidecarArtifact
 } from 'services/cd-ng'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
@@ -61,7 +60,6 @@ import StepNexusAuthentication from '@connectors/components/CreateConnector/Nexu
 import StepArtifactoryAuthentication from '@connectors/components/CreateConnector/ArtifactoryConnector/StepAuth/StepArtifactoryAuthentication'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import AzureAuthentication from '@connectors/components/CreateConnector/AzureConnector/StepAuth/AzureAuthentication'
-import { getStageIndexFromPipeline, getFlattenedStages } from '../PipelineStudio/StageBuilder/StageBuilderUtil'
 import ArtifactWizard from './ArtifactWizard/ArtifactWizard'
 import { DockerRegistryArtifact } from './ArtifactRepository/ArtifactLastSteps/DockerRegistryArtifact/DockerRegistryArtifact'
 import { ECRArtifact } from './ArtifactRepository/ArtifactLastSteps/ECRArtifact/ECRArtifact'
@@ -91,16 +89,11 @@ import { ACRArtifact } from './ArtifactRepository/ArtifactLastSteps/ACRArtifact/
 import css from './ArtifactsSelection.module.scss'
 
 export default function ArtifactsSelection({
-  isForOverrideSets = false,
-  identifierName,
-  isForPredefinedSets = false,
   isPropagating = false,
-  overrideSetIdentifier = '',
   deploymentType
 }: ArtifactsSelectionProps): JSX.Element {
   const {
     state: {
-      pipeline,
       selectionState: { selectedStageId }
     },
     getStageFromPipeline,
@@ -142,78 +135,25 @@ export default function ArtifactsSelection({
       allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.CustomArtifact)
     }
 
-    if (NG_AZURE && !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.Acr)) {
+    if (
+      NG_AZURE &&
+      !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.Acr) &&
+      !isServerlessDeploymentType(deploymentType)
+    ) {
       allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.Acr)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  const getPrimaryArtifactByIdentifier = (): PrimaryArtifact => {
-    return artifacts
-      .map((artifact: { overrideSet: { identifier: string; artifacts: { primary: Record<string, any> } } }) => {
-        if (artifact?.overrideSet?.identifier === identifierName) {
-          return artifact.overrideSet.artifacts['primary']
-        }
-      })
-      .filter((x: { overrideSet: { identifier: string; artifacts: [] } }) => x !== undefined)[0]
-  }
-
-  const getSidecarArtifactByIdentifier = (): SidecarArtifactWrapper[] => {
-    return artifacts
-      .map(
-        (artifact: {
-          overrideSet: {
-            identifier: string
-            artifacts: { sidecars: [{ sidecar: Record<string, any> }]; primary: Record<string, any> }
-          }
-        }) => {
-          if (artifact?.overrideSet?.identifier === identifierName) {
-            if (!artifact?.overrideSet?.artifacts?.['sidecars']) {
-              set(artifact, 'overrideSet.artifacts.sidecars', [])
-            }
-            return artifact.overrideSet.artifacts['sidecars']
-          }
-        }
-      )
-      .filter((x: { overrideSet: { identifier: string; artifacts: [] } }) => x !== undefined)[0]
-  }
+  }, [deploymentType])
 
   const getArtifactsPath = (): any => {
-    if (isForOverrideSets) {
-      return get(stage, 'stage.spec.serviceConfig.serviceDefinition.spec.artifactOverrideSets', [])
-    }
-    if (overrideSetIdentifier?.length) {
-      const parentStageName = stage?.stage?.spec?.serviceConfig?.useFromStage?.stage
-      const { index } = getStageIndexFromPipeline(pipeline, parentStageName)
-      const { stages } = getFlattenedStages(pipeline)
-      return get(stages[index], 'stage.spec.serviceConfig.serviceDefinition.spec.artifactOverrideSets', [])
-    }
-    if (isForPredefinedSets || isPropagating) {
+    if (isPropagating) {
       return get(stage, 'stage.spec.serviceConfig.stageOverrides.artifacts', [])
     }
     return get(stage, 'stage.spec.serviceConfig.serviceDefinition.spec.artifacts', {})
   }
 
-  const getOverrideSetArtifact = (): ArtifactOverrideSetWrapper => {
-    const parentStageName = stage?.stage?.spec?.serviceConfig?.useFromStage?.stage
-    const { index } = getStageIndexFromPipeline(pipeline, parentStageName)
-    const { stages } = getFlattenedStages(pipeline)
-    const overrideSets = get(stages[index], 'stage.spec.serviceConfig.serviceDefinition.spec.artifactOverrideSets', [])
-
-    const selectedOverrideSet = overrideSets.find(
-      ({ overrideSet }: { overrideSet: { identifier: string } }) => overrideSet.identifier === overrideSetIdentifier
-    )
-    return selectedOverrideSet
-  }
   const getPrimaryArtifactPath = useCallback((): PrimaryArtifact => {
-    if (isForOverrideSets) {
-      return getPrimaryArtifactByIdentifier()
-    }
-    if (overrideSetIdentifier?.length) {
-      const selectedOverrideSet = getOverrideSetArtifact()
-      return get(selectedOverrideSet, 'overrideSet.artifacts.primary', null)
-    }
-    if (isForPredefinedSets || isPropagating) {
+    if (isPropagating) {
       return get(stage, 'stage.spec.serviceConfig.stageOverrides.artifacts.primary', null)
     }
 
@@ -221,15 +161,7 @@ export default function ArtifactsSelection({
   }, [stage])
 
   const getSidecarPath = useCallback((): SidecarArtifactWrapper[] => {
-    if (isForOverrideSets) {
-      return getSidecarArtifactByIdentifier()
-    }
-    if (overrideSetIdentifier?.length) {
-      const selectedOverrideSet = getOverrideSetArtifact()
-
-      return get(selectedOverrideSet, 'overrideSet.artifacts.sidecars', [])
-    }
-    if (isForPredefinedSets || isPropagating) {
+    if (isPropagating) {
       return get(stage, 'stage.spec.serviceConfig.stageOverrides.artifacts.sidecars', [])
     }
     return get(stage, 'stage.spec.serviceConfig.serviceDefinition.spec.artifacts.sidecars', [])
@@ -353,58 +285,21 @@ export default function ArtifactsSelection({
       if (isPropagating) {
         artifacts['primary'] = { ...artifactObj }
       } else {
-        if (isForOverrideSets) {
-          artifacts.map(
-            (artifact: {
-              overrideSet: { identifier: string; artifacts: { primary: Record<string, any>; sidecars?: [] } }
-            }) => {
-              if (artifact?.overrideSet?.identifier === identifierName) {
-                artifact.overrideSet.artifacts = {
-                  ...artifact.overrideSet.artifacts,
-                  primary: { ...artifactObj }
-                }
-              }
-            }
-          )
-        } else {
-          artifacts['primary'] = { ...artifactObj }
-        }
+        artifacts['primary'] = { ...artifactObj }
       }
     },
-    [artifacts, identifierName, isForOverrideSets, isPropagating]
+    [artifacts, isPropagating]
   )
 
   const setSidecarArtifactData = useCallback(
     (artifactObj: SidecarArtifact): void => {
-      if (isForOverrideSets) {
-        artifacts.map(
-          (artifact: {
-            overrideSet: {
-              identifier: string
-              artifacts: { sidecars: [{ sidecar: Record<string, any> }]; primary: Record<string, any> }
-            }
-          }) => {
-            if (artifact?.overrideSet?.identifier === identifierName) {
-              if (artifact.overrideSet.artifacts['sidecars']) {
-                artifact.overrideSet.artifacts['sidecars'].push({ sidecar: artifactObj })
-              } else {
-                artifact.overrideSet.artifacts = {
-                  ...artifact.overrideSet.artifacts,
-                  sidecars: [{ sidecar: artifactObj }]
-                }
-              }
-            }
-          }
-        )
+      if (sideCarArtifact?.length) {
+        sideCarArtifact.splice(sidecarIndex, 1, { sidecar: artifactObj })
       } else {
-        if (sideCarArtifact?.length) {
-          sideCarArtifact.splice(sidecarIndex, 1, { sidecar: artifactObj })
-        } else {
-          sideCarArtifact.push({ sidecar: artifactObj })
-        }
+        sideCarArtifact.push({ sidecar: artifactObj })
       }
     },
-    [artifacts, identifierName, isForOverrideSets, sideCarArtifact, sidecarIndex]
+    [sideCarArtifact, sidecarIndex]
   )
 
   const updateStageData = useCallback((): StageElementWrapper<DeploymentStageElementConfig> | undefined => {
@@ -509,19 +404,7 @@ export default function ArtifactsSelection({
   }
 
   const removePrimary = (): void => {
-    if (isForOverrideSets) {
-      artifacts.map(
-        (artifact: {
-          overrideSet: { identifier: string; artifacts: { primary: Record<string, any> | null; sidecars: [] } }
-        }) => {
-          if (artifact?.overrideSet?.identifier === identifierName) {
-            artifact.overrideSet.artifacts['primary'] = null
-          }
-        }
-      )
-    } else {
-      delete artifacts.primary
-    }
+    delete artifacts.primary
     primaryArtifact.spec = {}
     setSelectedArtifact(null)
     const updatedStage = produce(stage, draft => {
@@ -756,10 +639,8 @@ export default function ArtifactsSelection({
 
   return (
     <ArtifactListView
-      isForPredefinedSets={isForPredefinedSets}
       stage={stage}
       primaryArtifact={primaryArtifact}
-      overrideSetIdentifier={overrideSetIdentifier}
       sideCarArtifact={sideCarArtifact}
       addNewArtifact={addNewArtifact}
       editArtifact={editArtifact}

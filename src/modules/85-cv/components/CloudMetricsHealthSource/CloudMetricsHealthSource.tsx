@@ -84,7 +84,7 @@ export default function CloudMetricsHealthSource<T>(props: CloudMetricsHealthSou
     isCustomCreatedMetric,
     serviceInstance,
     riskCategory
-  } = formikProps?.values
+  } = formikProps.values
 
   const { loading: metricLoading } = dashboardDetailRequest
 

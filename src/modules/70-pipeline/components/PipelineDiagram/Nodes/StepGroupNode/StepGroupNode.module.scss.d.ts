@@ -17,6 +17,7 @@ declare const styles: {
   readonly firstnode: string
   readonly horizontalBar: string
   readonly marginBottom: string
+  readonly markerEnd: string
   readonly markerStart: string
   readonly nestedGroup: string
   readonly nodeNameText: string
@@ -26,6 +27,8 @@ declare const styles: {
   readonly stepGroupBody: string
   readonly stepGroupHeader: string
   readonly stepGroupNode: string
+  readonly stepGroupNormal: string
+  readonly stepGroupParent: string
   readonly svgLeftJointPoint: string
   readonly svgRightJointPoint: string
 }

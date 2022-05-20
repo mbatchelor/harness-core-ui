@@ -333,7 +333,7 @@ describe('Create empty monitored service', () => {
     // Update values and verify
     cy.get('input[name="metricName"]').scrollIntoView().type(' updated')
     cy.get('input[name="metricPathDropdown"]').click()
-    cy.contains('p', 'Exceptions per Minute').click({ force: true })
+    cy.contains('p', 'Calls per Minute').click({ force: true })
 
     cy.contains('span', 'Submit').click({ force: true })
 
@@ -347,8 +347,8 @@ describe('Create empty monitored service', () => {
 
     cy.contains('p', 'appdMetric 10 updated').click()
     cy.get('input[name="metricName"]').should('have.value', 'appdMetric 10 updated')
-    cy.get('input[name="metricPathDropdown"]').should('have.value', 'Exceptions per Minute')
-    cy.contains('p', 'Overall Application Performance | docker-tier | Exceptions per Minute')
+    cy.get('input[name="metricPathDropdown"]').should('have.value', 'Calls per Minute')
+    cy.contains('p', 'Overall Application Performance | docker-tier | Calls per Minute')
       .scrollIntoView()
       .should('be.visible')
 
@@ -357,8 +357,8 @@ describe('Create empty monitored service', () => {
     cy.get('input[name="metricName"]').should('have.value', '')
     cy.get('input[name="groupName"]').should('have.value', 'Group 2')
     cy.get('input[name="basePath"]').should('have.value', 'Overall Application Performance')
-    cy.get('input[name="metricPathDropdown"]').should('have.value', 'Exceptions per Minute')
-    cy.contains('p', 'Overall Application Performance | docker-tier | Exceptions per Minute')
+    cy.get('input[name="metricPathDropdown"]').should('have.value', 'Calls per Minute')
+    cy.contains('p', 'Overall Application Performance | docker-tier | Calls per Minute')
       .scrollIntoView()
       .should('be.visible')
     cy.get('input[name="metricName"]').type('appdMetric 10 updated')

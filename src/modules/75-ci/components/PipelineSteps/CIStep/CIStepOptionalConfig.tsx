@@ -6,6 +6,7 @@
  */
 
 import React from 'react'
+import { useParams } from 'react-router-dom'
 import { isEmpty, startCase } from 'lodash-es'
 import cx from 'classnames'
 import { Container, Layout, MultiTypeInputType, Text, FormInput } from '@wings-software/uicore'
@@ -16,11 +17,20 @@ import { FormMultiTypeCheckboxField } from '@common/components/MultiTypeCheckbox
 import { MultiTypeTextField, MultiTypeTextProps } from '@common/components/MultiTypeText/MultiTypeText'
 import MultiTypeMap from '@common/components/MultiTypeMap/MultiTypeMap'
 import { MultiTypeMapInputSet } from '@common/components/MultiTypeMapInputSet/MultiTypeMapInputSet'
-import MultiTypeList from '@common/components/MultiTypeList/MultiTypeList'
+import MultiTypeList, { ConnectorReferenceProps } from '@common/components/MultiTypeList/MultiTypeList'
 import { MultiTypeListInputSet } from '@common/components/MultiTypeListInputSet/MultiTypeListInputSet'
+import {
+  FormMultiTypeConnectorField,
+  MultiTypeConnectorFieldProps
+} from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import { getAllowedValuesFromTemplate, shouldRenderRunTimeInputViewWithAllowedValues } from '@pipeline/utils/CIUtils'
+import {
+  getAllowedValuesFromTemplate,
+  shouldRenderRunTimeInputViewWithAllowedValues,
+  useGitScope
+} from '@pipeline/utils/CIUtils'
+import { ConnectorRefWidth } from '@pipeline/utils/constants'
 import { MultiTypeSelectField } from '@common/components/MultiTypeSelect/MultiTypeSelect'
 import { ArchiveFormatOptions } from '../../../constants/Constants'
 import {
@@ -73,7 +83,11 @@ export const renderMultiTypeListInputSet = ({
   expressions,
   getString,
   readonly,
-  formik
+  formik,
+  showConnectorRef,
+  connectorTypes,
+  connectorRefRenderer,
+  restrictToSingleEntry
 }: {
   name: string
   tooltipId: string
@@ -87,7 +101,8 @@ export const renderMultiTypeListInputSet = ({
   getString: (key: keyof StringsMap, vars?: Record<string, any> | undefined) => string
   readonly?: boolean
   formik?: any
-}) => (
+  restrictToSingleEntry?: boolean
+} & ConnectorReferenceProps) => (
   <MultiTypeListInputSet
     name={name}
     multiTextInputProps={{
@@ -116,6 +131,10 @@ export const renderMultiTypeListInputSet = ({
     formik={formik}
     withObjectStructure={withObjectStructure}
     keyName={keyName}
+    showConnectorRef={showConnectorRef}
+    connectorTypes={connectorTypes}
+    connectorRefRenderer={connectorRefRenderer}
+    restrictToSingleEntry={restrictToSingleEntry}
   />
 )
 
@@ -168,6 +187,12 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const prefix = isEmpty(path) ? '' : `${path}.`
+  const gitScope = useGitScope()
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<{
+    projectIdentifier: string
+    orgIdentifier: string
+    accountId: string
+  }>()
 
   const stepCss = stepViewType === StepViewType.DeploymentForm ? css.sm : css.lg
 
@@ -342,7 +367,11 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
       labelKey,
       placeholderKey,
       allowedTypes,
-      allowedTypesForEntries
+      allowedTypesForEntries,
+      showConnectorRef,
+      connectorTypes,
+      connectorRefRenderer,
+      restrictToSingleEntry
     }: {
       name: string
       tooltipId?: string
@@ -350,7 +379,8 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
       placeholderKey?: keyof StringsMap
       allowedTypes: MultiTypeInputType[]
       allowedTypesForEntries: MultiTypeInputType[]
-    }) => (
+      restrictToSingleEntry?: boolean
+    } & ConnectorReferenceProps) => (
       <MultiTypeList
         name={name}
         placeholder={placeholderKey ? getString(placeholderKey) : ''}
@@ -376,9 +406,46 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
           allowedTypes: allowedTypes
         }}
         disabled={readonly}
+        showConnectorRef={showConnectorRef}
+        connectorTypes={connectorTypes}
+        connectorRefRenderer={connectorRefRenderer}
+        restrictToSingleEntry={restrictToSingleEntry}
       />
     ),
     [expressions]
+  )
+
+  const renderConnectorRef = React.useCallback(
+    ({
+      name,
+      connectorTypes,
+      label
+    }: {
+      name: string
+      connectorTypes?: ConnectorReferenceProps['connectorTypes']
+      label?: MultiTypeConnectorFieldProps['label']
+    }): JSX.Element => {
+      return (
+        <FormMultiTypeConnectorField
+          label={label ?? ''}
+          type={connectorTypes}
+          width={ConnectorRefWidth.InputSetView}
+          name={name}
+          placeholder={getString('select')}
+          accountIdentifier={accountId}
+          projectIdentifier={projectIdentifier}
+          orgIdentifier={orgIdentifier}
+          multiTypeProps={{
+            expressions,
+            allowableTypes: [MultiTypeInputType.FIXED],
+            disabled: readonly
+          }}
+          gitScope={gitScope}
+          setRefValue
+        />
+      )
+    },
+    [gitScope, readonly, expressions, accountId, projectIdentifier, orgIdentifier]
   )
 
   return (
@@ -410,6 +477,37 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
           />
         </Container>
       ) : null}
+      {Object.prototype.hasOwnProperty.call(enableFields, 'spec.baseImageConnectorRefs') && (
+        <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
+          {isInputSetView
+            ? renderMultiTypeListInputSet({
+                name: `${prefix}spec.baseImageConnectorRefs`,
+                tooltipId: 'baseImageConnectorRefs',
+                labelKey: 'ci.baseConnectorImage',
+                allowedTypes: SupportedInputTypesForListTypeFieldInInputSetView,
+                allowedTypesForEntries: SupportedInputTypesForListItems,
+                expressions,
+                getString,
+                readonly,
+                formik,
+                showConnectorRef: true,
+                connectorTypes: enableFields['spec.baseImageConnectorRefs'].type,
+                connectorRefRenderer: renderConnectorRef,
+                restrictToSingleEntry: true
+              })
+            : renderMultiTypeList({
+                name: `${prefix}spec.baseImageConnectorRefs`,
+                tooltipId: 'baseImageConnectorRefs',
+                labelKey: 'ci.baseConnectorImage',
+                allowedTypes: SupportedInputTypesForListTypeField,
+                allowedTypesForEntries: SupportedInputTypesForListItems,
+                showConnectorRef: true,
+                connectorTypes: enableFields['spec.baseImageConnectorRefs'].type,
+                connectorRefRenderer: renderConnectorRef,
+                restrictToSingleEntry: true
+              })}
+        </Container>
+      )}
       {!enableFields['spec.privileged']?.shouldHide &&
       Object.prototype.hasOwnProperty.call(enableFields, 'spec.privileged') ? (
         <div className={cx(css.formGroup, css.sm)}>

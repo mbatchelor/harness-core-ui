@@ -21,6 +21,7 @@ import { ConnectorRefWidth } from './constants'
 export function getShortCommitId(commitId: string): string {
   return commitId.slice(0, 7)
 }
+const cloneCodebaseKeyRef = 'stage.spec.cloneCodebase'
 
 export enum CodebaseTypes {
   branch = 'branch',
@@ -111,8 +112,12 @@ export const getConnectorRefWidth = (viewType: StepViewType | string): number =>
 
 export const isRuntimeInput = (str: unknown): boolean => typeof str === 'string' && str?.includes(RUNTIME_INPUT_VALUE)
 
-export const isCloneCodebaseEnabledAtLeastOneStage = (pipeline: PipelineInfoConfig): boolean =>
-  !!pipeline?.stages?.some(stage => get(stage, 'stage.spec.cloneCodebase'))
+// need to check if this is enabled at least one stage in regular or in paralle
+export const isCloneCodebaseEnabledAtLeastOneStage = (pipeline?: PipelineInfoConfig): boolean =>
+  !!pipeline?.stages?.some(
+    stage =>
+      get(stage, cloneCodebaseKeyRef) || stage.parallel?.some(parallelStage => get(parallelStage, cloneCodebaseKeyRef))
+  )
 
 export const isCodebaseFieldsRuntimeInputs = (template?: PipelineInfoConfig): boolean =>
   Object.keys(template?.properties?.ci?.codebase || {}).filter(x => x !== 'build')?.length > 0 // show codebase when more fields needed

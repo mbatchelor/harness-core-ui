@@ -1,6 +1,14 @@
-import { environmentRoute, environmentsCall, envUpsertCall, envUpdateList } from '../../support/70-pipeline/constants'
+import { environmentRoute, environmentsCall, envUpsertCall } from '../../support/70-pipeline/constants'
 
 describe('Environment for Pipeline', () => {
+  const visitEnvironmentsPageWithAssertion = (): void => {
+    cy.visit(environmentRoute, {
+      timeout: 30000
+    })
+    cy.wait(1000)
+    cy.visitPageAssertion()
+  }
+
   beforeEach(() => {
     cy.on('uncaught:exception', () => {
       // returning false here prevents Cypress from
@@ -8,17 +16,28 @@ describe('Environment for Pipeline', () => {
       return false
     })
     cy.initializeRoute()
-    cy.visit(environmentRoute, {
-      timeout: 30000
-    })
+
+    switch (Cypress.currentTest.title) {
+      case 'Environment Addition & YAML/visual parity': {
+        cy.intercept('GET', environmentsCall, { fixture: 'ng/api/environments/environments.empty.json' }).as(
+          'emptyEnvironments'
+        )
+        visitEnvironmentsPageWithAssertion()
+        cy.wait('@emptyEnvironments', { timeout: 30000 })
+        break
+      }
+      default: {
+        cy.intercept('GET', environmentsCall, { fixture: 'ng/api/environments/environmentsList.json' }).as(
+          'environmentsList'
+        )
+        visitEnvironmentsPageWithAssertion()
+        cy.wait('@environmentsList', { timeout: 30000 })
+        break
+      }
+    }
   })
 
   it('Environment Addition & YAML/visual parity', () => {
-    cy.intercept('GET', environmentsCall, { fixture: 'ng/api/environments/environments.empty.json' }).as(
-      'emptyEnvironments'
-    )
-    cy.wait(1000)
-    cy.wait('@emptyEnvironments')
     cy.wait(500)
     cy.contains('h2', 'No Environments Available').should('be.visible')
     cy.contains('span', 'New Environment').should('be.visible')
@@ -52,12 +71,6 @@ describe('Environment for Pipeline', () => {
   })
 
   it('Environment Assertion and Edit', () => {
-    cy.intercept('GET', environmentsCall, { fixture: 'ng/api/environments/environmentsList.json' }).as(
-      'environmentsList'
-    )
-    cy.wait(1000)
-    cy.wait('@environmentsList')
-
     cy.wait(1000)
     cy.contains('p', 'testEnv').should('be.visible')
     cy.contains('p', 'Test Environment Description').should('be.visible')
@@ -87,12 +100,12 @@ describe('Environment for Pipeline', () => {
 
     //upsert call
     cy.intercept('GET', envUpsertCall, { fixture: 'ng/api/environments/upsertCall.json' })
+    cy.intercept('GET', environmentsCall, { fixture: 'ng/api/environments/environmentListUpdate.json' }).as(
+      'environmentListUpdate'
+    )
     cy.contains('span', 'Save').click()
 
     //Updated list
-    cy.intercept('GET', envUpdateList, { fixture: 'ng/api/environments/environmentListUpdate.json' }).as(
-      'environmentListUpdate'
-    )
     cy.wait('@environmentListUpdate')
 
     //check if list updated
@@ -103,11 +116,6 @@ describe('Environment for Pipeline', () => {
   })
 
   it('Environment Assertion and Deletion', () => {
-    cy.intercept('GET', environmentsCall, { fixture: 'ng/api/environments/environmentsList.json' }).as(
-      'environmentsList'
-    )
-    cy.wait(1000)
-    cy.wait('@environmentsList')
     cy.wait(1000)
     cy.contains('p', 'testEnv').should('be.visible')
     cy.contains('p', 'Test Environment Description').should('be.visible')

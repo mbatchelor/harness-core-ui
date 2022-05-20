@@ -11,7 +11,7 @@ import { useModalHook } from '@harness/use-modal'
 import { Dialog, IDialogProps } from '@blueprintjs/core'
 import { useParams } from 'react-router-dom'
 import { CreateConnectorWizard } from '@connectors/components/CreateConnectorWizard/CreateConnectorWizard'
-import { Connectors } from '@connectors/constants'
+import { Connectors, CONNECTOR_MODAL_MIN_WIDTH } from '@connectors/constants'
 import type { ConnectorInfoDTO, ConnectorRequestBody } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { IGitContextFormProps } from '@common/components/GitContextForm/GitContextForm'
@@ -52,7 +52,7 @@ const useCreateConnectorModal = (props: UseCreateConnectorModalProps): UseCreate
     enforceFocus: false,
     style: {
       width: 'auto',
-      minWidth: 1175,
+      minWidth: CONNECTOR_MODAL_MIN_WIDTH,
       minHeight: 640,
       borderLeft: 0,
       paddingBottom: 0,

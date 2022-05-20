@@ -20,6 +20,7 @@ import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import { useStrings } from 'framework/strings'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
+import { SavedExecutionViewTypes } from '@pipeline/components/LogsContent/LogsContent'
 import css from './ExecutionTabs.module.scss'
 
 const TAB_ID_MAP = {
@@ -32,11 +33,18 @@ const TAB_ID_MAP = {
   STO_SECURITY: 'sto_security'
 }
 
-export default function ExecutionTabs(props: React.PropsWithChildren<unknown>): React.ReactElement {
+interface ExecutionTabsProps {
+  children?: React.ReactChild
+  savedExecutionView: string | undefined
+  setSavedExecutionView: (data: string) => void
+}
+
+export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactElement {
   const [selectedTabId, setSelectedTabId] = React.useState('')
-  const { children } = props
+  const { children, savedExecutionView, setSavedExecutionView } = props
   const { getString } = useStrings()
   const { pipelineExecutionDetail, isPipelineInvalid } = useExecutionContext()
+  const initialSelectedView = savedExecutionView || SavedExecutionViewTypes.GRAPH
   const params = useParams<PipelineType<ExecutionPathProps>>()
   const location = useLocation()
   const { view } = useQueryParams<ExecutionQueryParams>()
@@ -46,8 +54,8 @@ export default function ExecutionTabs(props: React.PropsWithChildren<unknown>): 
   const stoCIPipelineSecurityEnabled = useFeatureFlag(FeatureFlag.STO_CI_PIPELINE_SECURITY)
 
   const routeParams = { ...accountPathProps, ...executionPathProps, ...pipelineModuleParams }
-  // const isGraphView = !view || view === 'graph'
-  const isLogView = view === 'log'
+  const isLogView =
+    view === SavedExecutionViewTypes.LOG || (!view && initialSelectedView === SavedExecutionViewTypes.LOG)
   const isCD = params.module === 'cd'
   const isCI = params.module === 'ci'
   const isCIInPipeline = pipelineExecutionDetail?.pipelineExecutionSummary?.moduleInfo?.ci
@@ -62,10 +70,11 @@ export default function ExecutionTabs(props: React.PropsWithChildren<unknown>): 
     const { checked } = e.target as HTMLInputElement
 
     updateQueryParams({
-      view: checked ? 'log' : 'graph',
+      view: checked ? SavedExecutionViewTypes.LOG : SavedExecutionViewTypes.GRAPH,
       filterAnomalous: 'false',
       type: getString('pipeline.verification.analysisTab.metrics')
     })
+    setSavedExecutionView(checked ? SavedExecutionViewTypes.LOG : SavedExecutionViewTypes.GRAPH)
   }
 
   React.useEffect(() => {

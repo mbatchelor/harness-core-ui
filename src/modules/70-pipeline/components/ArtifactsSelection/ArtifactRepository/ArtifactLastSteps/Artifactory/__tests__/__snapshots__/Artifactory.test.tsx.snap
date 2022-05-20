@@ -1012,45 +1012,6 @@ exports[`Serverless artifact ServerlessArtifactoryRepository while fetching repo
           class="connectorForm"
         >
           <div
-            class="dockerSideCard"
-          >
-            <div
-              class="bp3-form-group"
-            >
-              <label
-                class="bp3-label"
-                for="identifier"
-              >
-                <span
-                  class="Tooltip--acenter"
-                  data-tooltip-id="artifactoryArtifact_identifier"
-                >
-                  pipeline.artifactsSelection.existingDocker.sidecarId
-                </span>
-                 
-                <span
-                  class="bp3-text-muted"
-                />
-              </label>
-              <div
-                class="bp3-form-content"
-              >
-                <div
-                  class="bp3-input-group"
-                >
-                  <input
-                    autocomplete="off"
-                    class="bp3-input"
-                    name="identifier"
-                    placeholder="pipeline.artifactsSelection.existingDocker.sidecarIdPlaceholder"
-                    type="text"
-                    value=""
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
             class="imagePathContainer"
           >
             <div
@@ -1483,45 +1444,6 @@ exports[`Serverless artifact ServerlessArtifactoryRepository with repository as 
         <div
           class="connectorForm"
         >
-          <div
-            class="dockerSideCard"
-          >
-            <div
-              class="bp3-form-group"
-            >
-              <label
-                class="bp3-label"
-                for="identifier"
-              >
-                <span
-                  class="Tooltip--acenter"
-                  data-tooltip-id="artifactoryArtifact_identifier"
-                >
-                  pipeline.artifactsSelection.existingDocker.sidecarId
-                </span>
-                 
-                <span
-                  class="bp3-text-muted"
-                />
-              </label>
-              <div
-                class="bp3-form-content"
-              >
-                <div
-                  class="bp3-input-group"
-                >
-                  <input
-                    autocomplete="off"
-                    class="bp3-input"
-                    name="identifier"
-                    placeholder="pipeline.artifactsSelection.existingDocker.sidecarIdPlaceholder"
-                    type="text"
-                    value=""
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
           <div
             class="imagePathContainer"
           >
@@ -2012,45 +1934,6 @@ exports[`Serverless artifact ServerlessArtifactoryRepository with status as erro
           class="connectorForm"
         >
           <div
-            class="dockerSideCard"
-          >
-            <div
-              class="bp3-form-group"
-            >
-              <label
-                class="bp3-label"
-                for="identifier"
-              >
-                <span
-                  class="Tooltip--acenter"
-                  data-tooltip-id="artifactoryArtifact_identifier"
-                >
-                  pipeline.artifactsSelection.existingDocker.sidecarId
-                </span>
-                 
-                <span
-                  class="bp3-text-muted"
-                />
-              </label>
-              <div
-                class="bp3-form-content"
-              >
-                <div
-                  class="bp3-input-group"
-                >
-                  <input
-                    autocomplete="off"
-                    class="bp3-input"
-                    name="identifier"
-                    placeholder="pipeline.artifactsSelection.existingDocker.sidecarIdPlaceholder"
-                    type="text"
-                    value=""
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
             class="imagePathContainer"
           >
             <div
@@ -2484,45 +2367,6 @@ exports[`Serverless artifact ServerlessArtifactoryRepository with status as fail
           class="connectorForm"
         >
           <div
-            class="dockerSideCard"
-          >
-            <div
-              class="bp3-form-group"
-            >
-              <label
-                class="bp3-label"
-                for="identifier"
-              >
-                <span
-                  class="Tooltip--acenter"
-                  data-tooltip-id="artifactoryArtifact_identifier"
-                >
-                  pipeline.artifactsSelection.existingDocker.sidecarId
-                </span>
-                 
-                <span
-                  class="bp3-text-muted"
-                />
-              </label>
-              <div
-                class="bp3-form-content"
-              >
-                <div
-                  class="bp3-input-group"
-                >
-                  <input
-                    autocomplete="off"
-                    class="bp3-input"
-                    name="identifier"
-                    placeholder="pipeline.artifactsSelection.existingDocker.sidecarIdPlaceholder"
-                    type="text"
-                    value=""
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
             class="imagePathContainer"
           >
             <div
@@ -2955,45 +2799,6 @@ exports[`Serverless artifact renders serverlessArtifactRepository 1`] = `
         <div
           class="connectorForm"
         >
-          <div
-            class="dockerSideCard"
-          >
-            <div
-              class="bp3-form-group"
-            >
-              <label
-                class="bp3-label"
-                for="identifier"
-              >
-                <span
-                  class="Tooltip--acenter"
-                  data-tooltip-id="artifactoryArtifact_identifier"
-                >
-                  pipeline.artifactsSelection.existingDocker.sidecarId
-                </span>
-                 
-                <span
-                  class="bp3-text-muted"
-                />
-              </label>
-              <div
-                class="bp3-form-content"
-              >
-                <div
-                  class="bp3-input-group"
-                >
-                  <input
-                    autocomplete="off"
-                    class="bp3-input"
-                    name="identifier"
-                    placeholder="pipeline.artifactsSelection.existingDocker.sidecarIdPlaceholder"
-                    type="text"
-                    value=""
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
           <div
             class="imagePathContainer"
           >

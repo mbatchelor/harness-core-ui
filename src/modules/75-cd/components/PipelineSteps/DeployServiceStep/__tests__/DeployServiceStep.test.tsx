@@ -13,8 +13,8 @@ import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import { fillAtForm, InputTypes } from '@common/utils/JestFormHelper'
 import { DeployService } from '../DeployServiceStep.stories'
-import { NewEditServiceModal } from '../DeployServiceStep'
 import serviceData, { inputSetServiceData } from './serviceMock'
+import { NewEditServiceModal } from '../NewEditServiceModal'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 const onSave = jest.fn()

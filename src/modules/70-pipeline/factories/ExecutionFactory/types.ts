@@ -29,9 +29,9 @@ export interface StageDetailsRegister {
   component: React.ComponentType<StageDetailProps>
 }
 
-export interface ExecutionCardInfoProps {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  data: Record<string, any>
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export interface ExecutionCardInfoProps<T = Record<string, any>> {
+  data: T
   nodeMap: Record<string, GraphLayoutNode>
   startingNodeId: string
   variant: CardVariant

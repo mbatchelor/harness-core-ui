@@ -1,0 +1,171 @@
+{
+  "state": {
+    "pipeline": {
+      "name": "Pipeline",
+      "identifier": "Pipeline",
+      "description": null,
+      "tags": null,
+      "stages": [
+        {
+          "stage": {
+            "name": "Deploy",
+            "identifier": "Deploy",
+            "description": "",
+            "type": "Deployment",
+            "spec": {
+              "serviceConfig": {
+                "service": {
+                  "identifier": null,
+                  "name": null,
+                  "description": null
+                },
+                "serviceDefinition": {
+                  "type": "Kubernetes",
+                  "spec": {
+                    "artifacts": {},
+                    "manifests": [],
+                    "artifactOverrideSets": [
+                      {
+                        "overrideSet": {
+                          "identifier": "overrideSetIdentifier",
+                          "artifacts": {}
+                        }
+                      }
+                    ],
+                    "manifestOverrideSets": []
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "originalPipeline": {
+      "name": "Pipeline",
+      "identifier": "Pipeline",
+      "description": null,
+      "tags": null,
+      "stages": [
+        {
+          "stage": {
+            "name": "Deploy 1",
+            "identifier": "Deploy_1",
+            "description": "",
+            "type": "Deployment",
+            "spec": {
+              "serviceConfig": {
+                "service": {
+                  "identifier": null,
+                  "name": null,
+                  "description": null
+                },
+                "serviceDefinition": {
+                  "type": "Kubernetes",
+                  "spec": {
+                    "artifacts": { "sidecars": [] },
+                    "manifests": [],
+                    "artifactOverrideSets": [],
+                    "manifestOverrideSets": []
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "stage": {
+            "name": "Deploy 2",
+            "identifier": "Deploy_2",
+            "description": "",
+            "type": "Deployment",
+            "spec": {
+              "serviceConfig": {
+                "service": {
+                  "identifier": null,
+                  "name": null,
+                  "description": null
+                },
+                "serviceDefinition": {
+                  "type": "Kubernetes",
+                  "spec": {
+                    "artifacts": { "sidecars": [] },
+                    "manifests": [],
+                    "artifactOverrideSets": [],
+                    "manifestOverrideSets": []
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "stage": {
+            "name": "Deploy 3",
+            "identifier": "Deploy_3",
+            "description": "",
+            "type": "Deployment",
+            "spec": { "serviceConfig": { "useFromStage": { "stage": "Deploy_2" }, "stageOverrides": null } }
+          }
+        }
+      ]
+    },
+    "pipelineIdentifier": "Pipeline",
+    "pipelineView": {
+      "isSplitViewOpen": true,
+      "isDrawerOpened": false,
+      "splitViewData": { "type": "StageView" },
+      "drawerData": { "type": "AddCommand" }
+    },
+    "selectionState": { "selectedStageId": "Deploy" },
+    "isLoading": false,
+    "isBEPipelineUpdated": false,
+    "isDBInitialized": true,
+    "isUpdated": true,
+    "isInitialized": true,
+    "error": ""
+  },
+  "stepsFactory": { "invocationMap": {}, "stepBank": {}, "stepIconMap": {}, "type": "pipeline-factory" },
+  "stagesMap": {
+    "Deployment": {
+      "name": "Deploy",
+      "type": "Deployment",
+      "icon": "pipeline-deploy",
+      "iconColor": "var(--pipeline-deploy-stage-color)",
+      "isApproval": false,
+      "openExecutionStrategy": true
+    },
+    "ci": {
+      "name": "Deploy",
+      "type": "ci",
+      "icon": "pipeline-build",
+      "iconColor": "var(--pipeline-build-stage-color)",
+      "isApproval": false,
+      "openExecutionStrategy": false
+    },
+    "Pipeline": {
+      "name": "Deploy",
+      "type": "Pipeline",
+      "icon": "pipeline",
+      "iconColor": "var(--pipeline-blue-color)",
+      "isApproval": false,
+      "openExecutionStrategy": false
+    },
+    "Custom": {
+      "name": "Deploy",
+      "type": "Custom",
+      "icon": "pipeline-custom",
+      "iconColor": "var(--pipeline-custom-stage-color)",
+      "isApproval": false,
+      "openExecutionStrategy": false
+    },
+    "Approval": {
+      "name": "Deploy",
+      "type": "Approval",
+      "icon": "pipeline-approval",
+      "iconColor": "var(--pipeline-approval-stage-color)",
+      "isApproval": false,
+      "openExecutionStrategy": false
+    }
+  }
+}

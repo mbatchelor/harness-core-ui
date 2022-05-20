@@ -55,6 +55,7 @@ export const getChangeEventTimeline = `/cv/api/account/${accountId}/org/${orgIde
 export const getChangeEventList = `/cv/api/account/${accountId}/org/${orgIdentifier}/project/${projectIdentifier}/change-event?routingId=${accountId}&monitoredServiceIdentifiers=cvng_prod&startTime=1641364526709&endTime=1641450926709&pageIndex=0&pageSize=10`
 export const getMonitoredServiceChangeEventSummary = `/cv/api/change-event/monitored-service-summary?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&monitoredServiceIdentifier=cvng_prod&startTime=1641364526709&endTime=1641450926709`
 export const getChangeEventDetail = `/cv/api/account/${accountId}/org/${orgIdentifier}/project/${projectIdentifier}/change-event/_bDpV3daRFm7MYlqidI5Sw?routingId=${accountId}`
+export const getExecutionDetailv2 = `pipeline/api/pipelines/execution/v2/FIUabw9tRhqLSHMZY1BcKg?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&stageNodeId=VyUkWiR7T_uXkwajusV88Q`
 export const getMonitoredServiceOverAllHealthScore = `/cv/api/monitored-service/cvng_prod/overall-health-score?routingId=${accountId}&accountId=${accountId}&projectIdentifier=${projectIdentifier}&orgIdentifier=${orgIdentifier}&duration=FOUR_HOURS&endTime=1651731852793`
 export const getSLODashboardWidgets = `/cv/api/slo-dashboard/widgets?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&monitoredServiceIdentifier=cvng_prod`
 export const getSLODetailsForSLO_1 = `/cv/api/slo-dashboard/widget/SLO_1?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&startTime=1651717500000&endTime=1651731600000`
@@ -433,8 +434,8 @@ export const errorResponseSLODuplication = {
 export const errorBudgetResetHistoryResponse = {
   resource: [
     {
-      errorBudgetAtReset: 75,
-      remainingErrorBudgetAtReset: 60,
+      errorBudgetAtReset: 100,
+      remainingErrorBudgetAtReset: 110,
       errorBudgetIncrementPercentage: 50,
       createdAt: 1643328000000,
       reason: 'REASON'
@@ -1153,4 +1154,162 @@ export const getSLODetailResponseSLIRecalculation = {
       ]
     }
   }
+}
+
+export const mockedExecutionSummary = {
+  status: 'SUCCESS',
+  data: {
+    pipelineExecutionSummary: {
+      pipelineIdentifier: 'SingleStageMultipleHealthSources',
+      planExecutionId: 'x6HNXGJPRImXyAeBnlmiOQ',
+      name: 'SingleStage-MultipleHealthSources',
+      status: 'Aborted',
+      tags: [],
+      executionTriggerInfo: {
+        triggerType: 'SCHEDULER_CRON',
+        triggeredBy: {
+          uuid: 'systemUser',
+          identifier: 'trigger',
+          extraInfo: {
+            execution_trigger_tag_needed_for_abort: 'zEaak-FLS425IEO7OLzMUg:CVNG:SRM:SingleStageMultipleHealthSources',
+            triggerRef: 'zEaak-FLS425IEO7OLzMUg/CVNG/SRM/trigger',
+            eventCorrelationId: 'Cron_rv1hAyH6SCGgfW575HPcWQ'
+          }
+        },
+        isRerun: false
+      },
+      governanceMetadata: {
+        id: '66333',
+        deny: false,
+        details: [
+          {
+            policySetId: '',
+            deny: false,
+            policyMetadata: [
+              {
+                policyId: '',
+                policyName: 'test_success',
+                severity: 'pass',
+                denyMessages: [],
+                status: 'pass',
+                identifier: 'test_success',
+                accountId: 'zEaak-FLS425IEO7OLzMUg',
+                orgId: '',
+                projectId: '',
+                created: '1650242836542',
+                updated: '1650244024784',
+                error: ''
+              }
+            ],
+            policySetName: 'test_success',
+            status: 'pass',
+            identifier: 'test_success',
+            created: '1650242851674',
+            accountId: 'zEaak-FLS425IEO7OLzMUg',
+            orgId: '',
+            projectId: ''
+          }
+        ],
+        message: '',
+        timestamp: '1652335206998',
+        status: 'pass',
+        accountId: 'zEaak-FLS425IEO7OLzMUg',
+        orgId: 'CVNG',
+        projectId: 'SRM',
+        entity:
+          'accountIdentifier%3AzEaak-FLS425IEO7OLzMUg%2ForgIdentifier%3ACVNG%2FprojectIdentifier%3ASRM%2FpipelineIdentifier%3ASingleStageMultipleHealthSources',
+        type: 'pipeline',
+        action: 'onrun',
+        created: '1652335206976'
+      },
+      moduleInfo: {
+        cd: {
+          __recast: 'io.harness.cdng.pipeline.executions.beans.CDPipelineModuleInfo',
+          envIdentifiers: ['prod'],
+          environmentTypes: ['Production'],
+          infrastructureTypes: ['KubernetesDirect'],
+          serviceDefinitionTypes: ['Kubernetes'],
+          serviceIdentifiers: ['service']
+        }
+      },
+      layoutNodeMap: {
+        '3SCmJ7fHRzCqT9-ATJF31A': {
+          nodeType: 'Deployment',
+          nodeGroup: 'STAGE',
+          nodeIdentifier: 'multiple_health_sources',
+          name: 'multiple_health_sources',
+          nodeUuid: '3SCmJ7fHRzCqT9-ATJF31A',
+          status: 'Aborted',
+          module: 'cd',
+          moduleInfo: {
+            cd: {
+              __recast: 'io.harness.cdng.pipeline.executions.beans.CDStageModuleInfo',
+              serviceInfo: {
+                __recast: 'io.harness.cdng.pipeline.executions.beans.ServiceExecutionSummary',
+                identifier: 'service',
+                displayName: 'service',
+                deploymentType: 'Kubernetes',
+                artifacts: {
+                  __recast: 'io.harness.cdng.pipeline.executions.beans.ServiceExecutionSummary$ArtifactsSummary',
+                  primary: {
+                    __recast: 'io.harness.ngpipeline.pipeline.executions.beans.DockerArtifactSummary',
+                    imagePath: 'harness/todolist',
+                    tag: 'praveen-cv-test'
+                  },
+                  sidecars: []
+                }
+              },
+              infraExecutionSummary: {
+                __recast: 'io.harness.cdng.pipeline.executions.beans.InfraExecutionSummary',
+                identifier: 'prod',
+                name: 'prod',
+                type: 'Production'
+              }
+            }
+          },
+          startTs: 1652335207422,
+          endTs: 1652335267976,
+          edgeLayoutList: {
+            currentNodeChildren: [],
+            nextIds: []
+          },
+          nodeRunInfo: {
+            whenCondition: '<+OnPipelineSuccess>',
+            evaluatedCondition: true,
+            expressions: [
+              {
+                expression: 'OnPipelineSuccess',
+                expressionValue: 'true',
+                count: 1
+              }
+            ]
+          },
+          failureInfo: {
+            message: ''
+          },
+          failureInfoDTO: {
+            message: '',
+            failureTypeList: [],
+            responseMessages: []
+          }
+        }
+      },
+      modules: ['cd'],
+      startingNodeId: '3SCmJ7fHRzCqT9-ATJF31A',
+      startTs: 1652335206998,
+      endTs: 1652335269167,
+      createdAt: 1652335207066,
+      canRetry: true,
+      showRetryHistory: false,
+      runSequence: 248,
+      successfulStagesCount: 0,
+      runningStagesCount: 0,
+      failedStagesCount: 0,
+      totalStagesCount: 1,
+      allowStageExecutions: false,
+      stagesExecution: false
+    }
+  },
+  metaData: null,
+  correlationId: '592d8d1e-8fec-4d44-8169-c0af331b6b72'
 }

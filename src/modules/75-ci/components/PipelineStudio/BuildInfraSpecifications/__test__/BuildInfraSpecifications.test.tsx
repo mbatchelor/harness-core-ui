@@ -22,6 +22,8 @@ import contextMockAdvancedStagesWithPropagate from './pipelineContextMock2.json'
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 jest.mock('@pipeline/components/ErrorsStrip/ErrorsStripBinded', () => () => <></>)
 
+jest.useFakeTimers()
+
 export const ConnectorResponse: UseGetReturnData<ResponseConnectorResponse> = {
   loading: false,
   refetch: jest.fn(),

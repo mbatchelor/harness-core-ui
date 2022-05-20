@@ -11,6 +11,7 @@ common:
   database: 'RDS'
   totalCount: 'Total: {{ count }}'
   emissionUnitHTML: '{{value}} kg CO<sub>2</sub>'
+  refresh: '{{$.common.refresh}}'
 allRegions: 'All Regions'
 allClusters: 'All Clusters'
 enforcementMessage:
@@ -45,6 +46,8 @@ co:
   totalEmissions: 'TOTAL EMISSIONS'
   reducedEmissions: 'EMISSIONS REDUCED'
   rules: 'rules'
+  activeMode: 'ACTIVE MODE'
+  dryRunMode: 'DRY RUN MODE'
   landingPageText:
     '<b>AutoStopping Rules</b> dynamically make sure that your <i>non-production workloads</i> are <b>running (and costing you)
     only when you’re using them</b>, and never when they are idle. Additionally, run your workloads on fully
@@ -161,15 +164,23 @@ co:
             successfullyDeletedSchedule: 'Schedule {{name}} deleted successfully'
             unsuccessfulDeletionMessage: 'There was an error while saving the Fixed Schedule associated with this AutoStopping Rule. {{error}}'
       instanceModal:
+        header: 'Select Instances'
         description: 'AutoStopping Rules can manage multiple VMs as long as they are all within the same cloud provider region.'
         rgEmptyDescription: 'Select a resource group to see all the instances.'
         rgEmptyInstancesDescription: 'No instances found for {{region}} resource group'
         gcpFiltersNotSelectedDescription: 'Select a region and a zone to see all the instances.'
         gcpZoneFilterNotSelectedDescription: 'Select a zone to see all the instances.'
         gcpEmptyInstancesDescription: 'No instances found for this zone.'
+        labels:
+          selectTags: 'Select Tags (optional)'
+          selectRegion: '{{$.pipeline.regionPlaceholder}}'
+          selectTagKey: 'Select tag key'
+          selectTagVal: 'Select tag value'
       ecsModal:
         title: 'Select ECS Service'
         emptyDescription: 'Select a Region and a Cluster to see all the services.'
+        labels:
+          selectCluster: 'Select Cluster'
       rdsModal:
         title: 'Select RDS instance(s)'
         emptyDescription: 'Select a Region to see all the databases.'
@@ -178,6 +189,11 @@ co:
       igModal:
         title: 'Select instance group'
         gcpFiltersNotSelectedDescription: 'Select a region to see all the instance groups.'
+      kubernetesModal:
+        title: '{{$.connectors.selectConnector}}'
+        infoText1: 'The connectors shown below are the clusters who are connected to a Harness Delegate'
+        infoText2: 'A Harness Delegate is a service that can run in local network or VPC to connect artifact servers, infrastructure and verification providers to install projects and pipelines. If the cluster you would like to monitor does not have a Harness delegate connected to it, you will have to create a connector'
+        createNewConnectorBtn: '+ Create a new connector'
     review:
       configDetails: 'Configuration Details'
       cloudAccountDetails: 'Cloud account details'
@@ -188,6 +204,8 @@ co:
       serviceDetails: 'Service details'
       rdsDetails: 'RDS details'
       hideProgressPage: 'Hide progress page'
+      activeMode: 'Active mode'
+      dryRunMode: 'Dry run mode'
       setupAccessDetails: 'Setup Access details'
       dnsLinkMapping: 'DNS Link mapping'
       instanceFulfilment: 'Instance fulfilment'
@@ -695,6 +713,8 @@ perspectives:
       addRuleText: 'Add rule'
       selectOperator: 'SELECT OPERATOR'
       selectValuesText: 'SELECT VALUES'
+      selectAll: 'Select all'
+      chooseOperand: 'Choose Operand'
     preview:
       groupBy: 'Group By'
       title: '{{$.executionStrategy.preview}}'
@@ -917,14 +937,20 @@ anomalyDetection:
   tableHeaders:
     date: date
     anomalousSpend: anomalous spend
+    anomalousVariant: variance
     resource: resource
     details: details
     status: '{{ $.ce.co.accessPoint.status }}'
   tableMenu:
     whitelistResource: Whitelist resource
-    falseAnomaly: This is false anomaly
+    falseAnomaly: This is a false anomaly
+  noSearchResults: The value you have searched for has no anomalies.
+  noData: There are no anomalies yet in the selected time range.
+  checkLater: Check after some time or select a longer time range to see older anomalies.
   userFeedbackSuccessMsg: 'Thanks for your feedback!'
-  trend: '(+{{ trend }}%)'
+  listFetchingError: Error in showing anomalies
+  listFetchingErrorDesc: Come back and check later.
+  trend: '+{{ trend }}%'
   tooltip:
     countText: '{{ count }} Anomalies'
     anomaliesRedirectionText: View anomalies

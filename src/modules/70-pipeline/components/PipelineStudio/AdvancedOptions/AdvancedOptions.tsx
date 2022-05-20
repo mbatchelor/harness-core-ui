@@ -59,6 +59,9 @@ export function AdvancedOptions({ onApplyChanges, onDiscard, pipeline }: Advance
       if (isEmpty(data.timeout)) {
         unset(data, 'timeout')
       }
+      if (isEmpty(data.delegateSelectors) || data.delegateSelectors?.[0] === '') {
+        unset(data, 'delegateSelectors')
+      }
       onApplyChanges(data)
     },
     [onApplyChanges]

@@ -21,6 +21,7 @@ export interface ChangeDetailsDataInterface {
   details: {
     [key: string]: string | { name: string | ChangeEventDTO['type']; url?: string }
   }
+  executedBy?: React.ReactElement
 }
 
 export interface ChangeTitleData {
@@ -28,6 +29,9 @@ export interface ChangeTitleData {
   type: ChangeEventDTO['type']
   executionId: string
   url?: string
+  status?: string
+  serviceIdentifier?: string
+  envIdentifier?: string
 }
 
 export interface CustomChangeEventDTO extends ChangeEventDTO {

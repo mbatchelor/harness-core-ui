@@ -51,7 +51,7 @@ const ProjectsListPage: React.FC = () => {
   useDocumentTitle(getString('projectsText'))
 
   const { preference: savedProjectView, setPreference: setSavedProjectView } = usePreferenceStore<Views | undefined>(
-    PreferenceScope.USER,
+    PreferenceScope.MACHINE,
     'projectsViewType'
   )
   const initialSelectedView = savedProjectView || Views.GRID

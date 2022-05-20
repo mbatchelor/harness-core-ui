@@ -8,7 +8,7 @@
 import React, { useEffect, useMemo } from 'react'
 import type { CellProps } from 'react-table'
 import cx from 'classnames'
-import { isEmpty as _isEmpty, defaultTo as _defaultTo } from 'lodash-es'
+import { isEmpty as _isEmpty, defaultTo as _defaultTo, isBoolean } from 'lodash-es'
 import { Heading, Container, Layout, Text, Table, Icon, IconName } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import type { GatewayDetails, InstanceDetails } from '@ce/components/COCreateGateway/models'
@@ -229,15 +229,15 @@ const COGatewayReview: React.FC<COGatewayReviewProps> = props => {
                   alt=""
                   aria-hidden
                 />
-                <Text>{props.gatewayDetails.fullfilment || 'ondemand'}</Text>
+                <Text>{_defaultTo(props.gatewayDetails.fullfilment, getString('ce.nodeRecommendation.onDemand'))}</Text>
               </Layout.Horizontal>
             </Layout.Horizontal>
           )}
         </ReviewDetailsSection>
       )}
       {(isK8sRule ||
+        isBoolean(props.gatewayDetails.opts?.dry_run) ||
         !_isEmpty(props.gatewayDetails.resourceMeta?.container_svc) ||
-        !_isEmpty(filteredSchedules) ||
         !_isEmpty(filteredSchedules)) && (
         <ReviewDetailsSection isEditable onEdit={handleAdvancedConfigEdit}>
           <Heading level={2}>{getString('ce.co.autoStoppingRule.configuration.step4.advancedConfiguration')}</Heading>
@@ -250,6 +250,16 @@ const COGatewayReview: React.FC<COGatewayReviewProps> = props => {
               >
                 <Text>{getString('ce.co.autoStoppingRule.review.hideProgressPage')}</Text>
                 <Text>{Utils.booleanToString(props.gatewayDetails.opts?.hide_progress_page)}</Text>
+              </Layout.Horizontal>
+            )}
+            {isBoolean(props.gatewayDetails.opts?.dry_run) && (
+              <Layout.Horizontal
+                spacing={'large'}
+                padding={{ bottom: 'medium' }}
+                className={cx(css.equalSpacing, css.borderSpacing)}
+              >
+                <Text>{getString('ce.co.autoStoppingRule.review.dryRunMode')}</Text>
+                <Text>{Utils.booleanToString(props.gatewayDetails.opts?.dry_run as boolean)}</Text>
               </Layout.Horizontal>
             )}
             {!_isEmpty(filteredSchedules) && (

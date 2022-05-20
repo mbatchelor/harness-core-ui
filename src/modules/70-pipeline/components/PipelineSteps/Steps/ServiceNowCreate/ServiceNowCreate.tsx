@@ -49,6 +49,8 @@ export class ServiceNowCreate extends PipelineStep<ServiceNowCreateData> {
       fieldType: FieldType.ConfigureFields,
       useServiceNowTemplate: false,
       fields: [],
+      selectedFields: [],
+      templateFields: [],
       description: '',
       shortDescription: ''
     }

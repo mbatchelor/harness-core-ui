@@ -6,6 +6,7 @@
  */
 
 import type { Point } from 'highcharts'
+import type { SelectOption } from '@harness/uicore'
 import type { CCM_CHART_TYPES } from '@ce/constants'
 import type { QlceViewTimeGroupType, QlceViewFilterInput, QlceViewFieldInputInput } from 'services/ce/services'
 import type { CostTarget, SharedCost } from 'services/ce'
@@ -154,4 +155,24 @@ export type CustomPoint = Point & {
 
 export type CustomHighcharts = Highcharts.Chart & {
   rePlaceMarker: (reqVal: number, limitVal?: number) => void
+}
+
+export interface SelectedTagFilter {
+  key?: string
+  value?: string
+}
+
+export interface GCPFiltersProps {
+  region?: SelectOption
+  zone?: SelectOption
+}
+
+export interface AWSFiltersProps {
+  region?: SelectOption
+  tags?: SelectedTagFilter
+}
+
+export interface AzureFiltersProps {
+  resourceGroup?: SelectOption
+  tags?: SelectedTagFilter
 }

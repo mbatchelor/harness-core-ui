@@ -16,7 +16,6 @@ import routes from '@common/RouteDefinitions'
 import type { DeleteFeatureFlagQueryParams, Feature, GitSyncErrorResponse } from 'services/cf'
 import { useConfirmAction, useQueryParams } from '@common/hooks'
 import { GitSyncFormValues, GIT_SYNC_ERROR_CODE, UseGitSync } from '@cf/hooks/useGitSync'
-import { AUTO_COMMIT_MESSAGES } from '@cf/constants/GitSyncConstants'
 import { getErrorMessage, showToaster } from '@cf/utils/CFUtils'
 import SaveFlagToGitModal from '../../SaveFlagToGitModal/SaveFlagToGitModal'
 
@@ -36,6 +35,7 @@ interface UseDeleteFlagModalReturn {
 
 const useDeleteFlagModal = (props: UseDeleteFlagModalProps): UseDeleteFlagModalReturn => {
   const { featureFlag, gitSync, queryParams, deleteFeatureFlag } = props
+  const { gitSyncInitialValues, gitSyncValidationSchema } = gitSync.getGitSyncFormMeta()
 
   const urlQuery: Record<string, string> = useQueryParams()
   const { projectIdentifier, orgIdentifier, accountId } = useParams<Record<string, string>>()
@@ -56,20 +56,20 @@ const useDeleteFlagModal = (props: UseDeleteFlagModalProps): UseDeleteFlagModalR
       <SaveFlagToGitModal
         flagName={featureFlag.name}
         flagIdentifier={featureFlag.identifier}
+        gitSyncInitialValues={gitSyncInitialValues}
+        gitSyncValidationSchema={gitSyncValidationSchema}
         onSubmit={handleDeleteFlag}
         onClose={() => {
           hideGitModal()
         }}
       />
     )
-  }, [featureFlag.name, featureFlag.identifier])
+  }, [featureFlag.name, featureFlag.identifier, gitSync])
 
   const handleDeleteFlag = async (gitSyncFormValues?: GitSyncFormValues): Promise<void> => {
     let commitMsg = ''
 
     if (gitSync.isGitSyncEnabled) {
-      const { gitSyncInitialValues } = gitSync.getGitSyncFormMeta(AUTO_COMMIT_MESSAGES.DELETED_FLAG)
-
       if (gitSync.isAutoCommitEnabled) {
         commitMsg = gitSyncInitialValues.gitDetails.commitMsg
       } else {

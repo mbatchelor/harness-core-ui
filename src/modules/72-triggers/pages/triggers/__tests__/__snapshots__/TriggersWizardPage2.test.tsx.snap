@@ -1748,7 +1748,7 @@ exports[`Manifest Trigger Tests function getArtifactSpecObj by displaying select
                                   <span
                                     class="StyledProps--font StyledProps--main textHeading StyledProps--inline"
                                   >
-                                    COMMON.LOCATION
+                                    PIPELINE.ARTIFACTTRIGGERCONFIGPANEL.LOCATIONREPOPATH
                                   </span>
                                 </div>
                               </p>
@@ -2458,7 +2458,7 @@ exports[`Manifest Trigger Tests on click of edit - submits thru the right payloa
                                   <span
                                     class="StyledProps--font StyledProps--main textHeading StyledProps--inline"
                                   >
-                                    COMMON.LOCATION
+                                    PIPELINE.ARTIFACTTRIGGERCONFIGPANEL.LOCATIONREPOPATH
                                   </span>
                                 </div>
                               </p>
@@ -3768,7 +3768,7 @@ exports[`Manifest Trigger Tests on click of edit artifact - submits thru the rig
                                   <span
                                     class="StyledProps--font StyledProps--main textHeading StyledProps--inline"
                                   >
-                                    COMMON.LOCATION
+                                    PIPELINE.ARTIFACTTRIGGERCONFIGPANEL.LOCATIONREPOPATH
                                   </span>
                                 </div>
                               </p>

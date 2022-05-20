@@ -10,7 +10,7 @@ import { useParams } from 'react-router-dom'
 import type { CellProps, Column, Renderer } from 'react-table'
 import { Button, Container, Layout, Text, PageError, TableV2 } from '@wings-software/uicore'
 import type { IconName } from '@blueprintjs/core'
-import type { HarnessIconName } from '@wings-software/uicore/dist/icons/HarnessIcons'
+import type { HarnessIconName } from '@harness/icons'
 import type { ContainerProps } from '@wings-software/uicore/dist/components/Container/Container'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import { AuditTrail, Feature, useGetAuditByParams } from 'services/cf'
@@ -44,7 +44,7 @@ const RenderCellAction: Renderer<CellProps<AuditTrail>> = ({ row }) => {
   const data = row.original
   let text = getString('cf.auditLogs.unknown')
   let icon: IconName | HarnessIconName = 'audit-log-created'
-  let color = 'var(--purple-500)'
+  let color = 'var(--purple-600)'
   const eventStrings = translateEvents(data.instructionSet, getString)
 
   switch (data.action) {

@@ -62,8 +62,21 @@ describe('Unit tests for LogAnalysisRiskAndJiraModal', () => {
       data: 'Failed to fetch'
     }
 
-    render(<WrapperComponent {...initialProps} logsError={errorObj} />)
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    render(<WrapperComponent {...initialProps} logsError={errorObj} rowData={{} as LogAnalysisRowData} />)
 
     expect(screen.getByTestId('LogAnalysisRiskAndJiraModal_error')).toBeInTheDocument()
+  })
+
+  test('should not show error when data is available', () => {
+    const errorObj = {
+      message: 'Failed to fetch: Failed to fetch',
+      data: 'Failed to fetch'
+    }
+
+    render(<WrapperComponent {...initialProps} logsError={errorObj} />)
+
+    expect(screen.queryByTestId('LogAnalysisRiskAndJiraModal_error')).not.toBeInTheDocument()
   })
 })

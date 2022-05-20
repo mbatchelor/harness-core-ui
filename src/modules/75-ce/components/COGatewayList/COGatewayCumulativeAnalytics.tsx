@@ -14,6 +14,7 @@ import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import { String, useStrings } from 'framework/strings'
 import type { CumulativeSavings } from 'services/lw'
+import { RulesMode } from '@ce/constants'
 import EmptyView from '@ce/images/empty-state.svg'
 import { getEmissionsValue } from '@ce/utils/formatResourceValue'
 import greenLeaf from '@ce/common/images/green-leaf.svg'
@@ -26,6 +27,7 @@ import css from './COGatewayCumulativeAnalytics.module.scss'
 interface COGatewayCumulativeAnalyticsProps {
   data: CumulativeSavings | undefined
   loadingData: boolean
+  mode: RulesMode
 }
 
 const toFixedDecimalNumber = (num: number, decimalPlaces = 2) => Number(num.toFixed(decimalPlaces))
@@ -35,7 +37,8 @@ function getStackedAreaChartOptions(
   categories: string[],
   yAxisText: string,
   savingsData: number[],
-  spendData: number[]
+  spendData: number[],
+  mode: RulesMode
 ): Highcharts.Options {
   let step = 1
   if (categories && categories.length) {
@@ -108,7 +111,8 @@ function getStackedAreaChartOptions(
             [1, 'rgba(71, 213, 223, 0)']
           ]
         },
-        pointPlacement: 'on'
+        pointPlacement: 'on',
+        dashStyle: mode === RulesMode.DRY ? 'Dash' : 'Solid'
       },
       {
         name: 'Spend',
@@ -127,7 +131,8 @@ function getStackedAreaChartOptions(
             [1, 'rgba(124, 77, 211, 0) 55.59%)']
           ]
         },
-        pointPlacement: 'on'
+        pointPlacement: 'on',
+        dashStyle: mode === RulesMode.DRY ? 'Dash' : 'Solid'
       }
     ]
   }
@@ -138,7 +143,7 @@ function getSavingsPercentage(totalSavings: number, totalPotentialCost: number):
   }
   return Math.round((totalSavings / totalPotentialCost) * 100)
 }
-const COGatewayCumulativeAnalytics: React.FC<COGatewayCumulativeAnalyticsProps> = ({ data, loadingData }) => {
+const COGatewayCumulativeAnalytics: React.FC<COGatewayCumulativeAnalyticsProps> = ({ data, loadingData, mode }) => {
   const { getString } = useStrings()
   const sustainabilityEnabled = useFeatureFlag(FeatureFlag.CCM_SUSTAINABILITY)
   const hasData = !_isEmpty(data)
@@ -169,7 +174,8 @@ const COGatewayCumulativeAnalytics: React.FC<COGatewayCumulativeAnalyticsProps> 
                   data?.days as string[],
                   '',
                   data?.savings as number[],
-                  data?.actual_cost as number[]
+                  data?.actual_cost as number[],
+                  mode
                 )}
               />
             ) : loadingData ? (
@@ -192,9 +198,10 @@ const COGatewayCumulativeAnalytics: React.FC<COGatewayCumulativeAnalyticsProps> 
                   options={
                     hasData
                       ? geGaugeChartOptionsWithoutLabel(
-                          getSavingsPercentage(data?.total_savings as number, data?.total_potential as number)
+                          getSavingsPercentage(data?.total_savings as number, data?.total_potential as number),
+                          mode
                         )
-                      : geGaugeChartOptionsWithoutLabel(0)
+                      : geGaugeChartOptionsWithoutLabel(0, mode)
                   }
                 />
               </Layout.Horizontal>

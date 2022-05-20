@@ -121,6 +121,11 @@ const triggerDrawerMap = (getString: (key: StringKeys) => string): AddDrawerMapI
           itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.DockerRegistry]),
           value: ENABLED_ARTIFACT_TYPES.DockerRegistry,
           iconName: ArtifactIconByType.DockerRegistry
+        },
+        {
+          itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry]),
+          value: ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,
+          iconName: ArtifactIconByType.ArtifactoryRegistry
         }
       ]
     },
@@ -132,12 +137,6 @@ const triggerDrawerMap = (getString: (key: StringKeys) => string): AddDrawerMapI
           itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Acr]),
           value: ENABLED_ARTIFACT_TYPES.Acr,
           iconName: ArtifactIconByType.Acr,
-          disabled: true
-        },
-        {
-          itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry]),
-          value: ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,
-          iconName: ArtifactIconByType.ArtifactoryRegistry,
           disabled: true
         },
         {

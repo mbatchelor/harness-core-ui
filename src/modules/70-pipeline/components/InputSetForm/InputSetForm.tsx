@@ -56,11 +56,6 @@ import type { GitContextProps } from '@common/components/GitContextForm/GitConte
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import type { InputSetDTO, InputSetType } from '@pipeline/utils/types'
-import {
-  isCloneCodebaseEnabledAtLeastOneStage,
-  isCodebaseFieldsRuntimeInputs,
-  getPipelineWithoutCodebaseInputs
-} from '@pipeline/utils/CIUtils'
 import { clearNullUndefined, isInputSetInvalid } from '@pipeline/utils/inputSetUtils'
 import { clearRuntimeInput } from '../PipelineStudio/StepUtil'
 import GitPopover from '../GitPopover/GitPopover'
@@ -473,20 +468,6 @@ export function InputSetForm(props: InputSetFormProps): React.ReactElement {
     defaultTo(parse(defaultTo(pipeline?.data?.yamlPipeline, ''))?.pipeline?.name, getString('pipelines')),
     isEdit ? defaultTo(inputSetResponse?.data?.name, '') : getString('inputSets.newInputSetLabel')
   ])
-
-  React.useEffect(() => {
-    // only do this for CI
-    if (
-      formikRef.current?.values?.pipeline?.template &&
-      isCodebaseFieldsRuntimeInputs(
-        formikRef.current?.values.pipeline?.template?.templateInputs as PipelineInfoConfig
-      ) &&
-      !isCloneCodebaseEnabledAtLeastOneStage(formikRef.current?.values.pipeline)
-    ) {
-      const newPipeline = getPipelineWithoutCodebaseInputs(formikRef.current.values)
-      formikRef.current.setFieldValue('pipeline', newPipeline)
-    }
-  }, [formikRef.current?.values?.pipeline?.template])
 
   const handleModeSwitch = React.useCallback(
     (view: SelectedView) => {

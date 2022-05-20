@@ -184,7 +184,7 @@ exports[`Select Artifact Modal tests on click of select button 1`] = `
             <span
               class="StyledProps--font StyledProps--main textHeading StyledProps--inline"
             >
-              COMMON.LOCATION
+              PIPELINE.ARTIFACTTRIGGERCONFIGPANEL.LOCATIONREPOPATH
             </span>
           </div>
         </p>
@@ -489,7 +489,7 @@ exports[`Select Artifact Modal tests when selected manifest-chart is not runtime
             <span
               class="StyledProps--font StyledProps--main textHeading StyledProps--inline"
             >
-              COMMON.LOCATION
+              PIPELINE.ARTIFACTTRIGGERCONFIGPANEL.LOCATIONREPOPATH
             </span>
           </div>
         </p>

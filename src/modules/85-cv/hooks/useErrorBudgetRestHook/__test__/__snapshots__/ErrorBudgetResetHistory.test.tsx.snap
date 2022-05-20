@@ -119,7 +119,7 @@ exports[`ErrorBudgetResetHistory it should render the data 1`] = `
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
           >
-            cv.increaseWithPercentSign
+            cv.increaseInMinutes
           </p>
           <span
             class="bp3-icon bp3-icon-double-caret-vertical StyledProps--main StyledProps--padding-left-small"
@@ -226,8 +226,8 @@ exports[`ErrorBudgetResetHistory it should render the data 1`] = `
             <p
               class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-variation-small"
             >
-              50
-               %
+               
+              cv.minutes
             </p>
           </div>
           <div
@@ -292,8 +292,8 @@ exports[`ErrorBudgetResetHistory it should render the data 1`] = `
             <p
               class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-variation-small"
             >
-              50
-               %
+               
+              cv.minutes
             </p>
           </div>
           <div

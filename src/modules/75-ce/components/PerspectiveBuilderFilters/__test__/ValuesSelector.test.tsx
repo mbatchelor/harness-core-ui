@@ -6,9 +6,9 @@
  */
 
 import React from 'react'
-import { render, fireEvent, waitFor } from '@testing-library/react'
+import { render, fireEvent, act, getByText } from '@testing-library/react'
 import type { QlceViewFilterOperator } from 'services/ce/services'
-import { TestWrapper } from '@common/utils/testUtils'
+import { findPopoverContainer, TestWrapper } from '@common/utils/testUtils'
 import ValuesSelectors from '../views/ValuesSelector'
 
 const mockData = {
@@ -65,18 +65,36 @@ const mockData = {
   onValueChange: jest.fn()
 }
 
+const mockDataLoading = {
+  ...mockData,
+  fetching: true
+}
 describe('test cases for filter values selector', () => {
-  test('should be able to render ValuesSelector', async () => {
-    const { container, getByPlaceholderText } = render(
+  test('should be able to render ValuesSelector / open popover', async () => {
+    const { container } = render(
       <TestWrapper>
         <ValuesSelectors onInputChange={jest.fn()} {...mockData} />
       </TestWrapper>
     )
-    expect(container.querySelector('[class*="operandSelectorContainer"]')).not.toBeNull()
-    const ctn = container.querySelector('[class*="operandSelectorContainer"]')
-    fireEvent.click(ctn!)
-    await waitFor(() => getByPlaceholderText('ce.perspectives.createPerspective.filters.searchText'))
+    expect(container.querySelector('[class*="bp3-input-ghost"]')).not.toBeNull()
 
-    expect(container).toMatchSnapshot()
+    const ctn = container.querySelector('input')
+    act(() => {
+      fireEvent.click(ctn!)
+    })
+
+    const popover = findPopoverContainer()
+
+    expect(getByText(popover!, 'ce.perspectives.createPerspective.filters.selectAll')).toBeDefined()
+  })
+
+  test('should be able to show spinner when loading', async () => {
+    const { container } = render(
+      <TestWrapper>
+        <ValuesSelectors onInputChange={jest.fn()} {...mockDataLoading} />
+      </TestWrapper>
+    )
+
+    expect(container.querySelector('[data-icon="spinner"]')).toBeDefined()
   })
 })

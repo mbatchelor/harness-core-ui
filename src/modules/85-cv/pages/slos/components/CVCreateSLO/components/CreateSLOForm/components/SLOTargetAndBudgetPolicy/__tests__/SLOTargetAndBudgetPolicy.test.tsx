@@ -31,6 +31,18 @@ jest.mock('@cv/pages/slos/components/SLOTargetChart/SLOTargetChart', () => ({
   }
 }))
 
+jest.mock('services/cv', () => ({
+  useGetNotificationRulesForSLO: jest
+    .fn()
+    .mockImplementation(() => ({ data: {}, loading: false, error: null, refetch: jest.fn() })),
+  useSaveNotificationRuleData: jest
+    .fn()
+    .mockImplementation(() => ({ data: {}, loading: false, error: null, refetch: jest.fn() })),
+  useUpdateNotificationRuleData: jest
+    .fn()
+    .mockImplementation(() => ({ data: {}, loading: false, error: null, refetch: jest.fn() }))
+}))
+
 function WrapperComponent(props: { initialValues: any }): JSX.Element {
   const { initialValues } = props
   return (

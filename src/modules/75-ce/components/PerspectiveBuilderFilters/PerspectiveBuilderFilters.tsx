@@ -56,7 +56,11 @@ const Filters: React.FC<FiltersProps> = ({
             {filters.map((data, innerIndex) => {
               return (
                 <Container
-                  className={cx(css.filters, { [css.withAndOperation]: showAndOperator })}
+                  className={cx(
+                    css.filters,
+                    { [css.withAndOperation]: showAndOperator },
+                    { [css.bottomPadding]: filters.length > 1 }
+                  )}
                   key={`filter-pill-${innerIndex}`}
                 >
                   <PerspectiveBuilderFilter

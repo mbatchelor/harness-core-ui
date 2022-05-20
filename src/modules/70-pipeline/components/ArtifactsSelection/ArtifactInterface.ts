@@ -23,9 +23,7 @@ import type {
 } from 'services/cd-ng'
 
 export interface ArtifactListViewProps {
-  isForPredefinedSets?: boolean
   stage: StageElementWrapper<DeploymentStageElementConfig> | undefined
-  overrideSetIdentifier?: string
   primaryArtifact: PrimaryArtifact
   sideCarArtifact: SidecarArtifactWrapper[] | undefined
   addNewArtifact: (view: number) => void
@@ -39,11 +37,7 @@ export interface ArtifactListViewProps {
   allowSidecar?: boolean
 }
 export interface ArtifactsSelectionProps {
-  isForOverrideSets?: boolean
-  isForPredefinedSets?: boolean
-  identifierName?: string
   isPropagating?: boolean
-  overrideSetIdentifier?: string
   deploymentType: ServiceDefinition['type']
 }
 

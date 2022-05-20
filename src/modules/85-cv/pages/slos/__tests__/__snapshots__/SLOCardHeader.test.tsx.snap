@@ -344,15 +344,15 @@ exports[`SLOCardHeader it should successfully reset the error budget 1`] = `
               >
                 <div
                   class="bp3-form-group"
-                  data-id="errorBudgetIncrementPercentage-0"
+                  data-id="errorBudgetIncrementMinutes-0"
                 >
                   <label
                     class="bp3-label"
-                    for="errorBudgetIncrementPercentage"
+                    for="errorBudgetIncrementMinutes"
                   >
                     <span
                       class="Tooltip--acenter"
-                      data-tooltip-id="errorBudgetReset_errorBudgetIncrementPercentage"
+                      data-tooltip-id="errorBudgetReset_errorBudgetIncrementMinutes"
                     >
                       cv.increaseErrorBudgetBy
                     </span>
@@ -371,7 +371,7 @@ exports[`SLOCardHeader it should successfully reset the error budget 1`] = `
                         autocomplete="off"
                         class="bp3-input"
                         min="1"
-                        name="errorBudgetIncrementPercentage"
+                        name="errorBudgetIncrementMinutes"
                         style="padding-right: 0px;"
                         type="number"
                         value="101"
@@ -379,25 +379,11 @@ exports[`SLOCardHeader it should successfully reset the error budget 1`] = `
                       <span
                         class="bp3-input-action"
                       >
-                        <span
-                          class="bp3-icon bp3-icon-percentage StyledProps--main StyledProps--padding-small"
-                          icon="percentage"
+                        <p
+                          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey600 StyledProps--font-variation-body StyledProps--padding-top-xsmall StyledProps--padding-right-small"
                         >
-                          <svg
-                            data-icon="percentage"
-                            height="16"
-                            viewBox="0 0 16 16"
-                            width="16"
-                          >
-                            <desc>
-                              percentage
-                            </desc>
-                            <path
-                              d="M6 6V4c0-1.1-.9-2-2-2H3c-1.1 0-2 .9-2 2v2c0 1.1.9 2 2 2h1c1.1 0 2-.9 2-2zM3.5 6c-.28 0-.5-.22-.5-.5v-1c0-.28.22-.5.5-.5s.5.22.5.5v1c0 .28-.22.5-.5.5zM13 8h-1c-1.1 0-2 .9-2 2v2c0 1.1.9 2 2 2h1c1.1 0 2-.9 2-2v-2c0-1.1-.9-2-2-2zm0 3.5c0 .28-.22.5-.5.5s-.5-.22-.5-.5v-1c0-.28.22-.5.5-.5s.5.22.5.5v1zM12 3a1.003 1.003 0 00-1.87-.5l-5.99 9.98c-.09.15-.14.33-.14.52a1.003 1.003 0 001.87.5l5.99-9.98c.09-.15.14-.33.14-.52z"
-                              fill-rule="evenodd"
-                            />
-                          </svg>
-                        </span>
+                          cv.minutes
+                        </p>
                       </span>
                     </div>
                   </div>

@@ -107,6 +107,7 @@ postCommandLabel: Post-Command
 portBindings: Port Bindings
 hostPort: Host Port
 containerPort: Container Port
+baseConnectorImage: Base Image Connector
 getStartedWithCI:
   firstPipeline: 'Let’s get you started with your first Pipeline!'
   chooseAnOption: Choose an option below to get started with your first Pipeline.

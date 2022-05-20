@@ -42,6 +42,10 @@ export interface ConnectorCreateEditProps {
   payload?: Connector
 }
 
+export interface HelpPanelOptions {
+  contentWidth: number
+  referenceId: string
+}
 export interface CreateConnectorModalProps {
   onClose: () => void
   onSuccess: (data?: ConnectorRequestBody) => void | Promise<void>
@@ -169,3 +173,5 @@ export const connectorHelperUrls = {
   ceAzureBillingExport:
     'https://ngdocs.harness.io/article/v682mz6qfd-set-up-cost-visibility-for-azure#step_2_azure_billing_exports'
 }
+
+export const CONNECTOR_MODAL_MIN_WIDTH = 1175

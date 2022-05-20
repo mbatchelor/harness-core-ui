@@ -157,7 +157,9 @@ exports[`Create DelegateSetup Step render data 1`] = `
                       </div>
                       <div
                         class="StyledProps--font StyledProps--main connectorFormElm"
-                      />
+                      >
+                        
+                      </div>
                     </div>
                   </div>
                   <div

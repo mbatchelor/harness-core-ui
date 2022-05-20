@@ -7,8 +7,8 @@
 
 import React, { useEffect, useState } from 'react'
 import YAML from 'yaml'
-import { Card, Accordion, Container, Text, RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
-import { get, isEmpty, isNil, omit, debounce, set, defaultTo } from 'lodash-es'
+import { Accordion, Card, Container, RUNTIME_INPUT_VALUE, Text } from '@wings-software/uicore'
+import { debounce, defaultTo, get, isEmpty, isNil, omit, set } from 'lodash-es'
 import produce from 'immer'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import {
@@ -23,7 +23,10 @@ import {
 import StringWithTooltip from '@common/components/StringWithTooltip/StringWithTooltip'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import type { InfraProvisioningData } from '@cd/components/PipelineSteps/InfraProvisioning/InfraProvisioning'
+import type {
+  InfraProvisioningData,
+  ProvisionersOptions
+} from '@cd/components/PipelineSteps/InfraProvisioning/InfraProvisioning'
 import type { GcpInfrastructureSpec } from '@cd/components/PipelineSteps/GcpInfrastructureSpec/GcpInfrastructureSpec'
 import { useStrings } from 'framework/strings'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
@@ -37,12 +40,12 @@ import SelectInfrastructureType from '@cd/components/PipelineStudio/DeployInfraS
 import { Scope } from '@common/interfaces/SecretsInterface'
 import type { AzureInfrastructureSpec } from '@cd/components/PipelineSteps/AzureInfrastructureStep/AzureInfrastructureStep'
 import {
+  detailsHeaderName,
+  getCustomStepProps,
   getSelectedDeploymentType,
   isServerlessDeploymentType,
-  StageType,
-  detailsHeaderName,
   ServerlessInfraTypes,
-  getCustomStepProps
+  StageType
 } from '@pipeline/utils/stageHelpers'
 import { InfraDeploymentType } from '@cd/components/PipelineSteps/PipelineStepsUtil'
 import type { ServerlessAwsLambdaSpec } from '@cd/components/PipelineSteps/ServerlessAWSLambda/ServerlessAwsLambdaSpec'
@@ -101,7 +104,7 @@ export default function DeployInfraSpecifications(props: React.PropsWithChildren
     debounce(
       (changedStage?: StageElementConfig) =>
         changedStage ? updateStage(changedStage) : /* instanbul ignore next */ Promise.resolve(),
-      100
+      300
     ),
     [updateStage]
   )
@@ -125,8 +128,21 @@ export default function DeployInfraSpecifications(props: React.PropsWithChildren
         }
       })
       debounceUpdateStage(stageData?.stage)
+    } else if (
+      scope !== Scope.PROJECT &&
+      stage?.stage?.spec?.infrastructure &&
+      stage?.stage?.spec?.infrastructure?.environmentRef !== RUNTIME_INPUT_VALUE
+    ) {
+      const stageData = produce(stage, draft => {
+        if (draft) {
+          set(draft, 'stage.spec.infrastructure.environmentRef', RUNTIME_INPUT_VALUE)
+        }
+      })
+      if (stageData?.stage) {
+        debounceUpdateStage(stageData?.stage)
+      }
     }
-  }, [stage?.stage])
+  }, [])
 
   const stageRef = React.useRef(stage)
   stageRef.current = stage
@@ -189,6 +205,7 @@ export default function DeployInfraSpecifications(props: React.PropsWithChildren
 
   const [provisionerEnabled, setProvisionerEnabled] = useState<boolean>(false)
   const [provisionerSnippetLoading, setProvisionerSnippetLoading] = useState<boolean>(false)
+  const [provisionerType, setProvisionerType] = useState<ProvisionersOptions>('TERRAFORM')
 
   const isProvisionerEmpty = (stageData: StageElementWrapper): boolean => {
     const provisionerData = get(stageData, 'stage.spec.infrastructure.infrastructureDefinition.provisioner')
@@ -199,7 +216,7 @@ export default function DeployInfraSpecifications(props: React.PropsWithChildren
   useEffect(() => {
     if (stage && isProvisionerEmpty(stage) && provisionerEnabled) {
       setProvisionerSnippetLoading(true)
-      getProvisionerExecutionStrategyYamlPromise({ queryParams: { provisionerType: 'TERRAFORM' } }).then(res => {
+      getProvisionerExecutionStrategyYamlPromise({ queryParams: { provisionerType: provisionerType } }).then(res => {
         const provisionerSnippet = YAML.parse(defaultTo(res?.data, ''))
         if (stage && isProvisionerEmpty(stage) && provisionerSnippet) {
           const stageData = produce(stage, draft => {
@@ -443,14 +460,13 @@ export default function DeployInfraSpecifications(props: React.PropsWithChildren
         <Card className={stageCss.sectionCard}>
           <StepWidget
             type={StepType.DeployEnvironment}
-            readonly={isReadonly || scope === Scope.ORG || scope === Scope.ACCOUNT}
+            readonly={isReadonly || scope !== Scope.PROJECT}
             initialValues={{
               environment: get(stage, 'stage.spec.infrastructure.environment', {}),
-              environmentRef: get(
-                stage,
-                'stage.spec.infrastructure.environmentRef',
-                getScopeBasedDefaultEnvironmentRef()
-              )
+              environmentRef:
+                scope === Scope.PROJECT
+                  ? get(stage, 'stage.spec.infrastructure.environmentRef', '')
+                  : RUNTIME_INPUT_VALUE
             }}
             allowableTypes={allowableTypes}
             onUpdate={val => updateEnvStep(val)}
@@ -510,11 +526,13 @@ export default function DeployInfraSpecifications(props: React.PropsWithChildren
                           cleanUpEmptyProvisioner(draft)
                         })
                         if (stageData.stage) {
+                          setProvisionerType(value.selectedProvisioner!)
                           updateStage(stageData.stage).then(() => {
                             setProvisionerEnabled(value.provisionerEnabled)
                           })
                         }
                       } else {
+                        setProvisionerType(value.selectedProvisioner!)
                         setProvisionerEnabled(value.provisionerEnabled)
                       }
                     }}

@@ -12,8 +12,27 @@ import { RightBar as PipelineStudioRightBar } from '@pipeline/components/Pipelin
 import { TemplateDrawer } from '@templates-library/components/TemplateDrawer/TemplateDrawer'
 import { RightDrawer } from '@templates-library/components/TemplateStudio/RightDrawer/RightDrawer'
 import { useSaveTemplateListener } from '@pipeline/components/PipelineStudio/hooks/useSaveTemplateListener'
+import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
+import { DrawerTypes } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateActions'
 
 const PipelineTemplateCanvas = (_props: unknown, _formikRef: TemplateFormRef): JSX.Element => {
+  const {
+    state: {
+      templateView: {
+        isDrawerOpened,
+        drawerData: { type }
+      }
+    }
+  } = React.useContext(TemplateContext)
+  const { setSelection } = usePipelineContext()
+
+  React.useEffect(() => {
+    if (isDrawerOpened && type === DrawerTypes.TemplateVariables) {
+      setSelection({ stageId: undefined, stepId: undefined, sectionId: undefined })
+    }
+  }, [isDrawerOpened])
+
   useSaveTemplateListener()
 
   return (

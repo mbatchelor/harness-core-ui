@@ -63,7 +63,7 @@ describe('DeploymentType in ServicesList ', () => {
     const responseData = serviceDetails.data.serviceDeploymentDetailsList as unknown as ServiceDetailsDTO[]
     responseData[1].deploymentTypeList = ['ServerlessAwsLambda']
     const { container } = renderSetup(responseData)
-    expect(container.querySelector('[data-icon="service-serverless-aws"]')).toBeTruthy()
+    expect(container.querySelector('[data-icon="service-serverless"]')).toBeTruthy()
   })
 
   test('render Ssh deployment type', () => {

@@ -10,7 +10,7 @@ import { useHistory, Link } from 'react-router-dom'
 import { FormInput, Formik, FormikForm, Button, Text, Container, HarnessIcons, Layout } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { useToaster } from '@common/components'
-import AppStorage from 'framework/utils/AppStorage'
+import SecureStorage from 'framework/utils/SecureStorage'
 import { useStrings } from 'framework/strings'
 import routes from '@common/RouteDefinitions'
 import { useQueryParams } from '@common/hooks'
@@ -72,10 +72,10 @@ const LoginPage: React.FC = () => {
       if (response.ok) {
         const json = await response.json()
 
-        AppStorage.set('token', json.resource.token)
-        AppStorage.set('acctId', json.resource.defaultAccountId)
-        AppStorage.set('uuid', json.resource.uuid)
-        AppStorage.set('lastTokenSetTime', +new Date())
+        SecureStorage.set('token', json.resource.token)
+        SecureStorage.set('acctId', json.resource.defaultAccountId)
+        SecureStorage.set('uuid', json.resource.uuid)
+        SecureStorage.set('lastTokenSetTime', Date.now())
 
         // this is naive redirect for now
         if (returnUrl) {

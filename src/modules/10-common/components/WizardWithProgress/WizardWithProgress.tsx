@@ -24,7 +24,7 @@ interface StepChangeData<SharedObject> {
   nextStep: number
   prevStepData: SharedObject
 }
-export interface StepWizardProps<SharedObject> {
+export interface StepWizardProps<SharedObject = unknown> {
   icon?: IconName
   // iconProps?: Omit<IconProps, 'name'>
   title?: string | JSX.Element
@@ -63,7 +63,7 @@ interface StepState<SharedObject> {
   panelActiveId: number
 }
 
-export const WizardWithProgress = <SharedObject extends unknown>(props: StepWizardProps<SharedObject>) => {
+export function WizardWithProgress<SharedObject>(props: StepWizardProps<SharedObject>): React.ReactElement {
   const {
     className = '',
     isNavMode = true,

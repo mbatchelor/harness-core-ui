@@ -6,8 +6,8 @@
  */
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Container, Heading, Layout, Select, SelectOption } from '@wings-software/uicore'
-import { FontVariation } from '@harness/design-system'
+import { Container, Heading, Layout, Select, SelectOption, Text, Icon } from '@harness/uicore'
+import { FontVariation, Color } from '@harness/design-system'
 import Card from '@cv/components/Card/Card'
 import { useStrings } from 'framework/strings'
 import ChangeTimeline from '@cv/components/ChangeTimeline/ChangeTimeline'
@@ -33,7 +33,6 @@ import MetricsAndLogs from './components/MetricsAndLogs/MetricsAndLogs'
 import AnomaliesCard from './components/AnomaliesCard/AnomaliesCard'
 import ChangesSourceCard from './components/ChangesSourceCard/ChangesSourceCard'
 import ChangesTable from './components/ChangesAndServiceDependency/components/ChangesTable/ChangesTable'
-import ErrorTracking from './components/ErrorTracking/ErrorTracking'
 import css from './ServiceHealth.module.scss'
 
 export default function ServiceHealth({
@@ -148,11 +147,19 @@ export default function ServiceHealth({
           <>
             <Container className={css.tickerContainer}>
               {changesTableAndSourceCardStartAndEndtime[0] && changesTableAndSourceCardStartAndEndtime[1] && (
-                <ChangesSourceCard
-                  monitoredServiceIdentifier={monitoredServiceIdentifier}
-                  startTime={changesTableAndSourceCardStartAndEndtime[0]}
-                  endTime={changesTableAndSourceCardStartAndEndtime[1]}
-                />
+                <>
+                  <ChangesSourceCard
+                    monitoredServiceIdentifier={monitoredServiceIdentifier}
+                    startTime={changesTableAndSourceCardStartAndEndtime[0]}
+                    endTime={changesTableAndSourceCardStartAndEndtime[1]}
+                  />
+                  <Layout.Horizontal margin={{ top: 'small', bottom: 'large' }}>
+                    <Icon margin={{ right: 'small' }} name="main-issue" color={Color.PRIMARY_7} />
+                    <Text color={Color.GREY_400} font={{ variation: FontVariation.SMALL }}>
+                      {getString('cv.monitoredServices.serviceHealth.userMessage')}
+                    </Text>
+                  </Layout.Horizontal>
+                </>
               )}
             </Container>
             <Container
@@ -228,17 +235,8 @@ export default function ServiceHealth({
           startTime={timeRange?.startTime}
           endTime={timeRange?.endTime}
           showTimelineSlider={showTimelineSlider}
+          isErrorTrackingEnabled={isErrorTrackingEnabled}
         />
-
-        {isErrorTrackingEnabled && (
-          <ErrorTracking
-            monitoredServiceIdentifier={monitoredServiceIdentifier}
-            serviceIdentifier={serviceIdentifier}
-            environmentIdentifier={environmentIdentifier}
-            startTime={timeRange?.startTime}
-            endTime={timeRange?.endTime}
-          />
-        )}
       </Container>
     </>
   )

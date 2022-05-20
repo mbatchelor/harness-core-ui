@@ -216,7 +216,12 @@ export function FlowControl(
       <div className={css.flowControlPanelHeader}>
         <div className={css.flowControlTitle}>
           <Layout.Horizontal>
-            <Text font={{ variation: FontVariation.H4 }} tooltipProps={{ dataTooltipId: 'pipelineVariables' }}>
+            <Text
+              lineClamp={1}
+              width={300}
+              font={{ variation: FontVariation.H4 }}
+              tooltipProps={{ dataTooltipId: 'pipelineVariables' }}
+            >
               {pipeline?.name}: {getString('pipeline.barriers.flowControl')}
             </Text>
           </Layout.Horizontal>

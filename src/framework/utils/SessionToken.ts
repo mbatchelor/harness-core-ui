@@ -5,12 +5,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import AppStorage from './AppStorage'
+import SecureStorage from './SecureStorage'
 
 export default {
-  isAuthenticated: () => AppStorage.has('token'),
-  getToken: () => AppStorage.get('token'),
-  username: () => AppStorage.get('username'),
-  accountId: () => AppStorage.get('acctId'),
-  getLastTokenSetTime: () => AppStorage.get('lastTokenSetTime')
+  getToken: (): string => SecureStorage.get<string>('token') || '',
+  username: (): string => SecureStorage.get<string>('username') || '',
+  accountId: (): string => SecureStorage.get<string>('acctId') || '',
+  getLastTokenSetTime: (): number | undefined => SecureStorage.get<number>('lastTokenSetTime')
 }

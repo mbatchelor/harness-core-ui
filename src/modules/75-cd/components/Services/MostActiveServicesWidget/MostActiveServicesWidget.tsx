@@ -11,8 +11,8 @@ import cx from 'classnames'
 import { Card, Container, LabelPosition, Layout, Text, WeightedStack, PageError } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings, UseStringsReturn } from 'framework/strings'
-import { Ticker, TickerVerticalAlignment } from '@common/components/Ticker/Ticker'
-import { DeploymentsTimeRangeContext, getFixed, INVALID_CHANGE_RATE } from '@cd/components/Services/common'
+// import { Ticker, TickerVerticalAlignment } from '@common/components/Ticker/Ticker'
+import { DeploymentsTimeRangeContext, getFixed } from '@cd/components/Services/common'
 import { DashboardWorkloadDeployment, GetWorkloadsQueryParams, useGetWorkloads } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { FAIL_COLORS, SUCCESS_COLORS } from '@dashboards/constants'
@@ -164,6 +164,9 @@ export const MostActiveServicesWidget: React.FC<MostActiveServicesWidget> = prop
     [environmentTypes, selectedEnvironmentType]
   )
 
+  //temporarily hiding tickers
+
+  /*
   const Tickers = useMemo(() => {
     return data.map((service, index) => {
       const { change } = service
@@ -192,6 +195,7 @@ export const MostActiveServicesWidget: React.FC<MostActiveServicesWidget> = prop
       )
     })
   }, [data])
+  */
 
   const weightedStackData = useMemo(
     () =>
@@ -294,7 +298,7 @@ export const MostActiveServicesWidget: React.FC<MostActiveServicesWidget> = prop
             labelStyles={css.label}
           />
         </Layout.Vertical>
-        <Layout.Vertical width="30%">{Tickers}</Layout.Vertical>
+        {/* <Layout.Vertical width="30%">{Tickers}</Layout.Vertical> */}
       </Layout.Horizontal>
     </MostActiveServicesWidgetContainer>
   )

@@ -6,7 +6,11 @@ import {
   monitoredServiceData,
   monitoredServiceListData,
   metrics,
-  healthSourceList
+  healthSourceList,
+  serviceScreenLogsListURL,
+  serviceScreenLogsListData,
+  serviceScreenLogsRadarClusterURL,
+  serviceScreenLogsRadarClusterData
 } from '../../../support/85-cv/monitoredService/service-health/constants'
 
 describe('Load service health dashboard', () => {
@@ -30,6 +34,10 @@ describe('Load service health dashboard', () => {
     cy.intercept('GET', overAllHeatlhScore.url, overAllHeatlhScore.data).as('overAllHeatlhScoreCall')
     cy.intercept('GET', healthSourceList.url, healthSourceList.data).as('healthSourceListCall')
     cy.intercept('GET', metrics.url, metrics.data).as('metricsCall')
+    cy.intercept('GET', serviceScreenLogsListURL, serviceScreenLogsListData).as('serviceScreenLogsListCall')
+    cy.intercept('GET', serviceScreenLogsRadarClusterURL, serviceScreenLogsRadarClusterData).as(
+      'serviceScreenLogsRadarClusterCall'
+    )
 
     cy.contains('div', 'appd').click()
     cy.wait('@monitoredServiceCall')
@@ -44,5 +52,12 @@ describe('Load service health dashboard', () => {
     cy.wait('@healthSourceListCall')
     cy.wait('@metricsCall')
     cy.get('[class*=MetricAnalysisRow-module_main]').should('have.length', 1)
+
+    cy.get('#bp3-tab-title_serviceScreenMetricsLogs_Logs').scrollIntoView().click()
+
+    cy.wait('@serviceScreenLogsListCall')
+    cy.wait('@serviceScreenLogsRadarClusterCall')
+
+    cy.findAllByTestId('logs-data-row').should('have.length', 10)
   })
 })

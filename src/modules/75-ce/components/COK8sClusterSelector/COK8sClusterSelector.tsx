@@ -15,12 +15,12 @@ import {
   Container,
   ExpandingSearchInput,
   Icon,
-  //   Intent,
+  ButtonVariation,
   Layout,
   Radio,
   Text
 } from '@wings-software/uicore'
-import { Color } from '@harness/design-system'
+import { Color, FontVariation } from '@harness/design-system'
 import { Table, TagsPopover } from '@common/components'
 import useCreateConnectorModal from '@connectors/modals/ConnectorModal/useCreateConnectorModal'
 import { Connectors } from '@connectors/constants'
@@ -42,7 +42,7 @@ interface COK8sClusterSelectorProps {
   refetchConnectors: () => Promise<void>
 }
 
-const TOTAL_ITEMS_PER_PAGE = 8
+const TOTAL_ITEMS_PER_PAGE = 5
 
 const RenderColumnConnector: Renderer<CellProps<ConnectorResponse>> = ({ row }) => {
   const data = row.original
@@ -284,44 +284,20 @@ const COK8sClusterSelector: React.FC<COK8sClusterSelectorProps> = props => {
   const hasSelectedCluster = !_isEmpty(selectedCluster)
   return (
     <Container>
-      <Layout.Vertical spacing={'large'}>
-        <Text font={'large'} className={css.header}>
-          Select Connector
+      <Layout.Vertical spacing={'medium'}>
+        <Text font={{ variation: FontVariation.H3 }}>
+          {getString('ce.co.autoStoppingRule.configuration.kubernetesModal.title')}
         </Text>
-        <Layout.Horizontal className={css.infoSection}>
-          <Icon name={'info'} size={24} />
-          <div>
-            <Text>
-              The connectors shown below are the clusters who are connected to a <span>Harness Delegate</span>
-            </Text>
-            <Text>
-              A <span>Harness Delegate</span> is a service that can run in local network or VPC to connect artifact
-              servers, infrastructure and verification providers to install projects and pipelines. If the cluster you
-              would like to monitor does not have a Harness delegate connected to it, you will have to create a
-              connector
-            </Text>
-          </div>
-        </Layout.Horizontal>
-        <Layout.Horizontal
-          style={{
-            paddingBottom: 20,
-            paddingTop: 20,
-            borderBottom: '1px solid #CDD3DD',
-            justifyContent: 'space-between'
-          }}
-        >
-          <Layout.Horizontal spacing={'medium'} className={css.ctaContainer}>
-            <Button
-              onClick={addConnector}
-              disabled={!hasSelectedCluster}
-              style={{
-                backgroundColor: selectedCluster ? '#0278D5' : 'inherit',
-                color: selectedCluster ? '#F3F3FA' : 'inherit'
-              }}
-              withoutBoxShadow
-            >
-              {'Add selected'}
-            </Button>
+        <div className={css.sectionSeparator} />
+        <Container>
+          <Layout.Horizontal className={css.infoSection}>
+            <Icon name={'info'} size={24} />
+            <div>
+              <Text>{getString('ce.co.autoStoppingRule.configuration.kubernetesModal.infoText1')}</Text>
+              <Text>{getString('ce.co.autoStoppingRule.configuration.kubernetesModal.infoText2')}</Text>
+            </div>
+          </Layout.Horizontal>
+          <Container className={css.ctaContainer}>
             <Button
               withoutBoxShadow
               className={css.borderBtn}
@@ -335,12 +311,15 @@ const COK8sClusterSelector: React.FC<COK8sClusterSelectorProps> = props => {
                 })
               }
             >
-              {'+ Create a new connector'}
+              {getString('ce.co.autoStoppingRule.configuration.kubernetesModal.createNewConnectorBtn')}
             </Button>
-          </Layout.Horizontal>
-          <ExpandingSearchInput onChange={handleSearch} />
-        </Layout.Horizontal>
+          </Container>
+        </Container>
+        <div className={css.sectionSeparator} />
         <Container>
+          <Layout.Horizontal className={css.searchAndFilterWrapper}>
+            <ExpandingSearchInput className={css.searchContainer} onChange={handleSearch} alwaysExpanded />
+          </Layout.Horizontal>
           {props.loading && (
             <Layout.Horizontal flex={{ justifyContent: 'center' }}>
               <Icon name="spinner" size={24} color="blue500" />
@@ -400,6 +379,22 @@ const COK8sClusterSelector: React.FC<COK8sClusterSelectorProps> = props => {
             />
           )}
         </Container>
+        <Layout.Horizontal style={{ paddingTop: 20 }}>
+          <Layout.Horizontal spacing={'medium'} className={css.ctaContainer}>
+            <Button
+              onClick={addConnector}
+              disabled={!hasSelectedCluster}
+              // style={{
+              //   backgroundColor: selectedCluster ? '#0278D5' : 'inherit',
+              //   color: selectedCluster ? '#F3F3FA' : 'inherit'
+              // }}
+              variation={ButtonVariation.PRIMARY}
+              withoutBoxShadow
+            >
+              {getString('ce.co.autoStoppingRule.configuration.addSelectedBtnText')}
+            </Button>
+          </Layout.Horizontal>
+        </Layout.Horizontal>
       </Layout.Vertical>
     </Container>
   )

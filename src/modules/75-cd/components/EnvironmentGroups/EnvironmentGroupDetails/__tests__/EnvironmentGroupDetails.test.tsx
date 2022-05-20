@@ -99,12 +99,15 @@ describe('Environment Group Details Page', () => {
     })
 
     expect(cdNgServices.updateEnvironmentGroupPromise).toHaveBeenCalledWith({
-      body: 'environmentGroup:\n  name: "Env Group 1 "\n  identifier: Env_Group_7\n  description: "Test Description "\n  tags:\n    Tag 1: ""\n  orgIdentifier: dummy\n  projectIdentifier: dummy\n  envIdentifiers:\n    - Environment_Ash_3\n    - Env_Ash_1\n',
+      body: {
+        identifier: 'Env_Group_7',
+        orgIdentifier: 'dummy',
+        projectIdentifier: 'dummy',
+        yaml: 'environmentGroup:\n  name: "Env Group 1 "\n  identifier: Env_Group_7\n  description: "Test Description "\n  tags:\n    Tag 1: ""\n  orgIdentifier: dummy\n  projectIdentifier: dummy\n  envIdentifiers:\n    - Environment_Ash_3\n    - Env_Ash_1\n'
+      },
       envGroupIdentifier: 'Env_Group_7',
       queryParams: {
-        accountIdentifier: 'dummy',
-        orgIdentifier: 'dummy',
-        projectIdentifier: 'dummy'
+        accountIdentifier: 'dummy'
       },
       requestOptions: { headers: { 'Content-Type': 'application/yaml' } }
     })
@@ -202,12 +205,15 @@ describe('Environment Group Details Page', () => {
     fireEvent.click(deleteButton!)
 
     expect(cdNgServices.updateEnvironmentGroupPromise).toHaveBeenCalledWith({
-      body: 'environmentGroup:\n  name: Env Group 7\n  identifier: Env_Group_7\n  description: Test\n  tags:\n    Tag 1: ""\n  orgIdentifier: dummy\n  projectIdentifier: dummy\n  envIdentifiers:\n    - Environment_Ash_3\n',
+      body: {
+        identifier: 'Env_Group_7',
+        orgIdentifier: 'dummy',
+        projectIdentifier: 'dummy',
+        yaml: 'environmentGroup:\n  name: Env Group 7\n  identifier: Env_Group_7\n  description: Test\n  tags:\n    Tag 1: ""\n  orgIdentifier: dummy\n  projectIdentifier: dummy\n  envIdentifiers:\n    - Environment_Ash_3\n'
+      },
       envGroupIdentifier: 'Env_Group_7',
       queryParams: {
-        accountIdentifier: 'dummy',
-        orgIdentifier: 'dummy',
-        projectIdentifier: 'dummy'
+        accountIdentifier: 'dummy'
       },
       requestOptions: { headers: { 'Content-Type': 'application/yaml' } }
     })
@@ -324,12 +330,15 @@ describe('Environment Group Details Page', () => {
 
     await waitFor(() =>
       expect(cdNgServices.updateEnvironmentGroupPromise).toHaveBeenLastCalledWith({
-        body: 'environmentGroup:\n  name: Env Group 7\n  identifier: Env_Group_7\n  description: Test\n  tags:\n    Tag 1: ""\n  orgIdentifier: dummy\n  projectIdentifier: dummy\n  envIdentifiers:\n    - Environment_Ash_3\n    - Environment_Ash_2\n',
+        body: {
+          identifier: 'Env_Group_7',
+          orgIdentifier: 'dummy',
+          projectIdentifier: 'dummy',
+          yaml: 'environmentGroup:\n  name: Env Group 7\n  identifier: Env_Group_7\n  description: Test\n  tags:\n    Tag 1: ""\n  orgIdentifier: dummy\n  projectIdentifier: dummy\n  envIdentifiers:\n    - Environment_Ash_3\n    - Environment_Ash_2\n'
+        },
         envGroupIdentifier: 'Env_Group_7',
         queryParams: {
-          accountIdentifier: 'dummy',
-          orgIdentifier: 'dummy',
-          projectIdentifier: 'dummy'
+          accountIdentifier: 'dummy'
         },
         requestOptions: { headers: { 'Content-Type': 'application/yaml' } }
       })

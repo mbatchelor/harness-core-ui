@@ -24,7 +24,7 @@ export const serverlessDeploymentTypeProps = {
   name: 'Artifact details',
   expressions: [],
   allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
-  context: 2,
+  context: 1,
   handleSubmit: jest.fn(),
   artifactIdentifiers: [],
   selectedArtifact: 'ArtifactoryRegistry' as ArtifactType,

@@ -9,22 +9,12 @@ import React, { ReactElement } from 'react'
 import { Text, Layout, Container, Switch } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-interface SettingsMenuProps {
-  isAutoCommitEnabled: boolean
-  isGitSyncPaused: boolean
-  handleToggleAutoCommit: (setAutoCommit: boolean) => void
-  handleGitPause: (newGitPauseValue: boolean) => void
-  isLoading: boolean
-}
+import { useFFGitSyncContext } from '@cf/contexts/ff-git-sync-context/FFGitSyncContext'
 
-const SettingsMenu = ({
-  isAutoCommitEnabled,
-  isGitSyncPaused,
-  handleToggleAutoCommit,
-  handleGitPause,
-  isLoading
-}: SettingsMenuProps): ReactElement => {
+const SettingsMenu = (): ReactElement => {
   const { getString } = useStrings()
+  const { isGitSyncPaused, handleGitPause, gitSyncLoading, isAutoCommitEnabled, handleAutoCommit } =
+    useFFGitSyncContext()
 
   return (
     <Layout.Vertical padding="medium" spacing="small" flex={{ alignItems: 'flex-start' }}>
@@ -36,7 +26,7 @@ const SettingsMenu = ({
           onChange={async event => {
             handleGitPause(event.currentTarget.checked)
           }}
-          disabled={isLoading}
+          disabled={gitSyncLoading}
         />
         <Text color={Color.BLACK}>{getString('cf.gitSync.toggleGitSyncPause')}</Text>
       </Container>
@@ -45,10 +35,10 @@ const SettingsMenu = ({
           data-testid="auto-commit-switch"
           alignIndicator="left"
           checked={isAutoCommitEnabled}
-          onChange={async event => {
-            handleToggleAutoCommit(event.currentTarget.checked)
+          onChange={event => {
+            handleAutoCommit(event.currentTarget.checked)
           }}
-          disabled={isLoading || isGitSyncPaused}
+          disabled={gitSyncLoading || isGitSyncPaused}
         />
         <Text color={Color.BLACK}>{getString('cf.gitSync.autoCommitStatusLabel')}</Text>
       </Container>

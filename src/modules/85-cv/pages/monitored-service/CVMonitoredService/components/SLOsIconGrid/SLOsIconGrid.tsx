@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import type { IconProps } from '@wings-software/uicore/dist/icons/Icon'
+import type { IconProps } from '@harness/icons'
 import { Layout, Text, Utils, Icon } from '@wings-software/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { getRiskColorValue, getRiskLabelStringId } from '@cv/utils/CommonUtils'

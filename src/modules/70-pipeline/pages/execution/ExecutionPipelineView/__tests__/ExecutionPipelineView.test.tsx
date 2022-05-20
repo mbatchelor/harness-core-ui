@@ -11,6 +11,7 @@ import { getMockFor_useGetPipeline } from '@pipeline/components/RunPipelineModal
 
 import { TestWrapper } from '@common/utils/testUtils'
 
+import { SavedExecutionViewTypes } from '@pipeline/components/LogsContent/LogsContent'
 import ExecutionPipelineView from '../ExecutionPipelineView'
 
 jest.mock('../ExecutionGraphView/ExecutionGraphView', () => {
@@ -40,7 +41,7 @@ describe('<ExecutionPipelineView /> tests', () => {
 
   test('renders log view with correct params', () => {
     const { getByTestId } = render(
-      <TestWrapper queryParams={{ view: 'log' }}>
+      <TestWrapper queryParams={{ view: SavedExecutionViewTypes.LOG }}>
         <ExecutionPipelineView />
       </TestWrapper>
     )
@@ -50,7 +51,7 @@ describe('<ExecutionPipelineView /> tests', () => {
 
   test('renders graph view with correct params', () => {
     const { getByTestId } = render(
-      <TestWrapper queryParams={{ view: 'graph' }}>
+      <TestWrapper queryParams={{ view: SavedExecutionViewTypes.GRAPH }}>
         <ExecutionPipelineView />
       </TestWrapper>
     )

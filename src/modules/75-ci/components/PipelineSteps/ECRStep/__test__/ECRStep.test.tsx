@@ -81,6 +81,7 @@ describe('ECR Step', () => {
           account: RUNTIME_INPUT_VALUE,
           imageName: RUNTIME_INPUT_VALUE,
           tags: RUNTIME_INPUT_VALUE,
+          baseImageConnectorRefs: RUNTIME_INPUT_VALUE,
           dockerfile: RUNTIME_INPUT_VALUE,
           context: RUNTIME_INPUT_VALUE,
           labels: RUNTIME_INPUT_VALUE,
@@ -126,6 +127,7 @@ describe('ECR Step', () => {
           account: 'Account',
           imageName: 'Image Name',
           tags: ['tag1', 'tag2', 'tag3'],
+          baseImageConnectorRefs: ['prodConnectorRef'],
           dockerfile: 'Dockerfile',
           context: 'Context',
           labels: {
@@ -189,6 +191,7 @@ describe('ECR Step', () => {
           account: RUNTIME_INPUT_VALUE,
           imageName: RUNTIME_INPUT_VALUE,
           tags: RUNTIME_INPUT_VALUE,
+          baseImageConnectorRefs: RUNTIME_INPUT_VALUE,
           dockerfile: RUNTIME_INPUT_VALUE,
           context: RUNTIME_INPUT_VALUE,
           labels: RUNTIME_INPUT_VALUE,
@@ -218,6 +221,7 @@ describe('ECR Step', () => {
           account: RUNTIME_INPUT_VALUE,
           imageName: RUNTIME_INPUT_VALUE,
           tags: RUNTIME_INPUT_VALUE,
+          baseImageConnectorRefs: RUNTIME_INPUT_VALUE,
           dockerfile: RUNTIME_INPUT_VALUE,
           context: RUNTIME_INPUT_VALUE,
           labels: RUNTIME_INPUT_VALUE,
@@ -269,6 +273,7 @@ describe('ECR Step', () => {
           account: 'Account',
           imageName: 'Image Name',
           tags: ['tag1', 'tag2', 'tag3'],
+          baseImageConnectorRefs: ['prodConnectorRef'],
           dockerfile: 'Dockerfile',
           context: 'Context',
           labels: {
@@ -327,6 +332,7 @@ describe('ECR Step', () => {
               account: 'Account',
               imageName: 'Image Name',
               tags: ['tag1', 'tag2', 'tag3'],
+              baseImageConnectorRefs: ['prodConnectorRef'],
               dockerfile: 'Dockerfile',
               context: 'Context',
               labels: {

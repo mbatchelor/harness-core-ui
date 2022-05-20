@@ -203,9 +203,9 @@ const GetChart: React.FC<GetChartProps> = ({
           <a id="navAnomalies_${item.timestamp}" class=${css.anomaliesNav}>${getString(
       'ce.anomalyDetection.tooltip.anomaliesRedirectionText'
     )}</a>
-          <a id="applyFilters_${item.timestamp}" class=${css.anomaliesNav}>${getString(
-      'ce.anomalyDetection.tooltip.filterText'
-    )}</a>
+          <span class=${item.anomalyCount > 1 ? css.isDisabled : ''}><a id="applyFilters_${item.timestamp}" class=${
+      css.anomaliesNav
+    }>${getString('ce.anomalyDetection.tooltip.filterText')}</a></span>
         </span>
       <div>
     `

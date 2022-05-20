@@ -8,7 +8,9 @@
 import React from 'react'
 import { render, screen, RenderResult, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import * as yup from 'yup'
 import { TestWrapper } from '@common/utils/testUtils'
+import { FFGitSyncProvider } from '@cf/contexts/ff-git-sync-context/FFGitSyncContext'
 import SaveFlagToGitModal, { SaveFlagToGitModalProps } from '../SaveFlagToGitModal'
 
 jest.mock('@cf/hooks/useGitSync', () => ({
@@ -38,13 +40,26 @@ const renderComponent = (props?: Partial<SaveFlagToGitModalProps>): RenderResult
       path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/feature-flags"
       pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
     >
-      <SaveFlagToGitModal
-        flagName="test 123"
-        flagIdentifier="test123"
-        onSubmit={jest.fn()}
-        onClose={jest.fn()}
-        {...props}
-      />
+      <FFGitSyncProvider>
+        <SaveFlagToGitModal
+          flagName="test 123"
+          flagIdentifier="test123"
+          gitSyncInitialValues={{
+            gitDetails: {
+              branch: 'main',
+              filePath: '/flags.yaml',
+              repoIdentifier: 'harnesstest',
+              rootFolder: './harness/',
+              commitMsg: ''
+            },
+            autoCommit: false
+          }}
+          gitSyncValidationSchema={yup.object()}
+          onSubmit={jest.fn()}
+          onClose={jest.fn()}
+          {...props}
+        />
+      </FFGitSyncProvider>
     </TestWrapper>
   )
 }

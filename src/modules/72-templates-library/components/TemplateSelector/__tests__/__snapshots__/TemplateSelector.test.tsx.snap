@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<TemplateSelector /> tests snapshot test 1`] = `
+exports[`<TemplateSelector /> tests should match snapshot when selected template is not set 1`] = `
 <div>
   <div
     class="StyledProps--font StyledProps--main container"

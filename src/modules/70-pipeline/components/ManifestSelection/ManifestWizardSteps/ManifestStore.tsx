@@ -23,6 +23,7 @@ import {
 } from '@wings-software/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
+import { isEmpty } from 'lodash-es'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
@@ -37,6 +38,7 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import type { ManifestStepInitData, ManifestStores } from '../ManifestInterface'
 import {
   ManifestIconByType,
+  ManifestStoreMap,
   ManifestStoreTitle,
   ManifestToConnectorLabelMap,
   ManifestToConnectorMap
@@ -53,6 +55,7 @@ interface ManifestStorePropType {
   handleConnectorViewChange: () => void
   handleStoreChange: (store: ManifestStores) => void
 }
+type ManifestStoreExcludingInheritFromManifest = Exclude<ManifestStores, 'InheritFromManifest'>
 
 function ManifestStore({
   handleConnectorViewChange,
@@ -74,8 +77,13 @@ function ManifestStore({
   const [selectedStore, setSelectedStore] = useState(prevStepData?.store ?? initialValues.store)
   const [multitypeInputValue, setMultiTypeValue] = useState<MultiTypeInputType | undefined>(undefined)
 
+  function isValidConnectorStore(): boolean {
+    return !!selectedStore && selectedStore !== ManifestStoreMap.InheritFromManifest
+  }
+
   const newConnectorLabel = `${getString('newLabel')} ${
-    !!selectedStore && getString(ManifestToConnectorLabelMap[selectedStore as ManifestStores])
+    isValidConnectorStore() &&
+    getString(ManifestToConnectorLabelMap[selectedStore as ManifestStoreExcludingInheritFromManifest])
   } ${getString('connector')}`
 
   const [canCreate] = usePermission({
@@ -88,7 +96,19 @@ function ManifestStore({
   const submitFirstStep = async (formData: ManifestStepInitData): Promise<void> => {
     nextStep?.({ ...formData })
   }
-  const handleOptionSelection = (formikData: any, storeSelected: ManifestStores): void => {
+
+  function shouldGotoNextStep(connectorRefValue: ConnectorSelectedValue | string): boolean {
+    if (selectedStore === ManifestStoreMap.InheritFromManifest) {
+      return true
+    }
+    return (
+      !!selectedStore &&
+      ((getMultiTypeFromValue(connectorRefValue) === MultiTypeInputType.FIXED &&
+        !isEmpty((connectorRefValue as ConnectorSelectedValue)?.connector)) ||
+        !isEmpty(connectorRefValue))
+    )
+  }
+  const handleOptionSelection = (formikData: any, storeSelected: ManifestStoreExcludingInheritFromManifest): void => {
     if (
       getMultiTypeFromValue(formikData.connectorRef) !== MultiTypeInputType.FIXED &&
       formikData.store !== storeSelected
@@ -134,9 +154,14 @@ function ManifestStore({
         initialValues={getInitialValues()}
         formName="manifestStore"
         validationSchema={Yup.object().shape({
-          connectorRef: Yup.mixed().required(
-            `${ManifestToConnectorMap[selectedStore]} ${getString('pipelineSteps.build.create.connectorRequiredError')}`
-          )
+          connectorRef: Yup.mixed().when('store', {
+            is: !ManifestStoreMap.InheritFromManifest,
+            then: Yup.mixed().required(
+              `${ManifestToConnectorMap[selectedStore]} ${getString(
+                'pipelineSteps.build.create.connectorRequiredError'
+              )}`
+            )
+          })
         })}
         onSubmit={formData => {
           submitFirstStep({ ...formData })
@@ -157,12 +182,12 @@ function ManifestStore({
                     items={supportedManifestStores}
                     isReadonly={isReadonly}
                     onChange={storeSelected => {
-                      handleOptionSelection(formik?.values, storeSelected as ManifestStores)
+                      handleOptionSelection(formik?.values, storeSelected as ManifestStoreExcludingInheritFromManifest)
                     }}
                   />
                 </Layout.Horizontal>
 
-                {formik.values.store !== '' ? (
+                {!isEmpty(formik.values.store) && selectedStore !== ManifestStoreMap.InheritFromManifest ? (
                   <Layout.Horizontal
                     spacing={'medium'}
                     flex={{ alignItems: 'flex-start', justifyContent: 'flex-start' }}
@@ -172,10 +197,10 @@ function ManifestStore({
                       key={formik.values.store}
                       name="connectorRef"
                       label={`${getString(
-                        ManifestToConnectorLabelMap[formik.values.store as ManifestStores]
+                        ManifestToConnectorLabelMap[formik.values.store as ManifestStoreExcludingInheritFromManifest]
                       )} ${getString('connector')}`}
                       placeholder={`${getString('select')} ${getString(
-                        ManifestToConnectorLabelMap[formik.values.store as ManifestStores]
+                        ManifestToConnectorLabelMap[formik.values.store as ManifestStoreExcludingInheritFromManifest]
                       )} ${getString('connector')}`}
                       accountIdentifier={accountId}
                       projectIdentifier={projectIdentifier}
@@ -240,11 +265,7 @@ function ManifestStore({
                   type="submit"
                   text={getString('continue')}
                   rightIcon="chevron-right"
-                  disabled={
-                    !selectedStore ||
-                    (getMultiTypeFromValue(formik.values.connectorRef) === MultiTypeInputType.FIXED &&
-                      !(formik.values.connectorRef as ConnectorSelectedValue)?.connector)
-                  }
+                  disabled={!shouldGotoNextStep(formik.values.connectorRef as ConnectorSelectedValue | string)}
                 />
               </Layout.Horizontal>
             </Layout.Vertical>

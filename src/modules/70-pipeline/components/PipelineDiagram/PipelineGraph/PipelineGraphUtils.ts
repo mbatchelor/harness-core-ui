@@ -27,15 +27,13 @@ const ZOOM_INC_DEC_LEVEL = 0.1
 const toFixed = (num: number): number => Number(num.toFixed(2))
 const getScaledValue = (value: number, scalingFactor: number): number => {
   let finalValue
-  const mulFactor = 1 / scalingFactor
-  const valueMultiplied = value * mulFactor
 
   if (scalingFactor === 1.0) {
     finalValue = value
   } else if (scalingFactor > 1) {
     finalValue = value / scalingFactor
   } else {
-    finalValue = valueMultiplied + mulFactor
+    finalValue = value * (1 / scalingFactor)
   }
   return toFixed(finalValue)
 }
@@ -69,8 +67,8 @@ const getFinalSVGArrowPath = (id1 = '', id2 = '', options?: DrawSVGPathOptions):
   const startPoint = `${getScaledValue(node1.right, scalingFactor)},${node1VerticalMid}`
   const horizontalMid = Math.abs((node1.right + node2.left) / 2)
   const endPoint = `${getScaledValue(node2.left, scalingFactor)},${node2VerticalMid}`
-  const node1Y = Math.round(node1.y * 10) / 10
-  const node2Y = Math.round(node2.y * 10) / 10
+  const node1Y = Math.round(node1.y)
+  const node2Y = Math.round(node2.y)
 
   if (node2Y < node1Y) {
     //  child node is at top
@@ -84,7 +82,7 @@ const getFinalSVGArrowPath = (id1 = '', id2 = '', options?: DrawSVGPathOptions):
       const startPointLeft = `${node1.left},${node1VerticalMid}`
       finalSVGPath = `M${startPointLeft}  L${endPoint}`
     } else if (options?.direction === 'rtr') {
-      const endPointRight = `${node2.right},${node2VerticalMid}`
+      const endPointRight = `${getScaledValue(node2.right, scalingFactor)},${node2VerticalMid}`
       finalSVGPath = `M${startPoint}  L${endPointRight}`
     } else {
       finalSVGPath = `M${startPoint}  L${endPoint}`
@@ -299,12 +297,20 @@ const getParallelNodeLinks = (
   })
 }
 
-const getScaleToFitValue = (elm: HTMLElement, paddingFromBottom = 20): number => {
+const getScaleToFitValue = (
+  elm: HTMLElement,
+  containerEl?: HTMLElement,
+  paddingHorizontal = 0,
+  paddingVertical = 20
+): number => {
+  const width = elm.scrollWidth
+  const height = elm.scrollHeight
+  const container = containerEl ? containerEl : document.body
   return (
     1 /
     Math.max(
-      elm.clientWidth / window.innerWidth,
-      elm.clientHeight / (window.innerHeight - elm.offsetTop - paddingFromBottom)
+      width / (container.offsetWidth - paddingHorizontal),
+      height / (container.offsetHeight - container.offsetTop - paddingVertical)
     )
   )
 }
@@ -362,8 +368,10 @@ const transformStageData = (
       const hasErrors =
         errorMap && [...errorMap.keys()].some(key => updatedStagetPath && key.startsWith(updatedStagetPath))
       const templateRef = getIdentifierFromValue(stage.stage?.template?.templateRef as string)
+
       const type = templateRef ? (templateTypes?.[templateRef] as string) : (stage.stage.type as string)
       const { nodeType, iconName } = getNodeInfo(defaultTo(type, ''), graphType)
+
       finalData.push({
         id: uuid() as string,
         identifier: stage.stage.identifier as string,
@@ -427,6 +435,7 @@ const transformStepsData = (
   offsetIndex = 0
 ): PipelineGraphState[] => {
   const finalData: PipelineGraphState[] = []
+
   steps.forEach((step: ExecutionWrapperConfig, index: number) => {
     if (step?.step) {
       const updatedStagetPath = `${parentPath}.${index + offsetIndex}`
@@ -437,6 +446,7 @@ const transformStepsData = (
       const templateRef = getIdentifierFromValue(
         (step?.step as unknown as TemplateStepNode)?.template?.templateRef as string
       )
+      const stepIcon = get(step, 'step.icon')
       const type = templateRef ? (templateTypes?.[templateRef] as string) : (step?.step?.type as string)
       const { nodeType, iconName } = getNodeInfo(defaultTo(type, ''), graphType)
       const isExecutionView = get(step, 'step.status', false)
@@ -446,7 +456,7 @@ const transformStepsData = (
         name: step.step.name as string,
         type,
         nodeType: nodeType as string,
-        icon: iconName,
+        icon: stepIcon ? stepIcon : iconName,
         data: {
           graphType,
           ...step,
@@ -523,7 +533,7 @@ const transformStepsData = (
       const updatedStagetPath = `${parentPath}.${index}.stepGroup.steps`
       const hasErrors =
         errorMap && [...errorMap.keys()].some(key => updatedStagetPath && key.startsWith(updatedStagetPath))
-
+      const isExecutionView = get(step, 'stepGroup.status', false)
       finalData.push({
         id: getuniqueIdForStep(step),
         identifier: step.stepGroup?.identifier as string,
@@ -533,6 +543,11 @@ const transformStepsData = (
         icon: iconName,
         data: {
           ...step,
+          conditionalExecutionEnabled: isExecutionView
+            ? getConditionalExecutionFlag(step.stepGroup?.when)
+            : step.stepGroup?.when
+            ? step.stepGroup?.when?.stageStatus !== 'Success' || !!step.stepGroup?.when?.condition?.trim()
+            : false,
           graphType,
           isInComplete: isCustomGeneratedString(step.stepGroup?.identifier as string) || hasErrors
         }

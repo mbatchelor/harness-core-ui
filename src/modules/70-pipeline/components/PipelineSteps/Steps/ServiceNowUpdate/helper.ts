@@ -5,7 +5,6 @@
  * https://polyformproject.org/wp-content/uploads/2020/05/PolyForm-Free-Trial-1.0.0.txt.
  */
 
-import { getMultiTypeFromValue, MultiTypeInputType, SelectOption } from '@wings-software/uicore'
 import type { ServiceNowUpdateData } from '@pipeline/components/PipelineSteps/Steps/ServiceNowUpdate/types'
 import type { ServiceNowCreateFieldType } from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/types'
 import { FieldType, ServiceNowStaticFields } from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/types'
@@ -21,10 +20,7 @@ export const processFormData = (values: ServiceNowUpdateData): ServiceNowUpdateD
       spec: {
         delegateSelectors: values.spec.delegateSelectors,
         useServiceNowTemplate: false,
-        connectorRef:
-          getMultiTypeFromValue(values.spec.connectorRef as SelectOption) === MultiTypeInputType.FIXED
-            ? (values.spec.connectorRef as SelectOption)?.value?.toString()
-            : values.spec.connectorRef,
+        connectorRef: values.spec.connectorRef,
         ticketType: values.spec.ticketType,
         ticketNumber: values.spec.ticketNumber,
         fields: processFieldsForSubmit(values)
@@ -35,10 +31,7 @@ export const processFormData = (values: ServiceNowUpdateData): ServiceNowUpdateD
       spec: {
         delegateSelectors: values.spec.delegateSelectors,
         useServiceNowTemplate: true,
-        connectorRef:
-          getMultiTypeFromValue(values.spec.connectorRef as SelectOption) === MultiTypeInputType.FIXED
-            ? (values.spec.connectorRef as SelectOption)?.value?.toString()
-            : values.spec.connectorRef,
+        connectorRef: values.spec.connectorRef,
         ticketType: values.spec.ticketType,
         ticketNumber: values.spec.ticketNumber,
         fields: [],
@@ -73,7 +66,9 @@ export const processInitialValues = (values: ServiceNowUpdateData): ServiceNowUp
         ?.value.toString() as string,
       fields: omitDescNShortDesc(values.spec.fields),
       ticketNumber: values.spec.ticketNumber,
-      templateName: values.spec.templateName
+      templateName: values.spec.templateName,
+      selectedFields: [],
+      templateFields: []
     }
   }
 }

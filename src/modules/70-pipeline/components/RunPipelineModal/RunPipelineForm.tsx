@@ -366,12 +366,13 @@ function RunPipelineFormBasic({
     if (
       formikRef?.current?.values?.template?.templateInputs &&
       isCodebaseFieldsRuntimeInputs(formikRef.current.values.template.templateInputs as PipelineInfoConfig) &&
-      !isCloneCodebaseEnabledAtLeastOneStage(formikRef.current.values.template.templateInputs as PipelineInfoConfig)
+      resolvedPipeline &&
+      !isCloneCodebaseEnabledAtLeastOneStage(resolvedPipeline)
     ) {
       const newPipeline = getPipelineWithoutCodebaseInputs(formikRef.current.values)
       formikRef.current.setValues({ ...formikRef.current.values, ...newPipeline })
     }
-  }, [formikRef?.current?.values?.template?.templateInputs])
+  }, [formikRef?.current?.values?.template?.templateInputs, resolvedPipeline])
 
   const [showPreflightCheckModal, hidePreflightCheckModal] = useModalHook(() => {
     return (

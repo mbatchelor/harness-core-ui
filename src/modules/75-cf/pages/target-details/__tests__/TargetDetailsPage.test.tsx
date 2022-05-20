@@ -10,6 +10,7 @@ import { fireEvent, getAllByText, getByText, render, waitFor } from '@testing-li
 import { TestWrapper } from '@common/utils/testUtils'
 import mockFeatureFlags from '@cf/pages/feature-flags-detail/__tests__/mockFeatureFlags'
 import mockImport from 'framework/utils/mockImport'
+import { FFGitSyncProvider } from '@cf/contexts/ff-git-sync-context/FFGitSyncContext'
 import { TargetDetailPage } from '../TargetDetailPage'
 
 jest.mock('@cf/hooks/useGitSync', () => ({
@@ -132,7 +133,9 @@ describe('TargetDetailPage', () => {
         path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/onboarding/detail"
         pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
       >
-        <TargetDetailPage />
+        <FFGitSyncProvider>
+          <TargetDetailPage />
+        </FFGitSyncProvider>
       </TestWrapper>
     )
 
@@ -203,7 +206,9 @@ describe('TargetDetailPage', () => {
         path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/onboarding/detail"
         pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
       >
-        <TargetDetailPage />
+        <FFGitSyncProvider>
+          <TargetDetailPage />
+        </FFGitSyncProvider>
       </TestWrapper>
     )
 

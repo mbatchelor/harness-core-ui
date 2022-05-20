@@ -11,6 +11,7 @@ declare const styles: {
   readonly analyticsContainer: string
   readonly center: string
   readonly fulFilmentIcon: string
+  readonly gaugeChartWrapper: string
   readonly instanceCount: string
   readonly instanceManager: string
   readonly spotUsage: string

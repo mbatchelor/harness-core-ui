@@ -7,14 +7,14 @@
 
 import React from 'react'
 import { Container, Layout, Pagination } from '@wings-software/uicore'
-import { defaultTo } from 'lodash-es'
+import { defaultTo, isEqual } from 'lodash-es'
 import { TemplateCard } from '@templates-library/components/TemplateCard/TemplateCard'
 import type { TemplateSummaryResponse } from 'services/template-ng'
 import type { TemplatesViewProps } from '@templates-library/pages/TemplatesPage/views/TemplatesView/TemplatesView'
 import css from './TemplatesGridView.module.scss'
 
 export const TemplatesGridView: React.FC<TemplatesViewProps> = (props): JSX.Element => {
-  const { data, selectedIdentifier, gotoPage, onSelect, onPreview, onOpenEdit, onOpenSettings, onDelete } = props
+  const { data, selectedTemplate, gotoPage, onSelect, onPreview, onOpenEdit, onOpenSettings, onDelete } = props
 
   return (
     <Layout.Vertical height={'100%'}>
@@ -27,7 +27,7 @@ export const TemplatesGridView: React.FC<TemplatesViewProps> = (props): JSX.Elem
             <TemplateCard
               template={template}
               onSelect={onSelect}
-              isSelected={template.identifier === selectedIdentifier}
+              isSelected={isEqual(template, selectedTemplate)}
               onPreview={onPreview}
               onOpenEdit={onOpenEdit}
               onOpenSettings={onOpenSettings}

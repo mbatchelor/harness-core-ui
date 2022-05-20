@@ -205,13 +205,22 @@ function PipelineEvents({ nextStep, prevStepData, stagesOptions }: PipelineEvent
                           onChange={e => {
                             if (e.currentTarget.checked) {
                               if (event.value === PipelineEventType.ALL_EVENTS) {
+                                const finalUpdatedValue = {
+                                  types: { [PipelineEventType.ALL_EVENTS]: true }
+                                } as PipelineEventsFormData
+
                                 Object.keys(formikProps.values.types).forEach(item => {
-                                  item !== PipelineEventType.ALL_EVENTS
-                                    ? (formikProps.values.types[item] = false)
-                                    : (formikProps.values.types[item] = true)
+                                  finalUpdatedValue.types[item] = item === PipelineEventType.ALL_EVENTS
                                 })
+                                formikProps.setValues(finalUpdatedValue)
                               } else {
-                                formikProps.values.types[PipelineEventType.ALL_EVENTS] = false
+                                formikProps.setValues({
+                                  types: {
+                                    ...formikProps.values.types,
+                                    [PipelineEventType.ALL_EVENTS]: false,
+                                    [event?.value]: true
+                                  }
+                                })
                               }
                             }
                           }}

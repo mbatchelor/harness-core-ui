@@ -9,6 +9,7 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+  width: 100%;
 
   .maxDropDownWidth {
     max-width: 250px;
@@ -23,7 +24,8 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  flex-grow: 1;
+  flex: 1;
+  overflow-y: auto;
 
   .timeline {
     padding-left: 25% !important;

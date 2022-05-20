@@ -28,10 +28,9 @@ useCreateVariableMock.mockImplementation(() => ({ mutate: createVariable }))
 const updateVariable = jest.fn().mockReturnValueOnce({ status: 'SUCCESS' })
 useUpdateVariableMock.mockReturnValue({ mutate: updateVariable })
 describe('Test useCreateEditVariableModal', () => {
-  const TestComponent = ({ isEdit = false, onSuccess = noop, variable = undefined }: any) => {
+  const TestComponent = ({ onSuccess = noop, variable = undefined }: any) => {
     const { openCreateUpdateVariableModal, closeCreateUpdateVariableModal } = useCreateEditVariableModal({
-      onSuccess: onSuccess,
-      isEdit: isEdit
+      onSuccess: onSuccess
     })
     return (
       <>
@@ -118,13 +117,13 @@ describe('Test useCreateEditVariableModal', () => {
   test('should open useCreateEditVariableModal in edit mode', async () => {
     const { container, getByText } = render(
       <TestWrapper path={routes.toVariables(projectPathProps)} pathParams={pathParams}>
-        <TestComponent isEdit={true} variable={StringFixedPayloadProj} />
+        <TestComponent variable={StringFixedPayloadProj} />
       </TestWrapper>
     )
     act(() => {
       fireEvent.click(container.querySelector('.useCreateEditVariableModalOpen')!)
     })
 
-    await waitFor(() => expect(getByText('common.editVariable')))
+    await waitFor(() => expect(getByText('variables.editVar')))
   })
 })

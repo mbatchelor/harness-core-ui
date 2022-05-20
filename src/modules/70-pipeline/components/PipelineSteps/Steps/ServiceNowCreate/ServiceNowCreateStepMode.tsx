@@ -230,10 +230,13 @@ function FormContent({
     }
   }, [serviceNowTemplateResponse?.data])
   useEffect(() => {
-    // Clear field list to be diaplyed under dynamic field selector if fixed ticket type is not chosen
+    // Clear field list to be displayed under dynamic field selector or template section, if fixed ticket type is not chosen
     if (ticketValueType !== MultiTypeInputType.FIXED) {
       formik.setFieldValue('spec.selectedFields', [])
+      formik.setFieldValue('spec.templateFields', [])
+      formik.setFieldValue('spec.templateName', '')
       setTicketFieldList([])
+      setTemplateName('')
     }
   }, [ticketValueType])
 
@@ -350,6 +353,7 @@ function FormContent({
           orgIdentifier={orgIdentifier}
           multiTypeProps={{ expressions, allowableTypes }}
           type="ServiceNow"
+          setRefValue
           enableConfigureOptions={false}
           selected={formik?.values?.spec.connectorRef as string}
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -588,7 +592,7 @@ function FormContent({
                           }
                         }
                       },
-                      allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
+                      allowableTypes: allowableTypes
                     }}
                   />
                   {getMultiTypeFromValue(formik.values.spec.templateName) === MultiTypeInputType.RUNTIME && (

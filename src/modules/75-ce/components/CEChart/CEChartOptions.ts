@@ -68,7 +68,8 @@ export default {
 export function getRadialChartOptions(
   series: Array<Record<string, string | number>> = [],
   colors: string[],
-  options: Record<string, any> = {}
+  options: Record<string, any> = {},
+  strokeSize = '80%'
 ): Highcharts.Options {
   const data: Array<Record<string, string | number>> = series.map(row => ({
     name: row.name,
@@ -99,7 +100,7 @@ export function getRadialChartOptions(
     series: [
       {
         name: 'Cost',
-        innerSize: '80%',
+        innerSize: strokeSize,
         type: 'pie',
         data
       }

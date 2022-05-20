@@ -33,6 +33,12 @@ export const ArtifactStepCommon: React.FC<ArtifactStepCommonProps> = ({
       stepViewType={stepViewType}
       readonly={readonly}
       enableFields={{
+        ...(artifactConnectorType === Connectors.AWS &&
+          shouldRenderRunTimeInputView(get(template, 'spec.baseImageConnectorRefs')) && {
+            'spec.baseImageConnectorRefs': {
+              type: [Connectors.DOCKER]
+            }
+          }),
         ...(shouldRenderRunTimeInputView(template?.spec?.tags) && {
           'spec.tags': {}
         }),

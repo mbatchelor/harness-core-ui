@@ -4,7 +4,7 @@ exports[`TemplateStudioSubHeader tests should match snapshot 1`] = `
 <div>
   <div
     class="StyledProps--font StyledProps--main subHeader StyledProps--padding-right-xlarge StyledProps--padding-left-xlarge StyledProps--border StyledProps--border-bottom StyledProps--border-color-grey200 StyledProps--background-white"
-    style="height: 52px;"
+    style="height: 49px;"
   >
     <div
       class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-space-between"
@@ -132,7 +132,7 @@ exports[`TemplateStudioSubHeader tests should match snapshot in read only mode 1
 <div>
   <div
     class="StyledProps--font StyledProps--main subHeader StyledProps--padding-right-xlarge StyledProps--padding-left-xlarge StyledProps--border StyledProps--border-bottom StyledProps--border-color-grey200 StyledProps--background-white"
-    style="height: 52px;"
+    style="height: 49px;"
   >
     <div
       class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-space-between"
@@ -214,7 +214,7 @@ exports[`TemplateStudioSubHeader tests should match snapshot when template is up
 <div>
   <div
     class="StyledProps--font StyledProps--main subHeader StyledProps--padding-right-xlarge StyledProps--padding-left-xlarge StyledProps--border StyledProps--border-bottom StyledProps--border-color-grey200 StyledProps--background-white"
-    style="height: 52px;"
+    style="height: 49px;"
   >
     <div
       class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-space-between"

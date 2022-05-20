@@ -23,9 +23,10 @@ import type {
 import routes from '@common/RouteDefinitions'
 import RbacFactory from '@rbac/factories/RbacFactory'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { getScopeLabelFromApi } from '@rbac/pages/ResourceGroupDetails/utils'
+import { getSelectedScopeLabel } from '@rbac/pages/ResourceGroupDetails/utils'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import type { ResourceType } from '@rbac/interfaces/ResourceType'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import ResourceGroupColumnMenu from './ResourceGroupColumnMenu'
 import css from './ResourceGroupList.module.scss'
 
@@ -73,6 +74,7 @@ export const RenderColumnLastUpdated: Renderer<CellProps<ResourceGroupV2Response
 
 const RenderColumnSummary: Renderer<CellProps<ResourceGroupV2Response>> = ({ row, column }) => {
   const { getString } = useStrings()
+  const { CUSTOM_RESOURCEGROUP_SCOPE } = useFeatureFlags()
   const { resourceGroup, harnessManaged } = row.original
   const scope = getScopeFromDTO(resourceGroup)
   const resourceFilter = resourceGroup.resourceFilter
@@ -115,7 +117,14 @@ const RenderColumnSummary: Renderer<CellProps<ResourceGroupV2Response>> = ({ row
         <Text font={{ variation: FontVariation.BODY2 }} color={Color.BLACK}>
           {getString('common.scope')}:
         </Text>
-        <Text>{getScopeLabelFromApi(getString, scope, resourceGroup)}</Text>
+        <Text>
+          {getSelectedScopeLabel(
+            getString,
+            scope,
+            defaultTo(resourceGroup.includedScopes, []),
+            CUSTOM_RESOURCEGROUP_SCOPE
+          )}
+        </Text>
       </Layout.Horizontal>
     </Layout.Vertical>
   ) : (

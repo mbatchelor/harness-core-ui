@@ -16,7 +16,7 @@ import { UserLabel } from '@common/components/UserLabel/UserLabel'
 
 import css from './ExecutionMetadata.module.scss'
 
-const ExecutionMetadataTrigger = () => {
+function ExecutionMetadataTrigger(): React.ReactElement {
   const { getString } = useStrings()
 
   const { pipelineExecutionDetail } = useExecutionContext()

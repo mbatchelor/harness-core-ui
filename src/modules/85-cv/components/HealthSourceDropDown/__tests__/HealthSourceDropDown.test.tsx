@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { findByText, act, fireEvent, render, waitFor } from '@testing-library/react'
-import { TestWrapper } from '@common/utils/testUtils'
+import { findPopoverContainer, TestWrapper } from '@common/utils/testUtils'
 import type { StringKeys } from 'framework/strings'
 import * as cvService from 'services/cv'
 import { HealthSourceDropDown } from '../HealthSourceDropDown'
@@ -125,8 +125,8 @@ describe('Unit tests for HealthSourceDropDown', () => {
       fireEvent.click(selectCaret!)
     })
 
-    const options = container.querySelectorAll('.bp3-popover-content .Select--menuItem')
-    expect(options.length).toEqual(3)
+    const options = findPopoverContainer()?.querySelectorAll('.Select--menuItem')
+    expect(options?.length).toEqual(3)
     expect(container).toMatchSnapshot()
 
     const typeToSelect = await findByText(container, 'Appd Health source updated')

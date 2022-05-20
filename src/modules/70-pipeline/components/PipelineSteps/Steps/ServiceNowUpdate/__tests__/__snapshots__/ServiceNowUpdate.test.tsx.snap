@@ -975,62 +975,11 @@ exports[`ServiceNow Update tests Edit stage - readony view: editstage-readonly 1
                     <span
                       class="bp3-button-text"
                     >
-                      <div
-                        class="Layout--horizontal Layout--layout-spacing-small StyledProps--main selectWrapper StyledProps--flex StyledProps--flex-distribution-space-between"
+                      <span
+                        class="placeholder"
                       >
-                        <span
-                          class="bp3-popover-wrapper"
-                        >
-                          <span
-                            class="bp3-popover-target Text--targetClass"
-                          >
-                            <p
-                              class="StyledProps--font StyledProps--main label StyledProps--color StyledProps--color-grey800"
-                              tabindex="0"
-                            >
-                              c1
-                            </p>
-                          </span>
-                        </span>
-                        <div
-                          class="rightStatus"
-                        >
-                          <span
-                            class="bp3-icon bp3-icon-full-circle StyledProps--main status redStatus"
-                            data-testid="crf-status"
-                            icon="full-circle"
-                          >
-                            <svg
-                              data-icon="full-circle"
-                              height="6"
-                              viewBox="0 0 16 16"
-                              width="6"
-                            >
-                              <desc>
-                                full-circle
-                              </desc>
-                              <path
-                                d="M8 0a8 8 0 100 16A8 8 0 108 0z"
-                                fill-rule="evenodd"
-                              />
-                            </svg>
-                          </span>
-                          <span
-                            class="Tag--main"
-                          >
-                            <span
-                              class="bp3-tag bp3-minimal"
-                              id="tag"
-                            >
-                              <span
-                                class="bp3-text-overflow-ellipsis bp3-fill"
-                              >
-                                project
-                              </span>
-                            </span>
-                          </span>
-                        </div>
-                      </div>
+                        select
+                      </span>
                     </span>
                     <span
                       class="bp3-icon bp3-icon-chevron-down StyledProps--main"

@@ -10,6 +10,7 @@ import type { GetDataError } from 'restful-react'
 
 import type {
   LogData,
+  RestResponseAnalyzedRadarChartLogDataWithCountDTO,
   RestResponseListLogAnalysisRadarChartClusterDTO,
   RestResponseLogAnalysisRadarChartListWithCountDTO
 } from 'services/cv'
@@ -32,7 +33,7 @@ export interface LogAnalysisContainerProps {
 }
 
 export interface LogAnalysisProps {
-  data: RestResponseLogAnalysisRadarChartListWithCountDTO | null
+  data: RestResponseLogAnalysisRadarChartListWithCountDTO | RestResponseAnalyzedRadarChartLogDataWithCountDTO | null
   clusterChartData: RestResponseListLogAnalysisRadarChartClusterDTO | null
   goToPage(val: number): void
   logsLoading: boolean
@@ -46,4 +47,8 @@ export interface LogAnalysisProps {
   refetchLogAnalysis?: () => void
   refetchClusterAnalysis?: () => void
   clusterChartError?: GetDataError<unknown> | null
+  isServicePage?: boolean
+  startTime?: number
+  endTime?: number
+  monitoredServiceIdentifier?: string
 }

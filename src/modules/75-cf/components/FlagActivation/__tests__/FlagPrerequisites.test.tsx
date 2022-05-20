@@ -55,4 +55,63 @@ describe('FlagPrerequisites', () => {
 
     expect(screen.getByTestId('flag-prerequisite-modal')).toMatchSnapshot()
   })
+
+  test('form should render when adding prerequisite', async () => {
+    renderComponent()
+    await waitFor(() => {
+      expect(screen.getByText('cf.featureFlags.newPrerequisite')).toBeInTheDocument()
+    })
+
+    userEvent.click(screen.getByText('cf.featureFlags.newPrerequisite'))
+
+    await waitFor(() => expect(screen.getByTestId('flag-prerequisite-modal')).toBeInTheDocument())
+
+    userEvent.click(screen.getByTestId('prerequisites-button'))
+
+    await waitFor(() => expect(screen.getByTestId('prerequisites-form')).toBeInTheDocument())
+  })
+
+  test('it should render feature flags in dropdown', async () => {
+    renderComponent()
+    await waitFor(() => {
+      expect(screen.getByText('cf.featureFlags.newPrerequisite')).toBeInTheDocument()
+    })
+
+    userEvent.click(screen.getByText('cf.featureFlags.newPrerequisite'))
+    await waitFor(() => expect(screen.getByTestId('flag-prerequisite-modal')).toBeInTheDocument())
+    userEvent.click(screen.getByTestId('prerequisites-button'))
+
+    await waitFor(() => expect(screen.getByTestId('prerequisites-form')).toBeInTheDocument())
+
+    expect(screen.getByTestId('prerequisites-variations-dropdown-0')).toBeInTheDocument()
+    userEvent.click(screen.getByTestId('prerequisites-dropdown-0'))
+    mockFeature.prerequisites?.forEach(prerequisite => {
+      expect(screen.getByText(prerequisite.feature)).toBeInTheDocument()
+    })
+  })
+
+  test('its should render variation when feature flag is selected', async () => {
+    renderComponent()
+    await waitFor(() => {
+      expect(screen.getByText('cf.featureFlags.newPrerequisite')).toBeInTheDocument()
+    })
+
+    userEvent.click(screen.getByText('cf.featureFlags.newPrerequisite'))
+    await waitFor(() => expect(screen.getByTestId('flag-prerequisite-modal')).toBeInTheDocument())
+    userEvent.click(screen.getByTestId('prerequisites-button'))
+
+    await waitFor(() => {
+      expect(screen.getByTestId('prerequisites-form')).toBeInTheDocument()
+      expect(screen.getByTestId('prerequisites-dropdown-0')).toBeInTheDocument()
+      expect(screen.getByTestId('prerequisites-variations-dropdown-0')).toBeInTheDocument()
+    })
+
+    mockFeature.prerequisites?.forEach(prerequisite => {
+      userEvent.click(screen.getByTestId('prerequisites-dropdown-0'))
+      userEvent.dblClick(screen.getByText(prerequisite.feature))
+
+      userEvent.click(screen.getByTestId('prerequisites-variations-dropdown-0'))
+      expect(screen.getByText('cf.featureFlags.false')).toBeInTheDocument()
+    })
+  })
 })

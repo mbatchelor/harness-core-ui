@@ -7,7 +7,7 @@
 
 import React, { useCallback } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
-import { Text, Icon, OverlaySpinner, Container, Layout } from '@wings-software/uicore'
+import { Text, Icon, IconName, OverlaySpinner, Container, Layout } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import routes from '@common/RouteDefinitions'
 import {
@@ -20,10 +20,12 @@ import {
 } from 'services/pipeline-ng'
 import { String, useStrings, UseStringsReturn } from 'framework/strings'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
+import type { Module } from 'framework/types/ModuleName'
 import { Page, StringUtils } from '@common/exports'
 import { useQueryParams, useMutateAsGet, useUpdateQueryParams } from '@common/hooks'
 import type { PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { UNSAVED_FILTER } from '@common/components/Filter/utils/FilterUtils'
+import { useModuleInfo } from '@common/hooks/useModuleInfo'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import RbacButton from '@rbac/components/Button/Button'
@@ -31,6 +33,7 @@ import PipelineSummaryCards from '@pipeline/components/Dashboards/PipelineSummar
 import PipelineBuildExecutionsChart from '@pipeline/components/Dashboards/BuildExecutionsChart/PipelineBuildExecutionsChart'
 import useTabVisible from '@common/hooks/useTabVisible'
 import { isCommunityPlan } from '@common/utils/utils'
+import type { StringsMap } from 'stringTypes'
 import ExecutionsList from './ExecutionsList/ExecutionsList'
 import ExecutionsPagination from './ExecutionsPagination/ExecutionsPagination'
 import { PipelineDeploymentListHeader } from './PipelineDeploymentListHeader/PipelineDeploymentListHeader'
@@ -38,6 +41,7 @@ import { FilterContextProvider } from './FiltersContext/FiltersContext'
 import type { QueryParams, StringQueryParams, QuickStatusParam } from './types'
 import deploymentIllustrations from './images/deployments-illustrations.svg'
 import buildIllustrations from './images/builds-illustrations.svg'
+import securityTestsIllustration from './images/security-tests-illustration.svg'
 import css from './PipelineDeploymentList.module.scss'
 
 const pollingIntervalInMilliseconds = 5_000
@@ -129,7 +133,7 @@ const renderDeploymentListHeader = ({
 
 function NoDeployments(props: {
   hasFilters: boolean
-  isCIModule: boolean
+  module: Module
   getString: UseStringsReturn['getString']
   clearFilters: () => void
   runPipeline: boolean
@@ -142,7 +146,7 @@ function NoDeployments(props: {
 }): JSX.Element {
   const {
     hasFilters,
-    isCIModule,
+    module,
     getString,
     clearFilters,
     runPipeline,
@@ -153,11 +157,43 @@ function NoDeployments(props: {
     onRunPipeline,
     isPipelineInvalid
   } = props || {}
+
+  let icon: IconName
+  let img: JSX.Element
+  let noDeploymentString: keyof StringsMap
+  let aboutDeploymentString: keyof StringsMap
+
+  switch (module) {
+    case 'ci':
+      icon = 'ci-main'
+      img = <img src={buildIllustrations} className={css.image} />
+      noDeploymentString = 'pipeline.noBuildsText'
+      aboutDeploymentString = 'noBuildsText'
+      break
+
+    case 'sto':
+      icon = 'sto-color-filled'
+      img = <img src={securityTestsIllustration} className={css.image} />
+      noDeploymentString = 'stoSteps.noScansText'
+      aboutDeploymentString = 'stoSteps.noScansRunPipelineText'
+      break
+
+    default:
+      icon = 'cd-main'
+      img = <img src={deploymentIllustrations} className={css.image} />
+      noDeploymentString = 'pipeline.noDeploymentText'
+      aboutDeploymentString = 'noDeploymentText'
+  }
+
+  if (!runPipeline) {
+    aboutDeploymentString = 'pipeline.noPipelineText'
+  }
+
   return (
     <div className={css.noDeploymentSection}>
       {hasFilters ? (
         <Layout.Vertical spacing="small" flex>
-          <Icon size={50} name={isCIModule ? 'ci-main' : 'cd-main'} margin={{ bottom: 'large' }} />
+          <Icon size={50} name={icon} margin={{ bottom: 'large' }} />
           <Text
             margin={{ top: 'large', bottom: 'small' }}
             font={{ weight: 'bold', size: 'medium' }}
@@ -169,13 +205,13 @@ function NoDeployments(props: {
         </Layout.Vertical>
       ) : (
         <Layout.Vertical spacing="small" flex={{ justifyContent: 'center', alignItems: 'center' }} width={720}>
-          <img src={isCIModule ? buildIllustrations : deploymentIllustrations} className={css.image} />
+          {img}
 
           <Text className={css.noDeploymentText} margin={{ top: 'medium', bottom: 'small' }}>
-            {getString(isCIModule ? 'pipeline.noBuildsText' : 'pipeline.noDeploymentText')}
+            {getString(noDeploymentString)}
           </Text>
           <Text className={css.aboutDeployment} margin={{ top: 'xsmall', bottom: 'xlarge' }}>
-            {getString(runPipeline ? (isCIModule ? 'noBuildsText' : 'noDeploymentText') : 'pipeline.noPipelineText')}
+            {getString(aboutDeploymentString)}
           </Text>
           <RbacButton
             intent="primary"
@@ -199,37 +235,39 @@ function NoDeployments(props: {
     </div>
   )
 }
+
+function processQueryParams(params: StringQueryParams) {
+  let filters = {}
+
+  try {
+    filters = params.filters ? JSON.parse(params.filters) : undefined
+  } catch (_e) {
+    // do nothing
+  }
+
+  return {
+    ...params,
+    page: parseInt(params.page || '1', 10),
+    size: parseInt(params.size || '20', 10),
+    sort: [],
+    status: ((Array.isArray(params.status) ? params.status : [params.status]) as QuickStatusParam)?.filter(p => p),
+    myDeployments: !!params.myDeployments,
+    searchTerm: params.searchTerm,
+    filters,
+    repoIdentifier: params.repoIdentifier,
+    branch: params.branch
+  }
+}
+
 export default function PipelineDeploymentList(props: PipelineDeploymentListProps): React.ReactElement {
-  const { orgIdentifier, projectIdentifier, pipelineIdentifier, accountId, module } =
+  const { orgIdentifier, projectIdentifier, pipelineIdentifier, accountId } =
     useParams<PipelineType<PipelinePathProps>>()
   const [pollingRequest, setPollingRequest] = React.useState(false)
   const [pipelineDataElements, setData] = React.useState<number | undefined>()
   const history = useHistory()
-  const queryParams = useQueryParams<QueryParams>({
-    processQueryParams(params: StringQueryParams) {
-      let filters = {}
-
-      try {
-        filters = params.filters ? JSON.parse(params.filters) : undefined
-      } catch (_e) {
-        // do nothing
-      }
-
-      return {
-        ...params,
-        page: parseInt(params.page || '1', 10),
-        size: parseInt(params.size || '20', 10),
-        sort: [],
-        status: ((Array.isArray(params.status) ? params.status : [params.status]) as QuickStatusParam)?.filter(p => p),
-        myDeployments: !!params.myDeployments,
-        searchTerm: params.searchTerm,
-        filters,
-        repoIdentifier: params.repoIdentifier,
-        branch: params.branch
-      }
-    }
-  })
+  const queryParams = useQueryParams<QueryParams>({ processQueryParams })
   const { replaceQueryParams } = useUpdateQueryParams<Partial<GetListOfExecutionsQueryParams>>()
+  const { module = 'cd' } = useModuleInfo()
 
   const { page, filterIdentifier, myDeployments, status, repoIdentifier, branch, searchTerm } = queryParams
 
@@ -241,7 +279,6 @@ export default function PipelineDeploymentList(props: PipelineDeploymentListProp
     status
   })
 
-  const isCIModule = module === 'ci'
   const { getString } = useStrings()
   const hasFilterIdentifier = getHasFilterIdentifier(filterIdentifier)
 
@@ -398,7 +435,7 @@ export default function PipelineDeploymentList(props: PipelineDeploymentListProp
             <NoDeployments
               onRunPipeline={props.onRunPipeline}
               hasFilters={hasFilters}
-              isCIModule={isCIModule}
+              module={module}
               getString={getString}
               clearFilters={clearFilters}
               runPipeline={runPipeline}

@@ -82,7 +82,7 @@ const ResourcesCard: React.FC<ResourcesCardProps> = ({
                       openAddResourceModal(resourceType, Array.isArray(resourceValues) ? resourceValues : [])
                     }}
                   >
-                    {getString('rbac.resourceGroup.add')}
+                    {getString('plusAdd')}
                   </Button>
                 </Layout.Horizontal>
               )}

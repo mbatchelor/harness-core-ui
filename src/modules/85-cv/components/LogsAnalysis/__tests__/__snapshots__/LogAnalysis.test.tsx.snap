@@ -3,428 +3,663 @@
 exports[`Unit tests for LogAnalysisContainer Verify if LogAnalysisContainer renders 1`] = `
 <div>
   <div
-    class="container"
+    class="StyledProps--font StyledProps--main main"
   >
     <div
-      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--margin-bottom-medium"
+      class="Layout--horizontal StyledProps--main filterContainer"
     >
       <div
-        class="bp3-popover-wrapper logsAnalysisFilters Select--main bp3-fill"
+        class="bp3-popover-wrapper MultiSelectDropDown--main"
       >
         <div
           class="bp3-popover-target"
         >
           <div
-            class="bp3-input-group"
+            class="Layout--horizontal StyledProps--main MultiSelectDropDown--dropdownButton MultiSelectDropDown--withBorder MultiSelectDropDown--minWidth StyledProps--flex"
+            data-testid="HealthSource_MultiSelect_DropDown"
+            style="min-width: 130px;"
           >
-            <input
-              autocomplete="off"
-              class="bp3-input"
-              placeholder="pipeline.verification.logs.filterByClusterType"
-              style="padding-right: 0px;"
-              type="text"
-              value="cv.unknown"
-            />
-            <span
-              class="bp3-input-action"
+            <div
+              class="Layout--horizontal StyledProps--main MultiSelectDropDown--labelWrapper StyledProps--flex"
             >
-              <span
-                class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
-                icon="chevron-down"
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main MultiSelectDropDown--label"
+                data-testid="dropdown-value"
+                style="--text-line-clamp: 1;"
               >
-                <svg
-                  data-icon="chevron-down"
-                  height="14"
-                  viewBox="0 0 16 16"
-                  width="14"
-                >
-                  <desc>
-                    chevron-down
-                  </desc>
-                  <path
-                    d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
-                    fill-rule="evenodd"
-                  />
-                </svg>
-              </span>
+                pipeline.verification.healthSourceLabel: all
+              </p>
+            </div>
+            <span
+              class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey400"
+              data-icon="main-chevron-down"
+            >
+              <svg
+                height="8"
+                viewBox="0 0 14 8"
+                width="8"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M13 0c-.3 0-.5.1-.7.3L7 5.6 1.7.3C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7l6 6c.2.2.4.3.7.3s.5-.1.7-.3l6-6c.2-.2.3-.4.3-.7 0-.6-.4-1-1-1z"
+                  fill="#4d5969"
+                />
+              </svg>
             </span>
           </div>
         </div>
       </div>
       <div
-        class="bp3-popover-wrapper maxDropDownWidth logsAnalysisFilters Select--main bp3-fill"
+        class="Layout--horizontal StyledProps--main StyledProps--margin-left-small StyledProps--padding-left-small StyledProps--border StyledProps--border-left"
+      >
+        <label
+          class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
+        >
+          <input
+            checked=""
+            data-testid="cv.known"
+            type="checkbox"
+            value="KNOWN_EVENT"
+          />
+          <span
+            class="bp3-control-indicator"
+          />
+          cv.known
+        </label>
+        <label
+          class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
+        >
+          <input
+            checked=""
+            data-testid="cv.unknown"
+            type="checkbox"
+            value="UNKNOWN_EVENT"
+          />
+          <span
+            class="bp3-control-indicator"
+          />
+          cv.unknown
+        </label>
+        <label
+          class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
+        >
+          <input
+            checked=""
+            data-testid="cv.unexpectedFrequency"
+            type="checkbox"
+            value="UNEXPECTED_FREQUENCY"
+          />
+          <span
+            class="bp3-control-indicator"
+          />
+          cv.unexpectedFrequency
+        </label>
+      </div>
+    </div>
+  </div>
+  <div
+    class="StyledProps--font StyledProps--main logsTab"
+  >
+    <div
+      class="StyledProps--font StyledProps--main clusterChart"
+    >
+      <div
+        class="StyledProps--font StyledProps--main StyledProps--margin-bottom-large"
       >
         <div
-          class="bp3-popover-target"
+          class="Layout--horizontal StyledProps--main StyledProps--margin-bottom-small"
         >
-          <div
-            class="bp3-input-group"
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--border StyledProps--border-right StyledProps--padding-right-small StyledProps--margin-right-small StyledProps--font-variation-small"
+            data-testid="LogAnalysis_totalClusters"
           >
-            <input
-              autocomplete="off"
-              class="bp3-input"
-              name="healthsources-select"
-              placeholder="pipeline.verification.healthSourcePlaceholder"
-              style="padding-right: 0px;"
-              type="text"
-              value=""
-            />
+            total
+             : 
+            29
+          </p>
+          <div
+            class="Layout--horizontal StyledProps--main StyledProps--margin-right-small"
+            data-testid="KNOWN_EVENT-count"
+            style="align-items: center;"
+          >
             <span
-              class="bp3-input-action"
-            >
-              <span
-                class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
-                icon="chevron-down"
-              >
-                <svg
-                  data-icon="chevron-down"
-                  height="14"
-                  viewBox="0 0 16 16"
-                  width="14"
-                >
-                  <desc>
-                    chevron-down
-                  </desc>
-                  <path
-                    d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
-                    fill-rule="evenodd"
-                  />
-                </svg>
-              </span>
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="bp3-card bp3-elevation-0 Card--card clusterChart"
-    >
-      <h2
-        class="StyledProps--font StyledProps--font-h2 StyledProps--main StyledProps--font-variation-card-title"
-        level="2"
-      >
-        pipeline.verification.logs.logCluster
-      </h2>
-      <div
-        class="StyledProps--font StyledProps--main StyledProps--padding-medium"
-      />
-    </div>
-    <div
-      class="StyledProps--font StyledProps--main main"
-    >
-      <div
-        class="StyledProps--font StyledProps--main mainRow columnHeader"
-      >
-        <p
-          class="StyledProps--font StyledProps--main StyledProps--padding-left-small"
-        >
-          pipeline.verification.logs.eventType
-        </p>
-        <p
-          class="StyledProps--font StyledProps--main"
-        >
-          cv.sampleMessage
-        </p>
-        <span />
-        <span />
-      </div>
-      <div
-        class="StyledProps--font StyledProps--main dataContainer"
-      >
-        <div
-          class="StyledProps--font StyledProps--main mainRow dataRow"
-          data-testid="logs-data-row"
-        >
-          <div
-            class="StyledProps--font StyledProps--main openModalColumn compareDataColumn StyledProps--padding-left-small"
-          >
+              class="radarChartTypeIndicator"
+            />
             <p
-              class="StyledProps--font StyledProps--main eventTypeTag StyledProps--font-xsmall"
+              class="StyledProps--font StyledProps--main StyledProps--font-variation-small"
             >
               Known
+               (
+              24
+              )
             </p>
           </div>
           <div
-            class="StyledProps--font StyledProps--main logText openModalColumn"
-          >
-            <p
-              class="logRowText"
-            >
-              prod-setup-205416
-            </p>
-          </div>
-          <span />
-          <div
-            class="Layout--horizontal StyledProps--main StyledProps--margin-top-xsmall"
-            style="align-items: center; justify-content: flex-end;"
+            class="Layout--horizontal StyledProps--main StyledProps--margin-right-small"
+            data-testid="UNKNOWN_EVENT-count"
+            style="align-items: center;"
           >
             <span
-              class="bp3-icon StyledProps--main"
-              data-icon="description"
-            >
-              <svg
-                fill="none"
-                height="24"
-                width="24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <g
-                  opacity="0.3"
-                >
-                  <mask
-                    fill="#fff"
-                    id="description_svg__a"
-                  >
-                    <path
-                      d="M6.75 6.625a.5.5 0 100 1h4.5a.5.5 0 100-1h-4.5zm-.5 2.75a.5.5 0 01.5-.5h4.5a.5.5 0 110 1h-4.5a.5.5 0 01-.5-.5zm0 2.25a.5.5 0 01.5-.5h4.5a.5.5 0 110 1h-4.5a.5.5 0 01-.5-.5z"
-                      fill-rule="evenodd"
-                    />
-                  </mask>
-                  <path
-                    d="M7.25 7.125a.5.5 0 01-.5.5v-2a1.5 1.5 0 00-1.5 1.5h2zm-.5-.5a.5.5 0 01.5.5h-2a1.5 1.5 0 001.5 1.5v-2zm4.5 0h-4.5v2h4.5v-2zm-.5.5a.5.5 0 01.5-.5v2a1.5 1.5 0 001.5-1.5h-2zm.5.5a.5.5 0 01-.5-.5h2a1.5 1.5 0 00-1.5-1.5v2zm-4.5 0h4.5v-2h-4.5v2zm0 .25a1.5 1.5 0 00-1.5 1.5h2a.5.5 0 01-.5.5v-2zm4.5 0h-4.5v2h4.5v-2zm1.5 1.5a1.5 1.5 0 00-1.5-1.5v2a.5.5 0 01-.5-.5h2zm-1.5 1.5a1.5 1.5 0 001.5-1.5h-2a.5.5 0 01.5-.5v2zm-4.5 0h4.5v-2h-4.5v2zm-1.5-1.5a1.5 1.5 0 001.5 1.5v-2a.5.5 0 01.5.5h-2zm1.5.75a1.5 1.5 0 00-1.5 1.5h2a.5.5 0 01-.5.5v-2zm4.5 0h-4.5v2h4.5v-2zm1.5 1.5a1.5 1.5 0 00-1.5-1.5v2a.5.5 0 01-.5-.5h2zm-1.5 1.5a1.5 1.5 0 001.5-1.5h-2a.5.5 0 01.5-.5v2zm-4.5 0h4.5v-2h-4.5v2zm-1.5-1.5a1.5 1.5 0 001.5 1.5v-2a.5.5 0 01.5.5h-2z"
-                    fill="#6b6d85"
-                    mask="url(#description_svg__a)"
-                  />
-                </g>
-                <rect
-                  height="13.5"
-                  rx="1"
-                  stroke="#6b6d85"
-                  width="10.5"
-                  x="3.75"
-                  y="2.25"
-                />
-              </svg>
-            </span>
-          </div>
-        </div>
-        <div
-          class="StyledProps--font StyledProps--main mainRow dataRow"
-          data-testid="logs-data-row"
-        >
-          <div
-            class="StyledProps--font StyledProps--main openModalColumn compareDataColumn StyledProps--padding-left-small"
-          >
+              class="radarChartTypeIndicator"
+            />
             <p
-              class="StyledProps--font StyledProps--main eventTypeTag StyledProps--font-xsmall"
+              class="StyledProps--font StyledProps--main StyledProps--font-variation-small"
             >
               Unknown
+               (
+              4
+              )
             </p>
           </div>
           <div
-            class="StyledProps--font StyledProps--main logText openModalColumn"
-          >
-            <p
-              class="logRowText"
-            >
-              prod-setup-205416
-            </p>
-          </div>
-          <span />
-          <div
-            class="Layout--horizontal StyledProps--main StyledProps--margin-top-xsmall"
-            style="align-items: center; justify-content: flex-end;"
+            class="Layout--horizontal StyledProps--main StyledProps--margin-right-small"
+            data-testid="UNEXPECTED_FREQUENCY-count"
+            style="align-items: center;"
           >
             <span
-              class="bp3-icon StyledProps--main"
-              data-icon="description"
-            >
-              <svg
-                fill="none"
-                height="24"
-                width="24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <g
-                  opacity="0.3"
-                >
-                  <mask
-                    fill="#fff"
-                    id="description_svg__a"
-                  >
-                    <path
-                      d="M6.75 6.625a.5.5 0 100 1h4.5a.5.5 0 100-1h-4.5zm-.5 2.75a.5.5 0 01.5-.5h4.5a.5.5 0 110 1h-4.5a.5.5 0 01-.5-.5zm0 2.25a.5.5 0 01.5-.5h4.5a.5.5 0 110 1h-4.5a.5.5 0 01-.5-.5z"
-                      fill-rule="evenodd"
-                    />
-                  </mask>
-                  <path
-                    d="M7.25 7.125a.5.5 0 01-.5.5v-2a1.5 1.5 0 00-1.5 1.5h2zm-.5-.5a.5.5 0 01.5.5h-2a1.5 1.5 0 001.5 1.5v-2zm4.5 0h-4.5v2h4.5v-2zm-.5.5a.5.5 0 01.5-.5v2a1.5 1.5 0 001.5-1.5h-2zm.5.5a.5.5 0 01-.5-.5h2a1.5 1.5 0 00-1.5-1.5v2zm-4.5 0h4.5v-2h-4.5v2zm0 .25a1.5 1.5 0 00-1.5 1.5h2a.5.5 0 01-.5.5v-2zm4.5 0h-4.5v2h4.5v-2zm1.5 1.5a1.5 1.5 0 00-1.5-1.5v2a.5.5 0 01-.5-.5h2zm-1.5 1.5a1.5 1.5 0 001.5-1.5h-2a.5.5 0 01.5-.5v2zm-4.5 0h4.5v-2h-4.5v2zm-1.5-1.5a1.5 1.5 0 001.5 1.5v-2a.5.5 0 01.5.5h-2zm1.5.75a1.5 1.5 0 00-1.5 1.5h2a.5.5 0 01-.5.5v-2zm4.5 0h-4.5v2h4.5v-2zm1.5 1.5a1.5 1.5 0 00-1.5-1.5v2a.5.5 0 01-.5-.5h2zm-1.5 1.5a1.5 1.5 0 001.5-1.5h-2a.5.5 0 01.5-.5v2zm-4.5 0h4.5v-2h-4.5v2zm-1.5-1.5a1.5 1.5 0 001.5 1.5v-2a.5.5 0 01.5.5h-2z"
-                    fill="#6b6d85"
-                    mask="url(#description_svg__a)"
-                  />
-                </g>
-                <rect
-                  height="13.5"
-                  rx="1"
-                  stroke="#6b6d85"
-                  width="10.5"
-                  x="3.75"
-                  y="2.25"
-                />
-              </svg>
-            </span>
-          </div>
-        </div>
-        <div
-          class="StyledProps--font StyledProps--main mainRow dataRow"
-          data-testid="logs-data-row"
-        >
-          <div
-            class="StyledProps--font StyledProps--main openModalColumn compareDataColumn StyledProps--padding-left-small"
-          >
+              class="radarChartTypeIndicator"
+            />
             <p
-              class="StyledProps--font StyledProps--main eventTypeTag StyledProps--font-xsmall"
+              class="StyledProps--font StyledProps--main StyledProps--font-variation-small"
             >
-              Unexpected
+              Unexpected Frequency
+               (
+              1
+              )
             </p>
-          </div>
-          <div
-            class="StyledProps--font StyledProps--main logText openModalColumn"
-          >
-            <p
-              class="logRowText"
-            >
-              prod-setup-205416
-            </p>
-          </div>
-          <span />
-          <div
-            class="Layout--horizontal StyledProps--main StyledProps--margin-top-xsmall"
-            style="align-items: center; justify-content: flex-end;"
-          >
-            <span
-              class="bp3-icon StyledProps--main"
-              data-icon="description"
-            >
-              <svg
-                fill="none"
-                height="24"
-                width="24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <g
-                  opacity="0.3"
-                >
-                  <mask
-                    fill="#fff"
-                    id="description_svg__a"
-                  >
-                    <path
-                      d="M6.75 6.625a.5.5 0 100 1h4.5a.5.5 0 100-1h-4.5zm-.5 2.75a.5.5 0 01.5-.5h4.5a.5.5 0 110 1h-4.5a.5.5 0 01-.5-.5zm0 2.25a.5.5 0 01.5-.5h4.5a.5.5 0 110 1h-4.5a.5.5 0 01-.5-.5z"
-                      fill-rule="evenodd"
-                    />
-                  </mask>
-                  <path
-                    d="M7.25 7.125a.5.5 0 01-.5.5v-2a1.5 1.5 0 00-1.5 1.5h2zm-.5-.5a.5.5 0 01.5.5h-2a1.5 1.5 0 001.5 1.5v-2zm4.5 0h-4.5v2h4.5v-2zm-.5.5a.5.5 0 01.5-.5v2a1.5 1.5 0 001.5-1.5h-2zm.5.5a.5.5 0 01-.5-.5h2a1.5 1.5 0 00-1.5-1.5v2zm-4.5 0h4.5v-2h-4.5v2zm0 .25a1.5 1.5 0 00-1.5 1.5h2a.5.5 0 01-.5.5v-2zm4.5 0h-4.5v2h4.5v-2zm1.5 1.5a1.5 1.5 0 00-1.5-1.5v2a.5.5 0 01-.5-.5h2zm-1.5 1.5a1.5 1.5 0 001.5-1.5h-2a.5.5 0 01.5-.5v2zm-4.5 0h4.5v-2h-4.5v2zm-1.5-1.5a1.5 1.5 0 001.5 1.5v-2a.5.5 0 01.5.5h-2zm1.5.75a1.5 1.5 0 00-1.5 1.5h2a.5.5 0 01-.5.5v-2zm4.5 0h-4.5v2h4.5v-2zm1.5 1.5a1.5 1.5 0 00-1.5-1.5v2a.5.5 0 01-.5-.5h2zm-1.5 1.5a1.5 1.5 0 001.5-1.5h-2a.5.5 0 01.5-.5v2zm-4.5 0h4.5v-2h-4.5v2zm-1.5-1.5a1.5 1.5 0 001.5 1.5v-2a.5.5 0 01.5.5h-2z"
-                    fill="#6b6d85"
-                    mask="url(#description_svg__a)"
-                  />
-                </g>
-                <rect
-                  height="13.5"
-                  rx="1"
-                  stroke="#6b6d85"
-                  width="10.5"
-                  x="3.75"
-                  y="2.25"
-                />
-              </svg>
-            </span>
           </div>
         </div>
       </div>
-    </div>
-    <div
-      class="Layout--horizontal StyledProps--main Pagination--container StyledProps--padding-top-medium StyledProps--padding-bottom-medium StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-distribution-space-between"
-    >
-      <span
-        class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--font-variation-small-semi"
+      <div
+        class="Layout--vertical StyledProps--main"
+        style="align-items: center; position: relative;"
       >
-        1
-         of 
-        1
-      </span>
+        <div
+          class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--margin-top-huge"
+          style="justify-content: center;"
+        >
+          <input
+            class="thumb thumbZindex3"
+            data-testid="MinMaxSlider_MinInput"
+            max="360"
+            min="0"
+            step="30"
+            type="range"
+            value="0"
+          />
+          <input
+            class="thumb thumbZindex5"
+            data-testid="MinMaxSlider_MaxInput"
+            max="360"
+            min="0"
+            step="30"
+            type="range"
+            value="360"
+          />
+          <div
+            class="StyledProps--font StyledProps--main slider"
+          >
+            <div
+              class="sliderTrack"
+            />
+            <div
+              class="sliderRange"
+              data-testid="MinMaxSlider_Range"
+              style="left: 0%; width: 100%;"
+            />
+            <p
+              class="sliderLeftValue"
+              data-testid="MinMaxSlider_MinValue"
+              style="left: calc(0% - 5px);"
+            >
+              0
+              °
+            </p>
+            <p
+              class="sliderRightValue"
+              data-testid="MinMaxSlider_MaxValue"
+              style="right: calc(0% - 10px);"
+            >
+              360
+              °
+            </p>
+          </div>
+        </div>
+        <div
+          class="StyledProps--font StyledProps--main"
+        >
+          <button
+            class="bp3-button Button--button StyledProps--font StyledProps--main resetButton StyledProps--inline StyledProps--color StyledProps--color-primary7 Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-link"
+            data-testid="MinMaxSlider_reset"
+            type="button"
+          >
+            <span
+              class="bp3-icon bp3-icon-reset StyledProps--main StyledProps--margin-right-small"
+              icon="reset"
+            >
+              <svg
+                data-icon="reset"
+                height="16"
+                viewBox="0 0 16 16"
+                width="16"
+              >
+                <desc>
+                  reset
+                </desc>
+                <path
+                  d="M6 5c0 .55-.45 1-1 1H1c-.55 0-1-.45-1-1V1c0-.55.45-1 1-1s1 .45 1 1v1.74A7.95 7.95 0 018 0c4.42 0 8 3.58 8 8 0 4.06-3.02 7.4-6.94 7.92-.02 0-.04.01-.06.01-.33.04-.66.07-1 .07-4.42 0-8-3.58-8-8 0-.55.45-1 1-1s1 .45 1 1c0 3.31 2.69 6 6 6 .71 0 1.37-.15 2-.38v.01c2.33-.82 4-3.02 4-5.63 0-3.31-2.69-6-6-6-1.77 0-3.36.78-4.46 2H5c.55 0 1 .45 1 1z"
+                  fill-rule="evenodd"
+                />
+              </svg>
+            </span>
+            <span
+              class="bp3-button-text"
+            >
+              reset
+            </span>
+          </button>
+        </div>
+      </div>
       <div
         class="Layout--horizontal StyledProps--main"
       >
-        <button
-          class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonLeft Button--with-current-color Button--withLeftIcon Button--size Button--small"
-          disabled=""
-          tabindex="-1"
-          type="button"
+        <span
+          class="bp3-icon StyledProps--main StyledProps--margin-right-small StyledProps--color StyledProps--color-primary7"
+          data-icon="main-issue"
         >
-          <span
-            class="bp3-icon bp3-icon-arrow-left StyledProps--main StyledProps--padding-right-xsmall"
-            icon="arrow-left"
+          <svg
+            height="16"
+            viewBox="0 0 14 14"
+            width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            <svg
-              data-icon="arrow-left"
-              height="12"
-              viewBox="0 0 16 16"
-              width="12"
-            >
-              <desc>
-                arrow-left
-              </desc>
-              <path
-                d="M13.99 6.99H4.41L7.7 3.7a1.003 1.003 0 00-1.42-1.42l-5 5a1.014 1.014 0 000 1.42l5 5a1.003 1.003 0 001.42-1.42L4.41 8.99H14c.55 0 1-.45 1-1s-.46-1-1.01-1z"
-                fill-rule="evenodd"
-              />
-            </svg>
-          </span>
-          <span
-            class="bp3-button-text"
-          >
-            Prev
-          </span>
-        </button>
-        <button
-          class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--selected Button--with-current-color"
-          disabled=""
-          tabindex="-1"
-          type="button"
+            <path
+              d="M7 0c3.9 0 7 3.1 7 7s-3.1 7-7 7-7-3.1-7-7 3.1-7 7-7zm0 1.4C3.9 1.4 1.4 3.9 1.4 7s2.5 5.6 5.6 5.6 5.6-2.5 5.6-5.6S10.1 1.4 7 1.4zm.7 9.8H6.3V9.8h1.4zm0-2.1H6.3V2.8h1.4z"
+              fill="#4d5969"
+            />
+          </svg>
+        </span>
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey600 StyledProps--font-variation-small"
         >
-          <span
-            class="bp3-button-text"
-          >
-            1
-          </span>
-        </button>
-        <button
-          class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonRight Button--with-current-color Button--withRightIcon Button--size Button--small"
-          disabled=""
-          tabindex="-1"
-          type="button"
-        >
-          <span
-            class="bp3-button-text"
-          >
-            Next
-          </span>
-          <span
-            class="bp3-icon bp3-icon-arrow-right StyledProps--main"
-            icon="arrow-right"
-          >
-            <svg
-              data-icon="arrow-right"
-              height="12"
-              viewBox="0 0 16 16"
-              width="12"
-            >
-              <desc>
-                arrow-right
-              </desc>
-              <path
-                d="M14.7 7.29l-5-5a.965.965 0 00-.71-.3 1.003 1.003 0 00-.71 1.71l3.29 3.29H1.99c-.55 0-1 .45-1 1s.45 1 1 1h9.59l-3.29 3.29a1.003 1.003 0 001.42 1.42l5-5c.18-.18.29-.43.29-.71s-.12-.52-.3-.7z"
-                fill-rule="evenodd"
-              />
-            </svg>
-          </span>
-        </button>
+          cv.logs.radarChartInfo
+        </p>
       </div>
-      <span>
-        Showing 10 per page
-      </span>
+    </div>
+    <div
+      class="StyledProps--font StyledProps--main tableContent"
+    >
+      <div
+        class="StyledProps--font StyledProps--main main logAnalysisRow"
+      >
+        <div
+          class="StyledProps--font StyledProps--main mainRow columnHeader"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--padding-left-small"
+          >
+            pipeline.verification.logs.eventType
+          </p>
+          <p
+            class="StyledProps--font StyledProps--main"
+          >
+            cv.sampleMessage
+          </p>
+          <span />
+          <span />
+        </div>
+        <div
+          class="StyledProps--font StyledProps--main dataContainer"
+        >
+          <div
+            class="StyledProps--font StyledProps--main mainRow dataRow"
+            data-testid="logs-data-row"
+          >
+            <div
+              class="StyledProps--font StyledProps--main openModalColumn compareDataColumn StyledProps--padding-left-small"
+            >
+              <p
+                class="StyledProps--font StyledProps--main eventTypeTag StyledProps--font-xsmall"
+              >
+                Unexpected
+              </p>
+            </div>
+            <div
+              class="StyledProps--font StyledProps--main logText openModalColumn"
+            >
+              <p
+                class="logRowText"
+              >
+                Test Message
+              </p>
+            </div>
+            <span />
+            <div
+              class="Layout--horizontal StyledProps--main StyledProps--margin-top-xsmall"
+              style="align-items: center; justify-content: flex-end;"
+            >
+              <span
+                class="bp3-icon StyledProps--main"
+                data-icon="description"
+              >
+                <svg
+                  fill="none"
+                  height="24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <g
+                    opacity="0.3"
+                  >
+                    <mask
+                      fill="#fff"
+                      id="description_svg__a"
+                    >
+                      <path
+                        d="M6.75 6.625a.5.5 0 100 1h4.5a.5.5 0 100-1h-4.5zm-.5 2.75a.5.5 0 01.5-.5h4.5a.5.5 0 110 1h-4.5a.5.5 0 01-.5-.5zm0 2.25a.5.5 0 01.5-.5h4.5a.5.5 0 110 1h-4.5a.5.5 0 01-.5-.5z"
+                        fill-rule="evenodd"
+                      />
+                    </mask>
+                    <path
+                      d="M7.25 7.125a.5.5 0 01-.5.5v-2a1.5 1.5 0 00-1.5 1.5h2zm-.5-.5a.5.5 0 01.5.5h-2a1.5 1.5 0 001.5 1.5v-2zm4.5 0h-4.5v2h4.5v-2zm-.5.5a.5.5 0 01.5-.5v2a1.5 1.5 0 001.5-1.5h-2zm.5.5a.5.5 0 01-.5-.5h2a1.5 1.5 0 00-1.5-1.5v2zm-4.5 0h4.5v-2h-4.5v2zm0 .25a1.5 1.5 0 00-1.5 1.5h2a.5.5 0 01-.5.5v-2zm4.5 0h-4.5v2h4.5v-2zm1.5 1.5a1.5 1.5 0 00-1.5-1.5v2a.5.5 0 01-.5-.5h2zm-1.5 1.5a1.5 1.5 0 001.5-1.5h-2a.5.5 0 01.5-.5v2zm-4.5 0h4.5v-2h-4.5v2zm-1.5-1.5a1.5 1.5 0 001.5 1.5v-2a.5.5 0 01.5.5h-2zm1.5.75a1.5 1.5 0 00-1.5 1.5h2a.5.5 0 01-.5.5v-2zm4.5 0h-4.5v2h4.5v-2zm1.5 1.5a1.5 1.5 0 00-1.5-1.5v2a.5.5 0 01-.5-.5h2zm-1.5 1.5a1.5 1.5 0 001.5-1.5h-2a.5.5 0 01.5-.5v2zm-4.5 0h4.5v-2h-4.5v2zm-1.5-1.5a1.5 1.5 0 001.5 1.5v-2a.5.5 0 01.5.5h-2z"
+                      fill="#6b6d85"
+                      mask="url(#description_svg__a)"
+                    />
+                  </g>
+                  <rect
+                    height="13.5"
+                    rx="1"
+                    stroke="#6b6d85"
+                    width="10.5"
+                    x="3.75"
+                    y="2.25"
+                  />
+                </svg>
+              </span>
+            </div>
+          </div>
+          <div
+            class="StyledProps--font StyledProps--main mainRow dataRow"
+            data-testid="logs-data-row"
+          >
+            <div
+              class="StyledProps--font StyledProps--main openModalColumn compareDataColumn StyledProps--padding-left-small"
+            >
+              <p
+                class="StyledProps--font StyledProps--main eventTypeTag StyledProps--font-xsmall"
+              >
+                Unknown
+              </p>
+            </div>
+            <div
+              class="StyledProps--font StyledProps--main logText openModalColumn"
+            >
+              <p
+                class="logRowText"
+              >
+                2022-02-10 07:22:59 UTC | TRACE | INFO | (pkg/trace/info/stats.go:104 in LogStats) | No data received
+
+              </p>
+            </div>
+            <span />
+            <div
+              class="Layout--horizontal StyledProps--main StyledProps--margin-top-xsmall"
+              style="align-items: center; justify-content: flex-end;"
+            >
+              <span
+                class="bp3-icon StyledProps--main"
+                data-icon="description"
+              >
+                <svg
+                  fill="none"
+                  height="24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <g
+                    opacity="0.3"
+                  >
+                    <mask
+                      fill="#fff"
+                      id="description_svg__a"
+                    >
+                      <path
+                        d="M6.75 6.625a.5.5 0 100 1h4.5a.5.5 0 100-1h-4.5zm-.5 2.75a.5.5 0 01.5-.5h4.5a.5.5 0 110 1h-4.5a.5.5 0 01-.5-.5zm0 2.25a.5.5 0 01.5-.5h4.5a.5.5 0 110 1h-4.5a.5.5 0 01-.5-.5z"
+                        fill-rule="evenodd"
+                      />
+                    </mask>
+                    <path
+                      d="M7.25 7.125a.5.5 0 01-.5.5v-2a1.5 1.5 0 00-1.5 1.5h2zm-.5-.5a.5.5 0 01.5.5h-2a1.5 1.5 0 001.5 1.5v-2zm4.5 0h-4.5v2h4.5v-2zm-.5.5a.5.5 0 01.5-.5v2a1.5 1.5 0 001.5-1.5h-2zm.5.5a.5.5 0 01-.5-.5h2a1.5 1.5 0 00-1.5-1.5v2zm-4.5 0h4.5v-2h-4.5v2zm0 .25a1.5 1.5 0 00-1.5 1.5h2a.5.5 0 01-.5.5v-2zm4.5 0h-4.5v2h4.5v-2zm1.5 1.5a1.5 1.5 0 00-1.5-1.5v2a.5.5 0 01-.5-.5h2zm-1.5 1.5a1.5 1.5 0 001.5-1.5h-2a.5.5 0 01.5-.5v2zm-4.5 0h4.5v-2h-4.5v2zm-1.5-1.5a1.5 1.5 0 001.5 1.5v-2a.5.5 0 01.5.5h-2zm1.5.75a1.5 1.5 0 00-1.5 1.5h2a.5.5 0 01-.5.5v-2zm4.5 0h-4.5v2h4.5v-2zm1.5 1.5a1.5 1.5 0 00-1.5-1.5v2a.5.5 0 01-.5-.5h2zm-1.5 1.5a1.5 1.5 0 001.5-1.5h-2a.5.5 0 01.5-.5v2zm-4.5 0h4.5v-2h-4.5v2zm-1.5-1.5a1.5 1.5 0 001.5 1.5v-2a.5.5 0 01.5.5h-2z"
+                      fill="#6b6d85"
+                      mask="url(#description_svg__a)"
+                    />
+                  </g>
+                  <rect
+                    height="13.5"
+                    rx="1"
+                    stroke="#6b6d85"
+                    width="10.5"
+                    x="3.75"
+                    y="2.25"
+                  />
+                </svg>
+              </span>
+            </div>
+          </div>
+          <div
+            class="StyledProps--font StyledProps--main mainRow dataRow"
+            data-testid="logs-data-row"
+          >
+            <div
+              class="StyledProps--font StyledProps--main openModalColumn compareDataColumn StyledProps--padding-left-small"
+            >
+              <p
+                class="StyledProps--font StyledProps--main eventTypeTag StyledProps--font-xsmall"
+              >
+                Unknown
+              </p>
+            </div>
+            <div
+              class="StyledProps--font StyledProps--main logText openModalColumn"
+            >
+              <p
+                class="logRowText"
+              >
+                  A v e r a g e   S p e e d       T i m  e         T i m e        D lToiamde    UCpuload   Trorteanlt 
+
+              </p>
+            </div>
+            <span />
+            <div
+              class="Layout--horizontal StyledProps--main StyledProps--margin-top-xsmall"
+              style="align-items: center; justify-content: flex-end;"
+            >
+              <span
+                class="bp3-icon StyledProps--main"
+                data-icon="description"
+              >
+                <svg
+                  fill="none"
+                  height="24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <g
+                    opacity="0.3"
+                  >
+                    <mask
+                      fill="#fff"
+                      id="description_svg__a"
+                    >
+                      <path
+                        d="M6.75 6.625a.5.5 0 100 1h4.5a.5.5 0 100-1h-4.5zm-.5 2.75a.5.5 0 01.5-.5h4.5a.5.5 0 110 1h-4.5a.5.5 0 01-.5-.5zm0 2.25a.5.5 0 01.5-.5h4.5a.5.5 0 110 1h-4.5a.5.5 0 01-.5-.5z"
+                        fill-rule="evenodd"
+                      />
+                    </mask>
+                    <path
+                      d="M7.25 7.125a.5.5 0 01-.5.5v-2a1.5 1.5 0 00-1.5 1.5h2zm-.5-.5a.5.5 0 01.5.5h-2a1.5 1.5 0 001.5 1.5v-2zm4.5 0h-4.5v2h4.5v-2zm-.5.5a.5.5 0 01.5-.5v2a1.5 1.5 0 001.5-1.5h-2zm.5.5a.5.5 0 01-.5-.5h2a1.5 1.5 0 00-1.5-1.5v2zm-4.5 0h4.5v-2h-4.5v2zm0 .25a1.5 1.5 0 00-1.5 1.5h2a.5.5 0 01-.5.5v-2zm4.5 0h-4.5v2h4.5v-2zm1.5 1.5a1.5 1.5 0 00-1.5-1.5v2a.5.5 0 01-.5-.5h2zm-1.5 1.5a1.5 1.5 0 001.5-1.5h-2a.5.5 0 01.5-.5v2zm-4.5 0h4.5v-2h-4.5v2zm-1.5-1.5a1.5 1.5 0 001.5 1.5v-2a.5.5 0 01.5.5h-2zm1.5.75a1.5 1.5 0 00-1.5 1.5h2a.5.5 0 01-.5.5v-2zm4.5 0h-4.5v2h4.5v-2zm1.5 1.5a1.5 1.5 0 00-1.5-1.5v2a.5.5 0 01-.5-.5h2zm-1.5 1.5a1.5 1.5 0 001.5-1.5h-2a.5.5 0 01.5-.5v2zm-4.5 0h4.5v-2h-4.5v2zm-1.5-1.5a1.5 1.5 0 001.5 1.5v-2a.5.5 0 01.5.5h-2z"
+                      fill="#6b6d85"
+                      mask="url(#description_svg__a)"
+                    />
+                  </g>
+                  <rect
+                    height="13.5"
+                    rx="1"
+                    stroke="#6b6d85"
+                    width="10.5"
+                    x="3.75"
+                    y="2.25"
+                  />
+                </svg>
+              </span>
+            </div>
+          </div>
+          <div
+            class="StyledProps--font StyledProps--main mainRow dataRow"
+            data-testid="logs-data-row"
+          >
+            <div
+              class="StyledProps--font StyledProps--main openModalColumn compareDataColumn StyledProps--padding-left-small"
+            >
+              <p
+                class="StyledProps--font StyledProps--main eventTypeTag StyledProps--font-xsmall"
+              >
+                Unknown
+              </p>
+            </div>
+            <div
+              class="StyledProps--font StyledProps--main logText openModalColumn"
+            >
+              <p
+                class="logRowText"
+              >
+                  % Total    % Received % Xferd  Average Spee d   %  TTimoet a  l  T i m e%   R e c eTiivmeed   %C uXrfreerndt 
+
+              </p>
+            </div>
+            <span />
+            <div
+              class="Layout--horizontal StyledProps--main StyledProps--margin-top-xsmall"
+              style="align-items: center; justify-content: flex-end;"
+            >
+              <span
+                class="bp3-icon StyledProps--main"
+                data-icon="description"
+              >
+                <svg
+                  fill="none"
+                  height="24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <g
+                    opacity="0.3"
+                  >
+                    <mask
+                      fill="#fff"
+                      id="description_svg__a"
+                    >
+                      <path
+                        d="M6.75 6.625a.5.5 0 100 1h4.5a.5.5 0 100-1h-4.5zm-.5 2.75a.5.5 0 01.5-.5h4.5a.5.5 0 110 1h-4.5a.5.5 0 01-.5-.5zm0 2.25a.5.5 0 01.5-.5h4.5a.5.5 0 110 1h-4.5a.5.5 0 01-.5-.5z"
+                        fill-rule="evenodd"
+                      />
+                    </mask>
+                    <path
+                      d="M7.25 7.125a.5.5 0 01-.5.5v-2a1.5 1.5 0 00-1.5 1.5h2zm-.5-.5a.5.5 0 01.5.5h-2a1.5 1.5 0 001.5 1.5v-2zm4.5 0h-4.5v2h4.5v-2zm-.5.5a.5.5 0 01.5-.5v2a1.5 1.5 0 001.5-1.5h-2zm.5.5a.5.5 0 01-.5-.5h2a1.5 1.5 0 00-1.5-1.5v2zm-4.5 0h4.5v-2h-4.5v2zm0 .25a1.5 1.5 0 00-1.5 1.5h2a.5.5 0 01-.5.5v-2zm4.5 0h-4.5v2h4.5v-2zm1.5 1.5a1.5 1.5 0 00-1.5-1.5v2a.5.5 0 01-.5-.5h2zm-1.5 1.5a1.5 1.5 0 001.5-1.5h-2a.5.5 0 01.5-.5v2zm-4.5 0h4.5v-2h-4.5v2zm-1.5-1.5a1.5 1.5 0 001.5 1.5v-2a.5.5 0 01.5.5h-2zm1.5.75a1.5 1.5 0 00-1.5 1.5h2a.5.5 0 01-.5.5v-2zm4.5 0h-4.5v2h4.5v-2zm1.5 1.5a1.5 1.5 0 00-1.5-1.5v2a.5.5 0 01-.5-.5h2zm-1.5 1.5a1.5 1.5 0 001.5-1.5h-2a.5.5 0 01.5-.5v2zm-4.5 0h4.5v-2h-4.5v2zm-1.5-1.5a1.5 1.5 0 001.5 1.5v-2a.5.5 0 01.5.5h-2z"
+                      fill="#6b6d85"
+                      mask="url(#description_svg__a)"
+                    />
+                  </g>
+                  <rect
+                    height="13.5"
+                    rx="1"
+                    stroke="#6b6d85"
+                    width="10.5"
+                    x="3.75"
+                    y="2.25"
+                  />
+                </svg>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div
+          class="Layout--horizontal StyledProps--main Pagination--container StyledProps--padding-top-medium StyledProps--padding-bottom-medium StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-distribution-space-between"
+        >
+          <span
+            class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--font-variation-small-semi"
+          >
+            (1 - 10) of 29
+          </span>
+          <div
+            class="Layout--horizontal StyledProps--main"
+          >
+            <button
+              class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonLeft Button--with-current-color Button--withLeftIcon Button--size Button--small"
+              disabled=""
+              tabindex="-1"
+              type="button"
+            >
+              <span
+                class="bp3-icon bp3-icon-arrow-left StyledProps--main StyledProps--padding-right-xsmall"
+                icon="arrow-left"
+              >
+                <svg
+                  data-icon="arrow-left"
+                  height="12"
+                  viewBox="0 0 16 16"
+                  width="12"
+                >
+                  <desc>
+                    arrow-left
+                  </desc>
+                  <path
+                    d="M13.99 6.99H4.41L7.7 3.7a1.003 1.003 0 00-1.42-1.42l-5 5a1.014 1.014 0 000 1.42l5 5a1.003 1.003 0 001.42-1.42L4.41 8.99H14c.55 0 1-.45 1-1s-.46-1-1.01-1z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
+              <span
+                class="bp3-button-text"
+              >
+                Prev
+              </span>
+            </button>
+            <button
+              class="bp3-button Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonRight Button--with-current-color Button--withRightIcon Button--size Button--small"
+              type="button"
+            >
+              <span
+                class="bp3-button-text"
+              >
+                Next
+              </span>
+              <span
+                class="bp3-icon bp3-icon-arrow-right StyledProps--main"
+                icon="arrow-right"
+              >
+                <svg
+                  data-icon="arrow-right"
+                  height="12"
+                  viewBox="0 0 16 16"
+                  width="12"
+                >
+                  <desc>
+                    arrow-right
+                  </desc>
+                  <path
+                    d="M14.7 7.29l-5-5a.965.965 0 00-.71-.3 1.003 1.003 0 00-.71 1.71l3.29 3.29H1.99c-.55 0-1 .45-1 1s.45 1 1 1h9.59l-3.29 3.29a1.003 1.003 0 001.42 1.42l5-5c.18-.18.29-.43.29-.71s-.12-.52-.3-.7z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
+            </button>
+          </div>
+          <span>
+            Showing 10 per page
+          </span>
+        </div>
+      </div>
     </div>
   </div>
 </div>

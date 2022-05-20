@@ -17,7 +17,6 @@ function getString(key: StringKeys): StringKeys {
 describe('Unit tests for LogAnalysis utils', () => {
   test('Verify if getClusterTypes gives correct results', async () => {
     expect(getClusterTypes(getString)).toEqual([
-      { label: 'auditTrail.allEvents', value: '' },
       { label: 'cv.known', value: LogEvents.KNOWN },
       { label: 'cv.unknown', value: LogEvents.UNKNOWN },
       { label: 'cv.unexpected', value: LogEvents.UNEXPECTED }

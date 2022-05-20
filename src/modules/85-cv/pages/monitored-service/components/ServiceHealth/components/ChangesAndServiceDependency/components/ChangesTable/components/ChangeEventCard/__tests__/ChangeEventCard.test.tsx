@@ -6,13 +6,22 @@
  */
 
 import React from 'react'
-import { render, waitFor } from '@testing-library/react'
+import { act, fireEvent, render, waitFor } from '@testing-library/react'
 import type { UseGetReturn } from 'restful-react'
 import * as cvService from 'services/cv'
+import * as pipelineNgService from 'services/pipeline-ng'
 import { TestWrapper } from '@common/utils/testUtils'
-import { mockedHealthScoreData } from '@cv/pages/monitored-service/components/ServiceHealth/components/HealthScoreChart/__tests__/HealthScoreChart.mock'
+import {
+  mockedExecutionSummary,
+  mockedHealthScoreData
+} from '@cv/pages/monitored-service/components/ServiceHealth/components/HealthScoreChart/__tests__/HealthScoreChart.mock'
 import ChangeEventCard from '../ChangeEventCard'
-import { HarnessCDMockData, HarnessNextGenMockData, payload } from './ChangeEventCard.mock'
+import {
+  HarnessCDMockData,
+  HarnessNextGenMockData,
+  HarnessNextGenMockDataWithoutMetadata,
+  payload
+} from './ChangeEventCard.mock'
 
 jest.mock('@cv/components/TimelineView/TimelineBar', () => ({
   TimelineBar: function MockComponent() {
@@ -76,15 +85,58 @@ describe('Validate ChangeCard', () => {
       data: mockedHealthScoreData,
       refetch: jest.fn() as unknown
     } as UseGetReturn<any, any, any, any>)
+
+    jest.spyOn(pipelineNgService, 'useGetExecutionDetailV2').mockReturnValue({
+      data: mockedExecutionSummary,
+      refetch: jest.fn() as unknown
+    } as UseGetReturn<any, any, any, any>)
+
     const { getByText } = render(
       <TestWrapper>
         <ChangeEventCard activityId={'dasda'} />
       </TestWrapper>
     )
     // Card Title is rendered Correctly
-    await waitFor(() => expect(getByText(HarnessNextGenMockData.resource.id)).toBeTruthy())
+    await waitFor(() => expect(getByText(HarnessNextGenMockData.resource.id)).toBeInTheDocument())
     await waitFor(() => expect(getByText(HarnessNextGenMockData.resource.name)).toBeTruthy())
     await waitFor(() => expect(getByText(HarnessNextGenMockData.resource.metadata.status)).toBeTruthy())
+    // const elem = cv.changeSource.changeSourceCard.viewDeployment
+
+    const btn = getByText('cv.changeSource.changeSourceCard.viewDeployment')
+    await act(async () => {
+      fireEvent.click(btn!)
+    })
+    // Card details title
+    await waitFor(() => expect(getByText(`HarnessCDNextGen Deployment details`)).toBeTruthy())
+  })
+  test('should render Deployment Harness NextGen card without metadata', async () => {
+    jest.spyOn(cvService, 'useGetChangeEventDetail').mockImplementation(
+      () =>
+        ({
+          data: HarnessNextGenMockDataWithoutMetadata,
+          refetch: jest.fn(),
+          error: null,
+          loading: false
+        } as any)
+    )
+    jest.spyOn(cvService, 'useGetMonitoredServiceOverAllHealthScore').mockReturnValue({
+      data: mockedHealthScoreData,
+      refetch: jest.fn() as unknown
+    } as UseGetReturn<any, any, any, any>)
+
+    jest.spyOn(pipelineNgService, 'useGetExecutionDetailV2').mockReturnValue({
+      data: mockedExecutionSummary,
+      refetch: jest.fn() as unknown
+    } as UseGetReturn<any, any, any, any>)
+
+    const { getByText } = render(
+      <TestWrapper>
+        <ChangeEventCard activityId={'dasda'} />
+      </TestWrapper>
+    )
+    // Card Title is rendered Correctly
+    await waitFor(() => expect(getByText(HarnessNextGenMockData.resource.id)).toBeInTheDocument())
+    await waitFor(() => expect(getByText(HarnessNextGenMockData.resource.name)).toBeTruthy())
 
     // Card details title
     await waitFor(() => expect(getByText(`HarnessCDNextGen Deployment details`)).toBeTruthy())

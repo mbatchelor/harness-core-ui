@@ -10,16 +10,11 @@ import type { LogData } from 'services/cv'
 import type { LogAnalysisRowData } from '../../LogAnalysisRow.types'
 
 export interface LogAnalysisRiskAndJiraModalProps {
-  // count: number
-  // activityType?: string
-  // trendData?: Highcharts.Options
   rowData: LogAnalysisRowData
   onHide: (data?: any) => void
   isDataLoading?: boolean
   logsError?: GetDataError<unknown> | null
   retryLogsCall?: () => void
-  // logMessage: string
-  // feedback?: { risk: string; message?: string }
 }
 
 export interface RiskAndMessageFormProps {

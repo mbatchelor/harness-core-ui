@@ -203,7 +203,7 @@ describe('ServiceNow Update process form data tests', () => {
       timeout: '10m',
       type: 'ServiceNowUpdate',
       spec: {
-        connectorRef: { label: 'conn', value: 'conn' },
+        connectorRef: 'conn',
         fieldType: FieldType.ConfigureFields,
         useServiceNowTemplate: false,
         ticketType: 'INCIDENT',

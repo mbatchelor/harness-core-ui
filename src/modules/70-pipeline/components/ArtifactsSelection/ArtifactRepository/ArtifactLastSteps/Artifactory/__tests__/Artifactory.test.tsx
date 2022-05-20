@@ -9,7 +9,7 @@ import React from 'react'
 import { act, findByText, fireEvent, queryByAttribute, render, waitFor } from '@testing-library/react'
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import userEvent from '@testing-library/user-event'
-import { TestWrapper } from '@common/utils/testUtils'
+import { findPopoverContainer, TestWrapper } from '@common/utils/testUtils'
 import { TagTypes } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import * as pipelineng from 'services/cd-ng'
 import Artifactory from '../Artifactory'
@@ -246,8 +246,8 @@ describe('Serverless artifact', () => {
     const repositoryField = getByPlaceholderText('Search...')
     expect(repositoryField).toBeTruthy()
     userEvent.click(repositoryField)
-    const errorText = await findByText(container, 'error')
-    expect(errorText).toBeTruthy()
+    const errorText = await findPopoverContainer()?.querySelector('.StyledProps--main')?.innerHTML
+    await waitFor(() => expect(errorText).toEqual('error'))
   })
 
   test(`ServerlessArtifactoryRepository with status as failure`, async () => {
@@ -268,8 +268,8 @@ describe('Serverless artifact', () => {
     const repositoryField = getByPlaceholderText('Search...')
     expect(repositoryField).toBeTruthy()
     userEvent.click(repositoryField)
-    const errorText = await findByText(container, 'repository fetch failed')
-    expect(errorText).toBeTruthy()
+    const errorText = await findPopoverContainer()?.querySelectorAll('.StyledProps--main')[1]?.innerHTML
+    await waitFor(() => expect(errorText).toEqual('repository fetch failed'))
   })
 
   test(`ServerlessArtifactoryRepository with empty repo list`, async () => {

@@ -10,6 +10,7 @@ declare const styles: {
   readonly addFilters: string
   readonly addMoreFilter: string
   readonly andOperator: string
+  readonly bottomPadding: string
   readonly filterContainer: string
   readonly filters: string
   readonly withAndOperation: string

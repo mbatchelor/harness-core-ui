@@ -81,7 +81,9 @@ Array [
       }
     }
   >
-    <FeatureFlagsLandingPage />
+    <FFGitSyncProvider>
+      <FeatureFlagsLandingPage />
+    </FFGitSyncProvider>
   </RouteWithLayout>,
   <RouteWithLayout
     exact={true}
@@ -103,7 +105,9 @@ Array [
       }
     }
   >
-    <FeatureFlagsDetailPage />
+    <FFGitSyncProvider>
+      <FeatureFlagsDetailPage />
+    </FFGitSyncProvider>
   </RouteWithLayout>,
   <RouteWithLayout
     exact={true}
@@ -125,7 +129,10 @@ Array [
       }
     }
   >
-    <SegmentDetailPage />
+    <FFGitSyncProvider>
+       
+      <SegmentDetailPage />
+    </FFGitSyncProvider>
   </RouteWithLayout>,
   <RouteWithLayout
     exact={true}
@@ -147,7 +154,11 @@ Array [
       }
     }
   >
-    <TargetDetailPage />
+    <FFGitSyncProvider>
+       
+      <TargetDetailPage />
+       
+    </FFGitSyncProvider>
   </RouteWithLayout>,
   <RouteWithLayout
     exact={true}
@@ -183,7 +194,9 @@ Array [
       }
     }
   >
-    <SegmentsPage />
+    <FFGitSyncProvider>
+      <SegmentsPage />
+    </FFGitSyncProvider>
   </RouteWithLayout>,
   <RouteWithLayout
     exact={true}
@@ -227,7 +240,9 @@ Array [
       }
     }
   >
-    <EnvironmentsPage />
+    <FFGitSyncProvider>
+      <EnvironmentsPage />
+    </FFGitSyncProvider>
   </RouteWithLayout>,
   <RouteWithLayout
     exact={true}
@@ -249,7 +264,9 @@ Array [
       }
     }
   >
-    <EnvironmentDetails />
+    <FFGitSyncProvider>
+      <EnvironmentDetails />
+    </FFGitSyncProvider>
   </RouteWithLayout>,
   <RouteWithLayout
     exact={true}

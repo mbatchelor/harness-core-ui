@@ -13,6 +13,7 @@ import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { useGetTags } from '@dashboards/services/CustomDashboardsService'
 import css from './HomePage.module.scss'
+import moduleTagCss from '@dashboards/common/ModuleTags.module.scss'
 
 export interface FilterTagsSideBarProps {
   setFilteredTags: (cb: (prevState: string[]) => string[]) => void
@@ -27,7 +28,7 @@ const FilterTagsSideBar: React.FC<FilterTagsSideBarProps> = ({ setFilteredTags }
   return (
     <Layout.Vertical className={css.filterPanel} padding="medium" spacing="medium">
       <Text font={{ variation: FontVariation.FORM_SUB_SECTION }}>{getString('dashboards.homePage.filterByTags')}</Text>
-      <Container className={css.predefinedTags}>
+      <Container className={moduleTagCss.predefinedTags}>
         {fetchingTags && <span>{getString('loading')} </span>}
         {!fetchingTags &&
           tagsList?.resource?.tags
@@ -39,7 +40,7 @@ const FilterTagsSideBar: React.FC<FilterTagsSideBarProps> = ({ setFilteredTags }
                   text={tag}
                   inline
                   minimal
-                  className={cx(css.customTag, css.customTagButton)}
+                  className={cx(moduleTagCss.customTag, moduleTagCss.customTagButton)}
                   key={tag + index}
                   onClick={() => {
                     setFilteredTags(prevState => {

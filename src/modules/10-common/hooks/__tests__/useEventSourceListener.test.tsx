@@ -70,7 +70,7 @@ describe('use Event Source Stream', () => {
     expect(getByTestId('location').innerHTML.includes(routes.toRedirect())).toBeTruthy()
   })
   test('On Mount listeners should be added', async () => {
-    jest.spyOn(SessionToken, 'getToken').mockReturnValue({ module: 'cd' })
+    jest.spyOn(SessionToken, 'getToken').mockReturnValue('token')
 
     render(
       <TestWrapper path={routes.toProjects({ accountId: 'dummy' })} pathParams={{ accountId: 'dummy' }}>
@@ -81,7 +81,7 @@ describe('use Event Source Stream', () => {
     expect(addEventListener).toHaveBeenCalledTimes(3)
   })
   test('Lazy streaming', async () => {
-    jest.spyOn(SessionToken, 'getToken').mockReturnValue({ module: 'cd' })
+    jest.spyOn(SessionToken, 'getToken').mockReturnValue('token')
     jest.clearAllMocks()
 
     const { getByText } = render(

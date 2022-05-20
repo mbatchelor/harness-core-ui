@@ -24,6 +24,7 @@ describe('Pipeline Execution History', () => {
   })
 
   it('loads a pipeline with no executions', () => {
+    cy.visitPageAssertion()
     cy.findByText('There are no deployments in your project').should('exist')
     cy.findByText('Your Pipeline does not have any executions yet. Click the button below to run a pipeline.').should(
       'exist'
@@ -46,7 +47,7 @@ describe('Pipeline Execution History', () => {
     cy.intercept(pipelineExecutionSummaryAPI, {
       fixture: 'pipeline/api/executionHistory/executionSummary.json'
     }).as('executionSummary')
-
+    cy.visitPageAssertion()
     // Check Run button in header
     cy.get('.PageSubHeader--container').within(() => {
       cy.findByText('Run').click()
@@ -151,6 +152,7 @@ describe('Pipeline Execution History', () => {
       fixture: 'pipeline/api/executionHistory/pipelineHealth.json'
     }).as('pipelineHealth')
 
+    cy.visitPageAssertion()
     cy.get('[class*=PipelineDeploymentList-module_healthAndExecutions] > :nth-child(1)').within(() => {
       cy.findByText('Pipeline health').should('exist')
       cy.findByText('Last 30 days').click()
@@ -187,6 +189,7 @@ describe('Pipeline Execution History', () => {
       fixture: 'pipeline/api/executionHistory/pipelineExecution.json'
     }).as('pipelineExecution')
 
+    cy.visitPageAssertion()
     cy.get('[class*=PipelineDeploymentList-module_healthAndExecutions] > :nth-child(2)').within(() => {
       cy.findByText('Executions').should('exist')
       cy.findByText('# of executions').should('exist')
@@ -214,6 +217,7 @@ describe('Pipeline Execution History', () => {
     cy.intercept('POST', pipelineExecutionSummaryAPI, {
       fixture: 'pipeline/api/executionHistory/executionSummary.json'
     }).as('executionSummary')
+    cy.visitPageAssertion()
 
     // Check various status
     // Success

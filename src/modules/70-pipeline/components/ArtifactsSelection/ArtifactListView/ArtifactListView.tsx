@@ -73,7 +73,6 @@ function ArtifactListView({
   sideCarArtifact,
   isReadonly,
   editArtifact,
-  overrideSetIdentifier,
   removePrimary,
   removeSidecar,
   addNewArtifact,
@@ -142,7 +141,7 @@ function ArtifactListView({
                     <span className={css.noWrap}>{getPrimaryArtifactLocation(primaryArtifact)}</span>
                   </Text>
                 </div>
-                {overrideSetIdentifier?.length === 0 && !isReadonly && (
+                {!isReadonly && (
                   <Layout.Horizontal>
                     <Button
                       icon="Edit"
@@ -220,7 +219,7 @@ function ArtifactListView({
                         </span>
                       </Text>
                     </div>
-                    {overrideSetIdentifier?.length === 0 && !isReadonly && (
+                    {!isReadonly && (
                       <span>
                         <Layout.Horizontal>
                           <Button
@@ -249,7 +248,7 @@ function ArtifactListView({
       </Layout.Vertical>
 
       <Layout.Vertical spacing={'medium'} flex={{ alignItems: 'flex-start' }}>
-        {!primaryArtifact && overrideSetIdentifier?.length === 0 && !isReadonly && (
+        {!primaryArtifact && !isReadonly && (
           <Button
             className={css.addArtifact}
             id="add-artifact"
@@ -259,7 +258,7 @@ function ArtifactListView({
             text={getString('pipelineSteps.serviceTab.artifactList.addPrimary')}
           />
         )}
-        {!overrideSetIdentifier?.length && !isReadonly && allowSidecar && (
+        {!isReadonly && allowSidecar && (
           <Button
             className={css.addArtifact}
             id="add-artifact"

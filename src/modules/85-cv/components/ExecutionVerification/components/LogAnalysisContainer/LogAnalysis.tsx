@@ -32,13 +32,17 @@ export default function LogAnalysis(props: LogAnalysisProps): JSX.Element {
     logsError,
     refetchLogAnalysis,
     clusterChartError,
-    refetchClusterAnalysis
+    refetchClusterAnalysis,
+    startTime,
+    endTime,
+    monitoredServiceIdentifier,
+    isServicePage = false
   } = props
   const { getString } = useStrings()
 
   const logAnalysisData = useMemo((): LogAnalysisRowData[] => {
-    return getLogAnalysisData(data)
-  }, [data])
+    return getLogAnalysisData(data, isServicePage)
+  }, [data, isServicePage])
 
   const [selectedLog, setSelectedLog] = useState<string | null>(null)
 
@@ -63,6 +67,7 @@ export default function LogAnalysis(props: LogAnalysisProps): JSX.Element {
           <PageError message={getErrorMessage(logsError)} onClick={refetchLogAnalysis} className={styles.noData} />
         </Container>
       )
+
       // adding clusterChartLoading here inorder to prevent this visible before cluster chart loads
       // this prevents showing two no data text and then change to one
     } else if (!logAnalysisData.length && !clusterChartLoading) {
@@ -82,6 +87,10 @@ export default function LogAnalysis(props: LogAnalysisProps): JSX.Element {
           selectedLog={selectedLog}
           resetSelectedLog={resetSelectedLog}
           activityId={activityId}
+          isServicePage={isServicePage}
+          startTime={startTime}
+          endTime={endTime}
+          monitoredServiceIdentifier={monitoredServiceIdentifier}
         />
       )
     }
@@ -106,6 +115,7 @@ export default function LogAnalysis(props: LogAnalysisProps): JSX.Element {
           clusterChartError={clusterChartError}
           refetchClusterAnalysis={refetchClusterAnalysis}
           logsLoading={logsLoading}
+          showBaseline={!isServicePage}
         />
       </Container>
       <Container className={styles.tableContent}>{renderLogsData()}</Container>

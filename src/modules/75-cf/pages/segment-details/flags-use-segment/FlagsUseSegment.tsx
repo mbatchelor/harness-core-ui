@@ -333,6 +333,7 @@ const FlagItem: React.FC<FlagItemProps> = ({
   ...props
 }) => {
   const { name, description, variation } = flag
+  const { gitSyncInitialValues, gitSyncValidationSchema } = gitSync.getGitSyncFormMeta()
 
   const variationTextWidth = onRemoveRule ? '88px' : '135px'
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
@@ -370,6 +371,8 @@ const FlagItem: React.FC<FlagItemProps> = ({
         <SaveFlagToGitModal
           flagName={flag.name}
           flagIdentifier={flag.identifier}
+          gitSyncInitialValues={gitSyncInitialValues}
+          gitSyncValidationSchema={gitSyncValidationSchema}
           onSubmit={formValues => onRemoveRule?.(flag.identifier, instruction, variation, flag.ruleId, formValues)}
           onClose={() => {
             setIsDeleteModalOpen(false)

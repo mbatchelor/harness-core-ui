@@ -124,13 +124,13 @@ const FilterCRUDRef = <T extends FilterInterface>(props: FilterCRUDProps<T>, fil
   const handleSaveOrUpdate = async (isUpdate: boolean, payload: T): Promise<T | undefined> => {
     try {
       if (isUpdate) {
-        const { status, data: updatedFilter } = await dataSvcConfig?.get('UPDATE')?.(payload)
+        const { status, data: updatedFilter } = await (dataSvcConfig?.get('UPDATE')?.(payload) || Promise.resolve({}))
         if (status === 'SUCCESS') {
           showSuccess(`${payload?.name} updated.`)
           return updatedFilter
         }
       } else {
-        const { status, data: updatedFilter } = await dataSvcConfig?.get('ADD')?.(payload)
+        const { status, data: updatedFilter } = await (dataSvcConfig?.get('ADD')?.(payload) || Promise.resolve({}))
         if (status === 'SUCCESS') {
           showSuccess(`${payload?.name} saved.`)
           return updatedFilter
@@ -149,7 +149,8 @@ const FilterCRUDRef = <T extends FilterInterface>(props: FilterCRUDProps<T>, fil
       return
     }
     try {
-      const { status, data } = await dataSvcConfig?.get('DELETE')?.(matchingFilter?.identifier || '')
+      const { status, data } = await (dataSvcConfig?.get('DELETE')?.(matchingFilter?.identifier || '') ||
+        Promise.resolve({}))
       if (status === 'SUCCESS' && data) {
         showSuccess(`${matchingFilter?.name} ${getString('filters.filterDeleted')}`)
       } else {
@@ -183,7 +184,7 @@ const FilterCRUDRef = <T extends FilterInterface>(props: FilterCRUDProps<T>, fil
       filterProperties
     }
     try {
-      const { status } = await dataSvcConfig?.get('ADD')?.(payload)
+      const { status } = await (dataSvcConfig?.get('ADD')?.(payload) || Promise.resolve({}))
       if (status === 'SUCCESS') {
         showSuccess(`${payload?.name} duplicated.`)
         await onSuccessfulCrudOperation?.()

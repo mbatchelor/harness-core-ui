@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { render, waitFor, screen } from '@testing-library/react'
+import { render, waitFor, screen, fireEvent } from '@testing-library/react'
+import * as cvServices from 'services/cv'
 import { TestWrapper } from '@common/utils/testUtils'
 import MetricsAnalysisContainer from '../MetricsAnalysisContainer'
 import type { MetricsAnalysisProps } from '../MetricsAnalysisContainer.types'
@@ -56,5 +57,70 @@ describe('Unit tests for MetricsAnalysisContainer', () => {
     await waitFor(() =>
       expect(screen.getAllByTestId('metrics-analysis-row')).toHaveLength(mockedMetricsData.resource.content.length)
     )
+  })
+
+  test('should show loading UI when the API is loading', () => {
+    jest
+      .spyOn(cvServices, 'useGetTimeSeriesMetricData')
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      .mockReturnValue({
+        data: {},
+        loading: true
+      })
+
+    render(<WrapperComponent {...props} />)
+
+    expect(screen.getByTestId('MetricsAnalysis-loading')).toBeInTheDocument()
+  })
+
+  test('should show error UI when the API is loading', () => {
+    const errorObj = {
+      message: 'Failed to fetch: Failed to fetch',
+      data: 'Failed to fetch'
+    }
+
+    jest
+      .spyOn(cvServices, 'useGetTimeSeriesMetricData')
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      .mockReturnValue({
+        data: {},
+        error: errorObj
+      })
+
+    render(<WrapperComponent {...props} />)
+
+    expect(screen.getByText('"Failed to fetch"')).toBeInTheDocument()
+  })
+
+  test('should call API with correct page number on pagination', () => {
+    jest.spyOn(cvServices, 'useGetTimeSeriesMetricData').mockReturnValue({
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      data: mockedMetricsData,
+      refetch: fetchMetricsData,
+      error: null,
+      loading: false
+    })
+    render(<WrapperComponent {...props} />)
+
+    fireEvent.click(screen.getByRole('button', { name: '4' }))
+
+    expect(fetchMetricsData).toHaveBeenCalledWith({
+      queryParams: {
+        accountId: undefined,
+        anomalous: true,
+        endTime: 1630595011443,
+        filter: undefined,
+        healthSources: undefined,
+        monitoredServiceIdentifier: 'monitored_service_identifier',
+        orgIdentifier: undefined,
+        page: 3,
+        projectIdentifier: undefined,
+        size: 10,
+        startTime: 1630594988077
+      }
+    })
   })
 })

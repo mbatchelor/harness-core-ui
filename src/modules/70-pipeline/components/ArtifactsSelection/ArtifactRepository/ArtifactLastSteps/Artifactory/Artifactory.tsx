@@ -283,7 +283,9 @@ function Artifactory({
                   connectorRef={
                     getMultiTypeFromValue(prevStepData?.connectorId) === MultiTypeInputType.RUNTIME
                       ? prevStepData?.connectorId
-                      : prevStepData?.connectorId.value
+                      : prevStepData?.connectorId?.value
+                      ? prevStepData.connectorId.value
+                      : prevStepData?.connectorId
                   }
                   isReadonly={isReadonly}
                   expressions={expressions}

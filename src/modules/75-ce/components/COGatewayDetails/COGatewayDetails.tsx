@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react'
-import { defaultTo as _defaultTo } from 'lodash-es'
+import { defaultTo as _defaultTo, isBoolean } from 'lodash-es'
 import { Layout, Tabs, Tab, Button, Container, Icon } from '@wings-software/uicore'
 import { useParams, useHistory } from 'react-router-dom'
 import { useToaster } from '@common/exports'
@@ -18,12 +18,21 @@ import routes from '@common/RouteDefinitions'
 import { Utils } from '@ce/common/Utils'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { useStrings } from 'framework/strings'
-import { useSaveService, Service, useGetServices, useCreateStaticSchedules, useDeleteStaticSchedule } from 'services/lw'
+import {
+  useSaveService,
+  Service,
+  useGetServices,
+  useCreateStaticSchedules,
+  useDeleteStaticSchedule,
+  useToggleRuleMode
+} from 'services/lw'
 import { Breadcrumbs } from '@common/components/Breadcrumbs/Breadcrumbs'
 import { ASRuleTabs } from '@ce/constants'
 import { GatewayContextProvider } from '@ce/context/GatewayContext'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { USER_JOURNEY_EVENTS } from '@ce/TrackingEventsConstants'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import { ConfigTabTitle, ReviewTabTitle, SetupAccessTabTitle } from './TabTitles'
 import { getServiceObjectFromgatewayDetails, isPrimaryBtnDisable, trackPrimaryBtnClick } from './helper'
 import css from './COGatewayDetails.module.scss'
@@ -34,6 +43,7 @@ interface COGatewayDetailsProps {
   setGatewayDetails: (gwDetails: GatewayDetails) => void
   activeTab?: ASRuleTabs
   isEditFlow: boolean
+  originalRuleDetails?: Service
 }
 const COGatewayDetails: React.FC<COGatewayDetailsProps> = props => {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<{
@@ -46,8 +56,9 @@ const COGatewayDetails: React.FC<COGatewayDetailsProps> = props => {
   const { showError, showSuccess } = useToaster()
   const { trackEvent } = useTelemetry()
   const { currentUserInfo } = useAppStore()
+  const dryRunModeEnabled = useFeatureFlag(FeatureFlag.CCM_AS_DRY_RUN)
 
-  const [selectedTabId, setSelectedTabId] = useState<string>(props.activeTab ?? ASRuleTabs.CONFIGURATION)
+  const [selectedTabId, setSelectedTabId] = useState<string>(_defaultTo(props.activeTab, ASRuleTabs.CONFIGURATION))
   const [validConfig, setValidConfig] = useState<boolean>(false)
   const [validAccessSetup, setValidAccessSetup] = useState<boolean>(false)
   const [saveInProgress, setSaveInProgress] = useState<boolean>(false)
@@ -87,6 +98,12 @@ const COGatewayDetails: React.FC<COGatewayDetailsProps> = props => {
     queryParams: { accountIdentifier: accountId }
   })
 
+  const { mutate: toggleMode } = useToggleRuleMode({
+    account_id: accountId,
+    rule_id: _defaultTo(props.originalRuleDetails?.id, 0),
+    queryParams: { accountIdentifier: accountId }
+  })
+
   const saveStaticSchedules = async (ruleId: number) => {
     const schedules = _defaultTo(
       props.gatewayDetails.schedules
@@ -112,7 +129,7 @@ const COGatewayDetails: React.FC<COGatewayDetailsProps> = props => {
     } catch (e) {
       showError(
         getString('ce.co.autoStoppingRule.configuration.step4.tabs.schedules.unsuccessfulDeletionMessage', {
-          error: e.data?.errors?.join('\n') || e.data?.message
+          error: _defaultTo(e.data?.errors?.join('\n'), e.data?.message)
         })
       )
     }
@@ -154,6 +171,19 @@ const COGatewayDetails: React.FC<COGatewayDetailsProps> = props => {
     }
   }
 
+  const handleModeToggle = async (currRuleDetails: Service) => {
+    if (
+      dryRunModeEnabled &&
+      props.isEditFlow &&
+      isBoolean(currRuleDetails?.opts?.dry_run) &&
+      currRuleDetails?.opts?.dry_run !== props.originalRuleDetails?.opts?.dry_run
+    ) {
+      await toggleMode({
+        id: _defaultTo(props.originalRuleDetails?.id, 0)
+      })
+    }
+  }
+
   const onSave = async (): Promise<void> => {
     try {
       setSaveInProgress(true)
@@ -164,6 +194,7 @@ const COGatewayDetails: React.FC<COGatewayDetailsProps> = props => {
         accountId,
         serverNames
       )
+      handleModeToggle(gateway)
       const result = await saveGateway({ service: gateway, deps: props.gatewayDetails.deps, apply_now: false }) // eslint-disable-line
       // Rule creation is halted until the access point creation takes place successfully.
       // Informing the user regarding the same

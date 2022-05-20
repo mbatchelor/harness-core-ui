@@ -11,7 +11,14 @@ import {
   triggersRoute
 } from '../../support/70-pipeline/constants'
 
-describe.skip('Triggers for Pipeline', () => {
+describe('Triggers for Pipeline', () => {
+  const visitTriggersPageWithAssertion = (): void => {
+    cy.visit(triggersRoute, {
+      timeout: 30000
+    })
+    cy.wait(2000)
+    cy.visitPageAssertion()
+  }
   beforeEach(() => {
     cy.on('uncaught:exception', () => {
       // returning false here prevents Cypress from
@@ -25,13 +32,22 @@ describe.skip('Triggers for Pipeline', () => {
     cy.intercept('GET', pipelineSummaryCallAPI, { fixture: '/ng/api/pipelineSummary' }).as('pipelineSummary')
     cy.intercept('GET', triggersAPI, { fixture: 'ng/api/triggers/triggersList.empty.json' }).as('emptyTriggersList')
 
-    cy.visit(triggersRoute, {
-      timeout: 30000
-    })
+    switch (Cypress.currentTest.title) {
+      case 'Pipeline Trigger List assertion': {
+        cy.intercept('GET', triggersAPI, { fixture: 'ng/api/triggers/triggerList.json' }).as('triggerList')
+        visitTriggersPageWithAssertion()
+        break
+      }
+      default: {
+        visitTriggersPageWithAssertion()
+        break
+      }
+    }
   })
 
   it('Triggers Drawer & List Assertion', () => {
-    cy.wait('@emptyTriggersList').wait(1000)
+    cy.wait(1000)
+    cy.wait('@emptyTriggersList')
     cy.contains('span', '+ New Trigger').should('be.visible')
     cy.contains('span', 'Add New Trigger').should('be.visible').click()
 
@@ -41,11 +57,14 @@ describe.skip('Triggers for Pipeline', () => {
       .within(() => {
         cy.contains('h2', 'Triggers').should('be.visible')
         Object.entries(triggersListData).forEach(([key, values]) => {
-          cy.contains('section', key)
+          cy.contains('div', key)
             .should('be.visible')
+            .parent()
+            .siblings()
+            .eq(0)
             .within(() => {
               values.forEach(value => {
-                cy.contains('section', value).should('be.visible')
+                cy.contains('section', value).scrollIntoView().should('be.visible')
               })
             })
         })
@@ -62,6 +81,7 @@ describe.skip('Triggers for Pipeline', () => {
   })
 
   it('Cron Trigger Flow', () => {
+    cy.visitPageAssertion()
     cy.wait('@emptyTriggersList')
     cy.contains('span', 'Add New Trigger').should('be.visible').click()
     cy.intercept('POST', inputSetsTemplateCall, { fixture: '/ng/api/triggers/triggerInputSet' }).as('triggerInputSet')
@@ -73,7 +93,7 @@ describe.skip('Triggers for Pipeline', () => {
     cy.get('[class*="AddDrawer"][class*="stepsRenderer"]')
       .should('be.visible')
       .within(() => {
-        cy.contains('section', 'Cron').should('be.visible').click()
+        cy.contains('section', 'Cron').scrollIntoView().should('be.visible').click()
       })
     cy.wait('@triggerPiplelineDetails')
     cy.wait(1000)
@@ -126,7 +146,7 @@ describe.skip('Triggers for Pipeline', () => {
     cy.contains('span', 'testPipeline_Cypress').should('be.visible')
 
     cy.contains('span', 'Scheduled').should('be.visible')
-    cy.contains('span', 'Cron').should('be.visible')
+    cy.contains('span', 'Cron').scrollIntoView().should('be.visible')
 
     cy.contains('span', 'expression').should('be.visible')
     cy.contains('span', '0/10 * * * *').should('be.visible')
@@ -142,9 +162,8 @@ describe.skip('Triggers for Pipeline', () => {
   })
 
   it('Pipeline Trigger List assertion', () => {
-    cy.intercept('GET', triggersAPI, { fixture: 'ng/api/triggers/triggerList.json' }).as('triggerList')
-    cy.wait('@triggerList')
-
+    cy.wait(1000)
+    cy.wait('@triggerList', { timeout: 30000 })
     cy.wait(1000)
     cy.contains('p', 'testTrigger').should('be.visible')
 

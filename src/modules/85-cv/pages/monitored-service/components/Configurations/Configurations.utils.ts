@@ -145,7 +145,8 @@ export const onSubmit = async ({
     tags,
     sources = {},
     dependencies = [],
-    type
+    type,
+    notificationRuleRefs
   } = formikValues
   const payload: ExtendedMonitoredServiceDTO = {
     orgIdentifier,
@@ -153,6 +154,7 @@ export const onSubmit = async ({
     serviceRef,
     environmentRef,
     identifier: monitoredServiceId,
+    notificationRuleRefs,
     name,
     description,
     tags,

@@ -7,6 +7,7 @@
 
 import isMatch from 'lodash-es/isMatch'
 import has from 'lodash-es/has'
+import { get } from 'lodash-es'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { PipelineInfoConfig } from 'services/cd-ng'
 import { validateCICodebase, getErrorsList, validatePipeline } from '../StepUtil'
@@ -16,7 +17,10 @@ import {
   pipelineWithBranchBuild,
   pipelineWithTagBuild,
   pipelineWithDeploymentStage,
-  templateWithRuntimeTimeout
+  templateWithRuntimeTimeout,
+  pipelineTemplateOriginalPipeline,
+  pipelineTemplateTemplate,
+  pipelineTemplateResolvedPipeline
 } from './mock'
 
 jest.mock('@common/utils/YamlUtils', () => ({
@@ -113,5 +117,90 @@ describe('Test StepUtils', () => {
     const { errorStrings, errorCount } = getErrorsList(errors)
     expect(errorStrings.length).toBe(3)
     expect(errorCount).toBe(3)
+  })
+  test('Test requires Connector and RepoName only when all CI Codebase fields are runtime inputs', () => {
+    const errors = validatePipeline({
+      pipeline: {
+        identifier: 'cicodebaseallfieldsruntime',
+        template: {
+          templateInputs: {
+            properties: {
+              ci: {
+                codebase: {
+                  connectorRef: '',
+                  repoName: '',
+                  build: {
+                    spec: {}
+                  },
+                  depth: 50,
+                  sslVerify: true,
+                  prCloneStrategy: 'MergeCommit',
+                  resources: {
+                    limits: {
+                      memory: '500Mi',
+                      cpu: '400m'
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      } as any,
+      originalPipeline: pipelineTemplateOriginalPipeline as PipelineInfoConfig,
+      // eslint-disable-next-line
+      // @ts-ignore
+      template: pipelineTemplateTemplate as PipelineInfoConfig,
+      resolvedPipeline: pipelineTemplateResolvedPipeline as any,
+      viewType: StepViewType.DeploymentForm
+    })
+
+    const errorKeys = Object.keys(get(errors, 'template.templateInputs.properties.ci.codebase') || {})
+    expect(errorKeys).toContain('connectorRef')
+    expect(errorKeys).toContain('repoName')
+  })
+  test('Test pipeline template requires Connector and RepoName only when all CI Codebase fields are runtime inputs', () => {
+    const errors = validatePipeline({
+      pipeline: {
+        identifier: 'cicodebaseallfieldsruntime',
+        template: {
+          templateInputs: {
+            properties: {
+              ci: {
+                codebase: {
+                  connectorRef: 'githubconnector',
+                  repoName: 'repo',
+                  build: {
+                    spec: {}
+                  },
+                  depth: 50,
+                  sslVerify: true,
+                  prCloneStrategy: 'abc',
+                  resources: {
+                    limits: {
+                      memory: 'abc',
+                      cpu: 'abc'
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      } as any,
+      originalPipeline: pipelineTemplateOriginalPipeline as PipelineInfoConfig,
+      // eslint-disable-next-line
+      // @ts-ignore
+      template: pipelineTemplateTemplate as PipelineInfoConfig,
+      resolvedPipeline: pipelineTemplateResolvedPipeline as any,
+      viewType: StepViewType.DeploymentForm
+    })
+
+    const errorKeys = Object.keys(get(errors, 'template.templateInputs.properties.ci.codebase') || {})
+    expect(errorKeys).not.toContain('connectorRef')
+    expect(errorKeys).not.toContain('repoName')
+    expect(errorKeys).toContain('build')
+    expect(errorKeys).toContain('prCloneStrategy')
+    expect(errorKeys).toContain('resources')
   })
 })

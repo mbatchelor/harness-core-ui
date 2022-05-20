@@ -8,25 +8,57 @@
 import React from 'react'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import * as yup from 'yup'
 import { TestWrapper } from '@common/utils/testUtils'
-import GitSyncActions, { GitSyncActionsProps } from '../GitSyncActions'
+import { FFGitSyncContext } from '@cf/contexts/ff-git-sync-context/FFGitSyncContext'
+import type { UseGitSync } from '@cf/hooks/useGitSync'
+import GitSyncActions from '../GitSyncActions'
 
-const renderComponent = (props?: Partial<GitSyncActionsProps>): void => {
+const renderComponent = (props?: Partial<UseGitSync>): void => {
   render(
     <TestWrapper
       path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/feature-flags"
       pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
     >
-      <GitSyncActions
-        branch="test branch"
-        repository="test repository"
-        isAutoCommitEnabled={false}
-        isLoading={false}
-        isGitSyncPaused={false}
-        handleToggleAutoCommit={jest.fn()}
-        handleGitPause={jest.fn()}
-        {...props}
-      />
+      <FFGitSyncContext.Provider
+        value={{
+          apiError: '',
+          gitSyncLoading: false,
+          getGitSyncFormMeta: () => ({
+            gitSyncInitialValues: {
+              gitDetails: {
+                branch: '',
+                filePath: '',
+                repoIdentifier: '',
+                rootFolder: '',
+                commitMsg: ''
+              },
+              autoCommit: false
+            },
+            gitSyncValidationSchema: yup.object().shape({
+              commitMsg: yup.string()
+            })
+          }),
+          gitRepoDetails: {
+            branch: 'test branch',
+            filePath: '',
+            objectId: '',
+            repoIdentifier: 'test repository',
+            rootFolder: ''
+          },
+          handleAutoCommit: () => Promise.resolve(undefined),
+          handleError: () => Promise.resolve(undefined),
+          handleGitPause: () => Promise.resolve(undefined),
+          saveWithGit: () => Promise.resolve(undefined),
+          isAutoCommitEnabled: false,
+          isGitSyncActionsEnabled: false,
+          isGitSyncEnabled: false,
+          isGitSyncPaused: false,
+          ...props
+        }}
+      >
+        <GitSyncActions />
+      </FFGitSyncContext.Provider>
     </TestWrapper>
   )
 }
@@ -99,7 +131,7 @@ describe('GitSyncActions', () => {
   test('it should call handleAutoCommit callback when switch toggled to ON', async () => {
     const handleAutoCommitMock = jest.fn()
 
-    renderComponent({ handleToggleAutoCommit: handleAutoCommitMock })
+    renderComponent({ handleAutoCommit: handleAutoCommitMock })
 
     userEvent.click(screen.getByText('test branch'))
     userEvent.click(screen.getByTestId('auto-commit-switch'))
@@ -110,7 +142,7 @@ describe('GitSyncActions', () => {
   test('it should call handleAutoCommit callback when switch toggled to OFF', async () => {
     const handleAutoCommitMock = jest.fn()
 
-    renderComponent({ handleToggleAutoCommit: handleAutoCommitMock, isAutoCommitEnabled: true })
+    renderComponent({ handleAutoCommit: handleAutoCommitMock, isAutoCommitEnabled: true })
 
     userEvent.click(screen.getByText('test branch'))
     userEvent.click(screen.getByTestId('auto-commit-switch'))
@@ -141,7 +173,7 @@ describe('GitSyncActions', () => {
   })
 
   test('it should show Git sync spinner when loading', async () => {
-    renderComponent({ isLoading: true })
+    renderComponent({ gitSyncLoading: true })
 
     expect(screen.getByTestId('git-sync-spinner')).toBeInTheDocument()
   })

@@ -6,7 +6,9 @@
  */
 
 import type { SeriesColumnOptions } from 'highcharts'
-import type { LogData } from 'services/cv'
+import type { GetAllRadarChartLogsDataQueryParams, LogData } from 'services/cv'
+
+export type ClusterTypesServiceScreen = GetAllRadarChartLogsDataQueryParams['clusterTypes']
 
 export type LogAnalysisRowData = {
   clusterType: LogData['tag']
@@ -29,7 +31,8 @@ export enum LogEvents {
   UNEXPECTED = 'UNEXPECTED'
 }
 
-export interface LogAnalysisContentProps extends LogAnalysisProps {
-  logEvent: LogEvents
-  healthSource?: string
+export interface LogAnalysisContentProps {
+  monitoredServiceIdentifier: string
+  startTime: number
+  endTime: number
 }

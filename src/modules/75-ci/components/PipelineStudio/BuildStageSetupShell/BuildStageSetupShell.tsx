@@ -12,7 +12,7 @@ import { cloneDeep, isEmpty, isEqual, set } from 'lodash-es'
 import produce from 'immer'
 import { Tabs, Tab, Icon, Button, Layout, ButtonVariation, IconName } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
-import type { HarnessIconName } from '@wings-software/uicore/dist/icons/HarnessIcons'
+import type { HarnessIconName } from '@harness/icons'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import {
   PipelineContextType,

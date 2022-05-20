@@ -10,10 +10,10 @@ import { cloneDeep, isEqual, noop } from 'lodash-es'
 import { MultiTypeInputType, VisualYamlSelectedView as SelectedView } from '@wings-software/uicore'
 import {
   findAllByKey,
-  getTemplateTypesByRef,
   PipelineContext,
   PipelineContextType
 } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import { getTemplateTypesByRef } from '@pipeline/utils/templateUtils'
 import {
   initialState,
   PipelineContextActions,

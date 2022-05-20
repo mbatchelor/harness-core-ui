@@ -32,7 +32,10 @@ export const getInitFormData = (
       environmentRef: templateValue?.spec?.environmentRef,
       environmentRefList: [],
       sources: templateValue?.spec?.sources,
-      dependencies: []
+      dependencies: [],
+      ...(templateValue?.spec?.notificationRuleRefs && {
+        notificationRuleRefs: templateValue?.spec?.notificationRuleRefs
+      })
     }
   }
   const {
@@ -45,7 +48,8 @@ export const getInitFormData = (
     environmentRefList = [],
     sources,
     dependencies = [],
-    type
+    type,
+    notificationRuleRefs = []
   } = monitoredServiceData || {}
 
   return {
@@ -56,6 +60,7 @@ export const getInitFormData = (
     tags,
     serviceRef,
     type: (type as MonitoredServiceForm['type']) || MonitoredServiceType.APPLICATION,
+    notificationRuleRefs,
     environmentRef,
     environmentRefList,
     sources,

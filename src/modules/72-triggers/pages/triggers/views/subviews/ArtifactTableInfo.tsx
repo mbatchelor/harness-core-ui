@@ -112,7 +112,9 @@ const RenderColumnArtifactRepository = ({ row }: { row: RenderColumnRow }) => {
   return (
     <Layout.Horizontal className={data.disabled ? css.disabledRow : ''}>
       <Text width="159px" lineClamp={1}>
-        {data.artifactRepository}
+        {data.artifactRepository?.includes('account.')
+          ? data.artifactRepository.split('.')[1]
+          : data.artifactRepository}
       </Text>
     </Layout.Horizontal>
   )
@@ -273,7 +275,7 @@ const ArtifactTableInfo = (props: ArtifactTableInfoInterface): JSX.Element => {
       {
         Header: (
           <Text inline={true} className={css.textHeading} tooltipProps={{ dataTooltipId: 'artifactManifestLocation' }}>
-            {getString?.('common.location').toUpperCase()}
+            {getString?.('pipeline.artifactTriggerConfigPanel.locationRepoPath').toUpperCase()}
           </Text>
         ),
         accessor: 'lastExecutionTime',
@@ -317,7 +319,7 @@ const ArtifactTableInfo = (props: ArtifactTableInfoInterface): JSX.Element => {
       columns.push({
         Header: (
           <Text inline={true} className={css.textHeading} tooltipProps={{ dataTooltipId: 'artifactBuildTag' }}>
-            {getString?.('pipeline.artifactTriggerConfigPanel.buildTag').toUpperCase()}
+            {getString?.('pipeline.artifactTriggerConfigPanel.buildTagArtifactPath').toUpperCase()}
           </Text>
         ),
         accessor: 'buildTag',
@@ -374,7 +376,9 @@ const ArtifactTableInfo = (props: ArtifactTableInfoInterface): JSX.Element => {
         <Text style={{ color: '#FF7B26' }}>
           {getString?.('pipeline.artifactTriggerConfigPanel.chartVersionRuntimeInput', {
             artifact: artifactOrManifestText.toLowerCase(),
-            runTimeStr: isManifest ? getString('pipeline.manifestType.http.chartVersion') : getString('tagLabel')
+            runTimeStr: isManifest
+              ? getString('pipeline.manifestType.http.chartVersion')
+              : getString('pipeline.artifactTriggerConfigPanel.tagArtifactPath')
           })}
         </Text>
       )}

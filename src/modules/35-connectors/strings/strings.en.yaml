@@ -236,6 +236,7 @@ hashiCorpVault:
   serviceAccountTokenPath: Service Account Token Path
   vaultK8sAuthRoleRequired: Role Required
   serviceAccountRequired: Service Account Token Path Required
+  preventDefaultWhenReadOnly: Read only secret manager cannot be set as default
 nexus:
   nexusLabel: Nexus
   nexusServerUrl: 'Nexus Repository URL'

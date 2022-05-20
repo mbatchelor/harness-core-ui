@@ -5,9 +5,15 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type { GetDataError } from 'restful-react'
 import routes from '@common/RouteDefinitions'
 import type { UseStringsReturn } from 'framework/strings'
-import type { LogData } from 'services/cv'
+import type {
+  LogData,
+  RestResponseAnalyzedRadarChartLogDataWithCountDTO,
+  RestResponseLogAnalysisRadarChartListWithCountDTO
+} from 'services/cv'
+import type { LogsRowData } from './LogAnalysisRow.types'
 
 export const getEventTypeFromClusterType = (
   tag: LogData['tag'],
@@ -65,3 +71,19 @@ export const onClickErrorTrackingRow = (
 
 export const isNoLogSelected = (selectedLog?: string | null): boolean =>
   selectedLog === null || typeof selectedLog === 'undefined'
+
+export function getCorrectLogsData(
+  serviceScreenLogsData: RestResponseAnalyzedRadarChartLogDataWithCountDTO | null,
+  verifyStepLogsData: RestResponseLogAnalysisRadarChartListWithCountDTO | null,
+  serviceScreenLogsLoading: boolean,
+  verifyStepLogsLoading: boolean,
+  serviceScreenLogsError: GetDataError<unknown> | null,
+  verifyStepLogsError: GetDataError<unknown> | null,
+  isServicePage?: boolean
+): LogsRowData {
+  return {
+    logsData: isServicePage ? serviceScreenLogsData : verifyStepLogsData,
+    logsLoading: isServicePage ? serviceScreenLogsLoading : verifyStepLogsLoading,
+    logsError: isServicePage ? serviceScreenLogsError : verifyStepLogsError
+  }
+}

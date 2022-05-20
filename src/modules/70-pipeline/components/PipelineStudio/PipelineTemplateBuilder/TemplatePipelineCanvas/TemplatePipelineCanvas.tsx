@@ -5,9 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useRef } from 'react'
+import React from 'react'
 import { PageError, Tag } from '@wings-software/uicore'
-import { defaultTo, get } from 'lodash-es'
+import { defaultTo, get, merge } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { PageSpinner } from '@harness/uicore'
 import { parse } from 'yaml'
@@ -15,29 +15,32 @@ import { useStageBuilderCanvasState } from '@pipeline/components/PipelineStudio/
 import { CanvasWidget, createEngine } from '@pipeline/components/Diagram'
 import { StageBuilderModel } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderModel'
 import type { PipelineInfoConfig } from 'services/cd-ng'
-import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import { findAllByKey, usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import { getTemplateTypesByRef } from '@pipeline/utils/templateUtils'
 import { useStrings } from 'framework/strings'
 import { useValidationErrors } from '@pipeline/components/PipelineStudio/PiplineHooks/useValidationErrors'
 import { CanvasButtons } from '@pipeline/components/CanvasButtons/CanvasButtons'
-import { getScopeBasedProjectPathParams, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
+import {
+  getIdentifierFromValue,
+  getScopeFromValue,
+  getScopeBasedProjectPathParams
+} from '@common/components/EntityReference/EntityReference'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { useGetYamlWithTemplateRefsResolved } from 'services/template-ng'
-import { useMutateAsGet } from '@common/hooks'
-import { yamlStringify } from '@common/utils/YamlHelperMethods'
+import { useGetTemplate } from 'services/template-ng'
 import css from './TemplatePipelineCanvas.module.scss'
 
 export function TemplatePipelineCanvas(): React.ReactElement {
   const {
     state: { pipeline, templateTypes, gitDetails },
-    stagesMap
+    stagesMap,
+    setTemplateTypes
   } = usePipelineContext()
   const canvasRef = React.useRef<HTMLDivElement | null>(null)
   const { getString } = useStrings()
   const { errorMap } = useValidationErrors()
   const [resolvedPipeline, setResolvedPipeline] = React.useState<PipelineInfoConfig>()
-  const scope = getScopeFromValue(defaultTo(pipeline.template?.templateRef, ''))
+  const templateScope = getScopeFromValue(defaultTo(pipeline.template?.templateRef, ''))
   const queryParams = useParams<ProjectPathProps>()
-  const dummyPipeline = useRef(pipeline)
 
   const model = React.useMemo(() => new StageBuilderModel(), [])
   const engine = React.useMemo(() => createEngine({}), [])
@@ -66,40 +69,56 @@ export function TemplatePipelineCanvas(): React.ReactElement {
   useStageBuilderCanvasState(engine, [])
 
   const {
-    data: pipelineResponse,
-    error: pipelineError,
-    refetch: refetchPipeline,
-    loading: pipelineLoading
-  } = useMutateAsGet(useGetYamlWithTemplateRefsResolved, {
+    data: pipelineTemplateResponse,
+    error: pipelineTemplateError,
+    refetch: refetchPipelineTemplate,
+    loading: pipelineTemplateLoading
+  } = useGetTemplate({
+    templateIdentifier: getIdentifierFromValue(defaultTo(pipeline.template?.templateRef, '')),
     queryParams: {
-      ...getScopeBasedProjectPathParams(queryParams, scope),
-      pipelineIdentifier: pipeline.identifier,
+      ...getScopeBasedProjectPathParams(queryParams, templateScope),
+      versionLabel: defaultTo(pipeline.template?.versionLabel, ''),
       repoIdentifier: gitDetails.repoIdentifier,
       branch: gitDetails.branch,
       getDefaultFromOtherRepo: true
-    },
-    body: {
-      originalEntityYaml: yamlStringify(dummyPipeline.current)
     }
   })
 
   React.useEffect(() => {
-    if (pipelineResponse?.data?.mergedPipelineYaml) {
-      setResolvedPipeline(parse(pipelineResponse?.data?.mergedPipelineYaml))
-    }
-  }, [pipelineResponse?.data?.mergedPipelineYaml])
+    const templateRefs = findAllByKey('templateRef', resolvedPipeline)
+    getTemplateTypesByRef(
+      {
+        accountIdentifier: queryParams.accountId,
+        orgIdentifier: queryParams.orgIdentifier,
+        projectIdentifier: queryParams.projectIdentifier,
+        templateListType: 'Stable',
+        repoIdentifier: gitDetails.repoIdentifier,
+        branch: gitDetails.branch,
+        getDefaultFromOtherRepo: true
+      },
+      templateRefs
+    ).then(resp => {
+      setTemplateTypes(merge(templateTypes, resp))
+    })
+  }, [JSON.stringify(resolvedPipeline)])
 
   React.useEffect(() => {
-    dummyPipeline.current = pipeline
-  }, [pipeline.template?.templateRef, pipeline.template?.versionLabel])
+    if (pipelineTemplateResponse?.data?.yaml) {
+      setResolvedPipeline(parse(pipelineTemplateResponse.data.yaml)?.template?.spec)
+    }
+  }, [pipelineTemplateResponse?.data?.yaml])
 
   return (
     <div className={css.canvas} ref={canvasRef}>
-      {pipelineLoading && <PageSpinner />}
-      {!pipelineLoading && pipelineError && (
+      {pipelineTemplateLoading && <PageSpinner />}
+      {!pipelineTemplateLoading && pipelineTemplateError && (
         <PageError
-          message={get(pipelineError, 'data.error', get(pipelineError, 'data.message', pipelineError?.message))}
-          onClick={() => refetchPipeline()}
+          message={get(
+            pipelineTemplateError,
+            'data.error',
+            get(pipelineTemplateError, 'data.message', pipelineTemplateError?.message)
+          )}
+          onClick={() => refetchPipelineTemplate()}
         />
       )}
       <Tag className={css.readOnlyTag}>READ ONLY</Tag>

@@ -9,7 +9,7 @@ import React, { useEffect, useState } from 'react'
 import { Container, Text, PageError, PageSpinner, Collapse, getErrorInfoFromErrorObject } from '@wings-software/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
-import type { IconProps } from '@harness/uicore/dist/icons/Icon'
+import type { IconProps } from '@harness/icons'
 import { useStrings } from 'framework/strings'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import {

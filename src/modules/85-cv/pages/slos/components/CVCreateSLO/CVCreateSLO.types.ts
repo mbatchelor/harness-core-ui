@@ -13,7 +13,8 @@ import type {
   RatioSLIMetricSpec,
   SLOTarget,
   CalenderSLOTargetSpec,
-  WeeklyCalendarSpec
+  WeeklyCalendarSpec,
+  NotificationRuleRefDTO
 } from 'services/cv'
 import type { SLOTargetChartWithAPIGetSliGraphProps } from '@cv/pages/slos/components/SLOTargetChart/SLOTargetChart.types'
 import type { SelectOption } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
@@ -94,7 +95,8 @@ export const enum SLOFormFields {
   PERIOD_LENGTH_TYPE = 'periodLengthType',
   DAY_OF_MONTH = 'dayOfMonth',
   DAY_OF_WEEK = 'dayOfWeek',
-  SLO_TARGET_PERCENTAGE = 'SLOTargetPercentage'
+  SLO_TARGET_PERCENTAGE = 'SLOTargetPercentage',
+  NOTIFICATION_RULE_REFS = 'notificationRuleRefs'
 }
 
 export interface SLIForm {
@@ -125,6 +127,7 @@ export interface SLOForm extends SLIForm {
   [SLOFormFields.DAY_OF_MONTH]?: string
   [SLOFormFields.DAY_OF_WEEK]?: WeeklyCalendarSpec['dayOfWeek']
   [SLOFormFields.SLO_TARGET_PERCENTAGE]: number
+  [SLOFormFields.NOTIFICATION_RULE_REFS]: NotificationRuleRefDTO[]
 }
 
 export interface CreateSLOFormProps {

@@ -33,7 +33,8 @@ interface CreateNodeStepProps {
 function CreateNodeStep(props: CreateNodeStepProps): React.ReactElement {
   return (
     <div
-      onMouseOver={() => {
+      onMouseOver={(event: any) => {
+        event?.stopPropagation()
         props.onMouseOver?.()
       }}
       onMouseLeave={() => {

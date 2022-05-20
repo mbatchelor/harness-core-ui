@@ -601,14 +601,7 @@ exports[`StepWidget tests renders ServiceStep for Service Tab  1`] = `
           class="Layout--vertical StyledProps--main"
           style="border-radius: 5px;"
         >
-          <section>
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500"
-              style="font-size: 13px;"
-            >
-              workflowVariableInfo
-            </p>
-          </section>
+          <section />
         </div>
       </div>
     </div>

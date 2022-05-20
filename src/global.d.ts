@@ -66,6 +66,9 @@ declare interface Window {
   saberToken: string
   Saber: any
   hj: any
+  helpPanelAccessToken: string
+  helpPanelSpace: string
+  helpPanelEnvironment: 'QA' | 'master'
 }
 
 declare interface WindowEventMap {

@@ -462,8 +462,6 @@ describe('StepWidget tests', () => {
     )
     const variables = await findByText(container, 'common.variables')
     expect(variables).toBeDefined()
-    const workflowInfo = await findByText(container, 'workflowVariableInfo')
-    expect(workflowInfo).toBeDefined()
   })
 
   // eslint-disable-next-line jest/no-disabled-tests

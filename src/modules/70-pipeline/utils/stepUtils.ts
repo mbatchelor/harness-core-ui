@@ -107,7 +107,7 @@ export function getStepPaletteModuleInfosFromStage(
     case StageType.SECURITY:
       return [
         {
-          module: 'sto',
+          module: 'ci',
           shouldShowCommonSteps: false
         }
       ]

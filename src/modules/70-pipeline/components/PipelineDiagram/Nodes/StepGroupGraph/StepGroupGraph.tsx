@@ -79,7 +79,7 @@ const getCalculatedStyles = (data: PipelineGraphState[]): LayoutStyles => {
     maxChildLength = Math.max(maxChildLength, node?.children?.length || 0)
   })
   let finalHeight = (maxChildLength + 1) * 100
-  finalHeight = hasStepGroupNode ? finalHeight + 30 : finalHeight
+  finalHeight = hasStepGroupNode ? finalHeight + 50 : finalHeight
   return { height: `${finalHeight}px`, width: `${width - 80}px` } // 80 is link gap that we dont need for last stepgroup node
 }
 
@@ -97,16 +97,18 @@ function StepGroupGraph(props: StepGroupGraphProps): React.ReactElement {
     setTreeRectangle(rectBoundary)
   }
   const { errorMap } = useValidationErrors()
-  const { getStagePathFromPipeline } = usePipelineContext()
+  const {
+    state: { templateTypes },
+    getStagePathFromPipeline
+  } = usePipelineContext()
 
   const stagePath = getStagePathFromPipeline(props?.identifier || '', 'pipeline.stages')
-
   useLayoutEffect(() => {
     if (props?.data?.length) {
       setState(
         getPipelineGraphData({
           data: props.data,
-          templateTypes: undefined,
+          templateTypes: templateTypes,
           serviceDependencies: undefined,
           errorMap: errorMap,
           parentPath: `${stagePath}.stage.spec.execution.steps.stepGroup.steps` //index after step missing - getStepPathFromPipeline??
@@ -128,6 +130,11 @@ function StepGroupGraph(props: StepGroupGraphProps): React.ReactElement {
       props?.updateGraphLinks?.()
     }
   }, [layoutStyles])
+
+  const updateGraphLinks = (): void => {
+    setSVGLinks()
+    props?.updateGraphLinks?.()
+  }
   const setSVGLinks = (): void => {
     if (props.hideLinks) {
       return
@@ -171,6 +178,7 @@ function StepGroupGraph(props: StepGroupGraphProps): React.ReactElement {
             startEndNodeNeeded={false}
             readonly={props.readonly}
             optimizeRender={false}
+            updateGraphLinks={updateGraphLinks}
           />
         </>
       ) : (

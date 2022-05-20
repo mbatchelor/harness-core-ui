@@ -17,5 +17,6 @@ declare const styles: {
   readonly costWrapper: string
   readonly differenceCostNeg: string
   readonly differenceCostPos: string
+  readonly isDisabled: string
 }
 export default styles

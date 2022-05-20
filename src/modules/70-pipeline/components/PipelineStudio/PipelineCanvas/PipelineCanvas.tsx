@@ -745,7 +745,7 @@ export function PipelineCanvas({
                 {isReadonly && (
                   <div className={css.readonlyAccessTag}>
                     <Icon name="eye-open" size={16} />
-                    <div className={css.readonlyAccessText}>{getString('common.readonlyPermissions')}</div>
+                    <div className={css.readonlyAccessText}>{getString('common.viewAndExecutePermissions')}</div>
                   </div>
                 )}
                 {isUpdated && !isReadonly && <div className={css.tagRender}>{getString('unsavedChanges')}</div>}

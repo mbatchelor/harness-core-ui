@@ -12,10 +12,14 @@ declare const styles: {
   readonly countCard: string
   readonly groupbyFilter: string
   readonly header: string
+  readonly noResultsContainer: string
   readonly rowGap8: string
   readonly searchFilterWrapper: string
   readonly searchInput: string
+  readonly sortingColumn: string
+  readonly sortingIcon: string
   readonly summaryCharts: string
+  readonly summaryError: string
   readonly tableView: string
 }
 export default styles

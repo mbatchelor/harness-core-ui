@@ -43,13 +43,18 @@ describe('test cases for Create Perspective Page', () => {
       }
     }
 
-    const { container } = render(
+    const { getByText } = render(
       <TestWrapper pathParams={params}>
         <Provider value={responseState as any}>
           <CreatePerspectivePage />
         </Provider>
       </TestWrapper>
     )
-    expect(container).toMatchSnapshot()
+
+    expect(getByText('AWS_GCP')).toBeDefined()
+    expect(getByText('value3')).toBeDefined()
+    expect(getByText('ce.perspectives.createPerspective.filters.rulesText1')).toBeDefined()
+    expect(getByText('ce.perspectives.createPerspective.nextButton')).toBeDefined()
+    expect(getByText('ce.perspectives.createPerspective.preview.title')).toBeDefined()
   })
 })

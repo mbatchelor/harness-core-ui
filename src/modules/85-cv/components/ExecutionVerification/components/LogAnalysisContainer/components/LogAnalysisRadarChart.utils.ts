@@ -5,12 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { SeriesScatterOptions } from 'highcharts'
+import type { SeriesScatterOptions, TooltipOptions } from 'highcharts'
 import { Color } from '@harness/design-system'
 import { getEventTypeChartColor } from '@cv/utils/CommonUtils'
 import type { LogAnalysisRadarChartClusterDTO } from 'services/cv'
 import type { MinMaxAngleState } from '../LogAnalysisView.container.types'
-import type { MarkerOption } from './LogAnalysisRadarChart.types'
+import type { CommonChartProperties, MarkerOption } from './LogAnalysisRadarChart.types'
 
 function getRadarMarkerDetails(marker: LogAnalysisRadarChartClusterDTO): MarkerOption {
   const markerDetails = [
@@ -55,44 +55,76 @@ export function getRadarChartSeries(data?: LogAnalysisRadarChartClusterDTO[]): S
   return graphData
 }
 
-export default function getLogAnalysisSpiderChartOptions(
+const getCommonChartProperties = (minMaxAngle: MinMaxAngleState): Pick<Highcharts.Options, CommonChartProperties> => ({
+  chart: {
+    polar: true,
+    type: 'scatter',
+    height: 400,
+    marginTop: 20,
+    marginBottom: 20
+  },
+  title: {
+    text: ''
+  },
+  legend: {
+    enabled: false
+  },
+  pane: {
+    size: '100%'
+  },
+  xAxis: {
+    labels: { enabled: true, format: '{text}°' },
+    floor: 0,
+    tickmarkPlacement: 'on',
+    lineWidth: 0,
+    tickAmount: 13,
+    max: minMaxAngle.max,
+    min: minMaxAngle.min
+  },
+  boost: {
+    enabled: true,
+    seriesThreshold: 2000
+  }
+})
+
+const tooltipCommonProps: TooltipOptions = {
+  backgroundColor: 'rgba(255,255,255,0.7)',
+  borderColor: Color.GREY_300,
+  borderRadius: 10,
+  shadow: {
+    color: 'rgba(96, 97, 112, 0.56)'
+  },
+  shape: 'square',
+  outside: true
+}
+
+const commonPlotoptionsProps = {
+  marker: {
+    symbol: 'circle',
+    states: {
+      hover: {
+        enabled: true,
+        radius: 10
+      }
+    }
+  },
+  cursor: 'pointer'
+}
+
+const commonYAxisProps = {
+  max: 90,
+  allowDecimals: false,
+  gridLineColor: '#ECE6E6',
+  tickPixelInterval: 30
+}
+
+export function getLogAnalysisSpiderChartOptions(
   series: SeriesScatterOptions['data'] | null,
   minMaxAngle: MinMaxAngleState,
   handleRadarPointClick: (pointClusterId: string) => void
 ): Highcharts.Options {
   return {
-    chart: {
-      polar: true,
-      type: 'scatter',
-      height: 400,
-      marginTop: 20,
-      marginBottom: 20
-    },
-    credits: undefined,
-    title: {
-      text: ''
-    },
-    legend: {
-      enabled: false
-    },
-    pane: {
-      size: '100%'
-    },
-
-    xAxis: {
-      labels: { enabled: true, format: '{text}°' },
-      floor: 0,
-      tickmarkPlacement: 'on',
-      lineWidth: 0,
-      tickAmount: 13,
-      max: minMaxAngle.max,
-      min: minMaxAngle.min
-    },
-    boost: {
-      enabled: true,
-      seriesThreshold: 2000
-    },
-
+    ...getCommonChartProperties(minMaxAngle),
     yAxis: {
       labels: { enabled: false },
       plotBands: [
@@ -112,25 +144,15 @@ export default function getLogAnalysisSpiderChartOptions(
           color: '#EFFBFF'
         }
       ],
-      max: 90,
-      allowDecimals: false,
       tickPositions: [0, 30, 60, 90],
-      gridLineColor: '#ECE6E6',
-      tickPixelInterval: 30
+      ...commonYAxisProps
     },
 
     tooltip: {
       formatter: function tooltipFormatter(): string {
         return this.series.name
       },
-      backgroundColor: 'rgba(255,255,255,0.7)',
-      borderColor: Color.GREY_300,
-      borderRadius: 10,
-      shadow: {
-        color: 'rgba(96, 97, 112, 0.56)'
-      },
-      shape: 'square',
-      outside: true
+      ...tooltipCommonProps
     },
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
@@ -139,22 +161,75 @@ export default function getLogAnalysisSpiderChartOptions(
       series: {
         events: {
           mouseOver: function () {
+            /* istanbul ignore next */
             this.data.forEach(p => p.setState('hover'))
           },
           mouseOut: function () {
             this.data.forEach(p => p.setState())
           }
         },
-        marker: {
-          symbol: 'circle',
-          states: {
-            hover: {
-              enabled: true,
-              radius: 10
+        ...commonPlotoptionsProps,
+
+        point: {
+          events: {
+            click: e => {
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-ignore
+              handleRadarPointClick(e.point.series.userOptions.clusterId)
             }
           }
+        }
+      }
+    }
+  }
+}
+
+export function getLogAnalysisSpiderChartOptionsWithoutBaseline(
+  series: SeriesScatterOptions['data'] | null,
+  minMaxAngle: MinMaxAngleState,
+  handleRadarPointClick: (pointClusterId: string) => void
+): Highcharts.Options {
+  return {
+    ...getCommonChartProperties(minMaxAngle),
+    yAxis: {
+      labels: { enabled: false },
+      plotBands: [
+        {
+          from: 0,
+          to: 60,
+          color: '#FAFCFF'
         },
-        cursor: 'pointer',
+        {
+          from: 60,
+          to: 90,
+          color: '#EFFBFF'
+        }
+      ],
+      tickPositions: [0, 60, 90],
+      ...commonYAxisProps
+    },
+
+    tooltip: {
+      formatter: function tooltipFormatter(): string {
+        return this.series.name
+      },
+      ...tooltipCommonProps
+    },
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    series,
+    plotOptions: {
+      series: {
+        events: {
+          mouseOver: function () {
+            /* istanbul ignore next */
+            this.data.forEach(p => p.setState('hover'))
+          },
+          mouseOut: function () {
+            this.data.forEach(p => p.setState())
+          }
+        },
+        ...commonPlotoptionsProps,
         point: {
           events: {
             click: e => {

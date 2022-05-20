@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react'
 import { VisualYamlToggle, VisualYamlSelectedView as SelectedView, Container } from '@harness/uicore'
-import { cloneDeep, defaultTo, isEmpty, set } from 'lodash-es'
+import { cloneDeep, defaultTo, set } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { parse } from 'yaml'
 import produce from 'immer'
@@ -15,19 +15,21 @@ import DeployServiceSpecifications from '@cd/components/PipelineStudio/DeploySer
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import YAMLBuilder from '@common/components/YAMLBuilder/YamlBuilder'
 import type { YamlBuilderHandlerBinding, YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
-import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
-import { useGetYamlSchema } from 'services/cd-ng'
+import { NGServiceConfig, useGetEntityYamlSchema } from 'services/cd-ng'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import { setNameIDDescription } from '../../utils/ServiceUtils'
+import BasicServiceStep from './BasicServiceStep'
+import css from './ServiceConfiguration.module.scss'
 
 interface ServiceConfigurationProps {
-  serviceData: any
+  serviceData: NGServiceConfig
 }
 
 const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
   fileName: `service.yaml`,
   entityType: 'Service',
   width: '100%',
-  height: 194,
+  height: 'calc(100vh - 250px)',
   showSnippetSection: false,
   yamlSanityConfig: {
     removeEmptyString: false,
@@ -40,7 +42,6 @@ function ServiceConfiguration({ serviceData }: ServiceConfigurationProps): React
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const {
     state: { pipeline },
-    setSelection,
     updatePipeline,
     isReadonly
   } = usePipelineContext()
@@ -48,21 +49,14 @@ function ServiceConfiguration({ serviceData }: ServiceConfigurationProps): React
   const [selectedView, setSelectedView] = useState<SelectedView>(SelectedView.VISUAL)
   const [yamlHandler, setYamlHandler] = useState<YamlBuilderHandlerBinding | undefined>()
 
-  const { data: serviceSchema } = useGetYamlSchema({
+  const { data: serviceSchema } = useGetEntityYamlSchema({
     queryParams: {
       entityType: 'Service',
       projectIdentifier,
       orgIdentifier,
-      accountIdentifier: accountId,
-      scope: getScopeFromDTO({ accountIdentifier: accountId, orgIdentifier, projectIdentifier })
+      accountIdentifier: accountId
     }
   })
-
-  React.useEffect(() => {
-    if (!isEmpty(pipeline.stages)) {
-      setSelection({ stageId: pipeline.stages?.[0]?.stage?.identifier })
-    }
-  }, [pipeline.stages])
 
   const handleModeSwitch = React.useCallback(
     (view: SelectedView) => {
@@ -72,6 +66,8 @@ function ServiceConfiguration({ serviceData }: ServiceConfigurationProps): React
 
         if (serviceSetYamlVisual) {
           const newPipelineData = produce({ ...pipeline }, draft => {
+            setNameIDDescription(draft, serviceSetYamlVisual)
+
             set(
               draft,
               'stages[0].stage.spec.serviceConfig.serviceDefinition',
@@ -88,7 +84,7 @@ function ServiceConfiguration({ serviceData }: ServiceConfigurationProps): React
 
   return (
     <>
-      <div>
+      <div className={css.optionBtns}>
         <VisualYamlToggle
           selectedView={selectedView}
           onChange={nextMode => {
@@ -98,7 +94,10 @@ function ServiceConfiguration({ serviceData }: ServiceConfigurationProps): React
         />
       </div>
       {selectedView === SelectedView.VISUAL ? (
-        <DeployServiceSpecifications />
+        <>
+          <BasicServiceStep />
+          <DeployServiceSpecifications />
+        </>
       ) : (
         <Container>
           <YAMLBuilder

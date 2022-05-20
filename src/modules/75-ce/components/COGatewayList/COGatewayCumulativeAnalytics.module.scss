@@ -9,8 +9,7 @@
   :global {
     .bp3-progress-bar {
       .bp3-progress-meter {
-        // background-color: var(--blue-100) !important;
-        background-color: #00ade4 !important;
+        background-color: var(--primary-5) !important;
       }
     }
   }
@@ -48,6 +47,16 @@
     .instanceCount {
       font-weight: 600 !important;
       color: var(--grey-500);
+    }
+  }
+}
+
+.gaugeChartWrapper {
+  :global {
+    .highcharts-plot-band {
+      fill: var(--green-200);
+      stroke-dasharray: 2 2;
+      stroke-dashoffset: 0;
     }
   }
 }

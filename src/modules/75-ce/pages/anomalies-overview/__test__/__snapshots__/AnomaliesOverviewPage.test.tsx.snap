@@ -291,7 +291,9 @@ exports[`test case for anomalies detection overview page should be able to rende
             </p>
             <p
               class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-red600 StyledProps--font-variation-h4"
-            />
+            >
+              -
+            </p>
           </div>
           <div
             class="bp3-card bp3-elevation-0 Card--card costCard"
@@ -318,11 +320,16 @@ exports[`test case for anomalies detection overview page should be able to rende
               class="Layout--horizontal StyledProps--main"
               style="justify-content: space-between; align-items: center;"
             >
-              <p
-                class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey800 StyledProps--font-weight-semi-bold StyledProps--font-size-small"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="topThreeAnomalies"
               >
-                ce.anomalyDetection.summary.perspectiveWise
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey800 StyledProps--font-weight-semi-bold StyledProps--font-size-small"
+                >
+                  ce.anomalyDetection.summary.perspectiveWise
+                </p>
+              </div>
             </div>
             <div
               class="cols"
@@ -353,11 +360,16 @@ exports[`test case for anomalies detection overview page should be able to rende
               class="Layout--horizontal StyledProps--main"
               style="justify-content: space-between; align-items: center;"
             >
-              <p
-                class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey800 StyledProps--font-weight-semi-bold StyledProps--font-size-small"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="anomaliesByCloudProviders"
               >
-                ce.anomalyDetection.summary.cloudProvidersWise
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey800 StyledProps--font-weight-semi-bold StyledProps--font-size-small"
+                >
+                  ce.anomalyDetection.summary.cloudProvidersWise
+                </p>
+              </div>
             </div>
             <div
               class="cols"
@@ -413,6 +425,23 @@ exports[`test case for anomalies detection overview page should be able to rende
             </div>
           </div>
         </div>
+      </div>
+      <div
+        class="StyledProps--font StyledProps--main noResultsContainer"
+      >
+        <img
+          src="test-file-stub"
+        />
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--color StyledProps--color-grey500"
+        >
+          ce.anomalyDetection.noData
+        </p>
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey500"
+        >
+          ce.anomalyDetection.checkLater
+        </p>
       </div>
     </div>
   </div>

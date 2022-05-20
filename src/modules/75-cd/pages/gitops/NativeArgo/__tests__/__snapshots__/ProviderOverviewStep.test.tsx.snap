@@ -1973,7 +1973,7 @@ exports[`Connector details step Test for data false 1`] = `
                     <p
                       class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-weight-bold StyledProps--color StyledProps--color-red500"
                       data-type="single-message"
-                      style="overflow-wrap: break-word; word-wrap: break-word; hyphens: auto; --text-line-clamp: 5;"
+                      style="overflow-wrap: break-word; word-break: break-word; white-space: pre-wrap; --text-line-clamp: 5;"
                     >
                       cd.duplicateIdError
                     </p>
@@ -2726,7 +2726,7 @@ exports[`Connector details step test for error in response 1`] = `
                     <p
                       class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-weight-bold StyledProps--color StyledProps--color-red500"
                       data-type="single-message"
-                      style="overflow-wrap: break-word; word-wrap: break-word; hyphens: auto; --text-line-clamp: 5;"
+                      style="overflow-wrap: break-word; word-break: break-word; white-space: pre-wrap; --text-line-clamp: 5;"
                     >
                       mock error
                     </p>

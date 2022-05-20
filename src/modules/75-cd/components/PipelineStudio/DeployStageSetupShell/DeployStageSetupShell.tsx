@@ -8,7 +8,7 @@
 import React from 'react'
 import { Layout, Tabs, Tab, Button, Icon, ButtonVariation } from '@wings-software/uicore'
 import cx from 'classnames'
-import type { HarnessIconName } from '@wings-software/uicore/dist/icons/HarnessIcons'
+import type { HarnessIconName } from '@harness/icons'
 import { Expander, IconName } from '@blueprintjs/core'
 import { defaultTo, get, isEmpty, set } from 'lodash-es'
 import type { ValidationError } from 'yup'
@@ -163,6 +163,9 @@ export default function DeployStageSetupShell(): JSX.Element {
     ) {
       updateStage(
         produce(selectedStage, draft => {
+          if (!draft.stage?.spec?.execution) {
+            draft = set(draft, 'stage.spec', { ...draft.stage?.spec, execution: {} })
+          }
           const jsonFromYaml = YAML.parse(defaultTo(yamlSnippet?.data, '{}')) as StageElementConfig
           set(draft, 'stage.failureStrategies', jsonFromYaml.failureStrategies)
           set(draft, 'stage.spec.execution', defaultTo((jsonFromYaml.spec as DeploymentStageConfig)?.execution, {}))
@@ -235,7 +238,11 @@ export default function DeployStageSetupShell(): JSX.Element {
           const openExecutionStrategy = stageType ? stagesMap[stageType].openExecutionStrategy : true
           const isServerlessDeploymentTypeSelected = isServerlessDeploymentType(selectedDeploymentType)
           // Show executiomn strategies when openExecutionStrategy is true and deployment type is not serverless
-          if (openExecutionStrategy && !isServerlessDeploymentTypeSelected) {
+          if (
+            openExecutionStrategy &&
+            !isServerlessDeploymentTypeSelected &&
+            selectedSectionId === DeployTabs.EXECUTION
+          ) {
             updatePipelineView({
               ...pipelineView,
               isDrawerOpened: true,
@@ -261,7 +268,7 @@ export default function DeployStageSetupShell(): JSX.Element {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedStage, selectedTabId, selectedStageId, selectedDeploymentType])
+  }, [selectedStage, selectedTabId, selectedStageId, selectedDeploymentType, selectedSectionId])
 
   React.useEffect(() => {
     validate()

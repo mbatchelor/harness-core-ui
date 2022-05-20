@@ -58,7 +58,7 @@ function GroupNode(props: GroupNodeProps): React.ReactElement {
         status: props.status as string
       }
 
-      nodesArr = props?.children?.length ? [firstNodeData, ...props?.children] : [firstNodeData]
+      nodesArr = props?.children && props.children.length ? [firstNodeData, ...props.children] : [firstNodeData]
     } else {
       nodesArr = props?.children?.slice(props.intersectingIndex - 1)
     }

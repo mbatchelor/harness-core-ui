@@ -8,7 +8,7 @@
 import React from 'react'
 import { IPopoverProps, PopoverInteractionKind } from '@blueprintjs/core'
 import { Icon, Layout, Popover, Text } from '@wings-software/uicore'
-import type { IconProps } from '@wings-software/uicore/dist/icons/Icon'
+import type { IconProps } from '@harness/icons'
 import { Color } from '@harness/design-system'
 import { getRepoDetailsByIndentifier } from '@common/utils/gitSyncUtils'
 import type { EntityGitDetails } from 'services/pipeline-ng'
@@ -57,7 +57,7 @@ export function RenderGitPopover(props: GitPopoverProps): React.ReactElement | n
   ]
   const gitPopover = React.useCallback(() => {
     return (
-      <Popover interactionKind={PopoverInteractionKind.HOVER} {...popoverProps}>
+      <Popover interactionKind={PopoverInteractionKind.HOVER} {...popoverProps} autoFocus={false}>
         <Icon
           name={'service-github'}
           color={Color.GREY_700}

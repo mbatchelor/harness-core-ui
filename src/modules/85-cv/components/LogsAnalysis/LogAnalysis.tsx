@@ -5,214 +5,239 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import {
-  Container,
-  Icon,
-  Pagination,
-  Select,
-  Heading,
-  NoDataCard,
-  Layout,
-  PageError,
-  Card
-} from '@wings-software/uicore'
-import { FontVariation, Color } from '@harness/design-system'
+import { Container, Icon, NoDataCard, PageError, MultiSelectOption } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import { useGetAllLogsClusterData, useGetAllLogsData } from 'services/cv'
+import {
+  GetAllRadarChartLogsClusterDataQueryParams,
+  GetAllRadarChartLogsDataQueryParams,
+  useGetAllRadarChartLogsClusterData,
+  useGetAllRadarChartLogsData
+} from 'services/cv'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
-import { HealthSourceDropDown } from '@cv/components/HealthSourceDropDown/HealthSourceDropDown'
+import LogAnalysis from '@cv/components/ExecutionVerification/components/LogAnalysisContainer/LogAnalysis'
 import noDataImage from '@cv/assets/noData.svg'
-import { LogAnalysisRow } from './components/LogAnalysisRow/LogAnalysisRow'
-import { getClusterTypes, getLogAnalysisTableData } from './LogAnalysis.utils'
-import { LogAnalysisContentProps, LogAnalysisProps, LogEvents } from './LogAnalysis.types'
-import { PAGE_SIZE } from './LogAnalysis.constants'
-import ClusterChart from './components/ClusterChart/ClusterChart'
-import { VerificationType } from '../HealthSourceDropDown/HealthSourceDropDown.constants'
+import type { ClusterTypesServiceScreen, LogAnalysisContentProps } from './LogAnalysis.types'
+import type { MinMaxAngleState } from '../ExecutionVerification/components/LogAnalysisContainer/LogAnalysisView.container.types'
+import { getClusterTypes } from '../ExecutionVerification/components/LogAnalysisContainer/LogAnalysis.utils'
+import type { EventTypeFullName } from '../ExecutionVerification/components/LogAnalysisContainer/LogAnalysis.constants'
+import LogFilters from './components/LogFilters/LogFilters'
+import { RadarChartAngleLimits } from '../ExecutionVerification/components/LogAnalysisContainer/LogAnalysisView.container.constants'
 import css from './LogAnalysis.module.scss'
 
-const ClusterChartContainer: React.FC<LogAnalysisContentProps> = ({
+export const LogAnalysisContent: React.FC<LogAnalysisContentProps> = ({
   monitoredServiceIdentifier,
   startTime,
-  endTime,
-  logEvent,
-  healthSource
+  endTime
 }) => {
   const { getString } = useStrings()
   const { orgIdentifier, projectIdentifier, accountId } = useParams<ProjectPathProps>()
 
-  const { data, loading, error, refetch } = useGetAllLogsClusterData({
-    queryParams: {
-      accountId,
-      orgIdentifier,
-      projectIdentifier,
-      monitoredServiceIdentifier,
-      startTime,
-      endTime,
-      ...(logEvent ? { clusterTypes: [logEvent] } : {}),
-      healthSources: healthSource ? [healthSource] : undefined
+  const isFirstFilterCall = useRef(true)
+
+  const [clusterTypeFilters, setClusterTypeFilters] = useState<ClusterTypesServiceScreen>(
+    (): ClusterTypesServiceScreen => {
+      return getClusterTypes(getString).map(i => i.value) as ClusterTypesServiceScreen
+    }
+  )
+
+  const [minMaxAngle, setMinMaxAngle] = useState({ min: RadarChartAngleLimits.MIN, max: RadarChartAngleLimits.MAX })
+  const [selectedHealthSources, setSelectedHealthSources] = useState<MultiSelectOption[]>([])
+
+  const [logsDataQueryParams, setLogsDataQueryParams] = useState<GetAllRadarChartLogsDataQueryParams>(
+    (): GetAllRadarChartLogsDataQueryParams => {
+      return {
+        accountId,
+        pageNumber: 0,
+        pageSize: 10,
+        orgIdentifier,
+        projectIdentifier,
+        monitoredServiceIdentifier,
+        minAngle: minMaxAngle.min,
+        maxAngle: minMaxAngle.max,
+        startTime,
+        endTime,
+        clusterTypes: clusterTypeFilters?.length ? clusterTypeFilters : undefined,
+        healthSources: selectedHealthSources.length
+          ? (selectedHealthSources.map(item => item.value) as string[])
+          : undefined
+      }
+    }
+  )
+
+  const [radarChartDataQueryParams, setRadarChartDataQueryParams] =
+    useState<GetAllRadarChartLogsClusterDataQueryParams>((): GetAllRadarChartLogsClusterDataQueryParams => {
+      return {
+        accountId,
+        orgIdentifier,
+        projectIdentifier,
+        monitoredServiceIdentifier,
+        startTime,
+        endTime,
+        clusterTypes: clusterTypeFilters?.length ? clusterTypeFilters : undefined,
+        healthSources: selectedHealthSources.length
+          ? (selectedHealthSources.map(item => item.value) as string[])
+          : undefined
+      }
+    })
+
+  const {
+    data: logsData,
+    refetch: fetchLogAnalysis,
+    loading: logsLoading,
+    error: logsError
+  } = useGetAllRadarChartLogsData({
+    queryParams: logsDataQueryParams,
+    queryParamStringifyOptions: {
+      arrayFormat: 'repeat'
+    }
+  })
+
+  const {
+    data: clusterChartData,
+    loading: clusterChartLoading,
+    error: clusterChartError,
+    refetch: fetchClusterAnalysis
+  } = useGetAllRadarChartLogsClusterData({
+    queryParams: radarChartDataQueryParams,
+    queryParamStringifyOptions: {
+      arrayFormat: 'repeat'
+    }
+  })
+
+  useEffect(() => {
+    if (!isFirstFilterCall.current) {
+      setLogsDataQueryParams({
+        ...logsDataQueryParams,
+        minAngle: minMaxAngle.min,
+        maxAngle: minMaxAngle.max
+      })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [minMaxAngle])
+
+  useEffect(() => {
+    if (!isFirstFilterCall.current) {
+      const updatedQueryParams = {
+        clusterTypes: clusterTypeFilters?.length ? clusterTypeFilters : undefined,
+        healthSources: selectedHealthSources.length
+          ? (selectedHealthSources.map(item => item.value) as string[])
+          : undefined,
+        startTime,
+        endTime
+      }
+
+      const updatedLogsDataParams = {
+        ...logsDataQueryParams,
+        ...updatedQueryParams
+      }
+
+      const updatedRadarChartDataParams = {
+        ...radarChartDataQueryParams,
+        ...updatedQueryParams
+      }
+
+      setLogsDataQueryParams(updatedLogsDataParams)
+      setRadarChartDataQueryParams(updatedRadarChartDataParams)
+      setMinMaxAngle({ min: RadarChartAngleLimits.MIN, max: RadarChartAngleLimits.MAX })
+    } else {
+      isFirstFilterCall.current = false
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [clusterTypeFilters, selectedHealthSources, startTime, endTime])
+
+  const handleClustersFilterChange = useCallback((checked: boolean, filterName: EventTypeFullName): void => {
+    setClusterTypeFilters(currentFilters => {
+      if (checked) {
+        return [...(currentFilters as EventTypeFullName[]), filterName]
+      } else {
+        return currentFilters?.filter((item: string) => item !== filterName)
+      }
+    })
+  }, [])
+
+  /* istanbul ignore next */
+  const goToLogsPage = useCallback(
+    pageNumber => {
+      fetchLogAnalysis({
+        queryParams: { ...logsDataQueryParams, pageNumber }
+      })
     },
-    queryParamStringifyOptions: {
-      arrayFormat: 'repeat'
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [logsDataQueryParams]
+  )
+
+  const handleHealthSourceChange = useCallback(selectedHealthSourceFitlers => {
+    setSelectedHealthSources(selectedHealthSourceFitlers)
+  }, [])
+
+  const handleMinMaxChange = useCallback((updatedAngle: MinMaxAngleState): void => {
+    setMinMaxAngle({ ...updatedAngle })
+  }, [])
+
+  const getContents = (): JSX.Element => {
+    if (logsLoading && clusterChartLoading) {
+      return (
+        <Container
+          flex={{ justifyContent: 'center' }}
+          className={css.loadingContainer}
+          data-testid="LogAnalysis-loading-spinner"
+        >
+          <Icon name="steps-spinner" color={Color.GREY_400} size={30} />
+        </Container>
+      )
     }
-  })
 
-  if (loading) {
-    return (
-      <Container flex={{ justifyContent: 'center' }} margin={{ top: 'xxxlarge' }}>
-        <Icon name="steps-spinner" color={Color.GREY_400} size={30} />
-      </Container>
-    )
-  }
-
-  if (error) {
-    return <PageError message={getErrorMessage(error)} onClick={() => refetch()} />
-  }
-
-  if (!data?.resource?.length) {
-    return (
-      <NoDataCard
-        image={noDataImage}
-        imageClassName={css.logClusterNoDataImage}
-        className={css.noData}
-        containerClassName={css.noDataContainer}
-        message={getString('cv.monitoredServices.noAvailableData')}
-      />
-    )
-  }
-
-  return <ClusterChart data={data.resource} />
-}
-
-const LogAnalysisContent: React.FC<LogAnalysisContentProps> = ({
-  monitoredServiceIdentifier,
-  startTime,
-  endTime,
-  logEvent,
-  healthSource
-}) => {
-  const { getString } = useStrings()
-  const { orgIdentifier, projectIdentifier, accountId } = useParams<ProjectPathProps>()
-
-  const queryParams = useMemo(() => {
-    return {
-      page: 0,
-      size: PAGE_SIZE,
-      accountId,
-      orgIdentifier,
-      projectIdentifier,
-      monitoredServiceIdentifier,
-      startTime,
-      endTime,
-      ...(logEvent ? { clusterTypes: [logEvent] } : {}),
-      healthSources: healthSource ? [healthSource] : undefined
+    if (logsError) {
+      return <PageError message={getErrorMessage(logsError)} onClick={() => fetchLogAnalysis()} />
     }
-  }, [
-    accountId,
-    endTime,
-    healthSource,
-    logEvent,
-    orgIdentifier,
-    projectIdentifier,
-    monitoredServiceIdentifier,
-    startTime
-  ])
 
-  const { data, refetch, loading, error } = useGetAllLogsData({
-    queryParams,
-    queryParamStringifyOptions: {
-      arrayFormat: 'repeat'
+    if (!logsData?.resource?.logAnalysisRadarCharts?.content?.length && !clusterChartData?.resource?.length) {
+      return (
+        <NoDataCard
+          message={getString('cv.monitoredServices.noAvailableData')}
+          image={noDataImage}
+          containerClassName={css.logsAnalysisNoDataServicePage}
+        />
+      )
     }
-  })
 
-  if (loading) {
     return (
-      <Container flex={{ justifyContent: 'center' }} className={css.loadingContainer}>
-        <Icon name="steps-spinner" color={Color.GREY_400} size={30} />
-      </Container>
+      <>
+        <LogAnalysis
+          data={logsData}
+          clusterChartData={clusterChartData}
+          filteredAngle={minMaxAngle}
+          logsLoading={logsLoading}
+          logsError={logsError}
+          refetchLogAnalysis={fetchLogAnalysis}
+          refetchClusterAnalysis={fetchClusterAnalysis}
+          clusterChartError={clusterChartError}
+          clusterChartLoading={clusterChartLoading}
+          goToPage={goToLogsPage}
+          handleAngleChange={handleMinMaxChange}
+          startTime={startTime}
+          endTime={endTime}
+          monitoredServiceIdentifier={monitoredServiceIdentifier}
+          isServicePage
+        />
+      </>
     )
   }
-
-  if (error) {
-    return <PageError message={getErrorMessage(error)} onClick={() => refetch()} />
-  }
-
-  if (!data?.resource?.content?.length) {
-    return (
-      <NoDataCard
-        message={getString('cv.monitoredServices.noAvailableData')}
-        image={noDataImage}
-        containerClassName={css.logsAnalysisNoData}
-      />
-    )
-  }
-
-  const { pageSize = 0, totalPages = 0, totalItems = 0, pageIndex = 0 } = data.resource
 
   return (
     <>
-      <LogAnalysisRow data={getLogAnalysisTableData(data.resource.content)} />
-      <Pagination
-        pageSize={pageSize}
-        pageCount={totalPages}
-        itemCount={totalItems}
-        pageIndex={pageIndex}
-        gotoPage={index => refetch({ queryParams: { ...queryParams, page: index } })}
+      <LogFilters
+        clusterTypeFilters={clusterTypeFilters}
+        onFilterChange={handleClustersFilterChange}
+        onHealthSouceChange={handleHealthSourceChange}
+        monitoredServiceIdentifier={monitoredServiceIdentifier}
+        selectedHealthSources={selectedHealthSources}
       />
+      {getContents()}
     </>
   )
 }
-
-const LogAnalysis: React.FC<LogAnalysisProps> = ({ monitoredServiceIdentifier, startTime, endTime }) => {
-  const { getString } = useStrings()
-
-  const [logEvent, setLogEvent] = useState<LogEvents>(LogEvents.UNKNOWN)
-  const [healthSource, setHealthSource] = useState<string>()
-
-  const clusterTypes = getClusterTypes(getString)
-
-  return (
-    <div className={css.container}>
-      <Layout.Horizontal spacing="medium" margin={{ bottom: 'medium' }}>
-        <Select
-          items={clusterTypes}
-          defaultSelectedItem={clusterTypes[2]}
-          className={css.logsAnalysisFilters}
-          inputProps={{ placeholder: getString('pipeline.verification.logs.filterByClusterType') }}
-          onChange={item => setLogEvent(item.value as LogEvents)}
-        />
-        <HealthSourceDropDown
-          onChange={setHealthSource}
-          className={css.logsAnalysisFilters}
-          monitoredServiceIdentifier={monitoredServiceIdentifier}
-          verificationType={VerificationType.LOG}
-        />
-      </Layout.Horizontal>
-
-      <Card className={css.clusterChart}>
-        <Heading level={2} font={{ variation: FontVariation.CARD_TITLE }}>
-          {getString('pipeline.verification.logs.logCluster')}
-        </Heading>
-        <ClusterChartContainer
-          monitoredServiceIdentifier={monitoredServiceIdentifier}
-          startTime={startTime}
-          endTime={endTime}
-          logEvent={logEvent}
-          healthSource={healthSource}
-        />
-      </Card>
-
-      <LogAnalysisContent
-        monitoredServiceIdentifier={monitoredServiceIdentifier}
-        startTime={startTime}
-        endTime={endTime}
-        logEvent={logEvent}
-        healthSource={healthSource}
-      />
-    </div>
-  )
-}
-
-export default LogAnalysis

@@ -211,6 +211,26 @@ exports[`STO side nav tests renders project path 1`] = `
           </a>
           <a
             class="link"
+            href="/account/accountId/sto/orgs/orgIdentifier/projects/projectIdentifier/deployments"
+          >
+            <p
+              class="StyledProps--font StyledProps--main text"
+            >
+              common.purpose.sto.continuous
+            </p>
+          </a>
+          <a
+            class="link"
+            href="/account/accountId/sto/orgs/orgIdentifier/projects/projectIdentifier/pipelines"
+          >
+            <p
+              class="StyledProps--font StyledProps--main text"
+            >
+              pipelines
+            </p>
+          </a>
+          <a
+            class="link"
             href="/account/accountId/sto/orgs/orgIdentifier/projects/projectIdentifier/targets"
           >
             <p

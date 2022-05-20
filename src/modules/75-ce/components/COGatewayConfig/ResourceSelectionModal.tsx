@@ -20,10 +20,10 @@ const modalProps: IDialogProps = {
   style: {
     width: 1000,
     minHeight: 350,
-    borderTop: '5px solid #0091FF',
     padding: 40,
     position: 'relative',
-    overflow: 'hidden'
+    overflow: 'hidden',
+    background: 'var(--primary-bg)'
   }
 }
 const ResourceSelectionModal: React.FC<ResourceSelectionModalProps> = props => {

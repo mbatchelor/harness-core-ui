@@ -21,7 +21,7 @@ import { useParams } from 'react-router-dom'
 import { FontVariation, Color } from '@harness/design-system'
 import cx from 'classnames'
 import { TimeRangeToDays, useLandingDashboardContext } from '@common/factories/LandingDashboardContext'
-import { useStrings } from 'framework/strings'
+import { useStrings, String } from 'framework/strings'
 import { ModuleName } from 'framework/types/ModuleName'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import {
@@ -55,9 +55,17 @@ const renderTooltipForProjectLabel = (
   return (
     <Layout.Vertical padding="medium" spacing="small">
       <Text color={Color.WHITE}>{projectData?.projectInfo?.projectName ?? ''}</Text>
-      <Text icon="union" iconProps={{ color: Color.GREY_300 }} color={Color.GREY_300}>
-        {projectData?.orgInfo?.orgName ?? ''}
-      </Text>
+      {projectData?.orgInfo?.orgName ? (
+        <Layout.Horizontal padding={{ top: 'small' }} flex={{ alignItems: 'center' }}>
+          <Icon name="union" color={Color.GREY_300} margin={{ right: 'xsmall' }} />
+          <Text inline color={Color.GREY_300}>
+            <String stringID="common.org" />
+          </Text>
+          <Text color={Color.GREY_300}>:&nbsp;</Text>
+
+          <Text color={Color.WHITE}>{projectData?.orgInfo?.orgName}</Text>
+        </Layout.Horizontal>
+      ) : undefined}
     </Layout.Vertical>
   )
 }

@@ -101,6 +101,7 @@ export interface FlatValidWebhookFormikValuesInterface {
   target?: string
   targetIdentifier?: string
   pipeline: PipelineInfoConfig
+  resolvedPipeline?: PipelineInfoConfig
   sourceRepo: string
   triggerType: NGTriggerSourceV2['type']
   repoName?: string
@@ -132,6 +133,7 @@ export interface FlatValidScheduleFormikValuesInterface {
   target?: string
   targetIdentifier?: string
   pipeline: PipelineInfoConfig
+  resolvedPipeline?: PipelineInfoConfig
   sourceRepo: string
   triggerType: NGTriggerSourceV2['type']
   expression: string
@@ -148,6 +150,7 @@ export interface FlatValidArtifactFormikValuesInterface {
   selectedArtifact: any
   stageId: string
   pipeline: PipelineInfoConfig
+  resolvedPipeline?: PipelineInfoConfig
 }
 export interface TriggerTypeSourceInterface {
   triggerType: NGTriggerSourceV2['type']

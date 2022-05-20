@@ -6,7 +6,7 @@ exports[`useRbacError testRBACError rbac errors 1`] = `
   padding="small"
   spacing="small"
 >
-  <v
+  <m
     color="grey800"
     font={
       Object {
@@ -26,8 +26,8 @@ exports[`useRbacError testRBACError rbac errors 1`] = `
     >
        pipelines.
     </span>
-  </v>
-  <v
+  </m>
+  <m
     color="grey800"
     font={
       Object {
@@ -36,8 +36,8 @@ exports[`useRbacError testRBACError rbac errors 1`] = `
     }
   >
     rbac.youAreMissingTheFollowingPermission
-  </v>
-  <v
+  </m>
+  <m
     color="grey800"
     font={
       Object {
@@ -56,7 +56,7 @@ exports[`useRbacError testRBACError rbac errors 1`] = `
     <span>
        rbac.in rbac.project "test"
     </span>
-  </v>
+  </m>
 </Layout.Vertical>
 `;
 
@@ -66,7 +66,7 @@ exports[`useRbacError testRBACError rbac errors 2`] = `
   padding="small"
   spacing="small"
 >
-  <v
+  <m
     color="grey800"
     font={
       Object {
@@ -86,8 +86,8 @@ exports[`useRbacError testRBACError rbac errors 2`] = `
     >
        pipelines.
     </span>
-  </v>
-  <v
+  </m>
+  <m
     color="grey800"
     font={
       Object {
@@ -96,8 +96,8 @@ exports[`useRbacError testRBACError rbac errors 2`] = `
     }
   >
     rbac.youAreMissingTheFollowingPermission
-  </v>
-  <v
+  </m>
+  <m
     color="grey800"
     font={
       Object {
@@ -116,7 +116,7 @@ exports[`useRbacError testRBACError rbac errors 2`] = `
     <span>
        rbac.in rbac.accountScope
     </span>
-  </v>
+  </m>
 </Layout.Vertical>
 `;
 
@@ -126,7 +126,7 @@ exports[`useRbacError testRBACError rbac errors 3`] = `
   padding="small"
   spacing="small"
 >
-  <v
+  <m
     color="grey800"
     font={
       Object {
@@ -146,8 +146,8 @@ exports[`useRbacError testRBACError rbac errors 3`] = `
     >
        pipelines.
     </span>
-  </v>
-  <v
+  </m>
+  <m
     color="grey800"
     font={
       Object {
@@ -156,8 +156,8 @@ exports[`useRbacError testRBACError rbac errors 3`] = `
     }
   >
     rbac.youAreMissingTheFollowingPermission
-  </v>
-  <v
+  </m>
+  <m
     color="grey800"
     font={
       Object {
@@ -176,6 +176,6 @@ exports[`useRbacError testRBACError rbac errors 3`] = `
     <span>
        rbac.in rbac.org "testOrg"
     </span>
-  </v>
+  </m>
 </Layout.Vertical>
 `;

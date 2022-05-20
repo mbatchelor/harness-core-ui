@@ -8,10 +8,17 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly checkbox: string
+  readonly createPerspectiveMvs: string
+  readonly createValueContainer: string
   readonly fetchingMoreLoader: string
+  readonly highlight: string
   readonly labelItem: string
+  readonly multiSelectOption: string
   readonly searchBoxContainer: string
   readonly searchCheckBox: string
+  readonly searchText: string
+  readonly searchTextHighlight: string
+  readonly separator: string
   readonly valueContainer: string
   readonly valueFetching: string
 }

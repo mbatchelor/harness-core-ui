@@ -6,9 +6,9 @@
  */
 
 import React, { useState } from 'react'
-import { Container, Layout, Icon, TextInput } from '@wings-software/uicore'
+import { Container, Layout, Icon, TextInput, Text } from '@wings-software/uicore'
 import { Popover, PopoverInteractionKind, Position } from '@blueprintjs/core'
-import { Color } from '@harness/design-system'
+import { Color, FontVariation } from '@harness/design-system'
 import {
   QlceViewFieldIdentifierData,
   ViewFieldIdentifier,
@@ -218,6 +218,8 @@ const OperandSelector: React.FC<OperandSelectorProps> = ({
   setProviderAndIdentifier,
   timeRange
 }) => {
+  const { getString } = useStrings()
+
   const [labelResult] = useFetchPerspectiveFiltersValueQuery({
     variables: {
       filters: [
@@ -265,7 +267,11 @@ const OperandSelector: React.FC<OperandSelectorProps> = ({
       }
     >
       <div className={css.operandSelectorContainer}>
-        {provider?.id && service?.id ? `${provider.name || provider.id} > ${service.name}` : 'Choose Operand'}
+        <Text lineClamp={1} font={{ variation: FontVariation.BODY2 }} color={Color.GREY_500}>
+          {provider?.id && service?.id
+            ? `${provider.name || provider.id} > ${service.name}`
+            : getString('ce.perspectives.createPerspective.filters.chooseOperand')}
+        </Text>
         <Icon name="caret-down" />
       </div>
     </Popover>

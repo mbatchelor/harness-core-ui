@@ -184,7 +184,7 @@ describe('SLOCardHeader', () => {
     setFieldValue({
       container: dialogContainer!,
       type: InputTypes.TEXTFIELD,
-      fieldId: 'errorBudgetIncrementPercentage',
+      fieldId: 'errorBudgetIncrementMinutes',
       value: '0'
     })
 
@@ -196,7 +196,7 @@ describe('SLOCardHeader', () => {
     setFieldValue({
       container: dialogContainer!,
       type: InputTypes.TEXTFIELD,
-      fieldId: 'errorBudgetIncrementPercentage',
+      fieldId: 'errorBudgetIncrementMinutes',
       value: '101'
     })
 
@@ -235,7 +235,7 @@ describe('SLOCardHeader', () => {
     await waitFor(() => {
       expect(onResetErrorBudget).toBeCalledWith(dashboardWidgetsContent.sloIdentifier, {
         errorBudgetAtReset: 100,
-        errorBudgetIncrementPercentage: 101,
+        errorBudgetIncrementMinutes: 101,
         reason: 'REASON',
         remainingErrorBudgetAtReset: 60
       })

@@ -191,7 +191,7 @@ export function RightBar(): JSX.Element {
   }
 
   React.useEffect(() => {
-    if (!isEmpty(codebase?.connectorRef)) {
+    if (!isEmpty(codebase?.connectorRef) && !isRuntimeInput(codebase?.connectorRef)) {
       refetch()
     }
   }, [codebase?.connectorRef])

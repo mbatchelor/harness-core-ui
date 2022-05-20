@@ -9,8 +9,7 @@ import React, { useMemo, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import type { Column } from 'react-table'
 import { get } from 'lodash-es'
-import { Position } from '@blueprintjs/core'
-import { Container, Layout, Pagination, Text, TableV2 } from '@harness/uicore'
+import { Container, Layout, Pagination, Text, TableV2, FontVariation, Color } from '@harness/uicore'
 import { Intent } from '@harness/design-system'
 import {
   EnvironmentResponseDTO,
@@ -19,7 +18,6 @@ import {
   useGetEnvironmentListForProject
 } from 'services/cd-ng'
 import { useToaster } from '@common/exports'
-import { IdentifierText } from '@cf/components/IdentifierText/IdentifierText'
 import { CF_DEFAULT_PAGE_SIZE } from '@cf/utils/CFUtils'
 import { EnvironmentType } from '@common/constants/EnvironmentType'
 import { useConfirmAction } from '@common/hooks/useConfirmAction'
@@ -33,7 +31,7 @@ import { withTableData } from '@cf/utils/table-utils'
 import RbacOptionsMenuButton from '@rbac/components/RbacOptionsMenuButton/RbacOptionsMenuButton'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import css from './EnvironmentsPage.module.scss'
+import css from '@cf/pages/environments/EnvironmentsPage.module.scss'
 
 type EnvData = { environment: EnvironmentResponseDTO }
 const withEnvironment = withTableData<EnvironmentResponseDTO, EnvData>(({ row }) => ({ environment: row.original }))
@@ -52,55 +50,27 @@ export const TypeCell = withEnvironment(({ environment }) => {
 
 export const NameCell = withEnvironment(({ environment }) => {
   const { getString } = useEnvStrings()
-  const tags = Object.entries(environment.tags ?? {}).reduce(
-    (acc: Array<{ name: string; value: string }>, [key, value]: [string, string]) => {
-      return [...acc, { name: key, value: value }]
-    },
-    [] as Array<{ name: string; value: string }>
-  )
   return (
     <Layout.Horizontal
+      className={css.mediumMaxWidth}
       flex={{ distribution: 'space-between', align: 'center-center' }}
       padding={{ left: 'small', right: 'small' }}
-      style={{ maxWidth: 'calc(100% - var(--spacing-medium))' }}
     >
-      <Layout.Vertical spacing="xsmall" style={{ maxWidth: 'calc(100% - 100px)' }}>
-        <Text style={{ color: '#22222A', fontWeight: 500 }}>{environment.name}</Text>
+      <Layout.Vertical className={css.calcMaxWidth} spacing="xsmall">
+        <Text style={{ color: Color.BLACK, font: FontVariation.BODY2 }}>{environment.name}</Text>
 
         {environment.description && (
           <Container>
-            <Text style={{ color: '#6B6D85', fontSize: '12px', lineHeight: '18px' }}>{environment.description}</Text>
+            <Text style={{ font: FontVariation.SMALL, color: Color.GREY_600 }}>{environment.description}</Text>
           </Container>
         )}
 
         <Container padding={{ top: 'xsmall' }} margin={{ bottom: 'xsmall' }}>
-          <IdentifierText identifier={environment.identifier} inline style={{ padding: 'var(--spacing-xsmall)' }} />
+          <Text style={{ font: FontVariation.SMALL, color: Color.GREY_600 }}>
+            {getString('cf.environments.environmentID')} {environment.identifier}
+          </Text>
         </Container>
       </Layout.Vertical>
-      <Layout.Horizontal>
-        <Text
-          width={100}
-          flex
-          icon="main-tags"
-          style={{ justifyContent: 'center' }}
-          tooltip={
-            tags.length ? (
-              <>
-                <Text>{getString('tagsLabel').toUpperCase()}</Text>
-                {tags.map((elem, i) => (
-                  <Text key={`${elem.value}-${i}`}>{elem.name}</Text>
-                ))}
-              </>
-            ) : undefined
-          }
-          tooltipProps={{
-            portalClassName: css.tagsPopover,
-            position: Position.RIGHT
-          }}
-        >
-          {tags.length}
-        </Text>
-      </Layout.Horizontal>
     </Layout.Horizontal>
   )
 })
@@ -213,22 +183,25 @@ const EnvironmentsPage: React.FC = () => {
   const columns: CustomColumn<EnvironmentResponseDTO>[] = useMemo(
     () => [
       {
-        Header: getString('environment').toUpperCase(),
+        Header: getString('environment'),
+        font: FontVariation.TABLE_HEADERS,
         id: 'name',
-        width: '75%',
+        width: '40%',
         accessor: 'name',
         Cell: NameCell
       },
       {
-        Header: getString('typeLabel').toUpperCase(),
+        Header: getString('typeLabel'),
+        font: FontVariation.TABLE_HEADERS,
         id: 'type',
         accessor: 'type',
-        width: '15%',
+        width: '40%',
         Cell: TypeCell
       },
       {
         id: 'modifiedBy',
-        width: '10%',
+        font: FontVariation.TABLE_HEADERS,
+        width: '20%',
         Cell: ModifiedByCell,
         actions: {
           onEdit: handleEdit,

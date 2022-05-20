@@ -50,7 +50,7 @@ const ResourceTypeList: React.FC<ResourceTypeListProps> = props => {
   return (
     <Layout.Vertical flex spacing="small" className={css.resourceTypeList}>
       <Layout.Horizontal flex className={css.resourcePicker} padding={{ bottom: 'small' }}>
-        <Text font={{ variation: FontVariation.H6 }} color={Color.GREY_800}>
+        <Text font={{ variation: FontVariation.H5 }} color={Color.GREY_800}>
           {getString('resources')}
         </Text>
 

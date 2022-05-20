@@ -419,11 +419,11 @@ function getMetricPackDTO(
 }
 
 export function generateCustomMetricPack(): ReturnType<typeof useGetMetricPacks> {
-  const categories: MetricPackDTO['category'][] = ['ERRORS', 'INFRASTRUCTURE', 'PERFORMANCE']
+  const categories: MetricPackDTO['category'][] = ['Errors', 'Infrastructure', 'Performance']
   const packs: MetricPackDTO[] = []
   for (const category of categories) {
     switch (category) {
-      case 'ERRORS':
+      case 'Errors':
         packs.push(
           getMetricPackDTO('Errors', 'Errors' as MetricPackDTO['category'], [
             {
@@ -435,7 +435,7 @@ export function generateCustomMetricPack(): ReturnType<typeof useGetMetricPacks>
           ])
         )
         break
-      case 'INFRASTRUCTURE':
+      case 'Infrastructure':
         packs.push(
           getMetricPackDTO('Infrastructure', 'Infrastructure' as MetricPackDTO['category'], [
             {
@@ -447,7 +447,7 @@ export function generateCustomMetricPack(): ReturnType<typeof useGetMetricPacks>
           ])
         )
         break
-      case 'PERFORMANCE':
+      case 'Performance':
         packs.push(
           getMetricPackDTO('Performance', 'Performance' as MetricPackDTO['category'], [
             {

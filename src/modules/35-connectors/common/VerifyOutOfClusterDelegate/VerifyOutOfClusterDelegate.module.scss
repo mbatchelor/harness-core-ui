@@ -41,8 +41,9 @@
   border-radius: 4px;
   padding: var(--spacing-small);
   max-width: calc(100% - 30px);
-  overflow-x: scroll;
-  margin-bottom: var(--spacing-large);
+  max-height: 230px;
+  overflow: scroll;
+  margin-bottom: var(--spacing-small);
 }
 
 .subHeading {
@@ -67,8 +68,8 @@
   min-height: 460px;
 }
 .errorResult {
-  > span {
-    max-width: calc(100% - 120px);
+  > button {
+    min-width: 134px;
   }
 }
 .stepError {

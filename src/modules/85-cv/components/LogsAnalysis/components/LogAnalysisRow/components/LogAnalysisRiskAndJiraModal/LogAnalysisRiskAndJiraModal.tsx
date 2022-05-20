@@ -6,6 +6,7 @@
  */
 
 import React, { useState, useCallback, useMemo } from 'react'
+import { isEmpty } from 'lodash-es'
 import { Container, Heading, Button, Text, Icon, PageError } from '@wings-software/uicore'
 import { Drawer } from '@blueprintjs/core'
 import { Color, FontVariation } from '@harness/design-system'
@@ -70,7 +71,7 @@ export function LogAnalysisRiskAndJiraModal(props: LogAnalysisRiskAndJiraModalPr
       )
     }
 
-    if (logsError) {
+    if (logsError && isEmpty(rowData)) {
       return (
         <Container className={css.messageContainer} data-testid="LogAnalysisRiskAndJiraModal_error">
           <PageError message={getErrorMessage(logsError)} onClick={retryLogsCall} />

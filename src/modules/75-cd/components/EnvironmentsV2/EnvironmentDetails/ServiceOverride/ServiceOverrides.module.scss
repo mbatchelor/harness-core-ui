@@ -1,0 +1,290 @@
+/*
+ * Copyright 2021 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.custom-variables {
+  position: relative;
+  &:nth-child(1) {
+    margin-top: -18px !important;
+  }
+  .header-row {
+    display: inline-flex;
+    transform: translateY(-44px);
+    margin-left: 82%;
+    width: 200px;
+    height: 0;
+    :global(.bp3-button) {
+      margin-top: var(--spacing-medium);
+    }
+  }
+
+  .subHeader {
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-columns: repeat(2, minmax(10px, 1fr));
+    align-items: baseline;
+    margin: var(--spacing-medium) 0 var(--spacing-large) 0;
+    text-transform: uppercase;
+  }
+
+  .value-row {
+    display: grid;
+    align-items: center;
+    height: 32px;
+    grid-template-columns: 264px 1fr;
+    column-gap: var(--spacing-xsmall);
+
+    & :global(.bp3-form-group) {
+      width: 100%;
+      margin: 0;
+    }
+
+    & :global(.MultiTypeInput--btn) {
+      width: 28px !important;
+    }
+    .runtimeInputButton {
+      top: 0px !important;
+      height: 22px !important;
+      border: solid 1px var(--grey-200) !important;
+    }
+
+    input[type='number']::-webkit-inner-spin-button,
+    input[type='number']::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    input[type='number'] {
+      -moz-appearance: textfield;
+    }
+  }
+
+  .variable-list-table {
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-columns: repeat(2, minmax(10px, 1fr));
+    align-items: baseline;
+    border-bottom: solid 1px var(--grey-200);
+    position: relative;
+    &:before {
+      position: absolute;
+      width: 100%;
+      bottom: -1px;
+      content: '';
+      border-bottom: solid 1px var(--grey-200);
+      height: 1px;
+      left: 100%;
+    }
+    &:after {
+      position: absolute;
+      width: 100%;
+      bottom: -1px;
+      content: '';
+      border-bottom: solid 1px var(--grey-200);
+      height: 1px;
+      right: 100%;
+    }
+    :global(.TextInput--main) {
+      margin-bottom: 0;
+    }
+  }
+
+  .configureButton {
+    width: 38px;
+    align-items: end;
+    padding-right: 4px;
+    display: grid;
+    justify-content: center;
+    :global(.bp3-button) {
+      margin-top: -5px;
+      color: var(--grey-450) !important;
+    }
+  }
+  .actionButtons {
+    display: grid;
+    grid-template-columns: repeat(3, 30px);
+
+    section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+    button {
+      margin-left: var(--spacing-small);
+      border-radius: var(--spacing-xxlarge) !important;
+      padding: 0 !important;
+      vertical-align: initial;
+    }
+  }
+}
+
+.secret-container {
+  position: relative;
+  padding: var(--spacing-large) 0 0;
+  .fixed {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+  .icon {
+    cursor: pointer;
+  }
+}
+
+.service-overrides {
+  margin-top: var(--spacing-medium);
+
+  .table-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 3fr;
+    column-gap: var(--spacing-8);
+    margin-bottom: var(--spacing-medium);
+    align-items: baseline;
+
+    & :global(.bp3-form-group) {
+      margin: 0;
+    }
+
+    .value-string {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    .value-column {
+      display: grid;
+      grid-template-columns: 1fr 90px;
+      &[data-type='RUNTIME'] {
+        grid-template-columns: 1fr 32px 90px;
+      }
+    }
+
+    .actionButtons {
+      display: flex;
+      justify-content: flex-end;
+      column-gap: var(--spacing-xsmall);
+    }
+
+    &:last-of-type,
+    &.header-row {
+      padding-bottom: var(--spacing-medium);
+      border-bottom: 1px solid var(--grey-100);
+    }
+
+    &.header-row {
+      font-style: normal;
+      font-weight: 600;
+      font-size: var(--font-size-xsmall);
+      letter-spacing: 0.2px;
+      color: var(--grey-600);
+      text-transform: uppercase;
+    }
+  }
+}
+
+.tooltip {
+  display: block;
+  padding: var(--spacing-small);
+}
+
+.buttonsActions {
+  &:hover path {
+    stroke: var(--primary-6) !important;
+  }
+}
+
+.custom-variables-input-sets {
+  padding: var(--spacing-large);
+  margin: 0 var(--spacing-large);
+  background-color: var(--white);
+  border: 1px solid var(--grey-200);
+  border-radius: var(--spacing-2);
+
+  .variable-list-table {
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-columns: repeat(3, minmax(10px, 1fr));
+    align-items: baseline;
+    margin-top: var(--spacing-small);
+    column-gap: var(--spacing-xsmall);
+
+    & > p {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+}
+.selectedSearchText {
+  background-color: var(--yellow-300);
+}
+.selectedSearchTextValueRow {
+  :global(.bp3-form-group) {
+    border: solid 2px var(--yellow-300) !important;
+  }
+
+  &:global(.selected-search-text) {
+    :global(.bp3-form-group) {
+      border: solid 2px var(--orange-400) !important;
+    }
+  }
+}
+
+.currentSelection {
+  background-color: var(--orange-400);
+  padding: 0px 2px;
+}
+
+.copyTextRow {
+  width: 300px;
+  margin: var(--spacing-small) 0;
+
+  :global {
+    .bp3-form-group {
+      margin: 0;
+    }
+  }
+}
+
+.copyTextInput {
+  input[type='text'] {
+    height: 22px !important;
+
+    &:hover {
+      border-color: var(--primary-6) !important;
+    }
+  }
+}
+
+.copyTextPopoverWrapper {
+  position: absolute;
+  right: 1px;
+  top: 1px;
+  bottom: 1px;
+
+  &::before {
+    height: 20px !important;
+  }
+
+  &::after {
+    height: 20px !important;
+  }
+
+  :global {
+    .bp3-button {
+      height: 20px !important;
+    }
+  }
+}
+
+.variableNameCell {
+  background: var(--primary-bg) !important;
+  box-sizing: border-box;
+  width: 300px;
+  border-radius: var(--spacing-2);
+}
+
+.hoveredRow {
+  background-color: var(--primary-1);
+}

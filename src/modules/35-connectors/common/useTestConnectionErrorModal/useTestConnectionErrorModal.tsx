@@ -13,12 +13,15 @@ import { Dialog, IDialogProps } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 import { removeErrorCode } from '@connectors/pages/connectors/utils/ConnectorUtils'
-import type { ConnectorValidationResult, ResponseMessage } from 'services/cd-ng'
+import type { ConnectorInfoDTO, ConnectorValidationResult, ResponseMessage } from 'services/cd-ng'
 import type { ErrorMessage } from '@connectors/pages/connectors/views/ConnectorsListView'
+import Suggestions from '../ErrorSuggestions/ErrorSuggestionsCe'
 import css from './useTestConnectionErrorModal.module.scss'
 
 export interface UseTestConnectionErrorModalProps {
   onClose?: () => void
+  connectorInfo?: ConnectorInfoDTO
+  showCustomErrorSuggestion?: boolean
 }
 
 export interface UseTestConnectionErrorModalReturn {
@@ -50,7 +53,21 @@ const useTestConnectionErrorModal = (props: UseTestConnectionErrorModalProps): U
             {getString('errorDetails')}
           </Text>
           {error?.useErrorHandler ? (
-            <ErrorHandler responseMessages={error.errors as ResponseMessage[]} />
+            <ErrorHandler
+              responseMessages={error.errors as ResponseMessage[]}
+              errorHintsRenderer={
+                props.showCustomErrorSuggestion
+                  ? hints => (
+                      <Suggestions
+                        items={hints as ResponseMessage[]}
+                        header={getString('common.errorHandler.tryTheseSuggestions')}
+                        icon={'lightbulb'}
+                        connectorType={props.connectorInfo?.type || ''}
+                      />
+                    )
+                  : undefined
+              }
+            />
           ) : (
             <Container>
               <Text

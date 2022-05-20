@@ -7,28 +7,29 @@
 
 import React from 'react'
 import {
-  Label,
+  Container,
   FormInput,
-  MultiTypeInputType,
-  Icon,
-  Layout,
-  Text,
   getMultiTypeFromValue,
-  Container
+  Icon,
+  Label,
+  Layout,
+  MultiTypeInputType,
+  Text
 } from '@wings-software/uicore'
 import { connect } from 'formik'
 import { Color, FontVariation } from '@harness/design-system'
-import { get, set, isEmpty, pickBy, identity, isNil, defaultTo } from 'lodash-es'
+import { defaultTo, get, identity, isEmpty, isNil, pickBy, set } from 'lodash-es'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
+import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import type {
   DeploymentStageConfig,
-  ServiceSpec,
   ExecutionWrapperConfig,
-  ServiceConfig,
-  PipelineInfrastructure,
   Infrastructure,
+  PipelineInfrastructure,
+  ServiceConfig,
+  ServiceSpec,
   StageOverridesConfig,
   StepElementConfig
 } from 'services/cd-ng'
@@ -57,6 +58,8 @@ import {
   infraDefinitionTypeMapping
 } from '@pipeline/utils/stageHelpers'
 import type { K8sDirectInfraYaml } from 'services/ci'
+import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
+import { Scope } from '@common/interfaces/SecretsInterface'
 import factory from '../PipelineSteps/PipelineStepFactory'
 import { StepType } from '../PipelineSteps/PipelineStepInterface'
 import { CollapseForm } from './CollapseForm'
@@ -431,13 +434,9 @@ export function StageInputSetFormInternal({
   const { expressions } = useVariablesExpression()
   const isPropagating = deploymentStage?.serviceConfig?.useFromStage
   const gitScope = useGitScope()
-
-  const { accountId, projectIdentifier, orgIdentifier } = useParams<{
-    projectIdentifier: string
-    orgIdentifier: string
-    accountId: string
-  }>()
-
+  const params = useParams<ProjectPathProps>()
+  const { accountId, projectIdentifier, orgIdentifier } = params
+  const scope = getScopeFromDTO(params)
   const containerSecurityContextFields = ['containerSecurityContext', 'runAsUser']
   const deploymentStageTemplateInfraKeys = Object.keys((deploymentStageTemplate.infrastructure as any)?.spec || {})
   const hasContainerSecurityContextFields = containerSecurityContextFields.some(field =>
@@ -616,6 +615,23 @@ export function StageInputSetFormInternal({
     [expressions]
   )
 
+  React.useEffect(() => {
+    if (scope !== Scope.PROJECT) {
+      if (
+        deploymentStageTemplate?.serviceConfig?.serviceRef &&
+        deploymentStageInputSet?.serviceConfig?.serviceRef !== RUNTIME_INPUT_VALUE
+      ) {
+        formik?.setValues(set(formik?.values, `${path}.serviceConfig.serviceRef`, RUNTIME_INPUT_VALUE))
+      }
+      if (
+        deploymentStageTemplate?.infrastructure?.environmentRef &&
+        deploymentStageInputSet?.infrastructure?.environmentRef !== RUNTIME_INPUT_VALUE
+      ) {
+        formik?.setValues(set(formik?.values, `${path}.infrastructure.environmentRef`, RUNTIME_INPUT_VALUE))
+      }
+    }
+  }, [])
+
   return (
     <>
       {deploymentStageTemplate.serviceConfig && (
@@ -631,7 +647,7 @@ export function StageInputSetFormInternal({
                 stepViewType={viewType}
                 path={`${path}.serviceConfig`}
                 allowableTypes={allowableTypes}
-                readonly={readonly}
+                readonly={readonly || scope !== Scope.PROJECT}
                 customStepProps={{ stageIdentifier }}
               />
             )}
@@ -969,7 +985,7 @@ export function StageInputSetFormInternal({
                 stepViewType={viewType}
                 allowableTypes={allowableTypes}
                 path={`${path}.infrastructure`}
-                readonly={readonly}
+                readonly={readonly || scope !== Scope.PROJECT}
               />
             )}
             {deploymentStageTemplate.infrastructure.infrastructureDefinition && (

@@ -61,7 +61,7 @@ function TooltipContent({ description, stepsFactory, stepData }: StepTooltipCont
   return null
 }
 
-export const StepPopover: React.FC<StepPopoverProps> = props => {
+export function StepPopover(props: StepPopoverProps): React.ReactElement {
   const { stepData, stepsFactory, popoverProps, className } = props
   if (stepData && !isEmpty(stepData)) {
     const step = stepsFactory.getStep(stepData.type)

@@ -10,7 +10,8 @@ import { useLocation, useParams } from 'react-router-dom'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import type { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { useGetPipeline } from 'services/pipeline-ng'
-
+import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
+import { SavedExecutionViewTypes } from '@pipeline/components/LogsContent/LogsContent'
 import ExecutionGraphView from './ExecutionGraphView/ExecutionGraphView'
 import ExecutionLogView from './ExecutionLogView/ExecutionLogView'
 
@@ -27,9 +28,14 @@ export default function ExecutionPipelineView(): React.ReactElement {
 
   const location = useLocation()
   const queryParams = new URLSearchParams(location.search)
-
+  const { preference: savedExecutionView } = usePreferenceStore<string | undefined>(
+    PreferenceScope.USER,
+    'executionViewType'
+  )
+  const initialSelectedView = savedExecutionView || SavedExecutionViewTypes.GRAPH
   const view = queryParams.get('view')
-  const isLogView = view === 'log'
+  const isLogView =
+    view === SavedExecutionViewTypes.LOG || (!view && initialSelectedView === SavedExecutionViewTypes.LOG)
 
   // Get pipeline data to check if it is valid
   const { data: pipelineResponse } = useGetPipeline({

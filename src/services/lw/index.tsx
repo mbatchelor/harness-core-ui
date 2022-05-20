@@ -391,6 +391,7 @@ export interface Opts {
   access_details?: { [key: string]: any }
   always_use_private_ip?: boolean
   delete_cloud_resources?: boolean
+  dry_run?: boolean
   hide_progress_page?: boolean
   preserve_private_ip?: boolean
 }
@@ -721,6 +722,15 @@ export interface Subnet {
   name?: string
 }
 
+export interface Tags {
+  key?: string
+  values?: string[]
+}
+
+export interface TagsResponse {
+  response?: Tags[]
+}
+
 export interface TargetGroupMinimal {
   id?: string
   name?: string
@@ -772,6 +782,10 @@ export interface TimeSchedule {
      */
     start?: string
   }
+}
+
+export interface ToggleRuleModeDetails {
+  id?: number
 }
 
 export interface ValidateSchedulesBody {
@@ -1300,6 +1314,7 @@ export const useAccessPointRules = ({ account_id, lb_id, ...props }: UseAccessPo
 export interface GetServicesQueryParams {
   accountIdentifier: string
   value?: string
+  dry_run?: boolean
 }
 
 export interface GetServicesPathParams {
@@ -1386,6 +1401,7 @@ export const useSaveService = ({ account_id, ...props }: UseSaveServiceProps) =>
 
 export interface CumulativeServiceSavingsQueryParams {
   accountIdentifier: string
+  dry_run?: boolean
 }
 
 export interface CumulativeServiceSavingsPathParams {
@@ -1869,6 +1885,54 @@ export const useGetServiceStats = ({ account_id, rule_id, ...props }: UseGetServ
   useGet<ServiceStatsResponse, void, GetServiceStatsQueryParams, GetServiceStatsPathParams>(
     (paramsInPath: GetServiceStatsPathParams) =>
       `/accounts/${paramsInPath.account_id}/autostopping/rules/${paramsInPath.rule_id}/stats`,
+    { base: getConfig('lw/api'), pathParams: { account_id, rule_id }, ...props }
+  )
+
+export interface ToggleRuleModeQueryParams {
+  accountIdentifier: string
+}
+
+export interface ToggleRuleModePathParams {
+  account_id: string
+  rule_id: number
+}
+
+export type ToggleRuleModeProps = Omit<
+  MutateProps<void, void, ToggleRuleModeQueryParams, ToggleRuleModeDetails, ToggleRuleModePathParams>,
+  'path' | 'verb'
+> &
+  ToggleRuleModePathParams
+
+/**
+ * Toggle rule mode from/to dryn_run_mode
+ *
+ * Toggle rule mode from/to dryn_run_mode
+ */
+export const ToggleRuleMode = ({ account_id, rule_id, ...props }: ToggleRuleModeProps) => (
+  <Mutate<void, void, ToggleRuleModeQueryParams, ToggleRuleModeDetails, ToggleRuleModePathParams>
+    verb="POST"
+    path={`/accounts/${account_id}/autostopping/rules/${rule_id}/toggle_dry_run`}
+    base={getConfig('lw/api')}
+    {...props}
+  />
+)
+
+export type UseToggleRuleModeProps = Omit<
+  UseMutateProps<void, void, ToggleRuleModeQueryParams, ToggleRuleModeDetails, ToggleRuleModePathParams>,
+  'path' | 'verb'
+> &
+  ToggleRuleModePathParams
+
+/**
+ * Toggle rule mode from/to dryn_run_mode
+ *
+ * Toggle rule mode from/to dryn_run_mode
+ */
+export const useToggleRuleMode = ({ account_id, rule_id, ...props }: UseToggleRuleModeProps) =>
+  useMutate<void, void, ToggleRuleModeQueryParams, ToggleRuleModeDetails, ToggleRuleModePathParams>(
+    'POST',
+    (paramsInPath: ToggleRuleModePathParams) =>
+      `/accounts/${paramsInPath.account_id}/autostopping/rules/${paramsInPath.rule_id}/toggle_dry_run`,
     { base: getConfig('lw/api'), pathParams: { account_id, rule_id }, ...props }
   )
 
@@ -3249,5 +3313,52 @@ export type UseGetMachineListForZoneProps = Omit<
 export const useGetMachineListForZone = ({ account_id, ...props }: UseGetMachineListForZoneProps) =>
   useGet<GetMachineListForZoneResponse, unknown, GetMachineListForZoneQueryParams, GetMachineListForZonePathParams>(
     (paramsInPath: GetMachineListForZonePathParams) => `accounts/${paramsInPath.account_id}/machine_types`,
+    { base: getConfig('lw/api'), pathParams: { account_id }, ...props }
+  )
+
+export interface GetInstancesTagsQueryParams {
+  accountIdentifier: string
+  cloud_account_id: string
+  routingId: string
+  filter?: string
+}
+
+export interface GetInstancesTagsPathParams {
+  account_id: string
+}
+
+export type GetInstancesTagsProps = Omit<
+  GetProps<TagsResponse, unknown, GetInstancesTagsQueryParams, GetInstancesTagsPathParams>,
+  'path'
+> &
+  GetInstancesTagsPathParams
+
+/**
+ * Fetches all the tags associated with instances
+ *
+ * Fetches all the tags (key and values) associated with instances
+ */
+export const GetInstancesTags = ({ account_id, ...props }: GetInstancesTagsProps) => (
+  <Get<TagsResponse, unknown, GetInstancesTagsQueryParams, GetInstancesTagsPathParams>
+    path={`accounts/${account_id}/tags`}
+    base={getConfig('lw/api')}
+    {...props}
+  />
+)
+
+export type UseGetInstancesTagsProps = Omit<
+  UseGetProps<TagsResponse, unknown, GetInstancesTagsQueryParams, GetInstancesTagsPathParams>,
+  'path'
+> &
+  GetInstancesTagsPathParams
+
+/**
+ * Fetches all the tags associated with instances
+ *
+ * Fetches all the tags (key and values) associated with instances
+ */
+export const useGetInstancesTags = ({ account_id, ...props }: UseGetInstancesTagsProps) =>
+  useGet<TagsResponse, unknown, GetInstancesTagsQueryParams, GetInstancesTagsPathParams>(
+    (paramsInPath: GetInstancesTagsPathParams) => `accounts/${paramsInPath.account_id}/tags`,
     { base: getConfig('lw/api'), pathParams: { account_id }, ...props }
   )

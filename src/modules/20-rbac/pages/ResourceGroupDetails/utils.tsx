@@ -6,7 +6,6 @@
  */
 
 import produce from 'immer'
-import type { SelectOption } from '@wings-software/uicore'
 import { RbacResourceGroupTypes } from '@rbac/constants/utils'
 import type { ResourceType } from '@rbac/interfaces/ResourceType'
 import { isDynamicResourceSelector, SelectionType } from '@rbac/utils/utils'
@@ -24,6 +23,10 @@ import type { UseStringsReturn } from 'framework/strings'
 import RbacFactory from '@rbac/factories/RbacFactory'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 
+interface Option {
+  label: string
+  value: string
+}
 export enum SelectorScope {
   CURRENT = 'CURRENT',
   INCLUDE_CHILD_SCOPES = 'INCLUDE_CHILD_SCOPES',
@@ -159,31 +162,42 @@ export const computeResourceMapOnMultiChange = (
   }
 }
 
-export const getScopeLabelFromApi = (
+export const getSelectedScopeLabel = (
   getString: UseStringsReturn['getString'],
-  scope: Scope,
-  resourceGroup: ResourceGroupV2
+  resourceGroupScope: Scope,
+  scopes: ScopeSelector[],
+  includeCustomScope = false
 ): string => {
-  const selectorScope = getScopeType(resourceGroup)
-  const dropDownItems = getScopeDropDownItems(scope, getString)
+  const selectorScope = getSelectedScopeType(resourceGroupScope, scopes)
+  const dropDownItems = getScopeDropDownItems(resourceGroupScope, getString, includeCustomScope)
   const option = dropDownItems.filter(item => item.value === selectorScope)
   return option.length ? option[0].label : ''
 }
 
-export const getScopeDropDownItems = (scope: Scope, getString: UseStringsReturn['getString']): SelectOption[] => {
+export const getScopeDropDownItems = (
+  scope: Scope,
+  getString: UseStringsReturn['getString'],
+  includeCustomScope = false
+): Option[] => {
   switch (scope) {
     case Scope.PROJECT:
       return [{ label: getString('rbac.scopeItems.projectOnly'), value: SelectorScope.CURRENT }]
     case Scope.ORG:
       return [
         { label: getString('rbac.scopeItems.orgOnly'), value: SelectorScope.CURRENT },
-        { label: getString('rbac.scopeItems.orgAll'), value: SelectorScope.INCLUDE_CHILD_SCOPES }
+        { label: getString('rbac.scopeItems.orgAll'), value: SelectorScope.INCLUDE_CHILD_SCOPES },
+        ...(includeCustomScope
+          ? [{ label: getString('rbac.scopeItems.specificProjects'), value: SelectorScope.CUSTOM }]
+          : [])
       ]
     case Scope.ACCOUNT:
     default:
       return [
         { label: getString('rbac.scopeItems.accountOnly'), value: SelectorScope.CURRENT },
-        { label: getString('rbac.scopeItems.accountAll'), value: SelectorScope.INCLUDE_CHILD_SCOPES }
+        { label: getString('rbac.scopeItems.accountAll'), value: SelectorScope.INCLUDE_CHILD_SCOPES },
+        ...(includeCustomScope
+          ? [{ label: getString('rbac.scopeItems.specificOrgsAndProjects'), value: SelectorScope.CUSTOM }]
+          : [])
       ]
   }
 }
@@ -195,9 +209,18 @@ export const getSelectionType = (resourceGroup?: ResourceGroupV2): SelectionType
   return SelectionType.SPECIFIED
 }
 export const getScopeType = (resourceGroup?: ResourceGroupV2): SelectorScope => {
-  if (resourceGroup?.includedScopes?.length) {
-    for (const scope of resourceGroup?.includedScopes) {
-      if (getScopeFromDTO(resourceGroup) === getScopeFromDTO(scope)) {
+  return resourceGroup
+    ? getSelectedScopeType(getScopeFromDTO(resourceGroup), resourceGroup?.includedScopes)
+    : SelectorScope.CURRENT
+}
+
+export const getSelectedScopeType = (scopeOfResourceGroup: Scope, scopes?: ScopeSelector[]): SelectorScope => {
+  if (scopes?.length) {
+    if (scopes.length > 1) {
+      return SelectorScope.CUSTOM
+    }
+    for (const scope of scopes) {
+      if (scopeOfResourceGroup === getScopeFromDTO(scope)) {
         return scope.filter === 'INCLUDING_CHILD_SCOPES' ? SelectorScope.INCLUDE_CHILD_SCOPES : SelectorScope.CURRENT
       } else {
         return SelectorScope.CUSTOM
@@ -226,7 +249,7 @@ export const getFormattedDataForApi = (
               resources: resourceSelectors,
               includeAllResources: false
             },
-      includedScopes: includedScopes === [] ? getIncludedScopes(SelectorScope.CURRENT, data) : includedScopes
+      includedScopes: includedScopes
     }
   }
 }
@@ -247,6 +270,22 @@ export const getFilteredResourceTypes = (
     }
     return acc
   }, [])
+}
+
+export const includeCustomProjects = (orgScopes?: ScopeSelector[]): boolean => {
+  return orgScopes?.filter(item => item.filter === 'EXCLUDING_CHILD_SCOPES' || !!item.projectIdentifier).length !== 0
+}
+
+export const includeProjects = (orgScopes?: ScopeSelector[]): boolean => {
+  return orgScopes?.filter(item => item.filter === 'INCLUDING_CHILD_SCOPES' || !!item.projectIdentifier).length !== 0
+}
+
+export const getAllProjects = (orgScopes?: ScopeSelector[]): string[] => {
+  return (
+    orgScopes
+      ?.filter(item => item.filter === 'EXCLUDING_CHILD_SCOPES' && !!item.projectIdentifier)
+      .map(item => item.projectIdentifier || '') || []
+  )
 }
 
 export const cleanUpResourcesMap = (
@@ -290,29 +329,6 @@ export const getDefaultIncludedScope = (
   ]
 }
 
-export const getIncludedScopes = (type: SelectorScope, resourceGroup: ResourceGroupV2): ScopeSelector[] => {
-  const { accountIdentifier, orgIdentifier, projectIdentifier } = resourceGroup
-  switch (type) {
-    case SelectorScope.CUSTOM:
-      //Replace with custom scope once it is added
-      return []
-    case SelectorScope.INCLUDE_CHILD_SCOPES:
-      return [
-        {
-          accountIdentifier,
-          orgIdentifier,
-          projectIdentifier,
-          filter: 'INCLUDING_CHILD_SCOPES'
-        }
-      ]
-    default:
-      return [
-        {
-          accountIdentifier,
-          orgIdentifier,
-          projectIdentifier,
-          filter: 'EXCLUDING_CHILD_SCOPES'
-        }
-      ]
-  }
+export const includesCurrentScope = (scopes: ScopeSelector[], resourceScope: Scope): boolean => {
+  return !!scopes.find(scope => getScopeFromDTO(scope) === resourceScope && scope.filter === 'EXCLUDING_CHILD_SCOPES')
 }

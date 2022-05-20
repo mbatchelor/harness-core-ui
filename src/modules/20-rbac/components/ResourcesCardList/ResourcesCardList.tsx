@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Container, Layout, Page } from '@harness/uicore'
+import { Color, Container, Layout, Page, Text } from '@harness/uicore'
 import { defaultTo } from 'lodash-es'
 import ResourcesCard from '@rbac/components/ResourcesCard/ResourcesCard'
 import { useStrings } from 'framework/strings'
@@ -58,6 +58,9 @@ const ResourcesCardList: React.FC<ResourcesCardListProps> = ({
         }
       }
     >
+      <Text color={Color.GREY_900} padding={{ bottom: 'medium' }}>
+        {getString('rbac.resourceGroup.resourceFilterSelection')}
+      </Text>
       {Array.from(selectedResourcesMap.keys()).length === 0 && (
         <Page.NoDataCard
           message={getString('rbac.resourceGroup.dragAndDropData')}

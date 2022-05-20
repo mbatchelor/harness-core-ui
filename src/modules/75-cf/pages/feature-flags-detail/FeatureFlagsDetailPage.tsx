@@ -18,7 +18,7 @@ import FlagActivation from '@cf/components/FlagActivation/FlagActivation'
 import FlagActivationDetails from '@cf/components/FlagActivation/FlagActivationDetails'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import GitSyncActions from '@cf/components/GitSyncActions/GitSyncActions'
-import { useGitSync } from '@cf/hooks/useGitSync'
+import { useFFGitSyncContext } from '@cf/contexts/ff-git-sync-context/FFGitSyncContext'
 import css from './FeatureFlagsDetailPage.module.scss'
 
 const FeatureFlagsDetailPage: React.FC = () => {
@@ -61,7 +61,7 @@ const FeatureFlagsDetailPage: React.FC = () => {
     }
   }, [governanceMetadata])
 
-  const gitSync = useGitSync()
+  const gitSync = useFFGitSyncContext()
 
   if (loading && !skipLoading) {
     return <ContainerSpinner className={css.spinner} />
@@ -90,17 +90,7 @@ const FeatureFlagsDetailPage: React.FC = () => {
     })
   }
 
-  const GitSyncActionsComponent = (): ReactElement => (
-    <GitSyncActions
-      isLoading={gitSync.gitSyncLoading}
-      branch={gitSync.gitRepoDetails?.branch || ''}
-      repository={gitSync.gitRepoDetails?.repoIdentifier || ''}
-      isAutoCommitEnabled={gitSync.isAutoCommitEnabled}
-      isGitSyncPaused={gitSync.isGitSyncPaused}
-      handleToggleAutoCommit={gitSync.handleAutoCommit}
-      handleGitPause={gitSync.handleGitPause}
-    />
-  )
+  const GitSyncActionsComponent = (): ReactElement => <GitSyncActions />
 
   return (
     <div className={css.pageLayout}>

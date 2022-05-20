@@ -10,8 +10,11 @@ import { getEventTypeChartColor } from '@cv/utils/CommonUtils'
 import type { SelectOption } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
 import type { UseStringsReturn } from 'framework/strings'
 import type {
+  AnalyzedRadarChartLogDataDTO,
+  FrequencyDTO,
   LogAnalysisRadarChartListDTO,
   LogData,
+  RestResponseAnalyzedRadarChartLogDataWithCountDTO,
   RestResponseLogAnalysisRadarChartListWithCountDTO
 } from 'services/cv'
 import type { LogAnalysisRowData } from './LogAnalysis.types'
@@ -34,11 +37,20 @@ export const getClusterTypes = (getString: UseStringsReturn['getString']): Selec
   return [
     { label: getString('cv.known'), value: EventTypeFullName.KNOWN_EVENT },
     { label: getString('cv.unknown'), value: EventTypeFullName.UNKNOWN_EVENT },
-    { label: getString('cv.unexpected'), value: EventTypeFullName.UNEXPECTED_FREQUENCY }
+    { label: getString('cv.unexpectedFrequency'), value: EventTypeFullName.UNEXPECTED_FREQUENCY }
   ]
 }
 
-export const getSingleLogData = (logData: LogAnalysisRadarChartListDTO): LogAnalysisRowData => {
+function getFrequencyDataValues(frequencyData?: number[] | FrequencyDTO[], isServicePage?: boolean): number[] {
+  if (!isServicePage || typeof frequencyData === 'undefined') return frequencyData as number[]
+
+  return (frequencyData as FrequencyDTO[]).map((datum: FrequencyDTO) => datum.count) as number[]
+}
+
+export const getSingleLogData = (
+  logData: LogAnalysisRadarChartListDTO | AnalyzedRadarChartLogDataDTO,
+  isServicePage?: boolean
+): LogAnalysisRowData => {
   return {
     clusterType: mapClusterType(logData?.clusterType as string),
     count: logData?.count as number,
@@ -48,7 +60,7 @@ export const getSingleLogData = (logData: LogAnalysisRadarChartListDTO): LogAnal
         name: 'testData',
         type: 'column',
         color: getEventTypeChartColor(logData?.clusterType),
-        data: logData?.frequencyData
+        data: getFrequencyDataValues(logData?.frequencyData, isServicePage)
       }
     ],
     clusterId: logData?.clusterId,
@@ -57,9 +69,14 @@ export const getSingleLogData = (logData: LogAnalysisRadarChartListDTO): LogAnal
 }
 
 export function getLogAnalysisData(
-  data: RestResponseLogAnalysisRadarChartListWithCountDTO | null
+  data: RestResponseLogAnalysisRadarChartListWithCountDTO | RestResponseAnalyzedRadarChartLogDataWithCountDTO | null,
+  isServicePage?: boolean
 ): LogAnalysisRowData[] {
-  return data?.resource?.logAnalysisRadarCharts?.content?.map(d => getSingleLogData(d)) ?? []
+  return (
+    data?.resource?.logAnalysisRadarCharts?.content?.map(
+      (datum: LogAnalysisRadarChartListDTO | AnalyzedRadarChartLogDataDTO) => getSingleLogData(datum, isServicePage)
+    ) ?? []
+  )
 }
 
 export function getInitialNodeName(selectedHostName?: string): MultiSelectOption[] {

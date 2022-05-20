@@ -24,6 +24,7 @@ interface AddLinkNodeProps<T> {
   className?: string
   id?: string
   isRightAddIcon?: boolean
+  setShowAddLink?: (data: boolean) => void
 }
 export default function AddLinkNode<T>(props: AddLinkNodeProps<T>): React.ReactElement | null {
   return (
@@ -48,6 +49,7 @@ export default function AddLinkNode<T>(props: AddLinkNodeProps<T>): React.ReactE
       onDragOver={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         event.stopPropagation()
         event.preventDefault()
+        props?.setShowAddLink && props?.setShowAddLink(true)
       }}
       onDrop={event => {
         event.stopPropagation()
@@ -61,6 +63,7 @@ export default function AddLinkNode<T>(props: AddLinkNodeProps<T>): React.ReactE
             destination: { ...props, ...props?.data }
           }
         })
+        props?.setShowAddLink && props?.setShowAddLink(false)
       }}
       className={props.className}
     >

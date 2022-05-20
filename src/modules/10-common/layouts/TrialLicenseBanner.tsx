@@ -89,7 +89,8 @@ export const TrialLicenseBanner = (): React.ReactElement => {
     ce: 'ce.continuous',
     cf: 'cf.continuous',
     ci: 'ci.continuous',
-    cv: 'cv.continuous'
+    cv: 'cv.continuous',
+    sto: 'stoSteps.continuous'
   }
   const moduleDescription = (module && getString(moduleDescriptionMap[module])) || ''
 
@@ -98,7 +99,8 @@ export const TrialLicenseBanner = (): React.ReactElement => {
     ce: 'common.module.ce',
     cf: 'common.module.cf',
     ci: 'common.module.ci',
-    cv: 'common.module.cv'
+    cv: 'common.module.cv',
+    sto: 'common.module.sto'
   }
   const descriptionModule = module && getString(descriptionModuleMap[module])
 

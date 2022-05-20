@@ -9,6 +9,7 @@ import React, { useEffect } from 'react'
 import { cloneDeep, set, isEmpty, get, defaultTo } from 'lodash-es'
 import type { NodeModelListener, LinkModelListener } from '@projectstorm/react-diagrams-core'
 import type { BaseModelListener } from '@projectstorm/react-canvas-core'
+import { Color } from '@harness/design-system'
 import { Button, ButtonVariation, Layout, Text } from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
 import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
@@ -525,18 +526,22 @@ function ExecutionGraphRef<T extends StageElementConfig>(
     eventTemp.stopPropagation?.()
     dynamicPopoverHandler?.hide()
     const node = getStepFromNode(state.stepsData, eventTemp.entity).node as StepElementConfig
-    const whenCondition = defaultTo(get(eventTemp, 'data.data.step.when'), node?.when)
+    const stepCondition = get(eventTemp, 'data.data.step.when')
+    const stepGroupCondition = get(eventTemp, 'data.data.stepGroup.when')
+    const whenCondition = defaultTo(stepCondition || stepGroupCondition, node?.when)
     if (whenCondition) {
       const { stageStatus, condition } = whenCondition
       if (stageStatus === PipelineOrStageStatus.SUCCESS && isEmpty(condition)) {
         return
       }
+      const stepData = get(eventTemp, 'data.data.step')
+      const stepGroupData = get(eventTemp, 'data.data.stepGroup')
       dynamicPopoverHandler?.show(
         eventTemp.target,
         {
           event: defaultTo(get(eventTemp, 'data.data'), eventTemp),
           isHoverView: true,
-          data: defaultTo(get(eventTemp, 'data.data.step'), node)
+          data: defaultTo(stepData || stepGroupData, node)
         },
         { useArrows: true, darkMode: false, fixedPosition: false, placement: 'top' }
       )
@@ -546,7 +551,6 @@ function ExecutionGraphRef<T extends StageElementConfig>(
   const mouseLeaveNodeListener = (event: any): void => {
     const eventTemp = event as DefaultNodeEvent
     eventTemp.stopPropagation?.()
-    dynamicPopoverHandler?.hide()
   }
 
   const nodeListeners: NodeModelListener = {
@@ -781,7 +785,8 @@ function ExecutionGraphRef<T extends StageElementConfig>(
       event = { ...event, ...event?.data }
       // event.stopPropagation()
       dynamicPopoverHandler?.hide()
-      const linkRender = document.querySelector(`[data-linkid="${event.identifier}"]`)
+      const targetEl = event?.target
+      const linkRender = targetEl || document.querySelector(`[data-linkid="${event.identifier}"]`)
       // check if the link is under step group then directly show add Step
       if (event?.node?.parentIdentifier && linkRender) {
         handleAdd(false, linkRender, false, { entity: { ...event } })
@@ -993,9 +998,9 @@ function ExecutionGraphRef<T extends StageElementConfig>(
     [Event.MouseLeaveNode]: mouseLeaveNodeListener,
     [Event.DragStart]: dragStart,
     [Event.StepGroupClicked]: (event: any) => {
-      const eventTemp = event as DefaultNodeEvent
-      eventTemp.stopPropagation()
-      const node = getStepFromNode(state.stepsData, eventTemp.entity).node
+      const eventTemp = event
+
+      const node = getStepFromNode(state.stepsData, eventTemp.data, undefined, undefined, event.data.identifier).node
       if (node) {
         editStep({
           node: node,
@@ -1115,7 +1120,7 @@ function ExecutionGraphRef<T extends StageElementConfig>(
             />
             {hasRollback && (
               <RollbackToggleSwitch
-                style={{ top: 62, ...rollBackPropsStyle }}
+                style={{ top: 62, ...rollBackPropsStyle, background: Color.WHITE }}
                 active={state.isRollback ? StepsType.Rollback : StepsType.Normal}
                 onChange={type => onRollbackToggleSwitchClick(type)}
               />
@@ -1145,6 +1150,8 @@ function ExecutionGraphRef<T extends StageElementConfig>(
           hoverShowDelay={200}
           render={renderPopover}
           bind={setDynamicPopoverHandler}
+          usePortal
+          portalClassName={css.portalVisibility}
         />
       </div>
     </div>

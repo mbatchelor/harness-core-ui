@@ -59,7 +59,7 @@ export const stepTemplate: ResponseTemplateResponse = {
   }
 }
 
-jest
+const useGetTemplate = jest
   .spyOn(templateServices, 'useGetTemplate')
   .mockImplementation(() => ({ data: stepTemplate, refetch: jest.fn(), error: null, loading: false } as any))
 
@@ -85,6 +85,7 @@ describe('<TemplateBar /> tests', () => {
   beforeAll(() => {
     jest.clearAllMocks()
   })
+
   test('should call onOpenTemplateSelector when change template is clicked', async () => {
     const { container } = render(
       <TestWrapper>
@@ -222,7 +223,7 @@ describe('<TemplateBar /> tests', () => {
   })
 
   test('should match snapshot in loading', async () => {
-    jest.spyOn(templateServices, 'useGetTemplate').mockImplementation(() => ({ data: null, loading: true } as any))
+    useGetTemplate.mockImplementation(() => ({ data: null, loading: true } as any))
     const { container } = render(
       <TestWrapper>
         <TemplateBar {...baseProps} />

@@ -761,7 +761,7 @@ function StageBuilder(): JSX.Element {
       errorMap: errorMap,
       parentPath: `pipeline.stages`
     })
-  }, [pipeline, errorMap])
+  }, [pipeline, errorMap, templateTypes])
 
   return (
     <Layout.Horizontal className={cx(css.canvasContainer)} padding="medium">

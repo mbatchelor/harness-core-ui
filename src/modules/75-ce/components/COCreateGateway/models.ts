@@ -47,6 +47,7 @@ interface ServiceOpts {
   deleteCloudResources: boolean
   alwaysUsePrivateIP: boolean
   hide_progress_page: boolean
+  dry_run?: boolean
 }
 
 export interface Provider {

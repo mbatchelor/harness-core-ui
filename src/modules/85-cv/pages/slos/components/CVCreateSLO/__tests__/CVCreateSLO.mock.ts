@@ -79,7 +79,8 @@ export const serviceLevelObjective: SLOForm = {
   periodLengthType: undefined,
   dayOfWeek: undefined,
   dayOfMonth: undefined,
-  SLOTargetPercentage: 0
+  SLOTargetPercentage: 0,
+  notificationRuleRefs: []
 }
 
 export const SLOResponse: RestResponseServiceLevelObjectiveResponse = {
@@ -108,6 +109,7 @@ export const initialFormData: SLOForm = {
   userJourneyRef: '',
   monitoredServiceRef: '',
   healthSourceRef: '',
+  notificationRuleRefs: [],
   SLIType: SLITypes.LATENCY,
   SLIMetricType: SLIMetricTypes.RATIO,
   validRequestMetric: '',

@@ -118,7 +118,15 @@ describe('Unit tests for createting monitored source', () => {
     } as any)
 
     jest.spyOn(cvServices, 'useResetErrorBudget').mockReturnValue({ mutate: jest.fn(), loading: false } as any)
+
+    jest.spyOn(cvServices, 'useGetNotificationRulesForMonitoredService').mockReturnValue({
+      data: [],
+      loading: false,
+      error: null,
+      refetch: jest.fn()
+    } as any)
   })
+
   test('Health source table and environment services compoenet renders ', async () => {
     jest.spyOn(cvServices, 'useGetMonitoredService').mockImplementation(
       () =>

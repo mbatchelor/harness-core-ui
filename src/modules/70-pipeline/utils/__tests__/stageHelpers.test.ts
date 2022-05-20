@@ -5,7 +5,18 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { changeEmptyValuesToRunTimeInput } from '../stageHelpers'
+import { ManifestDataType } from '@pipeline/components/ManifestSelection/Manifesthelper'
+import {
+  changeEmptyValuesToRunTimeInput,
+  getHelpeTextForTags,
+  isCIStage,
+  isCDStage,
+  isInfraDefinitionPresent,
+  isServerlessDeploymentType,
+  isServerlessManifestType,
+  ServiceDeploymentType,
+  getCustomStepProps
+} from '../stageHelpers'
 import inputSetPipeline from './inputset-pipeline.json'
 test('if empty values are being replaced with <+input> except for tags', () => {
   const outputCriteria = changeEmptyValuesToRunTimeInput(inputSetPipeline, '')
@@ -19,4 +30,106 @@ test('if empty values are being replaced with <+input> except for tags', () => {
       .spec.store.spec.branch
   ).toBe('<+input>')
   expect((outputCriteria as any).tags.Test1).toBe('')
+})
+
+test('isCIStage', () => {
+  expect(isCIStage({})).toBe(false)
+  expect(isCIStage({ module: 'ci' })).toBe(true)
+  expect(isCIStage({ moduleInfo: { ci: { test: {} } } })).toBe(true)
+})
+
+test('isCDStage', () => {
+  expect(isCDStage({})).toBe(false)
+  expect(isCDStage({ module: 'cd' })).toBe(true)
+  expect(isCDStage({ moduleInfo: { cd: { test: {} } } })).toBe(true)
+})
+
+test('isInfraDefinitionPresent', () => {
+  expect(isInfraDefinitionPresent({ identifier: 'test', name: 'testName' })).toBe(false)
+  expect(
+    isInfraDefinitionPresent({
+      identifier: 'test',
+      name: 'testName',
+      spec: {
+        serviceConfig: {},
+        execution: { steps: [] },
+        infrastructure: { infrastructureDefinition: { spec: {}, type: 'KubernetesAzure' } }
+      }
+    })
+  ).toBe(true)
+})
+
+test('isServerlessDeploymentType', () => {
+  expect(isServerlessDeploymentType(ServiceDeploymentType.ServerlessAwsLambda)).toBe(true)
+  expect(isServerlessDeploymentType(ServiceDeploymentType.ServerlessAzureFunctions)).toBe(true)
+  expect(isServerlessDeploymentType(ServiceDeploymentType.ServerlessGoogleFunctions)).toBe(true)
+  expect(isServerlessDeploymentType(ServiceDeploymentType.AmazonSAM)).toBe(true)
+  expect(isServerlessDeploymentType(ServiceDeploymentType.AzureFunctions)).toBe(true)
+  expect(isServerlessDeploymentType(ServiceDeploymentType.Kubernetes)).toBe(false)
+})
+
+test('isServerlessManifestType', () => {
+  expect(isServerlessManifestType(ManifestDataType.ServerlessAwsLambda)).toBe(true)
+  expect(isServerlessManifestType(ManifestDataType.HelmChart)).toBe(false)
+})
+
+test('getHelpeTextForTags', () => {
+  expect(
+    getHelpeTextForTags({ imagePath: '/image', artifactPath: '', connectorRef: 'RUNTIME' }, (str: string) => str, false)
+  ).toBe('pipeline.artifactPathLabel  is  pipeline.tagDependencyRequired')
+
+  expect(
+    getHelpeTextForTags(
+      { imagePath: '', artifactPath: '/artifact', connectorRef: 'RUNTIME' },
+      (str: string) => str,
+      false
+    )
+  ).toBe('pipeline.imagePathLabel  is  pipeline.tagDependencyRequired')
+
+  expect(
+    getHelpeTextForTags({ imagePath: '/image', artifactPath: '', connectorRef: 'RUNTIME' }, (str: string) => str, true)
+  ).toBe('pipeline.artifactsSelection.artifactDirectory  is  pipeline.artifactPathDependencyRequired')
+})
+
+test('getCustomStepProps', () => {
+  expect(getCustomStepProps(ServiceDeploymentType.ServerlessAwsLambda, (str: string) => str)).toStrictEqual({
+    formInfo: {
+      formName: 'serverlessAWSInfra',
+      header: 'pipelineSteps.awsConnectorLabel',
+      tooltipIds: {
+        connector: 'awsInfraConnector',
+        region: 'awsRegion',
+        stage: 'awsStage'
+      },
+      type: 'Aws'
+    },
+    hasRegion: true
+  })
+  expect(getCustomStepProps(ServiceDeploymentType.ServerlessAzureFunctions, (str: string) => str)).toStrictEqual({
+    formInfo: {
+      formName: 'serverlessAzureInfra',
+      header: 'pipelineSteps.awsConnectorLabel',
+      tooltipIds: {
+        connector: 'azureInfraConnector',
+        region: 'azureRegion',
+        stage: 'azureStage'
+      },
+      type: 'Gcp'
+    }
+  })
+  expect(getCustomStepProps(ServiceDeploymentType.ServerlessGoogleFunctions, (str: string) => str)).toStrictEqual({
+    formInfo: {
+      formName: 'serverlessGCPInfra',
+      header: 'pipelineSteps.gcpConnectorLabel',
+      tooltipIds: {
+        connector: 'gcpInfraConnector',
+        region: 'gcpRegion',
+        stage: 'gcpStage'
+      },
+      type: 'Gcp'
+    }
+  })
+  expect(getCustomStepProps(ServiceDeploymentType.AmazonSAM, (str: string) => str)).toStrictEqual({
+    formInfo: {}
+  })
 })

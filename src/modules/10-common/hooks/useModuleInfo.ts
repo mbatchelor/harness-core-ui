@@ -1,3 +1,10 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import { useMemo } from 'react'
 import { useLocation } from 'react-router-dom'
 import { match } from 'path-to-regexp'
@@ -14,7 +21,7 @@ export interface UseModuleInfoReturn {
   module?: Module
 }
 
-const pathToMatch = withAccountId(() => '/:module(ci|cd|cf|cv|ce)')({ accountId: ':accountId' })
+const pathToMatch = withAccountId(() => '/:module(ci|cd|cf|cv|ce|sto)')({ accountId: ':accountId' })
 const matchModuleFn = match<ModuleInfo>(pathToMatch, { end: false })
 
 export function useModuleInfo(): UseModuleInfoReturn {

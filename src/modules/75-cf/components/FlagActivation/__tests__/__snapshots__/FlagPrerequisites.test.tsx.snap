@@ -22,222 +22,121 @@ exports[`FlagPrerequisites it should render correctly 1`] = `
     <form
       action="#"
       class="FormikForm--main"
+      data-testid="prerequisites-form"
     >
       <div>
         <div
           class="Layout--horizontal StyledProps--main StyledProps--flex"
         >
           <div
-            class="bp3-form-group"
-            data-id="prerequisites.0.feature-0"
+            data-testid="prerequisites-dropdown-0"
           >
             <div
-              class="bp3-form-content"
+              class="bp3-form-group"
+              data-id="prerequisites.0.feature-0"
             >
               <div
-                class="bp3-popover-wrapper Select--main bp3-fill"
+                class="bp3-form-content"
               >
                 <div
-                  class="bp3-popover-target"
+                  class="bp3-popover-wrapper Select--main bp3-fill"
                 >
                   <div
-                    class="bp3-input-group"
+                    class="bp3-popover-target"
                   >
-                    <input
-                      autocomplete="off"
-                      class="bp3-input"
-                      name="prerequisites.0.feature"
-                      placeholder="- Select -"
-                      style="padding-right: 0px;"
-                      type="text"
-                      value=""
-                    />
-                    <span
-                      class="bp3-input-action"
+                    <div
+                      class="bp3-input-group"
                     >
+                      <input
+                        autocomplete="off"
+                        class="bp3-input"
+                        name="prerequisites.0.feature"
+                        placeholder="- Select -"
+                        style="padding-right: 0px;"
+                        type="text"
+                        value=""
+                      />
                       <span
-                        class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
-                        icon="chevron-down"
+                        class="bp3-input-action"
                       >
-                        <svg
-                          data-icon="chevron-down"
-                          height="14"
-                          viewBox="0 0 16 16"
-                          width="14"
+                        <span
+                          class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                          icon="chevron-down"
                         >
-                          <desc>
-                            chevron-down
-                          </desc>
-                          <path
-                            d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
-                            fill-rule="evenodd"
-                          />
-                        </svg>
+                          <svg
+                            data-icon="chevron-down"
+                            height="14"
+                            viewBox="0 0 16 16"
+                            width="14"
+                          >
+                            <desc>
+                              chevron-down
+                            </desc>
+                            <path
+                              d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                              fill-rule="evenodd"
+                            />
+                          </svg>
+                        </span>
                       </span>
-                    </span>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
           <div
-            class="bp3-form-group"
-            data-id="prerequisites.0.variation-1"
+            data-testid="prerequisites-variations-dropdown-0"
           >
             <div
-              class="bp3-form-content"
+              class="bp3-form-group"
+              data-id="prerequisites.0.variation-1"
             >
               <div
-                class="bp3-popover-wrapper Select--main bp3-fill"
+                class="bp3-form-content"
               >
                 <div
-                  class="bp3-popover-target"
+                  class="bp3-popover-wrapper Select--main bp3-fill"
                 >
                   <div
-                    class="bp3-input-group"
+                    class="bp3-popover-target"
                   >
-                    <input
-                      autocomplete="off"
-                      class="bp3-input"
-                      name="prerequisites.0.variation"
-                      placeholder="- Select -"
-                      style="padding-right: 0px;"
-                      type="text"
-                      value="false"
-                    />
-                    <span
-                      class="bp3-input-action"
+                    <div
+                      class="bp3-input-group"
                     >
+                      <input
+                        autocomplete="off"
+                        class="bp3-input"
+                        name="prerequisites.0.variation"
+                        placeholder="- Select -"
+                        style="padding-right: 0px;"
+                        type="text"
+                        value="false"
+                      />
                       <span
-                        class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
-                        icon="chevron-down"
+                        class="bp3-input-action"
                       >
-                        <svg
-                          data-icon="chevron-down"
-                          height="14"
-                          viewBox="0 0 16 16"
-                          width="14"
+                        <span
+                          class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                          icon="chevron-down"
                         >
-                          <desc>
-                            chevron-down
-                          </desc>
-                          <path
-                            d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
-                            fill-rule="evenodd"
-                          />
-                        </svg>
+                          <svg
+                            data-icon="chevron-down"
+                            height="14"
+                            viewBox="0 0 16 16"
+                            width="14"
+                          >
+                            <desc>
+                              chevron-down
+                            </desc>
+                            <path
+                              d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                              fill-rule="evenodd"
+                            />
+                          </svg>
+                        </span>
                       </span>
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div
-          class="Layout--horizontal StyledProps--main StyledProps--flex"
-        >
-          <div
-            class="bp3-form-group"
-            data-id="prerequisites.1.feature-2"
-          >
-            <div
-              class="bp3-form-content"
-            >
-              <div
-                class="bp3-popover-wrapper Select--main bp3-fill"
-              >
-                <div
-                  class="bp3-popover-target"
-                >
-                  <div
-                    class="bp3-input-group"
-                  >
-                    <input
-                      autocomplete="off"
-                      class="bp3-input"
-                      name="prerequisites.1.feature"
-                      placeholder="- Select -"
-                      style="padding-right: 0px;"
-                      type="text"
-                      value=""
-                    />
-                    <span
-                      class="bp3-input-action"
-                    >
-                      <span
-                        class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
-                        icon="chevron-down"
-                      >
-                        <svg
-                          data-icon="chevron-down"
-                          height="14"
-                          viewBox="0 0 16 16"
-                          width="14"
-                        >
-                          <desc>
-                            chevron-down
-                          </desc>
-                          <path
-                            d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
-                            fill-rule="evenodd"
-                          />
-                        </svg>
-                      </span>
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            class="bp3-form-group"
-            data-id="prerequisites.1.variation-3"
-          >
-            <div
-              class="bp3-form-content"
-            >
-              <div
-                class="bp3-popover-wrapper Select--main bp3-fill"
-              >
-                <div
-                  class="bp3-popover-target"
-                >
-                  <div
-                    class="bp3-input-group"
-                  >
-                    <input
-                      autocomplete="off"
-                      class="bp3-input"
-                      name="prerequisites.1.variation"
-                      placeholder="- Select -"
-                      style="padding-right: 0px;"
-                      type="text"
-                      value="adminOnly"
-                    />
-                    <span
-                      class="bp3-input-action"
-                    >
-                      <span
-                        class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
-                        icon="chevron-down"
-                      >
-                        <svg
-                          data-icon="chevron-down"
-                          height="14"
-                          viewBox="0 0 16 16"
-                          width="14"
-                        >
-                          <desc>
-                            chevron-down
-                          </desc>
-                          <path
-                            d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
-                            fill-rule="evenodd"
-                          />
-                        </svg>
-                      </span>
-                    </span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -248,106 +147,232 @@ exports[`FlagPrerequisites it should render correctly 1`] = `
           class="Layout--horizontal StyledProps--main StyledProps--flex"
         >
           <div
-            class="bp3-form-group"
-            data-id="prerequisites.2.feature-4"
+            data-testid="prerequisites-dropdown-1"
           >
             <div
-              class="bp3-form-content"
+              class="bp3-form-group"
+              data-id="prerequisites.1.feature-2"
             >
               <div
-                class="bp3-popover-wrapper Select--main bp3-fill"
+                class="bp3-form-content"
               >
                 <div
-                  class="bp3-popover-target"
+                  class="bp3-popover-wrapper Select--main bp3-fill"
                 >
                   <div
-                    class="bp3-input-group"
+                    class="bp3-popover-target"
                   >
-                    <input
-                      autocomplete="off"
-                      class="bp3-input"
-                      name="prerequisites.2.feature"
-                      placeholder="- Select -"
-                      style="padding-right: 0px;"
-                      type="text"
-                      value=""
-                    />
-                    <span
-                      class="bp3-input-action"
+                    <div
+                      class="bp3-input-group"
                     >
+                      <input
+                        autocomplete="off"
+                        class="bp3-input"
+                        name="prerequisites.1.feature"
+                        placeholder="- Select -"
+                        style="padding-right: 0px;"
+                        type="text"
+                        value=""
+                      />
                       <span
-                        class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
-                        icon="chevron-down"
+                        class="bp3-input-action"
                       >
-                        <svg
-                          data-icon="chevron-down"
-                          height="14"
-                          viewBox="0 0 16 16"
-                          width="14"
+                        <span
+                          class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                          icon="chevron-down"
                         >
-                          <desc>
-                            chevron-down
-                          </desc>
-                          <path
-                            d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
-                            fill-rule="evenodd"
-                          />
-                        </svg>
+                          <svg
+                            data-icon="chevron-down"
+                            height="14"
+                            viewBox="0 0 16 16"
+                            width="14"
+                          >
+                            <desc>
+                              chevron-down
+                            </desc>
+                            <path
+                              d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                              fill-rule="evenodd"
+                            />
+                          </svg>
+                        </span>
                       </span>
-                    </span>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
           <div
-            class="bp3-form-group"
-            data-id="prerequisites.2.variation-5"
+            data-testid="prerequisites-variations-dropdown-1"
           >
             <div
-              class="bp3-form-content"
+              class="bp3-form-group"
+              data-id="prerequisites.1.variation-3"
             >
               <div
-                class="bp3-popover-wrapper Select--main bp3-fill"
+                class="bp3-form-content"
               >
                 <div
-                  class="bp3-popover-target"
+                  class="bp3-popover-wrapper Select--main bp3-fill"
                 >
                   <div
-                    class="bp3-input-group"
+                    class="bp3-popover-target"
                   >
-                    <input
-                      autocomplete="off"
-                      class="bp3-input"
-                      name="prerequisites.2.variation"
-                      placeholder="- Select -"
-                      style="padding-right: 0px;"
-                      type="text"
-                      value="true"
-                    />
-                    <span
-                      class="bp3-input-action"
+                    <div
+                      class="bp3-input-group"
                     >
+                      <input
+                        autocomplete="off"
+                        class="bp3-input"
+                        name="prerequisites.1.variation"
+                        placeholder="- Select -"
+                        style="padding-right: 0px;"
+                        type="text"
+                        value="adminOnly"
+                      />
                       <span
-                        class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
-                        icon="chevron-down"
+                        class="bp3-input-action"
                       >
-                        <svg
-                          data-icon="chevron-down"
-                          height="14"
-                          viewBox="0 0 16 16"
-                          width="14"
+                        <span
+                          class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                          icon="chevron-down"
                         >
-                          <desc>
-                            chevron-down
-                          </desc>
-                          <path
-                            d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
-                            fill-rule="evenodd"
-                          />
-                        </svg>
+                          <svg
+                            data-icon="chevron-down"
+                            height="14"
+                            viewBox="0 0 16 16"
+                            width="14"
+                          >
+                            <desc>
+                              chevron-down
+                            </desc>
+                            <path
+                              d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                              fill-rule="evenodd"
+                            />
+                          </svg>
+                        </span>
                       </span>
-                    </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="Layout--horizontal StyledProps--main StyledProps--flex"
+        >
+          <div
+            data-testid="prerequisites-dropdown-2"
+          >
+            <div
+              class="bp3-form-group"
+              data-id="prerequisites.2.feature-4"
+            >
+              <div
+                class="bp3-form-content"
+              >
+                <div
+                  class="bp3-popover-wrapper Select--main bp3-fill"
+                >
+                  <div
+                    class="bp3-popover-target"
+                  >
+                    <div
+                      class="bp3-input-group"
+                    >
+                      <input
+                        autocomplete="off"
+                        class="bp3-input"
+                        name="prerequisites.2.feature"
+                        placeholder="- Select -"
+                        style="padding-right: 0px;"
+                        type="text"
+                        value=""
+                      />
+                      <span
+                        class="bp3-input-action"
+                      >
+                        <span
+                          class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                          icon="chevron-down"
+                        >
+                          <svg
+                            data-icon="chevron-down"
+                            height="14"
+                            viewBox="0 0 16 16"
+                            width="14"
+                          >
+                            <desc>
+                              chevron-down
+                            </desc>
+                            <path
+                              d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                              fill-rule="evenodd"
+                            />
+                          </svg>
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            data-testid="prerequisites-variations-dropdown-2"
+          >
+            <div
+              class="bp3-form-group"
+              data-id="prerequisites.2.variation-5"
+            >
+              <div
+                class="bp3-form-content"
+              >
+                <div
+                  class="bp3-popover-wrapper Select--main bp3-fill"
+                >
+                  <div
+                    class="bp3-popover-target"
+                  >
+                    <div
+                      class="bp3-input-group"
+                    >
+                      <input
+                        autocomplete="off"
+                        class="bp3-input"
+                        name="prerequisites.2.variation"
+                        placeholder="- Select -"
+                        style="padding-right: 0px;"
+                        type="text"
+                        value="true"
+                      />
+                      <span
+                        class="bp3-input-action"
+                      >
+                        <span
+                          class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                          icon="chevron-down"
+                        >
+                          <svg
+                            data-icon="chevron-down"
+                            height="14"
+                            viewBox="0 0 16 16"
+                            width="14"
+                          >
+                            <desc>
+                              chevron-down
+                            </desc>
+                            <path
+                              d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                              fill-rule="evenodd"
+                            />
+                          </svg>
+                        </span>
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -356,6 +381,7 @@ exports[`FlagPrerequisites it should render correctly 1`] = `
         </div>
         <button
           class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow Button--withLeftIcon"
+          data-testid="prerequisites-button"
           type="button"
         >
           <span

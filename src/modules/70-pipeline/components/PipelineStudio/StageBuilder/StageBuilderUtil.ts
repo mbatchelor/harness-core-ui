@@ -424,10 +424,7 @@ export const resetStageServiceSpec = (stage: StageElementWrapperConfig): StageEl
           artifacts: {
             sidecars: []
           },
-          manifests: [],
-
-          artifactOverrideSets: [],
-          manifestOverrideSets: []
+          manifests: []
         }
       }
     }

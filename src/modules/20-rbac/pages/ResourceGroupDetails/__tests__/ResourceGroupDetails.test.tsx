@@ -7,16 +7,24 @@
 
 import React from 'react'
 import { render, act, fireEvent, RenderResult, queryByAttribute, getByText } from '@testing-library/react'
-import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
+import { findDialogContainer, findPopoverContainer, TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
-import { accountPathProps, resourceGroupPathProps } from '@common/utils/routeUtils'
+import { accountPathProps, orgPathProps, resourceGroupPathProps } from '@common/utils/routeUtils'
 import {
   getResourceTypeHandlerMock,
   getResourceGroupTypeHandlerMock,
   getResourceCategoryListMock
 } from '@rbac/utils/RbacFactoryMockData'
 import ResourceGroupDetails from '../ResourceGroupDetails'
-import { resourceTypes, resourceGroupDetails, resourceGroupDetailsWithHarnessManaged } from './mock'
+import {
+  resourceTypes,
+  resourceGroupDetails,
+  resourceGroupDetailsWithHarnessManaged,
+  orgMockData,
+  projectMockData,
+  orgResourceGroupDetails,
+  accountResourceGroupDetails
+} from './mock'
 
 const updateResourceGroupDetails = jest.fn()
 const getResourceGroupDetailsMock = jest.fn().mockImplementation(() => {
@@ -36,6 +44,15 @@ jest.mock('services/resourcegroups', () => ({
   })
 }))
 
+jest.mock('services/cd-ng', () => ({
+  useGetProjectList: jest.fn().mockImplementation(() => {
+    return { data: { data: { content: projectMockData } }, refetch: jest.fn(), error: null }
+  }),
+  useGetOrganizationList: jest.fn().mockImplementation(() => {
+    return { ...orgMockData, refetch: jest.fn(), error: null }
+  })
+}))
+
 jest.mock('@rbac/factories/RbacFactory', () => ({
   getResourceTypeHandler: jest.fn().mockImplementation(resource => getResourceTypeHandlerMock(resource)),
   getResourceCategoryHandler: jest.fn().mockImplementation(resource => getResourceGroupTypeHandlerMock(resource)),
@@ -51,6 +68,7 @@ describe('Resource Groups Page', () => {
       <TestWrapper
         path={routes.toResourceGroupDetails({ ...accountPathProps, ...resourceGroupPathProps })}
         pathParams={{ accountId: 'dummy', resourceGroupIdentifier: 'dummyResourceGroupIdentifier' }}
+        defaultFeatureFlagValues={{ CUSTOM_RESOURCEGROUP_SCOPE: true }}
       >
         <ResourceGroupDetails />
       </TestWrapper>
@@ -63,17 +81,17 @@ describe('Resource Groups Page', () => {
     const { container } = renderObj
     expect(container).toMatchSnapshot()
   })
-  test('test projects selection and save', async () => {
+  test('test connector selection and save', async () => {
     updateResourceGroupDetails.mockReset()
     const { getAllByText, container } = renderObj
-    const project = queryByAttribute('data-testid', container, 'CHECK-BOX-CONNECTOR')
-    expect(project).toBeTruthy()
+    const connector = queryByAttribute('data-testid', container, 'CHECK-BOX-CONNECTOR')
+    expect(connector).toBeTruthy()
     act(() => {
-      fireEvent.click(project!)
+      fireEvent.click(connector!)
     })
     expect(getAllByText('rbac.resourceGroup.all')[0]).toBeTruthy()
     await act(async () => {
-      fireEvent.click(getByText(container, 'applyChanges'))
+      fireEvent.click(getByText(container, 'save'))
     })
     expect(updateResourceGroupDetails).toHaveBeenCalledWith({
       accountIdentifier: 'kmpySmUISimoRrJL6NL73w',
@@ -115,7 +133,7 @@ describe('Resource Groups Page', () => {
     expect(form).toBeFalsy()
 
     await act(async () => {
-      fireEvent.click(getByText(container, 'applyChanges'))
+      fireEvent.click(getByText(container, 'save'))
     })
     expect(updateResourceGroupDetails).toBeCalledWith({
       accountIdentifier: 'kmpySmUISimoRrJL6NL73w',
@@ -136,6 +154,59 @@ describe('Resource Groups Page', () => {
       color: '#0063f7'
     })
   })
+  test('test change of resource scope', async () => {
+    const { container } = renderObj
+    const scope = getByText(container, 'rbac.scopeItems.accountOnly')
+    act(() => {
+      fireEvent.click(scope)
+    })
+
+    let form = findDialogContainer()
+    expect(form).toBeTruthy()
+
+    const customScope = getByText(form!, 'rbac.scopeItems.specificOrgsAndProjects')
+    act(() => {
+      fireEvent.click(customScope)
+    })
+
+    const includeCurrentScope = getByText(form!, 'rbac.resourceScope.includeAccResources')
+    act(() => {
+      fireEvent.click(includeCurrentScope)
+    })
+
+    const addOrgs = getByText(form!, 'rbac.resourceScope.selectOrgsandProjects')
+    act(() => {
+      fireEvent.click(addOrgs)
+    })
+
+    const selectOrg = getByText(form!, 'Select')
+    act(() => {
+      fireEvent.click(selectOrg)
+    })
+    const popover = findPopoverContainer()
+    expect(popover).toBeTruthy()
+
+    const defaultOrg = getByText(popover!, 'default')
+    act(() => {
+      fireEvent.click(defaultOrg)
+    })
+
+    const includeProjects = getByText(form!, 'rbac.resourceScope.includeProjResources')
+    act(() => {
+      fireEvent.click(includeProjects)
+    })
+
+    act(() => {
+      fireEvent.click(getByText(form!, 'common.apply'))
+    })
+    form = findDialogContainer()
+    expect(form).toBeFalsy()
+
+    await act(async () => {
+      fireEvent.click(getByText(container, 'save'))
+    })
+    expect(updateResourceGroupDetails).toHaveBeenCalled()
+  })
 })
 test('with harness managed resources', async () => {
   getResourceGroupDetailsMock.mockImplementation(() => {
@@ -149,6 +220,77 @@ test('with harness managed resources', async () => {
       <ResourceGroupDetails />
     </TestWrapper>
   )
-  const applyChanges = queryByText('applyChanges')
-  expect(applyChanges).toBeFalsy()
+  const save = queryByText('save')
+  expect(save).toBeFalsy()
+})
+test('Account Scope Resource Group Details', async () => {
+  getResourceGroupDetailsMock.mockImplementation(() => {
+    return { data: accountResourceGroupDetails, refetch: jest.fn(), error: null, loading: false }
+  })
+  const { container } = render(
+    <TestWrapper
+      path={routes.toResourceGroupDetails({ ...accountPathProps, ...resourceGroupPathProps })}
+      pathParams={{
+        accountId: 'dummy',
+        resourceGroupIdentifier: 'dummyResourceGroupIdentifier'
+      }}
+      defaultFeatureFlagValues={{ CUSTOM_RESOURCEGROUP_SCOPE: true }}
+    >
+      <ResourceGroupDetails />
+    </TestWrapper>
+  )
+
+  let scope = getByText(container, 'rbac.scopeItems.specificOrgsAndProjects')
+  act(() => {
+    fireEvent.click(scope)
+  })
+
+  let form = findDialogContainer()
+  expect(form).toBeTruthy()
+
+  const includeCurrentScope = queryByAttribute('data-testid', form!, 'INCLUDE_ACC_RESOURCES')
+  expect(includeCurrentScope).toBeTruthy()
+  act(() => {
+    fireEvent.click(includeCurrentScope!)
+  })
+
+  act(() => {
+    fireEvent.click(getByText(form!, 'common.apply'))
+  })
+  form = findDialogContainer()
+  expect(form).toBeFalsy()
+
+  scope = getByText(container, 'rbac.scopeItems.specificOrgsAndProjects')
+  act(() => {
+    fireEvent.click(scope)
+  })
+  form = findDialogContainer()
+  expect(form).toBeTruthy()
+})
+
+test('Org Scope Resource Group Details', async () => {
+  getResourceGroupDetailsMock.mockImplementation(() => {
+    return { data: orgResourceGroupDetails, refetch: jest.fn(), error: null, loading: false }
+  })
+  const { container } = render(
+    <TestWrapper
+      path={routes.toResourceGroupDetails({ ...accountPathProps, ...orgPathProps, ...resourceGroupPathProps })}
+      pathParams={{
+        accountId: 'dummy',
+        orgIdentifier: 'testOrg',
+        resourceGroupIdentifier: 'dummyResourceGroupIdentifier'
+      }}
+      defaultFeatureFlagValues={{ CUSTOM_RESOURCEGROUP_SCOPE: true }}
+    >
+      <ResourceGroupDetails />
+    </TestWrapper>
+  )
+
+  const scope = getByText(container, 'rbac.scopeItems.specificProjects')
+  act(() => {
+    fireEvent.click(scope)
+  })
+
+  const form = findDialogContainer()
+  expect(form).toBeTruthy()
 })

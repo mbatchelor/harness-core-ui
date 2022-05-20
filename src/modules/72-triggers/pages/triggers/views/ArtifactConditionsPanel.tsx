@@ -56,7 +56,11 @@ const ArtifactConditionsPanel: React.FC<WebhookConditionsPanelPropsInterface> = 
           <ConditionRow
             formikProps={formikProps}
             name="build"
-            label={getString('triggers.conditionsPanel.artifactBuild')}
+            label={
+              formikProps.values.selectedArtifact?.spec?.artifactPath
+                ? getString('pipeline.artifactPathLabel')
+                : getString('triggers.conditionsPanel.artifactBuild')
+            }
           />
         )}
       </Layout.Vertical>

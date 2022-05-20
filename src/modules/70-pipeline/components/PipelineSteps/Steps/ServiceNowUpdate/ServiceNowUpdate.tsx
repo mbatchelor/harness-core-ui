@@ -49,6 +49,8 @@ export class ServiceNowUpdate extends PipelineStep<ServiceNowUpdateData> {
       ticketType: '',
       fieldType: FieldType.ConfigureFields,
       fields: [],
+      selectedFields: [],
+      templateFields: [],
       ticketNumber: '',
       description: '',
       shortDescription: '',

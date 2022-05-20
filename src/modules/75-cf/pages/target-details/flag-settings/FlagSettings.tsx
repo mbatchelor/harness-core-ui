@@ -356,7 +356,9 @@ export const VariationSelect: React.FC<VariationSelectProps> = ({
 
   const { showError } = useToaster()
 
-  const { gitSyncInitialValues } = gitSync.getGitSyncFormMeta(AUTO_COMMIT_MESSAGES.UPDATED_FLAG_VARIATIONS)
+  const { gitSyncInitialValues, gitSyncValidationSchema } = gitSync.getGitSyncFormMeta(
+    AUTO_COMMIT_MESSAGES.UPDATED_FLAG_VARIATIONS
+  )
 
   const _useServeFlagVariationToTargets = useServeFeatureFlagVariationToTargets(patchParams)
 
@@ -467,6 +469,8 @@ export const VariationSelect: React.FC<VariationSelectProps> = ({
         <SaveFlagToGitModal
           flagName={feature?.name || ''}
           flagIdentifier={feature?.identifier || ''}
+          gitSyncInitialValues={gitSyncInitialValues}
+          gitSyncValidationSchema={gitSyncValidationSchema}
           onSubmit={saveVariationChange}
           onClose={() => {
             setIsGitSyncModalOpen(false)

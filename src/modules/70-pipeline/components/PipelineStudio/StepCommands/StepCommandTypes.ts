@@ -16,6 +16,7 @@ import type {
 import type { StageType } from '@pipeline/utils/stageHelpers'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { TemplateStepNode, TemplateLinkConfig } from 'services/pipeline-ng'
+import type { TemplateSummaryResponse } from 'services/template-ng'
 
 export enum AdvancedPanels {
   PreRequisites = 'preRequisites',
@@ -33,7 +34,7 @@ export interface StepCommandsProps {
   step: StepOrStepGroupOrTemplateStepData
   onChange?: (step: Partial<Values>) => void
   onUpdate: (step: Partial<Values>) => void
-  onUseTemplate?: () => void
+  onUseTemplate?: (selectedTemplate?: TemplateSummaryResponse) => void
   onRemoveTemplate?: () => Promise<void>
   stepsFactory: AbstractStepFactory
   isStepGroup: boolean

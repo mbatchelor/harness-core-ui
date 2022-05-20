@@ -24,6 +24,15 @@ const commonProps = {
 }
 
 describe('Create connector Wizard', () => {
+  test('should open CreateConnectorWizard for custom', () => {
+    const { container } = render(
+      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
+        <CreateConnectorWizard type={Connectors.CUSTOM} {...commonProps} />
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot()
+  })
+
   test('should open CreateConnectorWizard for k8', () => {
     const { container } = render(
       <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
@@ -118,6 +127,42 @@ describe('Create connector Wizard', () => {
     const { container } = render(
       <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
         <CreateConnectorWizard type={Connectors.ARTIFACTORY} {...commonProps} />
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot()
+  })
+
+  test('should open CreateConnectorWizard for Jira', () => {
+    const { container } = render(
+      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
+        <CreateConnectorWizard type={Connectors.Jira} {...commonProps} />
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot()
+  })
+
+  test('should open CreateConnectorWizard for App Dynamics', () => {
+    const { container } = render(
+      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
+        <CreateConnectorWizard type={Connectors.APP_DYNAMICS} {...commonProps} />
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot()
+  })
+
+  test('should open CreateConnectorWizard for Splunk', () => {
+    const { container } = render(
+      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
+        <CreateConnectorWizard type={Connectors.SPLUNK} {...commonProps} />
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot()
+  })
+
+  test('should open CreateConnectorWizard for Prometheus', () => {
+    const { container } = render(
+      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
+        <CreateConnectorWizard type={Connectors.PROMETHEUS} {...commonProps} />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()

@@ -15,7 +15,7 @@ import {
   PipelineContextInterface
 } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import ManifestSelection from '../ManifestSelection'
-import ManifestListView from '../ManifestListView'
+import ManifestListView from '../ManifestListView/ManifestListView'
 import pipelineContextMock from './pipeline_mock.json'
 import connectorsData from './connectors_mock.json'
 
@@ -40,7 +40,7 @@ describe('ManifestSelection tests', () => {
   test(`renders without crashing`, () => {
     const { container } = render(
       <TestWrapper>
-        <ManifestSelection deploymentType="Kubernetes" isForOverrideSets={false} isForPredefinedSets={false} />
+        <ManifestSelection deploymentType="Kubernetes" />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
@@ -50,7 +50,7 @@ describe('ManifestSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ManifestSelection deploymentType="Kubernetes" isForOverrideSets={false} isForPredefinedSets={false} />
+          <ManifestSelection deploymentType="Kubernetes" />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -71,7 +71,7 @@ describe('ManifestSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ManifestSelection deploymentType="Kubernetes" isForOverrideSets={false} isForPredefinedSets={false} />
+          <ManifestSelection deploymentType="Kubernetes" />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -96,7 +96,7 @@ describe('ManifestSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ManifestSelection deploymentType="Kubernetes" isForOverrideSets={true} isForPredefinedSets={false} />
+          <ManifestSelection deploymentType="Kubernetes" />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -114,7 +114,7 @@ describe('ManifestSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ManifestSelection deploymentType="Kubernetes" isForOverrideSets={false} isForPredefinedSets={true} />
+          <ManifestSelection deploymentType="Kubernetes" />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -132,14 +132,7 @@ describe('ManifestSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ManifestSelection
-            deploymentType="Kubernetes"
-            overrideSetIdentifier={'overrideSetIdentifier'}
-            isForOverrideSets={false}
-            isForPredefinedSets={false}
-            isPropagating={false}
-            identifierName={'identifierName'}
-          />
+          <ManifestSelection deploymentType="Kubernetes" isPropagating={false} />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -150,14 +143,7 @@ describe('ManifestSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ManifestSelection
-            deploymentType="Kubernetes"
-            overrideSetIdentifier={''}
-            isForOverrideSets={false}
-            isForPredefinedSets={false}
-            isPropagating={true}
-            identifierName={''}
-          />
+          <ManifestSelection deploymentType="Kubernetes" isPropagating={true} />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -179,8 +165,6 @@ describe('ManifestSelection tests', () => {
       stage: pipelineContextMock.state.pipeline.stages[0],
       isForOverrideSets: false,
       identifierName: '',
-      isForPredefinedSets: false,
-      overrideSetIdentifier: '',
       connectors: undefined,
       refetchConnectors: jest.fn(),
       isReadonly: false,
@@ -205,7 +189,6 @@ describe('ManifestSelection tests', () => {
       isForOverrideSets: false,
       identifierName: '',
       isForPredefinedSets: false,
-      overrideSetIdentifier: '',
       connectors: connectorsData.data as any,
       refetchConnectors: jest.fn(),
       isReadonly: false,
@@ -230,7 +213,6 @@ describe('ManifestSelection tests', () => {
       isForOverrideSets: true,
       identifierName: '',
       isForPredefinedSets: false,
-      overrideSetIdentifier: 'overrideSetIdentifier',
       connectors: connectorsData.data as any,
       refetchConnectors: jest.fn(),
       isReadonly: false,
@@ -255,7 +237,6 @@ describe('ManifestSelection tests', () => {
       isForOverrideSets: false,
       identifierName: '',
       isForPredefinedSets: false,
-      overrideSetIdentifier: '',
       connectors: connectorsData.data as any,
       refetchConnectors: jest.fn(),
       isReadonly: false,
@@ -301,10 +282,7 @@ describe('ManifestSelection tests', () => {
       pipeline: pipelineContextMock.state.pipeline,
       updateStage: jest.fn(),
       stage: pipelineContextMock.state.pipeline.stages[0],
-      isForOverrideSets: false,
       identifierName: '',
-      isForPredefinedSets: false,
-      overrideSetIdentifier: '',
       connectors: connectorsData.data as any,
       refetchConnectors: jest.fn(),
       isReadonly: false,
@@ -359,8 +337,6 @@ describe('ManifestSelection tests', () => {
       stage: pipelineContextMock.state.pipeline.stages[0],
       isForOverrideSets: true,
       identifierName: '',
-      isForPredefinedSets: false,
-      overrideSetIdentifier: '',
       connectors: connectorsData.data as any,
       refetchConnectors: jest.fn(),
       isReadonly: false,

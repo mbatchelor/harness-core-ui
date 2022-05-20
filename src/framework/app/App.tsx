@@ -10,7 +10,7 @@ import React, { useEffect, useState, Suspense } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { RestfulProvider } from 'restful-react'
 import { FocusStyleManager } from '@blueprintjs/core'
-import { TooltipContextProvider, PageSpinner } from '@wings-software/uicore'
+import { TooltipContextProvider, PageSpinner, useToaster } from '@wings-software/uicore'
 import { tooltipDictionary } from '@wings-software/ng-tooltip'
 import { setAutoFreeze, enableMapSet } from 'immer'
 import SessionToken from 'framework/utils/SessionToken'
@@ -25,7 +25,7 @@ import AppErrorBoundary from 'framework/utils/AppErrorBoundary/AppErrorBoundary'
 import { StringsContextProvider } from 'framework/strings/StringsContextProvider'
 import { getLoginPageURL } from 'framework/utils/SessionUtils'
 import { NGTooltipEditorPortal } from 'framework/tooltip/TooltipEditor'
-import AppStorage from 'framework/utils/AppStorage'
+import SecureStorage from 'framework/utils/SecureStorage'
 import { SideNavProvider } from 'framework/SideNavStore/SideNavContext'
 import { useRefreshToken } from 'services/portal'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
@@ -38,6 +38,7 @@ import { FeaturesProvider } from 'framework/featureStore/FeaturesContext'
 import { ThirdPartyIntegrations } from '3rd-party/ThirdPartyIntegrations'
 import { useGlobalEventListener } from '@common/hooks'
 import { global401HandlerUtils } from '@common/utils/global401HandlerUtils'
+import HelpPanelProvider from 'framework/utils/HelpPanelProvider'
 
 const RouteDestinations = React.lazy(() => import('modules/RouteDestinations'))
 
@@ -67,6 +68,7 @@ const getRequestOptions = (): Partial<RequestInit> => {
 }
 
 export function AppWithAuthentication(props: AppProps): React.ReactElement {
+  const { showError } = useToaster()
   const username = SessionToken.username()
   // always use accountId from URL, and not from local storage
   // if user lands on /, they'll first get redirected to a path with accountId
@@ -100,13 +102,13 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
 
   useEffect(() => {
     if (refreshTokenResponse?.resource) {
-      AppStorage.set('token', refreshTokenResponse.resource)
-      AppStorage.set('lastTokenSetTime', +new Date())
+      SecureStorage.set('token', refreshTokenResponse.resource)
+      SecureStorage.set('lastTokenSetTime', Date.now())
     }
   }, [refreshTokenResponse])
 
   const checkAndRefreshToken = (): void => {
-    const currentTime = +new Date()
+    const currentTime = Date.now()
     const lastTokenSetTime = SessionToken.getLastTokenSetTime() as number
     const refreshInterval = 60 * 60 * 1000 // one hour in milliseconds
     if (currentTime - lastTokenSetTime > refreshInterval && !refreshingToken) {
@@ -122,28 +124,59 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
 
   const globalResponseHandler = (response: Response): void => {
     const token = SessionToken.getToken()
-    if (!response.ok && response.status === 401) {
-      if (token) {
-        const lastTokenSetTime = SessionToken.getLastTokenSetTime() as number
-        window.bugsnagClient?.notify?.(
-          new Error('Logout with token'),
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          function (event: any) {
-            event.severity = 'error'
-            event.setUser(username)
-            event.addMetadata('401 Details', {
-              url: response.url,
-              status: response.status,
-              accountId,
-              lastTokenSetTime
-            })
+    if (!response.ok) {
+      switch (response.status) {
+        case 401: {
+          if (token) {
+            const lastTokenSetTime = SessionToken.getLastTokenSetTime() as number
+            window.bugsnagClient?.notify?.(
+              new Error('Logout with token'),
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              function (event: any) {
+                event.severity = 'error'
+                event.setUser(username)
+                event.addMetadata('401 Details', {
+                  url: response.url,
+                  status: response.status,
+                  accountId,
+                  lastTokenSetTime
+                })
+              }
+            )
           }
-        )
+          global401HandlerUtils(history)
+          return
+        }
+        case 400: {
+          response
+            .json()
+            .then(res => {
+              const notWhiteListedMessage = res?.responseMessages?.find(
+                (message: any) => message?.code === 'NOT_WHITELISTED_IP'
+              )
+              if (notWhiteListedMessage) {
+                showError(notWhiteListedMessage.message)
+                global401HandlerUtils(history)
+              }
+            })
+            .catch(() => {
+              window.bugsnagClient?.notify?.(
+                new Error('Error handling 400 status code'),
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                function (event: any) {
+                  event.severity = 'error'
+                  event.setUser(username)
+                  event.addMetadata('400 Details', {
+                    url: response.url,
+                    status: response.status,
+                    accountId
+                  })
+                }
+              )
+            })
+        }
       }
-      global401HandlerUtils(history)
-      return
     }
-
     checkAndRefreshToken()
   }
 
@@ -194,18 +227,20 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
               <AppErrorBoundary>
                 <FeaturesProvider>
                   <LicenseStoreProvider>
-                    <PermissionsProvider>
-                      <SideNavProvider>
-                        <Suspense fallback={<PageSpinner />}>
-                          <RouteDestinations />
-                        </Suspense>
-                        <NGTooltipEditorPortal
-                          showTooltipEditor={showTooltipEditor}
-                          onEditorClose={onEditorClose}
-                          setPreviewDatasetFromLocalStorage={onPreviewDatasetFromLocalStorage}
-                        />
-                      </SideNavProvider>
-                    </PermissionsProvider>
+                    <HelpPanelProvider>
+                      <PermissionsProvider>
+                        <SideNavProvider>
+                          <Suspense fallback={<PageSpinner />}>
+                            <RouteDestinations />
+                          </Suspense>
+                          <NGTooltipEditorPortal
+                            showTooltipEditor={showTooltipEditor}
+                            onEditorClose={onEditorClose}
+                            setPreviewDatasetFromLocalStorage={onPreviewDatasetFromLocalStorage}
+                          />
+                        </SideNavProvider>
+                      </PermissionsProvider>
+                    </HelpPanelProvider>
                     <ThirdPartyIntegrations />
                   </LicenseStoreProvider>
                 </FeaturesProvider>

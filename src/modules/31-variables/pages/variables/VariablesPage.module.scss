@@ -11,8 +11,5 @@
   border-bottom: 1px solid var(--grey-300);
 }
 .listBody {
-  min-height: calc(100vh - var(--page-header-height));
-}
-.listPage {
-  min-width: 900px;
+  --page-header-height: 146px;
 }

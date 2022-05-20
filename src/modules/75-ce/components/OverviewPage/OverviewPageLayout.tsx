@@ -53,6 +53,8 @@ interface HorizontalLayoutProps extends LayoutProps {
   showGist?: boolean
   chartSize?: number
   headingSize?: any
+  dataTooltipId?: string
+  strokeSize?: string
 }
 
 interface CardProps {
@@ -65,6 +67,7 @@ interface CostDistributionRadialChartProps {
   classNames?: string
   chartSize?: { height: number; width: number }
   gist: React.ReactNode
+  strokeSize?: string
 }
 
 interface GistProps {
@@ -90,6 +93,7 @@ interface ListProps {
   type?: ListType
   classNames?: string
   showCost?: boolean
+  showCount?: boolean
 }
 
 interface ChartTypeProps {
@@ -140,7 +144,9 @@ export const HorizontalLayout = (props: HorizontalLayoutProps) => {
     seeAll,
     showGist = true,
     chartSize = 200,
-    headingSize = 'medium'
+    headingSize = 'medium',
+    dataTooltipId = '',
+    strokeSize = '80%'
   } = props
   const len = getNumberOfDigits(+(totalCost.value || 0).toFixed(2))
   const totalCostFontSize = len >= 7 ? '15px' : '18px'
@@ -148,7 +154,11 @@ export const HorizontalLayout = (props: HorizontalLayoutProps) => {
   return (
     <div className={css.horizontalLayout}>
       <Layout.Horizontal style={{ justifyContent: 'space-between', alignItems: 'center' }}>
-        <Text color="grey800" font={{ weight: 'semi-bold', size: headingSize }}>
+        <Text
+          tooltipProps={{ dataTooltipId: dataTooltipId }}
+          color="grey800"
+          font={{ weight: 'semi-bold', size: headingSize }}
+        >
           {title}
         </Text>
         {seeAll}
@@ -157,6 +167,7 @@ export const HorizontalLayout = (props: HorizontalLayoutProps) => {
         <CostDistributionRadialChart
           data={chartData}
           chartSize={{ height: chartSize, width: chartSize }}
+          strokeSize={strokeSize}
           gist={
             showGist ? (
               <Gist totalCostFontSize={totalCostFontSize} totalCost={totalCost} showTrend={showTrendInChart} />
@@ -170,15 +181,20 @@ export const HorizontalLayout = (props: HorizontalLayoutProps) => {
 }
 
 const CostDistributionRadialChart = (props: CostDistributionRadialChartProps) => {
-  const { data, colors = CE_COLOR_CONST, chartSize, gist } = props
+  const { data, colors = CE_COLOR_CONST, chartSize, gist, strokeSize } = props
   const options = useMemo(
     () =>
-      getRadialChartOptions(data as any, colors, {
-        chart: chartSize,
-        plotOptions: {
-          pie: { color: Utils.getRealCSSColor(Color.GREY_100), fillColor: Utils.getRealCSSColor(Color.GREY_100) }
-        }
-      }),
+      getRadialChartOptions(
+        data as any,
+        colors,
+        {
+          chart: chartSize,
+          plotOptions: {
+            pie: { color: Utils.getRealCSSColor(Color.GREY_100), fillColor: Utils.getRealCSSColor(Color.GREY_100) }
+          }
+        },
+        strokeSize
+      ),
     [data, colors]
   )
 
@@ -289,7 +305,7 @@ export const FlexList = (props: ListProps) => {
 
 export const TableList = (props: ListProps) => {
   const { accountId } = useParams<{ accountId: string }>()
-  const { data = [], type = ListType.KEY_ONLY, classNames, showCost = true } = props
+  const { data = [], type = ListType.KEY_ONLY, classNames, showCost = true, showCount = true } = props
 
   const renderLegend = (item: Stats) => {
     return (
@@ -327,7 +343,7 @@ export const TableList = (props: ListProps) => {
             <Text color="grey600" font="small" lineClamp={1} style={{ maxWidth: 90 }}>
               {showCost ? formatCost(item.value) : item.count}
             </Text>
-            {item.count && showCost ? (
+            {item.count && showCount && showCost ? (
               <Text color="grey600" font="small" lineClamp={1} style={{ maxWidth: 90 }}>
                 {`(${item.count})`}
               </Text>

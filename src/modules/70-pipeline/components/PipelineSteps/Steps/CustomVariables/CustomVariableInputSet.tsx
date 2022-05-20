@@ -9,9 +9,10 @@ import React from 'react'
 import { useParams } from 'react-router-dom'
 import { Text, FormInput, MultiTypeInputType, getMultiTypeFromValue, SelectOption } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
+import produce from 'immer'
 import cx from 'classnames'
-import { defaultTo, get, isEqual, isUndefined } from 'lodash-es'
-import { connect } from 'formik'
+import { defaultTo, get, isEqual, isUndefined, set } from 'lodash-es'
+import { connect, FormikProps } from 'formik'
 import { useStrings } from 'framework/strings'
 import type { AllNGVariables } from '@pipeline/utils/types'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -35,15 +36,20 @@ export interface CustomVariableInputSetExtraProps {
   allValues?: CustomVariablesData
   executionIdentifier?: string
 }
+
 export interface CustomVariableInputSetProps extends CustomVariableInputSetExtraProps {
   initialValues: CustomVariablesData
   onUpdate?: (data: CustomVariablesData) => void
   stepViewType?: StepViewType
   inputSetData?: InputSetData<CustomVariablesData>
-  formik?: any
   allowableTypes: MultiTypeInputType[]
 }
-function CustomVariableInputSetBasic(props: CustomVariableInputSetProps): React.ReactElement {
+
+export interface ConectedCustomVariableInputSetProps extends CustomVariableInputSetProps {
+  formik: FormikProps<CustomVariablesData>
+}
+
+function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps): React.ReactElement {
   const {
     initialValues,
     template,
@@ -57,12 +63,12 @@ function CustomVariableInputSetBasic(props: CustomVariableInputSetProps): React.
     allowableTypes,
     executionIdentifier
   } = props
-  const basePath = path?.length ? `${path}.` : ''
+  const basePath = path?.length ? `${path}.variables` : 'variables'
   const { expressions } = useVariablesExpression()
   const { getString } = useStrings()
   const { executionId } = useQueryParams<Record<string, string>>()
   const { triggerIdentifier } = useParams<Record<string, string>>()
-  const formikVariables = get(formik?.values, `${basePath}variables`, [])
+  const formikVariables = get(formik?.values, basePath, [])
 
   React.useEffect(() => {
     const shouldUseDefaultValue =
@@ -85,9 +91,21 @@ function CustomVariableInputSetBasic(props: CustomVariableInputSetProps): React.
     })
 
     if (!isEqual(formikVariables, updatedVariables)) {
-      formik.setFieldValue(`${basePath}variables`, updatedVariables)
+      const newValues = produce(formik.values, draft => {
+        set(draft, basePath, updatedVariables)
+      })
+      formik.setValues(newValues)
     }
-  }, [formikVariables, template?.variables, allValues?.variables, executionId, executionIdentifier, triggerIdentifier])
+  }, [
+    formik.values, // fixes the variables default value issue
+    formikVariables,
+    basePath,
+    template?.variables,
+    allValues?.variables,
+    executionId,
+    executionIdentifier,
+    triggerIdentifier
+  ])
 
   return (
     <div className={cx(css.customVariablesInputSets, 'customVariables')} id={domId}>
@@ -128,7 +146,7 @@ function CustomVariableInputSetBasic(props: CustomVariableInputSetProps): React.
                 <MultiTypeSecretInput
                   expressions={expressions}
                   allowableTypes={allowableTypes}
-                  name={`${basePath}variables[${index}].value`}
+                  name={`${basePath}[${index}].value`}
                   disabled={inputSetData?.readonly}
                   label=""
                 />
@@ -137,7 +155,7 @@ function CustomVariableInputSetBasic(props: CustomVariableInputSetProps): React.
                   {isAllowedValues ? (
                     <FormInput.MultiTypeInput
                       className="variableInput"
-                      name={`${basePath}variables[${index}].value`}
+                      name={`${basePath}[${index}].value`}
                       label=""
                       useValue
                       selectItems={items}
@@ -151,7 +169,7 @@ function CustomVariableInputSetBasic(props: CustomVariableInputSetProps): React.
                   ) : (
                     <FormInput.MultiTextInput
                       className="variableInput"
-                      name={`${basePath}variables[${index}].value`}
+                      name={`${basePath}[${index}].value`}
                       multiTextInputProps={{
                         textProps: { type: variable.type === 'Number' ? 'number' : 'text' },
                         allowableTypes,
@@ -170,5 +188,6 @@ function CustomVariableInputSetBasic(props: CustomVariableInputSetProps): React.
     </div>
   )
 }
-const CustomVariableInputSet = connect(CustomVariableInputSetBasic)
+const CustomVariableInputSet = connect<CustomVariableInputSetProps, CustomVariablesData>(CustomVariableInputSetBasic)
+
 export { CustomVariableInputSet }

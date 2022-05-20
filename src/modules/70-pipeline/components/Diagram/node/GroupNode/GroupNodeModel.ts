@@ -7,7 +7,7 @@
 
 import type { DeserializeEvent } from '@projectstorm/react-canvas-core'
 import type { IconName } from '@wings-software/uicore'
-import type { IconProps } from '@wings-software/uicore/dist/icons/Icon'
+import type { IconProps } from '@harness/icons'
 import { DiagramType, PortName } from '../../Constants'
 import { DefaultNodeModelOptions, DefaultNodeModel } from '../DefaultNodeModel'
 import type { DefaultLinkModelGenerics } from '../../link/DefaultLinkModel'

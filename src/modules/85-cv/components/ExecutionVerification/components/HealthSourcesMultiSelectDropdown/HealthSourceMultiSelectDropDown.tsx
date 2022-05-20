@@ -29,14 +29,17 @@ export function HealthSourceMultiSelectDropDown(props: HealthSourceMultiSelectDr
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, error, loading, verificationType])
 
-  const getFilteredText = useCallback((selectedOptions: MultiSelectOption[] = [], filterText = ' '): string => {
-    const baseText = getString(filterText)
+  const getFilteredText = useCallback(
+    (selectedOptions: MultiSelectOption[] = [], filterText = ' '): string => {
+      const baseText = getString(filterText)
 
-    if (loading) {
-      return `${getString(filterText)} ${getString('loading')}`
-    }
-    return `${baseText}: ${selectedOptions?.length > 0 ? '' : getString('all')}`
-  }, [])
+      if (loading) {
+        return `${getString(filterText)} ${getString('loading')}`
+      }
+      return `${baseText}: ${selectedOptions?.length > 0 ? '' : getString('all')}`
+    },
+    [getString, loading]
+  )
 
   return (
     <MultiSelectDropDown

@@ -7,7 +7,7 @@
 
 import type { MultiSelectOption } from '@wings-software/uicore'
 import uniqBy from 'lodash/uniqBy'
-import type { IconProps } from '@harness/uicore/dist/icons/Icon'
+import type { IconProps } from '@harness/icons'
 import type { AuditTrailFormType, ProjectSelectOption } from '@audit-trail/components/FilterDrawer/FilterDrawer'
 import type { AuditEventDTO, AuditFilterProperties, ResourceScopeDTO } from 'services/audit'
 import type { StringKeys } from 'framework/strings'

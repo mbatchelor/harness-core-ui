@@ -1,7 +1,8 @@
 import {
   abortPipelineCall,
   executePipeline,
-  pipelineListAPI,
+  pageHeaderClassName,
+  pipelineListAPIWithoutSearchTerm,
   pipelinesRoute,
   serviceStepAPI,
   serviceStepStageID
@@ -30,10 +31,10 @@ describe('Pipeline Execution', () => {
   })
 
   it('Pipeline Execution steps phases - Running & Failed', () => {
-    cy.intercept('POST', pipelineListAPI, { fixture: '/pipeline/api/pipelineExecution/getPipelineList' }).as(
-      'pipelineList'
-    )
-    cy.wait(2000)
+    cy.intercept('POST', pipelineListAPIWithoutSearchTerm, {
+      fixture: '/pipeline/api/pipelineExecution/getPipelineList'
+    }).as('pipelineList')
+    cy.visitPageAssertion(pageHeaderClassName)
     cy.wait('@pipelineList', {
       timeout: 10000
     })
@@ -137,9 +138,9 @@ describe('Pipeline Execution', () => {
   })
 
   it('Pipeline Execution steps phases - Running & Success', () => {
-    cy.intercept('POST', pipelineListAPI, { fixture: '/pipeline/api/pipelineExecution/getPipelineList' }).as(
-      'pipelineList'
-    )
+    cy.intercept('POST', pipelineListAPIWithoutSearchTerm, {
+      fixture: '/pipeline/api/pipelineExecution/getPipelineList'
+    }).as('pipelineList')
     cy.intercept('POST', executePipeline, {
       fixture: 'pipeline/api/pipelineExecution/successPipeline/executePipeline'
     }).as('executePipeline')
@@ -150,7 +151,8 @@ describe('Pipeline Execution', () => {
     cy.intercept('GET', serviceStepStageID, {
       fixture: 'pipeline/api/pipelineExecution/successPipeline/serviceStepStageID'
     }).as('serviceStepStageID')
-    cy.wait(2000)
+    cy.wait(1000)
+    cy.visitPageAssertion(pageHeaderClassName)
     cy.wait('@pipelineList', {
       timeout: 10000
     })
@@ -221,9 +223,9 @@ describe('Pipeline Execution', () => {
 
   it('Pipeline Execution Serverless Aws Lambda Deploy step - Failed', () => {
     // Pipeline List call
-    cy.intercept('POST', pipelineListAPI, { fixture: '/pipeline/api/pipelineExecution/getPipelineList' }).as(
-      'pipelineList'
-    )
+    cy.intercept('POST', pipelineListAPIWithoutSearchTerm, {
+      fixture: '/pipeline/api/pipelineExecution/getPipelineList'
+    }).as('pipelineList')
 
     // Execute Pipeline call which is made when user click on Run button
     cy.intercept('POST', executePipeline, {
@@ -240,7 +242,8 @@ describe('Pipeline Execution', () => {
       .wait(1000)
 
     // Wait for pipeline list to appear on screen
-    cy.wait(2000)
+    cy.wait(1000)
+    cy.visitPageAssertion(pageHeaderClassName)
     cy.wait('@pipelineList', {
       timeout: 10000
     })
@@ -357,9 +360,9 @@ describe('Pipeline Execution', () => {
   })
 
   it('Pipeline Execution steps phases - Running & Abort', () => {
-    cy.intercept('POST', pipelineListAPI, { fixture: '/pipeline/api/pipelineExecution/getPipelineList' }).as(
-      'pipelineList'
-    )
+    cy.intercept('POST', pipelineListAPIWithoutSearchTerm, {
+      fixture: '/pipeline/api/pipelineExecution/getPipelineList'
+    }).as('pipelineList')
     cy.intercept('POST', executePipeline, {
       fixture: 'pipeline/api/pipelineExecution/successPipeline/executePipeline'
     }).as('executePipeline')
@@ -370,7 +373,8 @@ describe('Pipeline Execution', () => {
     cy.intercept('GET', serviceStepStageID, {
       fixture: 'pipeline/api/pipelineExecution/successPipeline/serviceStepStageID'
     }).as('serviceStepStageID')
-    cy.wait(2000)
+    cy.wait(1000)
+    cy.visitPageAssertion(pageHeaderClassName)
     cy.wait('@pipelineList', {
       timeout: 10000
     })

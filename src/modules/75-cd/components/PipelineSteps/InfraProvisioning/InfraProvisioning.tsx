@@ -14,11 +14,14 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { InfraProvisioningBaseWithRef } from './InfraProvisioningBase'
 
+export type ProvisionersOptions = 'TERRAFORM' | 'CLOUD_FORMATION'
+
 export interface InfraProvisioningData {
   provisioner: ExecutionElementConfig
   originalProvisioner?: Partial<ExecutionElementConfig>
   provisionerEnabled: boolean
   provisionerSnippetLoading?: boolean
+  selectedProvisioner?: ProvisionersOptions
 }
 
 export interface InfraProvisioningDataUI extends Omit<InfraProvisioningData, 'provisioner'> {

@@ -25,7 +25,7 @@ import type {
   EntityGitDetails,
   ResponseInputSetTemplateWithReplacedExpressionsResponse
 } from 'services/pipeline-ng'
-
+import type { PipelineInfoConfig } from 'services/cd-ng'
 import type { YamlBuilderHandlerBinding, YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
 import type { InputSetGitQueryParams, InputSetPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { NameIdDescriptionTags } from '@common/components'
@@ -38,6 +38,11 @@ import { useQueryParams } from '@common/hooks'
 import GitContextForm, { GitContextProps } from '@common/components/GitContextForm/GitContextForm'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import type { InputSetDTO, InputSetType } from '@pipeline/utils/types'
+import {
+  isCloneCodebaseEnabledAtLeastOneStage,
+  isCodebaseFieldsRuntimeInputs,
+  getPipelineWithoutCodebaseInputs
+} from '@pipeline/utils/CIUtils'
 import { PipelineInputSetForm } from '../PipelineInputSetForm/PipelineInputSetForm'
 import { validatePipeline } from '../PipelineStudio/StepUtil'
 import { factory } from '../PipelineSteps/Steps/__tests__/StepTestUtil'
@@ -91,12 +96,19 @@ const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
   }
 }
 
-function useValidateValues(
-  template: ResponseInputSetTemplateWithReplacedExpressionsResponse | null,
-  pipeline: ResponsePMSPipelineResponseDTO | null,
-  formErrors: Record<string, unknown>,
+function useValidateValues({
+  template,
+  pipeline,
+  formErrors,
+  setFormErrors,
+  resolvedPipeline
+}: {
+  template: ResponseInputSetTemplateWithReplacedExpressionsResponse | null
+  pipeline: ResponsePMSPipelineResponseDTO | null
+  formErrors: Record<string, unknown>
   setFormErrors: React.Dispatch<React.SetStateAction<Record<string, unknown>>>
-): { validateValues: (values: InputSetDTO & GitContextProps) => Promise<FormikErrors<InputSetDTO>> } {
+  resolvedPipeline?: PipelineInfoConfig
+}): { validateValues: (values: InputSetDTO & GitContextProps) => Promise<FormikErrors<InputSetDTO>> } {
   const { getString } = useStrings()
   const NameIdSchema = Yup.object({
     name: NameSchema(),
@@ -118,7 +130,9 @@ function useValidateValues(
           template: parse(defaultTo(template?.data?.inputSetTemplateYaml, '')).pipeline,
           originalPipeline: parse(defaultTo(pipeline?.data?.yamlPipeline, '')).pipeline,
           getString,
-          viewType: StepViewType.InputSet
+          viewType: StepViewType.InputSet,
+          viewTypeMetadata: { isInputSet: true },
+          resolvedPipeline
         }) as any
 
         if (isEmpty(errors.pipeline)) {
@@ -174,6 +188,7 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
   >()
   const { repoIdentifier, branch } = useQueryParams<InputSetGitQueryParams>()
   const history = useHistory()
+  const resolvedPipeline = parse(defaultTo(resolvedTemplatesPipelineYaml, ''))?.pipeline
 
   useEffect(() => {
     if (!isUndefined(inputSet?.outdated) && yamlHandler?.setLatestYaml) {
@@ -184,6 +199,21 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
       })
     }
   }, [inputSet?.outdated])
+
+  useEffect(() => {
+    // only do this for CI
+    if (
+      formikRef.current?.values?.pipeline?.template &&
+      isCodebaseFieldsRuntimeInputs(
+        formikRef.current?.values.pipeline?.template?.templateInputs as PipelineInfoConfig
+      ) &&
+      resolvedPipeline &&
+      !isCloneCodebaseEnabledAtLeastOneStage(resolvedPipeline)
+    ) {
+      const newPipeline = getPipelineWithoutCodebaseInputs(formikRef.current.values)
+      formikRef.current.setFieldValue('pipeline', newPipeline)
+    }
+  }, [formikRef.current?.values?.pipeline?.template])
 
   const [isEditable] = usePermission(
     {
@@ -204,7 +234,7 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
     [projectIdentifier, orgIdentifier, accountId, pipelineIdentifier]
   )
 
-  const { validateValues } = useValidateValues(template, pipeline, formErrors, setFormErrors)
+  const { validateValues } = useValidateValues({ template, pipeline, formErrors, setFormErrors, resolvedPipeline })
 
   const NameIdSchema = Yup.object({
     name: NameSchema(),

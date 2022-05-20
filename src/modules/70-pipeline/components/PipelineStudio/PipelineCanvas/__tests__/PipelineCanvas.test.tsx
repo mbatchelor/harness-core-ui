@@ -241,7 +241,7 @@ describe('Pipeline Canvas - new pipeline', () => {
         </PipelineContext.Provider>
       </TestWrapper>
     )
-    expect(queryByText('common.readonlyPermissions')).toBeTruthy()
+    expect(queryByText('common.viewAndExecutePermissions')).toBeTruthy()
     expect(queryByText('save')).toBeNull()
   })
 

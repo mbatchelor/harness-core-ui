@@ -23,6 +23,18 @@ const CONTEXT = process.cwd()
 // this BUGSNAG_TOKEN needs to be same which is passed in the docker file
 const BUGSNAG_TOKEN = process.env.BUGSNAG_TOKEN
 const BUGSNAG_SOURCEMAPS_UPLOAD = process.env.BUGSNAG_SOURCEMAPS_UPLOAD === 'true'
+const harnessPackages = Object.keys(packageJson.dependencies)
+  .filter(name => name.startsWith('@harness'))
+  .reduce((accumulator, current) => ({ ...accumulator, [current]: require(`${current}/package.json`).version }), {})
+
+const versionContent = {
+  version: packageJson.version,
+  gitCommit: process.env.GIT_COMMIT,
+  gitBranch: process.env.GIT_BRANCH,
+  ...harnessPackages
+}
+
+console.table(versionContent)
 
 const config = {
   mode: 'production',
@@ -54,11 +66,7 @@ const config = {
       chunkFilename: '[name].[id].[contenthash:6].css'
     }),
     new JSONGeneratorPlugin({
-      content: {
-        version: packageJson.version,
-        gitCommit: process.env.GIT_COMMIT,
-        gitBranch: process.env.GIT_BRANCH
-      },
+      content: versionContent,
       filename: 'version.json'
     }),
     new CircularDependencyPlugin({

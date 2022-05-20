@@ -35,7 +35,7 @@ export default function ModalEnvironmentList({
     selectedEnvironments: (string | EnvironmentResponse)[],
     item: EnvironmentResponse
   ) => void
-}) {
+}): React.ReactElement {
   const { getString } = useStrings()
   const { orgIdentifier, projectIdentifier, accountId } = useParams<ProjectPathProps & ModulePathParams>()
   const [isFetchingEnvironmentsFirstTime, setIsFetchingEnvironmentsFirstTime] = useState(false)
@@ -103,7 +103,7 @@ export default function ModalEnvironmentList({
             return null
           }
 
-          const { name, identifier, tags } = item?.environment
+          const { name, identifier, tags } = item?.environment || {}
           const checked =
             (selectedEnvironments as string[]).some((_id: string) => _id === identifier) ||
             (selectedEnvironments as EnvironmentResponse[]).some(

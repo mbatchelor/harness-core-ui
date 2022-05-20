@@ -32,6 +32,8 @@ import {
   useGetExecutionStrategyYaml
 } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
+import { loggerFor } from 'framework/logging/logging'
+import { ModuleName } from 'framework/types/ModuleName'
 import { PageSpinner } from '@common/components'
 import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import { getSelectedDeploymentType, ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
@@ -103,7 +105,7 @@ function ExecutionStrategyRef(
   const [isSubmitDisabled, disableSubmit] = useState(false)
   const [isVerifyEnabled, setIsVerifyEnabled] = useState(false)
   const [showPlayButton, setShowPlayButton] = useState<boolean>(false)
-
+  const logger = loggerFor(ModuleName.CD)
   const serviceDefinitionType = useCallback((): GetExecutionStrategyYamlQueryParams['serviceDefinitionType'] => {
     const isPropagating = get(selectedStage, 'stage.spec.serviceConfig.useFromStage', null)
     return getSelectedDeploymentType(
@@ -160,11 +162,20 @@ function ExecutionStrategyRef(
   useEffect(() => {
     const _strategies = strategies?.data
     /* istanbul ignore else */ if (_strategies) {
-      setStrategies(_strategies[serviceDefinitionType()] as any)
+      if (_strategies[serviceDefinitionType()]) {
+        setStrategies(_strategies[serviceDefinitionType()] as any)
+      } else {
+        setStrategies([selectedStrategy] as any) // setting default value as strategy
+        logger.error('Service Definition Type is missing', { serviceDefinitionType: serviceDefinitionType() })
+      }
     }
   }, [strategies?.data, serviceDefinitionType])
 
-  const { data: yamlSnippet, error } = useGetExecutionStrategyYaml({
+  const {
+    data: yamlSnippet,
+    error,
+    refetch: refetchStrategyYaml
+  } = useGetExecutionStrategyYaml({
     queryParams: {
       serviceDefinitionType: serviceDefinitionType(),
       strategyType: selectedStrategy !== 'BlankCanvas' ? selectedStrategy : 'Rolling',
@@ -224,6 +235,14 @@ function ExecutionStrategyRef(
     return type === 'Default' ? getString('pipeline.executionStrategy.strategies.default.displayName') : startCase(type)
   }
 
+  const refetchCall = (): void => {
+    if (!isSubmitDisabled) {
+      refetch()
+    } else {
+      // for yaml-snippets call fail
+      refetchStrategyYaml()
+    }
+  }
   return (
     <>
       {loading && (
@@ -231,12 +250,18 @@ function ExecutionStrategyRef(
           <PageSpinner />
         </Container>
       )}
-      {strategiesError && (
+      {(strategiesError || isSubmitDisabled) && (
         <Container data-test="executionStrategyListError" height={'100%'}>
-          <PageError onClick={() => refetch()} width={230} />
+          <PageError
+            onClick={() => {
+              refetchCall()
+            }}
+            message={isSubmitDisabled ? defaultTo((error?.data as Error)?.message, error?.message) : undefined}
+            width={230}
+          />
         </Container>
       )}
-      {!loading && !strategiesError && (
+      {!loading && !strategiesError && !isSubmitDisabled && (
         <Layout.Horizontal>
           <Layout.Vertical width={448} className={css.strategySelectionPanel}>
             <Layout.Horizontal className={css.header}>

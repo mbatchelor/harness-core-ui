@@ -17,7 +17,6 @@ import css from '@variables/components/CreateEditVariable/CreateEditVariable.mod
 
 export interface UseCreateUpdateVariableModalProps {
   onSuccess?: ((data: VariableDTO) => void) | (() => void)
-  isEdit?: boolean
 }
 
 export interface UseCreateUpdateVariableModalReturn {
@@ -42,7 +41,7 @@ const useCreateEditVariableModal = (props: UseCreateUpdateVariableModalProps): U
         onClose={() => {
           hideModal()
         }}
-        title={props.isEdit ? getString('common.editVariable') : getString('common.addVariable')}
+        title={variable ? getString('variables.editVar') : getString('common.addVariable')}
         className={css.variableDialog}
       >
         <CreateEditVariable

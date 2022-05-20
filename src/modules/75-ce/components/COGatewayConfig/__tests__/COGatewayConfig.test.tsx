@@ -211,7 +211,14 @@ const mockedRegionsData = { data: { response: [{ name: 'ap-southeast-1', label: 
 
 const mockedZonesData = { response: ['us-container-1'] }
 
+const mockedTagsData = { response: [{ key: 'testTagKey', values: ['testTagValue'] }] }
+
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
+
+jest.mock('@common/hooks/useFeatureFlag', () => ({
+  useFeatureFlag: jest.fn(() => true),
+  useFeatureFlags: jest.fn(() => ({}))
+}))
 
 jest.mock('services/lw', () => ({
   useAllResourcesOfAccount: jest.fn().mockImplementation(() => ({
@@ -237,6 +244,11 @@ jest.mock('services/lw', () => ({
   useAllZones: jest.fn().mockImplementation(() => ({
     data: mockedZonesData,
     loading: false
+  })),
+  useGetInstancesTags: jest.fn().mockImplementation(() => ({
+    data: mockedTagsData,
+    loading: false,
+    refetch: jest.fn()
   }))
 }))
 
@@ -314,9 +326,10 @@ describe('Auto stopping Rule creation Tests', () => {
     await waitFor(() => {
       fireEvent.click(addInstanceCta)
     })
-    expect(getByText('Select Instances')).toBeTruthy()
+    // expect(container).toMatchSnapshot('TEST_SNAPSHOT_DEBUG')
+    expect(getByText('ce.co.autoStoppingRule.configuration.instanceModal.header')).toBeTruthy()
     fireEvent.click(getByTestId('close-instance-modal'))
-    expect(queryByText('Select Instances')).toBeFalsy()
+    expect(queryByText('ce.co.autoStoppingRule.configuration.instanceModal.header')).toBeFalsy()
 
     const spotCard = container.querySelector('#configStep3 .bp3-card')
     expect(spotCard).toBeDefined()

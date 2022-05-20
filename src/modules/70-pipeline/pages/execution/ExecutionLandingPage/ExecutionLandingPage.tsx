@@ -33,6 +33,7 @@ import { EvaluationModal } from '@governance/EvaluationModal'
 import ExecutionContext, { GraphCanvasState } from '@pipeline/context/ExecutionContext'
 import { ModuleName } from 'framework/types/ModuleName'
 import useTabVisible from '@common/hooks/useTabVisible'
+import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { ExecutionHeader } from './ExecutionHeader/ExecutionHeader'
 import ExecutionMetadata from './ExecutionMetadata/ExecutionMetadata'
 import ExecutionTabs from './ExecutionTabs/ExecutionTabs'
@@ -111,7 +112,13 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
   /* These are updated only when new data is fetched successfully */
   const [selectedStageId, setSelectedStageId] = React.useState<string>('')
   const [selectedStepId, setSelectedStepId] = React.useState<string>('')
+  const { preference: savedExecutionView, setPreference: setSavedExecutionView } = usePreferenceStore<
+    string | undefined
+  >(PreferenceScope.USER, 'executionViewType')
   const queryParams = useQueryParams<ExecutionPageQueryParams>()
+  const initialSelectedView = savedExecutionView || 'graph'
+  const { view } = queryParams
+  const isLogView = view === 'log' || (!view && initialSelectedView === 'log')
   const location = useLocation<{ shouldShowGovernanceEvaluations: boolean; governanceMetadata: GovernanceMetadata }>()
   const locationPathNameArr = location?.pathname?.split('/') || []
   const selectedPageTab = locationPathNameArr[locationPathNameArr.length - 1]
@@ -266,7 +273,7 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
               <ExecutionHeader />
               <ExecutionMetadata />
             </header>
-            <ExecutionTabs />
+            <ExecutionTabs savedExecutionView={savedExecutionView} setSavedExecutionView={setSavedExecutionView} />
             {module === 'ci' && (
               <>
                 {deprecatedImages?.length ? (
@@ -297,7 +304,7 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
             )}
             <div
               className={css.childContainer}
-              data-view={(selectedPageTab === PageTabs.PIPELINE && queryParams.view) || 'graph'}
+              data-view={selectedPageTab === PageTabs.PIPELINE && isLogView ? 'log' : 'graph'}
               id="pipeline-execution-container"
             >
               {props.children}

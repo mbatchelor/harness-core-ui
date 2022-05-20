@@ -6,71 +6,55 @@ exports[`K8s cluster selector render cluster selector screen with data 1`] = `
     class="StyledProps--font StyledProps--main"
   >
     <div
-      class="Layout--vertical Layout--layout-spacing-large StyledProps--main"
+      class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
     >
       <p
-        class="StyledProps--font StyledProps--main header StyledProps--font-large"
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-h3"
       >
-        Select Connector
+        ce.co.autoStoppingRule.configuration.kubernetesModal.title
       </p>
       <div
-        class="Layout--horizontal StyledProps--main infoSection"
-      >
-        <span
-          class="bp3-icon StyledProps--main"
-          data-icon="info"
-        >
-          <svg
-            height="24"
-            viewBox="0 0 12 12"
-            width="24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              clip-rule="evenodd"
-              d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96l-.836.144zm1.846-7.352v1.03h-1.01v-1.03h1.01z"
-              fill-rule="evenodd"
-            />
-          </svg>
-        </span>
-        <div>
-          <p
-            class="StyledProps--font StyledProps--main"
-          >
-            The connectors shown below are the clusters who are connected to a 
-            <span>
-              Harness Delegate
-            </span>
-          </p>
-          <p
-            class="StyledProps--font StyledProps--main"
-          >
-            A 
-            <span>
-              Harness Delegate
-            </span>
-             is a service that can run in local network or VPC to connect artifact servers, infrastructure and verification providers to install projects and pipelines. If the cluster you would like to monitor does not have a Harness delegate connected to it, you will have to create a connector
-          </p>
-        </div>
-      </div>
+        class="sectionSeparator"
+      />
       <div
-        class="Layout--horizontal StyledProps--main"
-        style="padding-bottom: 20px; padding-top: 20px; border-bottom: 1px solid #CDD3DD; justify-content: space-between;"
+        class="StyledProps--font StyledProps--main"
       >
         <div
-          class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main ctaContainer"
+          class="Layout--horizontal StyledProps--main infoSection"
         >
-          <button
-            class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow"
-            style="background-color: rgb(2, 120, 213); color: rgb(243, 243, 250);"
-            type="button"
+          <span
+            class="bp3-icon StyledProps--main"
+            data-icon="info"
           >
-            <span
-              class="bp3-button-text"
+            <svg
+              height="24"
+              viewBox="0 0 12 12"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              Add selected
-            </span>
-          </button>
+              <path
+                clip-rule="evenodd"
+                d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96l-.836.144zm1.846-7.352v1.03h-1.01v-1.03h1.01z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+          <div>
+            <p
+              class="StyledProps--font StyledProps--main"
+            >
+              ce.co.autoStoppingRule.configuration.kubernetesModal.infoText1
+            </p>
+            <p
+              class="StyledProps--font StyledProps--main"
+            >
+              ce.co.autoStoppingRule.configuration.kubernetesModal.infoText2
+            </p>
+          </div>
+        </div>
+        <div
+          class="StyledProps--font StyledProps--main ctaContainer"
+        >
           <button
             class="bp3-button Button--button StyledProps--font StyledProps--main borderBtn Button--with-current-color Button--iconOnly Button--without-shadow"
             type="button"
@@ -78,46 +62,53 @@ exports[`K8s cluster selector render cluster selector screen with data 1`] = `
             <span
               class="bp3-button-text"
             >
-              + Create a new connector
+              ce.co.autoStoppingRule.configuration.kubernetesModal.createNewConnectorBtn
             </span>
           </button>
         </div>
-        <div
-          class="bp3-input-group ui-search-box ExpandingSearchInput--main    ExpandingSearchInput--light"
-          data-name=""
-        >
-          <span
-            class="bp3-icon StyledProps--main ExpandingSearchInput--icon StyledProps--color StyledProps--color-grey700"
-            data-icon="thinner-search"
-          >
-            <svg
-              fill="none"
-              height="14"
-              viewBox="0 0 16 16"
-              width="14"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M7.125 13.25c1.617 0 3.32-.695 4.375-1.75L15 15l-3.5-3.5c1.021-1.005 1.75-2.894 1.75-4.375a6.125 6.125 0 10-6.125 6.125z"
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-          </span>
-          <input
-            class="bp3-input  ExpandingSearchInput--filter"
-            dir="auto"
-            placeholder="Search"
-            style="padding-right: 0px;"
-            type="search"
-            value=""
-          />
-        </div>
       </div>
+      <div
+        class="sectionSeparator"
+      />
       <div
         class="StyledProps--font StyledProps--main"
       >
+        <div
+          class="Layout--horizontal StyledProps--main searchAndFilterWrapper"
+        >
+          <div
+            class="bp3-input-group ui-search-box ExpandingSearchInput--main searchContainer  ExpandingSearchInput--alwaysExpanded ExpandingSearchInput--light"
+            data-name=""
+          >
+            <span
+              class="bp3-icon StyledProps--main ExpandingSearchInput--icon StyledProps--color StyledProps--color-grey700"
+              data-icon="thinner-search"
+            >
+              <svg
+                fill="none"
+                height="14"
+                viewBox="0 0 16 16"
+                width="14"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M7.125 13.25c1.617 0 3.32-.695 4.375-1.75L15 15l-3.5-3.5c1.021-1.005 1.75-2.894 1.75-4.375a6.125 6.125 0 10-6.125 6.125z"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+            <input
+              class="bp3-input  ExpandingSearchInput--filter"
+              dir="auto"
+              placeholder="Search"
+              style="padding-right: 38px;"
+              type="search"
+              value=""
+            />
+          </div>
+        </div>
         <div
           class="TableV2--table"
         >
@@ -454,9 +445,28 @@ exports[`K8s cluster selector render cluster selector screen with data 1`] = `
               </button>
             </div>
             <span>
-              Showing 8 per page
+              Showing 5 per page
             </span>
           </div>
+        </div>
+      </div>
+      <div
+        class="Layout--horizontal StyledProps--main"
+        style="padding-top: 20px;"
+      >
+        <div
+          class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main ctaContainer"
+        >
+          <button
+            class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--variation Button--variation-primary"
+            type="button"
+          >
+            <span
+              class="bp3-button-text"
+            >
+              ce.co.autoStoppingRule.configuration.addSelectedBtnText
+            </span>
+          </button>
         </div>
       </div>
     </div>
@@ -470,73 +480,55 @@ exports[`K8s cluster selector render empty cluster selector screen 1`] = `
     class="StyledProps--font StyledProps--main"
   >
     <div
-      class="Layout--vertical Layout--layout-spacing-large StyledProps--main"
+      class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
     >
       <p
-        class="StyledProps--font StyledProps--main header StyledProps--font-large"
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-h3"
       >
-        Select Connector
+        ce.co.autoStoppingRule.configuration.kubernetesModal.title
       </p>
       <div
-        class="Layout--horizontal StyledProps--main infoSection"
-      >
-        <span
-          class="bp3-icon StyledProps--main"
-          data-icon="info"
-        >
-          <svg
-            height="24"
-            viewBox="0 0 12 12"
-            width="24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              clip-rule="evenodd"
-              d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96l-.836.144zm1.846-7.352v1.03h-1.01v-1.03h1.01z"
-              fill-rule="evenodd"
-            />
-          </svg>
-        </span>
-        <div>
-          <p
-            class="StyledProps--font StyledProps--main"
-          >
-            The connectors shown below are the clusters who are connected to a 
-            <span>
-              Harness Delegate
-            </span>
-          </p>
-          <p
-            class="StyledProps--font StyledProps--main"
-          >
-            A 
-            <span>
-              Harness Delegate
-            </span>
-             is a service that can run in local network or VPC to connect artifact servers, infrastructure and verification providers to install projects and pipelines. If the cluster you would like to monitor does not have a Harness delegate connected to it, you will have to create a connector
-          </p>
-        </div>
-      </div>
+        class="sectionSeparator"
+      />
       <div
-        class="Layout--horizontal StyledProps--main"
-        style="padding-bottom: 20px; padding-top: 20px; border-bottom: 1px solid #CDD3DD; justify-content: space-between;"
+        class="StyledProps--font StyledProps--main"
       >
         <div
-          class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main ctaContainer"
+          class="Layout--horizontal StyledProps--main infoSection"
         >
-          <button
-            class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow"
-            disabled=""
-            style="background-color: rgb(2, 120, 213); color: rgb(243, 243, 250);"
-            tabindex="-1"
-            type="button"
+          <span
+            class="bp3-icon StyledProps--main"
+            data-icon="info"
           >
-            <span
-              class="bp3-button-text"
+            <svg
+              height="24"
+              viewBox="0 0 12 12"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              Add selected
-            </span>
-          </button>
+              <path
+                clip-rule="evenodd"
+                d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96l-.836.144zm1.846-7.352v1.03h-1.01v-1.03h1.01z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+          <div>
+            <p
+              class="StyledProps--font StyledProps--main"
+            >
+              ce.co.autoStoppingRule.configuration.kubernetesModal.infoText1
+            </p>
+            <p
+              class="StyledProps--font StyledProps--main"
+            >
+              ce.co.autoStoppingRule.configuration.kubernetesModal.infoText2
+            </p>
+          </div>
+        </div>
+        <div
+          class="StyledProps--font StyledProps--main ctaContainer"
+        >
           <button
             class="bp3-button Button--button StyledProps--font StyledProps--main borderBtn Button--with-current-color Button--iconOnly Button--without-shadow"
             type="button"
@@ -544,46 +536,53 @@ exports[`K8s cluster selector render empty cluster selector screen 1`] = `
             <span
               class="bp3-button-text"
             >
-              + Create a new connector
+              ce.co.autoStoppingRule.configuration.kubernetesModal.createNewConnectorBtn
             </span>
           </button>
         </div>
-        <div
-          class="bp3-input-group ui-search-box ExpandingSearchInput--main    ExpandingSearchInput--light"
-          data-name=""
-        >
-          <span
-            class="bp3-icon StyledProps--main ExpandingSearchInput--icon StyledProps--color StyledProps--color-grey700"
-            data-icon="thinner-search"
-          >
-            <svg
-              fill="none"
-              height="14"
-              viewBox="0 0 16 16"
-              width="14"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M7.125 13.25c1.617 0 3.32-.695 4.375-1.75L15 15l-3.5-3.5c1.021-1.005 1.75-2.894 1.75-4.375a6.125 6.125 0 10-6.125 6.125z"
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-          </span>
-          <input
-            class="bp3-input  ExpandingSearchInput--filter"
-            dir="auto"
-            placeholder="Search"
-            style="padding-right: 0px;"
-            type="search"
-            value=""
-          />
-        </div>
       </div>
+      <div
+        class="sectionSeparator"
+      />
       <div
         class="StyledProps--font StyledProps--main"
       >
+        <div
+          class="Layout--horizontal StyledProps--main searchAndFilterWrapper"
+        >
+          <div
+            class="bp3-input-group ui-search-box ExpandingSearchInput--main searchContainer  ExpandingSearchInput--alwaysExpanded ExpandingSearchInput--light"
+            data-name=""
+          >
+            <span
+              class="bp3-icon StyledProps--main ExpandingSearchInput--icon StyledProps--color StyledProps--color-grey700"
+              data-icon="thinner-search"
+            >
+              <svg
+                fill="none"
+                height="14"
+                viewBox="0 0 16 16"
+                width="14"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M7.125 13.25c1.617 0 3.32-.695 4.375-1.75L15 15l-3.5-3.5c1.021-1.005 1.75-2.894 1.75-4.375a6.125 6.125 0 10-6.125 6.125z"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+            <input
+              class="bp3-input  ExpandingSearchInput--filter"
+              dir="auto"
+              placeholder="Search"
+              style="padding-right: 38px;"
+              type="search"
+              value=""
+            />
+          </div>
+        </div>
         <div
           class="TableV2--table"
         >
@@ -667,6 +666,27 @@ exports[`K8s cluster selector render empty cluster selector screen 1`] = `
           <div
             class="TableV2--body"
           />
+        </div>
+      </div>
+      <div
+        class="Layout--horizontal StyledProps--main"
+        style="padding-top: 20px;"
+      >
+        <div
+          class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main ctaContainer"
+        >
+          <button
+            class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--variation Button--variation-primary"
+            disabled=""
+            tabindex="-1"
+            type="button"
+          >
+            <span
+              class="bp3-button-text"
+            >
+              ce.co.autoStoppingRule.configuration.addSelectedBtnText
+            </span>
+          </button>
         </div>
       </div>
     </div>

@@ -16,6 +16,8 @@ import type {
   FixedScheduleClient,
   GatewayDetails
 } from '@ce/components/COCreateGateway/models'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import type { Service } from 'services/lw'
 import COGatewayConfigStep from '../../COGatewayConfigStep'
 import RuleDependency from './RuleDependency'
@@ -32,6 +34,7 @@ interface AdvancedConfigurationProps {
 
 const AdvancedConfiguration: React.FC<AdvancedConfigurationProps> = props => {
   const { getString } = useStrings()
+  const dryRunModeEnabled = useFeatureFlag(FeatureFlag.CCM_AS_DRY_RUN)
 
   const [selectedTab, setSelectedTab] = useState<AdvancedConfigTabs>(
     props.activeStepDetails?.count === 4 && props.activeStepDetails?.tabId
@@ -66,19 +69,34 @@ const AdvancedConfiguration: React.FC<AdvancedConfigurationProps> = props => {
       }}
     >
       <Layout.Vertical spacing="medium">
-        {(isK8sSelected || isEcsSelected) && (
-          <Toggle
-            label={'Hide Progress Page'}
-            checked={props.gatewayDetails.opts.hide_progress_page}
-            onToggle={isToggled => {
-              props.setGatewayDetails({
-                ...props.gatewayDetails,
-                opts: { ...props.gatewayDetails.opts, hide_progress_page: isToggled }
-              })
-            }}
-            data-testid={'progressPageViewToggle'}
-          />
-        )}
+        <Layout.Horizontal spacing={'large'}>
+          {(isK8sSelected || isEcsSelected) && (
+            <Toggle
+              label={getString('ce.co.autoStoppingRule.review.hideProgressPage')}
+              checked={props.gatewayDetails.opts.hide_progress_page}
+              onToggle={isToggled => {
+                props.setGatewayDetails({
+                  ...props.gatewayDetails,
+                  opts: { ...props.gatewayDetails.opts, hide_progress_page: isToggled }
+                })
+              }}
+              data-testid={'progressPageViewToggle'}
+            />
+          )}
+          {dryRunModeEnabled && (
+            <Toggle
+              label={getString('ce.co.dryRunMode')}
+              checked={props.gatewayDetails.opts.dry_run}
+              onToggle={isToggled => {
+                props.setGatewayDetails({
+                  ...props.gatewayDetails,
+                  opts: { ...props.gatewayDetails.opts, dry_run: isToggled }
+                })
+              }}
+              data-testid={'dryRunToggle'}
+            />
+          )}
+        </Layout.Horizontal>
         <Tabs id="advancedConfigTabs" selectedTabId={selectedTab} onChange={handleTabChange}>
           <Tab
             id={AdvancedConfigTabs.deps}

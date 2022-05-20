@@ -395,7 +395,7 @@ const updateSpecialFields = ({
   key
 }: UpdateSpecialFieldParams): void => {
   const metaKeyId = value
-  const { yamlProperties, yamlOutputProperties } = (metaDataMap as any)?.[value]
+  const { yamlProperties, yamlOutputProperties } = defaultTo((metaDataMap as any)?.[value], {})
 
   const yamlProps = defaultTo(yamlProperties, yamlOutputProperties)
   const updatedPath = `${path.trim().length === 0 ? '' : `${path}.`}${key}`

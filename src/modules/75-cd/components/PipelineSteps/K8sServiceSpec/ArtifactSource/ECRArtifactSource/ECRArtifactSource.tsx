@@ -19,7 +19,6 @@ import { ArtifactToConnectorMap, ENABLED_ARTIFACT_TYPES } from '@pipeline/compon
 import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { shouldFetchTagsSource } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import ExperimentalInput from '../../K8sServiceSpecForms/ExperimentalInput'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
@@ -27,7 +26,8 @@ import {
   getYamlData,
   isArtifactSourceRuntime,
   isFieldfromTriggerTabDisabled,
-  resetTags
+  resetTags,
+  shouldFetchTagsSource
 } from '../artifactSourceUtils'
 import ArtifactTagRuntimeField from '../ArtifactSourceRuntimeFields/ArtifactTagRuntimeField'
 import css from '../../K8sServiceSpec.module.scss'
@@ -63,10 +63,8 @@ const Content = (props: ECRRenderContent): JSX.Element => {
   const { getString } = useStrings()
   const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')
   const { expressions } = useVariablesExpression()
-  const [lastQueryData, setLastQueryData] = React.useState<{ imagePath: string; region: any }>({
-    imagePath: '',
-    region: ''
-  })
+  const [lastQueryData, setLastQueryData] = React.useState({ connectorRef: '', imagePath: '', region: '' })
+
   const {
     data: ecrTagsData,
     loading: fetchingTags,
@@ -125,15 +123,17 @@ const Content = (props: ECRRenderContent): JSX.Element => {
   const regionValue = get(initialValues, `artifacts.${artifactPath}.spec.region`, '') || artifact?.spec?.region
   const fetchTags = (): void => {
     if (canFetchTags()) {
-      setLastQueryData({ imagePath: imagePathValue, region: regionValue })
+      setLastQueryData({ connectorRef: connectorRefValue, imagePath: imagePathValue, region: regionValue })
       refetch()
     }
   }
 
   const canFetchTags = (): boolean => {
     return !!(
-      (lastQueryData.imagePath !== imagePathValue || lastQueryData.region !== regionValue) &&
-      shouldFetchTagsSource(connectorRefValue, [imagePathValue, regionValue])
+      (lastQueryData.connectorRef != connectorRefValue ||
+        lastQueryData.imagePath !== imagePathValue ||
+        lastQueryData.region !== regionValue) &&
+      shouldFetchTagsSource([connectorRefValue, imagePathValue, regionValue])
     )
   }
 

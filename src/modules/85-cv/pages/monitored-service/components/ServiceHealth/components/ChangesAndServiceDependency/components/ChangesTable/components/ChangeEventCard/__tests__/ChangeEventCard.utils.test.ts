@@ -54,10 +54,14 @@ describe('Validate Utils', () => {
   })
 
   test('should createChangeDetailsData', () => {
-    expect(createChangeTitleData(payload.resource as CustomChangeEventDTO)).toEqual({
+    expect(createChangeTitleData(payload.resource as CustomChangeEventDTO | undefined)).toEqual({
       executionId: 'rZc13AsoT1CZigLguBXZaw',
       name: 'A little bump in the road',
-      type: 'PagerDuty'
+      type: 'PagerDuty',
+      //type: 'HarnessCDNextGen',
+      serviceIdentifier: 'service1',
+      envIdentifier: 'prod',
+      status: 'triggered'
     })
   })
 

@@ -10,7 +10,7 @@ import type { CellProps, Column, Renderer } from 'react-table'
 import { Container, Layout, TableV2, Text } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { Position } from '@blueprintjs/core'
-import { defaultTo, isEmpty } from 'lodash-es'
+import { defaultTo, isEmpty, isEqual } from 'lodash-es'
 import { TemplateListCardContextMenu } from '@templates-library/pages/TemplatesPage/views/TemplateListCardContextMenu/TemplateListCardContextMenu'
 import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
@@ -137,7 +137,7 @@ const RenderColumnLabel: Renderer<CellProps<TemplateSummaryResponse>> = ({ row }
 
 export const TemplatesListView: React.FC<TemplatesViewProps> = (props): JSX.Element => {
   const { getString } = useStrings()
-  const { data, selectedIdentifier, gotoPage, onPreview, onOpenEdit, onOpenSettings, onDelete, onSelect } = props
+  const { data, selectedTemplate, gotoPage, onPreview, onOpenEdit, onOpenSettings, onDelete, onSelect } = props
   const { isGitSyncEnabled } = useAppStore()
   const hideMenu = !onPreview && !onOpenEdit && !onOpenSettings && !onDelete
 
@@ -220,7 +220,7 @@ export const TemplatesListView: React.FC<TemplatesViewProps> = (props): JSX.Elem
         pageIndex: defaultTo(data.number, 0),
         gotoPage
       }}
-      getRowClassName={row => (row.original.identifier === selectedIdentifier ? css.selected : '')}
+      getRowClassName={row => (isEqual(row.original, selectedTemplate) ? css.selected : '')}
     />
   )
 }

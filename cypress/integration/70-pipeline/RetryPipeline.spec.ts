@@ -1,4 +1,4 @@
-import { executionListRoute, executionSummaryApi } from '../../support/70-pipeline/constants'
+import { executionListRoute, executionSummaryApi, pageHeaderClassName } from '../../support/70-pipeline/constants'
 
 describe('RETRY FAILED PIPELINE', () => {
   const gitSyncCall =
@@ -23,6 +23,7 @@ describe('RETRY FAILED PIPELINE', () => {
   })
 
   it('Retry Failed Pipeline option should be visible for failed/ aborted executions', () => {
+    cy.visitPageAssertion(pageHeaderClassName)
     cy.wait('@pipelineExecutionSummary')
     cy.get('*[class^="ExecutionCard-module_cardLink"]').should('be.visible')
 
@@ -41,6 +42,7 @@ describe('RETRY FAILED PIPELINE', () => {
   })
 
   it('Retry Failed Pipeline option should not exist for successful executions', () => {
+    cy.visitPageAssertion(pageHeaderClassName)
     cy.wait('@pipelineExecutionSummary')
     cy.get('*[class^="ExecutionCard-module_cardLink"]').should('be.visible')
 
@@ -56,6 +58,7 @@ describe('RETRY FAILED PIPELINE', () => {
   })
 
   it('Clicking on Retry Failed pipeline renders retry failed pipeline modal', () => {
+    cy.visitPageAssertion(pageHeaderClassName)
     cy.wait('@pipelineExecutionSummary')
 
     cy.get('*[class^="ExecutionCard-module_cardLink"]')

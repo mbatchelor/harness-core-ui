@@ -131,7 +131,7 @@ activityHistoryLabel: Activity History
 connectionMode: Connection Mode
 credType: Credential Type
 noDeploymentText: Your Pipeline does not have any executions yet. Click the button below to run a pipeline.
-noBuildsText: Your account does not have any builds yet. Click the button below to run a pipeline.
+noBuildsText: Your project does not have any builds yet. Click the button below to run a pipeline.
 newConnector: 'New Connector'
 thisConnectorIsSavedAs: 'Selected Connector'
 errorTitle: Something went wrong...

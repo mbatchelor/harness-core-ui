@@ -288,7 +288,7 @@ export const EditVariationsModal: React.FC<EditVariationsModalProps> = ({
                         style={{ paddingLeft: 0 }}
                         onClick={() => {
                           formikProps.setFieldValue('variations', [
-                            ...formikProps.values?.variations,
+                            ...(formikProps.values?.variations || []),
                             { identifier: '', name: '', value: '', description: '' }
                           ])
                         }}

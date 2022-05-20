@@ -115,7 +115,7 @@ exports[`Select Artifact - For Artifact tests initial render 1`] = `
             <span
               class="StyledProps--font StyledProps--main textHeading StyledProps--inline"
             >
-              COMMON.LOCATION
+              PIPELINE.ARTIFACTTRIGGERCONFIGPANEL.LOCATIONREPOPATH
             </span>
           </div>
         </p>
@@ -136,7 +136,7 @@ exports[`Select Artifact - For Artifact tests initial render 1`] = `
             <span
               class="StyledProps--font StyledProps--main textHeading StyledProps--inline"
             >
-              PIPELINE.ARTIFACTTRIGGERCONFIGPANEL.BUILDTAG
+              PIPELINE.ARTIFACTTRIGGERCONFIGPANEL.BUILDTAGARTIFACTPATH
             </span>
           </div>
         </p>
@@ -520,7 +520,7 @@ exports[`Select Artifact - For Artifact tests on click of select button 1`] = `
             <span
               class="StyledProps--font StyledProps--main textHeading StyledProps--inline"
             >
-              COMMON.LOCATION
+              PIPELINE.ARTIFACTTRIGGERCONFIGPANEL.LOCATIONREPOPATH
             </span>
           </div>
         </p>
@@ -541,7 +541,7 @@ exports[`Select Artifact - For Artifact tests on click of select button 1`] = `
             <span
               class="StyledProps--font StyledProps--main textHeading StyledProps--inline"
             >
-              PIPELINE.ARTIFACTTRIGGERCONFIGPANEL.BUILDTAG
+              PIPELINE.ARTIFACTTRIGGERCONFIGPANEL.BUILDTAGARTIFACTPATH
             </span>
           </div>
         </p>
@@ -825,7 +825,7 @@ exports[`Select Artifact - For Artifact tests when selected tag is not runtime i
             <span
               class="StyledProps--font StyledProps--main textHeading StyledProps--inline"
             >
-              COMMON.LOCATION
+              PIPELINE.ARTIFACTTRIGGERCONFIGPANEL.LOCATIONREPOPATH
             </span>
           </div>
         </p>
@@ -846,7 +846,7 @@ exports[`Select Artifact - For Artifact tests when selected tag is not runtime i
             <span
               class="StyledProps--font StyledProps--main textHeading StyledProps--inline"
             >
-              PIPELINE.ARTIFACTTRIGGERCONFIGPANEL.BUILDTAG
+              PIPELINE.ARTIFACTTRIGGERCONFIGPANEL.BUILDTAGARTIFACTPATH
             </span>
           </div>
         </p>

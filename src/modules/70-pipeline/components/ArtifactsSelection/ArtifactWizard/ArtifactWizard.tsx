@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { StepWizard, Icon, MultiTypeInputType } from '@wings-software/uicore'
-import type { IconProps } from '@wings-software/uicore/dist/icons/Icon'
+import type { IconProps } from '@harness/icons'
 import { String, StringKeys, useStrings } from 'framework/strings'
 import { ArtifactoryRepoType } from '../ArtifactRepository/ArtifactoryRepoType'
 import { ArtifactConnector } from '../ArtifactRepository/ArtifactConnector'

@@ -1,0 +1,40 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+@mixin severityColors() {
+  --critical-bg: var(--red-800);
+  --high-bg: var(--orange-900);
+  --medium-bg: var(--orange-600);
+  --low-bg: var(--purple-500);
+  --info-bg: var(--grey-600);
+  --unassigned-bg: var(--grey-600);
+}
+
+.critical {
+  background-color: var(--critical-bg) !important;
+  color: var(--white) !important;
+}
+.high {
+  background-color: var(--high-bg) !important;
+  color: var(--white) !important;
+}
+.medium {
+  background-color: var(--medium-bg) !important;
+  color: var(--white) !important;
+}
+.low {
+  background-color: var(--low-bg) !important;
+  color: var(--white) !important;
+}
+.info {
+  background-color: var(--info-bg) !important;
+  color: var(--white) !important;
+}
+.unassigned {
+  background-color: var(--unassigned-bg) !important;
+  color: var(--white) !important;
+}

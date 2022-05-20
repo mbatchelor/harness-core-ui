@@ -279,6 +279,7 @@ exports[`test cases for Perspective details Page should be able to render no dat
           >
             <button
               class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main timeGranularityButton StyledProps--intent-primary Button--with-current-color Button--without-shadow Button--withRightIcon"
+              data-testid="groupBy"
               type="button"
             >
               <span
@@ -1077,6 +1078,7 @@ exports[`test cases for Perspective details Page should be able to render the de
           >
             <button
               class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main timeGranularityButton StyledProps--intent-primary Button--with-current-color Button--without-shadow Button--withRightIcon"
+              data-testid="groupBy"
               type="button"
             >
               <span

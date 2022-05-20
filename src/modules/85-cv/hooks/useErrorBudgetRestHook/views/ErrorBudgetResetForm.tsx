@@ -14,7 +14,6 @@ import {
   FormikForm,
   FormInput,
   Heading,
-  Icon,
   Layout,
   Text,
   Accordion
@@ -72,7 +71,7 @@ const ErrorBudgetResetForm: React.FC<ErrorBudgetResetFormProps> = ({ serviceLeve
         formName="errorBudgetReset"
         initialValues={{}}
         validationSchema={yup.object().shape({
-          errorBudgetIncrementPercentage: yup
+          errorBudgetIncrementMinutes: yup
             .number()
             .typeError(getString('cv.increaseErrorBudgetByIsRequired'))
             .min(1, getString('common.validation.valueMustBeGreaterThanOrEqualToN', { n: 1 }))
@@ -92,12 +91,20 @@ const ErrorBudgetResetForm: React.FC<ErrorBudgetResetFormProps> = ({ serviceLeve
             <Layout.Horizontal>
               <Container width={325} padding={{ right: 'xxxlarge' }} border={{ right: true }}>
                 <FormInput.Text
-                  name="errorBudgetIncrementPercentage"
+                  name="errorBudgetIncrementMinutes"
                   label={getString('cv.increaseErrorBudgetBy')}
                   inputGroup={{
                     type: 'number',
                     min: 1,
-                    rightElement: <Icon name="percentage" padding="small" />
+                    rightElement: (
+                      <Text
+                        color={Color.GREY_600}
+                        font={{ variation: FontVariation.BODY }}
+                        padding={{ top: 'xsmall', right: 'small' }}
+                      >
+                        {getString('cv.minutes')}
+                      </Text>
+                    )
                   }}
                 />
                 <FormInput.TextArea name="reason" label={getString('reason')} />
@@ -114,7 +121,7 @@ const ErrorBudgetResetForm: React.FC<ErrorBudgetResetFormProps> = ({ serviceLeve
                   >
                     {calculateErrorBudgetByIncrement(
                       serviceLevelObjective.totalErrorBudget,
-                      formik.values.errorBudgetIncrementPercentage
+                      formik.values.errorBudgetIncrementMinutes
                     )}
                   </Heading>
                   <Text inline font={{ variation: FontVariation.FORM_HELP }}>
@@ -136,7 +143,7 @@ const ErrorBudgetResetForm: React.FC<ErrorBudgetResetFormProps> = ({ serviceLeve
                     {calculateRemainingErrorBudgetByIncrement(
                       serviceLevelObjective.totalErrorBudget,
                       serviceLevelObjective.errorBudgetRemaining,
-                      formik.values.errorBudgetIncrementPercentage
+                      formik.values.errorBudgetIncrementMinutes
                     )}
                   </Heading>
                   <Text inline font={{ variation: FontVariation.FORM_HELP }} padding={{ right: 'small' }}>
@@ -155,7 +162,7 @@ const ErrorBudgetResetForm: React.FC<ErrorBudgetResetFormProps> = ({ serviceLeve
                     {calculateRemainingErrorBudgetByIncrement(
                       serviceLevelObjective.totalErrorBudget,
                       serviceLevelObjective.errorBudgetRemaining,
-                      formik.values.errorBudgetIncrementPercentage,
+                      formik.values.errorBudgetIncrementMinutes,
                       true
                     )}
                   </Heading>

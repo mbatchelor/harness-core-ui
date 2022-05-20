@@ -66,6 +66,12 @@ function FormContent(formContentProps: ServiceNowCreateDeploymentModeFormContent
   const connectorRefFixedValue = getGenuineValue(
     initialValues.spec?.connectorRef || (inputSetData?.allValues?.spec?.connectorRef as string)
   )
+  const descriptionFieldIndex = template?.spec?.fields?.findIndex(
+    field => field.name === ServiceNowStaticFields.description
+  )
+  const shortDescriptionFieldIndex = template?.spec?.fields?.findIndex(
+    field => field.name === ServiceNowStaticFields.short_description
+  )
 
   useEffect(() => {
     if (connectorRefFixedValue) {
@@ -170,7 +176,7 @@ function FormContent(formContentProps: ServiceNowCreateDeploymentModeFormContent
           }}
           label={getString('description')}
           className={css.deploymentViewMedium}
-          name={`${prefix}spec.description`}
+          name={`${prefix}spec.fields[${descriptionFieldIndex}].value`}
           disabled={isApprovalStepFieldDisabled(readonly)}
           placeholder={getString('common.descriptionPlaceholder')}
         />
@@ -185,7 +191,7 @@ function FormContent(formContentProps: ServiceNowCreateDeploymentModeFormContent
           }}
           label={getString('pipeline.serviceNowCreateStep.shortDescription')}
           className={css.deploymentViewMedium}
-          name={`${prefix}spec.shortDescription`}
+          name={`${prefix}spec.fields[${shortDescriptionFieldIndex}].value`}
           disabled={isApprovalStepFieldDisabled(readonly)}
           placeholder={getString('pipeline.serviceNowCreateStep.shortDescriptionPlaceholder')}
         />

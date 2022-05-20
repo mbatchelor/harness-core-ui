@@ -10,7 +10,7 @@ import { render, act, fireEvent, waitFor } from '@testing-library/react'
 import { RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
 import { StepViewType, StepFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import type { UseGetReturnData } from '@common/utils/testUtils'
+import { findPopoverContainer, UseGetReturnData } from '@common/utils/testUtils'
 import type { ResponseConnectorResponse } from 'services/cd-ng'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import { RunStep } from '../RunStep'
@@ -78,10 +78,10 @@ describe('Run Step', () => {
       expect(shellOptionsDropdownSelect).toBeTruthy()
       await waitFor(() => {
         fireEvent.click(shellOptionsDropdownSelect)
-        const menuItemLabels = container.querySelectorAll('[class*="menuItemLabel"]')
-        expect(menuItemLabels.length).toEqual(4)
-        expect(menuItemLabels[0].innerHTML).toEqual('common.bash')
-        expect(menuItemLabels[3].innerHTML).toEqual('common.sh')
+        const menuItemLabels = findPopoverContainer()?.querySelectorAll('[class*="menuItemLabel"]')
+        expect(menuItemLabels?.length).toEqual(4)
+        expect(menuItemLabels?.[0].innerHTML).toEqual('common.bash')
+        expect(menuItemLabels?.[3].innerHTML).toEqual('common.sh')
       })
     })
 

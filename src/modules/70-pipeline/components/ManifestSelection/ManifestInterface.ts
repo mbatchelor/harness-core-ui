@@ -27,26 +27,20 @@ export type ManifestTypes =
   | 'KustomizePatches'
   | 'ServerlessAwsLambda'
 
-export type ManifestStores = 'Git' | 'Github' | 'GitLab' | 'Bitbucket' | 'Http' | 'S3' | 'Gcs'
+export type PrimaryManifestType = 'K8sManifest' | 'HelmChart' | 'OpenshiftTemplate' | 'Kustomize'
+
+export type ManifestStores = 'Git' | 'Github' | 'GitLab' | 'Bitbucket' | 'Http' | 'S3' | 'Gcs' | 'InheritFromManifest'
 export type HelmVersionOptions = 'V2' | 'V3'
 export interface ManifestSelectionProps {
-  isForOverrideSets?: boolean
-  identifierName?: string
-  isForPredefinedSets?: boolean
   isPropagating?: boolean
-  overrideSetIdentifier?: string
   deploymentType: ServiceDefinition['type']
 }
 
 export interface ManifestListViewProps {
   pipeline: PipelineInfoConfig
-  isForOverrideSets: boolean
   updateStage: (stage: StageElementConfig) => Promise<void>
-  identifierName?: string
   stage: StageElementWrapper | undefined
-  isForPredefinedSets: boolean
   isPropagating?: boolean
-  overrideSetIdentifier?: string
   connectors: PageConnectorResponse | undefined
   refetchConnectors: () => void
   listOfManifests: Array<any>
@@ -69,6 +63,7 @@ export interface K8sValuesManifestDataType {
   paths: any
   skipResourceVersioning?: boolean
   repoName?: string
+  valuesPaths?: any
 }
 export interface ManifestLastStepProps {
   key: string
@@ -96,6 +91,7 @@ export interface HelmWithGITDataType {
   gitFetchType: 'Branch' | 'Commit'
   folderPath: string
   helmVersion: HelmVersionOptions
+  valuesPaths?: any
   skipResourceVersioning: boolean
   commandFlags: Array<CommandFlags>
 }
@@ -105,6 +101,7 @@ export interface HelmWithHTTPDataType {
   skipResourceVersioning: boolean
   chartName: string
   chartVersion: string
+  valuesPaths?: any
   commandFlags: Array<CommandFlags>
 }
 
@@ -119,6 +116,7 @@ export interface OpenShiftTemplateGITDataType {
   repoName?: string
   gitFetchType: 'Branch' | 'Commit'
   path: string
+  paramsPaths?: any
   skipResourceVersioning: boolean
 }
 
@@ -139,6 +137,7 @@ export interface KustomizeWithGITDataType {
   skipResourceVersioning: boolean
   folderPath: string
   pluginPath: string
+  patchesPaths?: any
 }
 export interface OpenShiftParamDataType {
   identifier: string
@@ -156,4 +155,8 @@ export interface ServerlessManifestDataType extends K8sValuesManifestDataType {
   paths: any
   repoName?: string
   configOverridePath?: string
+}
+export interface InheritFromManifestDataType {
+  identifier: string
+  paths: any
 }

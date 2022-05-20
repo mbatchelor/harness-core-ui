@@ -15,9 +15,6 @@ declare const styles: {
   readonly crossIcon: string
   readonly customDashboards: string
   readonly customSelect: string
-  readonly customTag: string
-  readonly customTagButton: string
-  readonly dashboardCard: string
   readonly dashboardDialog: string
   readonly dashboardFolderDialog: string
   readonly filter: string
@@ -30,7 +27,6 @@ declare const styles: {
   readonly mainNavTag: string
   readonly masonry: string
   readonly noFoldersContent: string
-  readonly predefinedTags: string
   readonly search: string
   readonly stepWizard: string
   readonly table: string

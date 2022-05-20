@@ -935,3 +935,216 @@ export const metrics = {
     responseMessages: []
   }
 }
+export const serviceScreenLogsListURL = `cv/api/log-dashboard/logs-radar-chart-data?routingId=${routingId}&accountId=${accountId}&pageNumber=0&pageSize=10&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&monitoredServiceIdentifier=${monitoredServiceIdentifier}&minAngle=0&maxAngle=360&startTime=1649128528705&endTime=1649133776735&clusterTypes=KNOWN_EVENT&clusterTypes=UNKNOWN_EVENT&clusterTypes=UNEXPECTED_FREQUENCY`
+export const serviceScreenLogsRadarClusterURL = `cv/api/log-dashboard/logs-radar-chart-cluster?routingId=${routingId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&monitoredServiceIdentifier=${monitoredServiceIdentifier}&startTime=1649128528705&endTime=1649133776735&clusterTypes=KNOWN_EVENT&clusterTypes=UNKNOWN_EVENT&clusterTypes=UNEXPECTED_FREQUENCY`
+
+export const serviceScreenLogsListData = {
+  metaData: {},
+  resource: {
+    totalClusters: 29,
+    eventCounts: [
+      { clusterType: 'KNOWN_EVENT', count: 24, displayName: 'Known' },
+      { clusterType: 'UNKNOWN_EVENT', count: 4, displayName: 'Unknown' },
+      { clusterType: 'UNEXPECTED_FREQUENCY', count: 1, displayName: 'Unexpected Frequency' }
+    ],
+    logAnalysisRadarCharts: {
+      totalPages: 3,
+      totalItems: 29,
+      pageItemCount: 10,
+      pageSize: 10,
+      content: [
+        {
+          message: 'Test Message',
+          label: 0,
+          risk: 'UNHEALTHY',
+          clusterType: 'UNEXPECTED_FREQUENCY',
+          count: 258,
+          frequencyData: [
+            {
+              count: 1,
+              timestamp: 234234
+            }
+          ],
+          clusterId: 1
+        },
+        {
+          message:
+            '2022-02-10 07:22:59 UTC | TRACE | INFO | (pkg/trace/info/stats.go:104 in LogStats) | No data received\n',
+          label: 30003,
+          risk: 'UNHEALTHY',
+          clusterType: 'UNKNOWN_EVENT',
+          count: 1,
+          frequencyData: [
+            {
+              count: 1,
+              timestamp: 234234
+            }
+          ],
+          baseline: null,
+          clusterId: 2
+        },
+        {
+          message:
+            '  A v e r a g e   S p e e d       T i m  e         T i m e        D lToiamde    UCpuload   Trorteanlt \n',
+          label: 30001,
+          risk: 'UNHEALTHY',
+          clusterType: 'UNKNOWN_EVENT',
+          count: 1,
+          frequencyData: [
+            {
+              count: 1,
+              timestamp: 234234
+            }
+          ],
+          clusterId: 3
+        },
+        {
+          message:
+            '  % Total    % Received % Xferd  Average Spee d   %  TTimoet a  l  T i m e%   R e c eTiivmeed   %C uXrfreerndt \n',
+          label: 30002,
+          risk: 'UNHEALTHY',
+          clusterType: 'UNKNOWN_EVENT',
+          count: 1,
+          frequencyData: [
+            {
+              count: 1,
+              timestamp: 234234
+            }
+          ],
+          clusterId: 4
+        },
+        {
+          message:
+            '    \r     0          D0l o a d   Up0l o a d    0  T   o0 t a l    S p0e n t     L   e0f t       0S p-e-e:d-\n',
+          label: 30000,
+          risk: 'UNHEALTHY',
+          clusterType: 'UNKNOWN_EVENT',
+          count: 1,
+          frequencyData: [
+            {
+              count: 1,
+              timestamp: 234234
+            }
+          ],
+          clusterId: 5
+        },
+        {
+          message: '{ [2938 bytes data]\n',
+          label: 11,
+          risk: 'HEALTHY',
+          clusterType: 'KNOWN_EVENT',
+          count: 21,
+          frequencyData: [
+            {
+              count: 1,
+              timestamp: 234234
+            }
+          ],
+          clusterId: 6
+        },
+        {
+          message:
+            '</pre><p><b>Note</b> The full stack trace of the root cause is available in the server logs.</p><hr class="line" /><h3>Apache Tomcat/8.5.41</h3></body></html><!doctype html><html lang="en"><head><title>HTTP Status 500 – Internal Server Error</title><style type="text/css">h1 {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;font-size:22px;} h2 {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;font-size:16px;} h3 {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;font-size:14px;} body {font-family:Tahoma,Arial,sans-serif;color:black;background-color:white;} b {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;} p {font-family:Tahoma,Arial,sans-serif;background:white;color:black;font-size:12px;} a {color:black;} a.name {color:black;} .line {height:1px;background-color:#525D76;border:none;}</style></head><body><h1>HTTP Status 500 – Internal Server Error</h1><hr class="line" /><p><b>Type</b> Exception Report</p><p><b>Description</b> The server encountered an unexpected condition that prevented it from fulfilling the request.</p><p><b>Exception</b></p><pre>java.lang.NullPointerException\n',
+          label: 98,
+          risk: 'HEALTHY',
+          clusterType: 'KNOWN_EVENT',
+          count: 4,
+          frequencyData: [
+            {
+              count: 1,
+              timestamp: 234234
+            }
+          ],
+          clusterId: 7
+        },
+        {
+          message: '< Location: display.jsp\r\n',
+          label: 112,
+          risk: 'HEALTHY',
+          clusterType: 'KNOWN_EVENT',
+          count: 3,
+          frequencyData: [1.0, 1.0, 1.0],
+          baseline: {
+            message: '< Location: display.jsp\r\n',
+            label: 112,
+            risk: 'NO_ANALYSIS',
+            clusterType: 'BASELINE',
+            count: 0,
+            frequencyData: [
+              {
+                count: 1,
+                timestamp: 234234
+              }
+            ]
+          },
+          hasControlData: true,
+          clusterId: 8
+        },
+        {
+          message: '< Date: Thu, 10 Feb 2022 07:22:58 GMT\r\n',
+          label: 80,
+          risk: 'HEALTHY',
+          clusterType: 'KNOWN_EVENT',
+          count: 25,
+          frequencyData: [
+            {
+              count: 1,
+              timestamp: 234234
+            }
+          ],
+          clusterId: 9
+        },
+        {
+          message: '* upload completely sent off: 47 out of 47 bytes\n',
+          label: 89,
+          risk: 'HEALTHY',
+          clusterType: 'KNOWN_EVENT',
+          count: 10,
+          frequencyData: [
+            {
+              count: 1,
+              timestamp: 234234
+            }
+          ],
+          clusterId: 10
+        }
+      ],
+      pageIndex: 0,
+      empty: false
+    }
+  },
+  responseMessages: []
+}
+
+export const serviceScreenLogsRadarClusterData = {
+  resource: [
+    {
+      label: 0,
+      message: 'projects/chi-play/logs/stdout',
+      risk: 'HEALTHY',
+      radius: 1.357564536113864,
+      angle: 0,
+      clusterType: 'KNOWN_EVENT',
+      clusterId: 121
+    },
+    {
+      label: 2,
+      message: 'projects/chi-play/logs/stderr',
+      risk: 'HEALTHY',
+      radius: 1.8066135269309567,
+      angle: 120,
+
+      clusterType: 'KNOWN_EVENT',
+      clusterId: 2
+    },
+    {
+      label: 1,
+      message: 'projects/chi-play/logs/events',
+      risk: 'HEALTHY',
+      radius: 1.480099986754282,
+      angle: 240,
+      clusterType: 'KNOWN_EVENT',
+      clusterId: 3
+    }
+  ]
+}

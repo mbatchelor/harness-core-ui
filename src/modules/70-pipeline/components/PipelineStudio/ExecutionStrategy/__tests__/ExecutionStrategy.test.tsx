@@ -348,7 +348,7 @@ describe('ExecutionStrategy test', () => {
   test('isPropagating true and checkBox', () => {
     pipelineContextMockValue = getDummyPipelineContextValue()
     jest.spyOn(cdngServices, 'useGetExecutionStrategyYaml').mockImplementation((): any => {
-      return { data: {}, error: true }
+      return { data: {}, error: false }
     })
     const { container } = render(
       <TestWrapper>
@@ -384,7 +384,9 @@ describe('ExecutionStrategy test', () => {
     const checkBox = container.querySelector('[data-testid="enable-verification-options-switch"]')
     expect(checkBox).not.toBeChecked()
     fireEvent.click(checkBox!)
-    expect(checkBox).toBeChecked()
+    setTimeout(() => {
+      expect(checkBox).toBeChecked()
+    }, 1500)
   })
 
   test('should display loading state', () => {

@@ -1,0 +1,11 @@
+.configureConditionsContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 530px;
+}
+
+.notificationRulesContainer {
+  height: 500px;
+  overflow-y: auto;
+}

@@ -7,6 +7,7 @@
 
 import React from 'react'
 import { render, act, fireEvent, Matcher, waitFor } from '@testing-library/react'
+import { findPopoverContainer } from '@common/utils/testUtils'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
@@ -67,12 +68,12 @@ describe('Run Step view', () => {
       expect(shellOptionsDropdownSelect).toBeTruthy()
       await waitFor(() => {
         fireEvent.click(shellOptionsDropdownSelect)
-        const menuItemLabels = container.querySelectorAll('[class*="menuItemLabel"]')
-        expect(menuItemLabels.length).toEqual(4)
-        expect(menuItemLabels[0].innerHTML).toEqual('common.bash')
-        expect(menuItemLabels[1].innerHTML).toEqual('common.powershell')
-        expect(menuItemLabels[2].innerHTML).toEqual('common.pwsh')
-        expect(menuItemLabels[3].innerHTML).toEqual('common.sh')
+        const menuItemLabels = findPopoverContainer()?.querySelectorAll('[class*="menuItemLabel"]')
+        expect(menuItemLabels?.length).toEqual(4)
+        expect(menuItemLabels?.[0].innerHTML).toEqual('common.bash')
+        expect(menuItemLabels?.[1].innerHTML).toEqual('common.powershell')
+        expect(menuItemLabels?.[2].innerHTML).toEqual('common.pwsh')
+        expect(menuItemLabels?.[3].innerHTML).toEqual('common.sh')
       })
     })
   })

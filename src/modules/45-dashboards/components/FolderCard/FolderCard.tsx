@@ -22,6 +22,7 @@ import UpdateFolder from '@dashboards/pages/folders/form/UpdateFolder'
 import { useStrings } from 'framework/strings'
 import type { FolderModel } from 'services/custom-dashboards'
 import css from '@dashboards/pages/home/HomePage.module.scss'
+import moduleTagCss from '@dashboards/common/ModuleTags.module.scss'
 
 export interface FolderCardProps {
   accountId: string
@@ -65,7 +66,7 @@ const FolderCard: React.FC<FolderCardProps> = ({ accountId, folder, onTriggerFol
 
   return (
     <Link to={folderPath}>
-      <Card interactive className={cx(css.dashboardCard)}>
+      <Card interactive className={cx(moduleTagCss.card)}>
         <Container data-testid={'container'}>
           {folder?.type !== FolderType.SHARED && (
             <CardBody.Menu

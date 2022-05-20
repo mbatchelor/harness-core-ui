@@ -9,10 +9,6 @@
   height: 100%;
   width: 100%;
 
-  .dashboardCard {
-    width: 240px;
-  }
-
   .search {
     width: 100%;
     input {
@@ -77,33 +73,6 @@
 
   .createButton {
     min-width: 110px;
-  }
-
-  .predefinedTags {
-    margin-top: var(--spacing-4);
-    section,
-    button {
-      padding: var(--spacing-2);
-      display: inline-block;
-      font-size: small !important;
-      font-weight: 500 !important;
-      margin-right: var(--spacing-4);
-      margin-bottom: var(--spacing-3);
-      cursor: pointer;
-      border-radius: 4px;
-    }
-  }
-  .customTag {
-    color: var(--grey-500) !important;
-    background: var(--grey-50) !important;
-    border: 1px solid var(--grey-200) !important;
-  }
-  .customTagButton {
-    padding: var(--spacing-2) !important;
-    height: unset !important;
-    max-height: unset !important;
-    min-height: 26px !important;
-    line-height: unset !important;
   }
 
   .button {

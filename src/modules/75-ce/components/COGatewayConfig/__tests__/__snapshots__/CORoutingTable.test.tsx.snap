@@ -240,7 +240,7 @@ exports[`Routing Table Tests fill in details for a route: updated route 1`] = `
                       style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(NaNpx, NaNpx, 0);"
                     >
                       <div
-                        class="bp3-popover bp3-minimal bp3-select-popover"
+                        class="bp3-popover bp3-minimal bp3-select-popover Select--popover"
                         style="transform-origin: center top;"
                       >
                         <div
@@ -580,7 +580,7 @@ exports[`Routing Table Tests render additional columns for redirection rule 1`] 
                       style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(NaNpx, NaNpx, 0);"
                     >
                       <div
-                        class="bp3-popover bp3-minimal bp3-select-popover"
+                        class="bp3-popover bp3-minimal bp3-select-popover Select--popover"
                         style="transform-origin: center top;"
                       >
                         <div

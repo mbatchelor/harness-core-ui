@@ -25,7 +25,9 @@ declare const styles: {
   readonly selectedValues: string
   readonly tabClass: string
   readonly tabsContainer: string
+  readonly tagInput: string
   readonly valueContainer: string
   readonly valueFetching: string
+  readonly valueTag: string
 }
 export default styles

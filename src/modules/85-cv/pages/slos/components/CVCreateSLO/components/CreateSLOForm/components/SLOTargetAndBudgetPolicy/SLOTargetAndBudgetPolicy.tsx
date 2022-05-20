@@ -27,14 +27,14 @@ import {
   SLOFormFields
 } from '@cv/pages/slos/components/CVCreateSLO/CVCreateSLO.types'
 import SLOTargetContextualHelpText from './components/SLOTargetContextualHelpText'
+import { flexStart } from './SLOTargetAndBudgetPolicy.constants'
+import SLOTargetNotificationsContainer from './components/SLOTargetNotificationsContainer/SLOTargetNotificationsContainer'
 import css from '@cv/pages/slos/components/CVCreateSLO/CVCreateSLO.module.scss'
-
-// SONAR recommendation
-const flexStart = 'flex-start'
 
 const SLOTargetAndBudgetPolicy: React.FC<SLOTargetAndBudgetPolicyProps> = ({ children, formikProps, ...rest }) => {
   const { getString } = useStrings()
-  const { periodType, periodLengthType } = formikProps.values
+
+  const { periodType, periodLengthType, notificationRuleRefs, identifier } = formikProps.values || {}
 
   return (
     <>
@@ -142,6 +142,11 @@ const SLOTargetAndBudgetPolicy: React.FC<SLOTargetAndBudgetPolicyProps> = ({ chi
             <SLOTargetContextualHelpText />
           </Container>
         </Layout.Horizontal>
+        <SLOTargetNotificationsContainer
+          identifier={identifier}
+          setFieldValue={formikProps?.setFieldValue}
+          notificationRuleRefs={notificationRuleRefs}
+        />
       </Card>
       {children}
     </>

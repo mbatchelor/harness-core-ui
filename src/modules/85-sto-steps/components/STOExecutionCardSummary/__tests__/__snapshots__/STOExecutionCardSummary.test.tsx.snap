@@ -1,0 +1,38 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`STOExecutionCardSummary renders correctly 1`] = `
+<div>
+  <div
+    class="main"
+  >
+    <div
+      data-testid="Critical"
+      data-value="1"
+    />
+    <div
+      data-testid="High"
+      data-value="2"
+    />
+    <div
+      data-testid="Medium"
+      data-value="3"
+    />
+    <div
+      data-testid="Low"
+      data-value="4"
+    />
+  </div>
+</div>
+`;
+
+exports[`STOExecutionCardSummary shows loading spinner 1`] = `
+<div>
+  <div
+    class="spinnerWrapper"
+  >
+    <div
+      data-testid="spinner"
+    />
+  </div>
+</div>
+`;

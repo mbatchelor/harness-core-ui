@@ -26,7 +26,8 @@ const getAggregationText: (getString: UseStringsReturn['getString']) => Record<s
   return {
     [QlceViewTimeGroupType.Day]: getString('ce.perspectives.timeAggregation.daily'),
     [QlceViewTimeGroupType.Month]: getString('ce.perspectives.timeAggregation.monthly'),
-    [QlceViewTimeGroupType.Hour]: getString('ce.perspectives.timeAggregation.hourly')
+    [QlceViewTimeGroupType.Hour]: getString('ce.perspectives.timeAggregation.hourly'),
+    [QlceViewTimeGroupType.Week]: getString('triggers.schedulePanel.weeklyTabTitle')
   }
 }
 
@@ -68,6 +69,14 @@ export const TimeGranularityDropDown: React.FC<TimeGranularityDropDownProps> = (
             text={aggregationTextMap[QlceViewTimeGroupType.Day]}
           />
           <MenuItem
+            active={aggregation === QlceViewTimeGroupType.Week}
+            className={css.aggregationMenuItems}
+            onClick={() => {
+              setAggregation(QlceViewTimeGroupType.Week)
+            }}
+            text={aggregationTextMap[QlceViewTimeGroupType.Week]}
+          />
+          <MenuItem
             active={aggregation === QlceViewTimeGroupType.Month}
             className={css.aggregationMenuItems}
             onClick={() => {
@@ -97,6 +106,7 @@ export const TimeGranularityDropDown: React.FC<TimeGranularityDropDownProps> = (
         iconProps={{
           size: 16
         }}
+        data-testId="groupBy"
         rightIcon="caret-down"
       />
     </Popover>

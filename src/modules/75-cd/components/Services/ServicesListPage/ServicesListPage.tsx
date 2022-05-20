@@ -28,15 +28,16 @@ import RbacButton from '@rbac/components/Button/Button'
 import { GetServiceListQueryParams, ServiceResponseDTO, useGetServiceList } from 'services/cd-ng'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
-import { NewEditServiceModal } from '@cd/components/PipelineSteps/DeployServiceStep/DeployServiceStep'
-
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { NewEditServiceModal } from '@cd/components/PipelineSteps/DeployServiceStep/NewEditServiceModal'
 import ServicesGridView from '../ServicesGridView/ServicesGridView'
 import ServicesListView from '../ServicesListView/ServicesListView'
-
+import { ServiceTabs } from '../utils/ServiceUtils'
 import css from './ServicesListPage.module.scss'
 
 export const ServicesListPage: React.FC = () => {
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
+  const { NG_SVC_ENV_REDESIGN } = useFeatureFlags()
   const [view, setView] = useState(Views.LIST)
   const [page, setPage] = useState(0)
   const { getString } = useStrings()
@@ -49,21 +50,35 @@ export const ServicesListPage: React.FC = () => {
   const goToServiceDetails = useCallback(
     (selectedService: ServiceResponseDTO): void => {
       if (selectedService?.identifier) {
-        history.push(
-          routes.toServiceStudio({
+        history.push({
+          pathname: routes.toServiceStudio({
             accountId,
             orgIdentifier,
             projectIdentifier,
-            serviceId: selectedService.identifier,
+            serviceId: selectedService?.identifier,
             module
-          })
-        )
+          }),
+          search: NG_SVC_ENV_REDESIGN ? `tab=${ServiceTabs.Configuration}` : `tab=${ServiceTabs.SUMMARY}`
+        })
       } else {
         showError(getString('cd.serviceList.noIdentifier'))
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [accountId, orgIdentifier, projectIdentifier, module]
+  )
+
+  const onServiceCreate = useCallback(
+    (values: ServiceResponseDTO): void => {
+      if (NG_SVC_ENV_REDESIGN) {
+        goToServiceDetails(values)
+      } else {
+        ;(fetchDeploymentList.current as () => void)?.()
+        hideModal()
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
   )
 
   const [showModal, hideModal] = useModalHook(
@@ -83,10 +98,7 @@ export const ServicesListPage: React.FC = () => {
             data={{ name: '', identifier: '', orgIdentifier, projectIdentifier }}
             isEdit={false}
             isService
-            onCreateOrUpdate={() => {
-              ;(fetchDeploymentList.current as () => void)?.()
-              hideModal()
-            }}
+            onCreateOrUpdate={values => onServiceCreate(values)}
             closeModal={hideModal}
           />
         </Container>

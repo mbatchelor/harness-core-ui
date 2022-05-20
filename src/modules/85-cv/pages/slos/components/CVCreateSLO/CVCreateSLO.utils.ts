@@ -23,7 +23,8 @@ import type {
   MonitoredServiceWithHealthSources,
   MetricDTO,
   ServiceLevelIndicatorDTO,
-  MonitoredServiceDTO
+  MonitoredServiceDTO,
+  NotificationRuleRefDTO
 } from 'services/cv'
 import { initialValuesSLO } from './CVCreateSLO.constants'
 import {
@@ -67,6 +68,7 @@ export const getSLOInitialFormData = (
     const {
       serviceLevelIndicators: [serviceLevelIndicator],
       target,
+      notificationRuleRefs,
       ...rest
     } = serviceLevelObjective
     const SLIMetricSpec = serviceLevelIndicator?.spec.spec as (ThresholdSLIMetricSpec & RatioSLIMetricSpec) | undefined
@@ -88,7 +90,8 @@ export const getSLOInitialFormData = (
       periodLengthType: targetSpec?.type,
       dayOfWeek: periodLengthTypeSpec?.dayOfWeek,
       dayOfMonth: periodLengthTypeSpec?.dayOfMonth?.toString(),
-      SLOTargetPercentage: target.sloTargetPercentage
+      SLOTargetPercentage: target.sloTargetPercentage,
+      notificationRuleRefs: notificationRuleRefs as NotificationRuleRefDTO[]
     }
   }
 
@@ -110,6 +113,7 @@ export const createSLORequestPayload = (
     healthSourceRef: values.healthSourceRef,
     orgIdentifier,
     projectIdentifier,
+    notificationRuleRefs: values?.notificationRuleRefs,
     serviceLevelIndicators: [
       {
         type: values.SLIType,

@@ -12,6 +12,24 @@ import { Get, GetProps, useGet, UseGetProps, Mutate, MutateProps, useMutate, Use
 
 import { getConfig, getUsingFetch, GetUsingFetchProps, mutateUsingFetch, MutateUsingFetchProps } from '../config'
 export const SPEC_VERSION = '1.0.0'
+export interface CloneDashboardRequestBody {
+  dashboardId: string
+  description?: string
+  folderId?: string
+  name?: string
+}
+
+export interface ClonedDashboardModel {
+  description: string
+  id: string
+  resourceIdentifier: string
+  title: string
+}
+
+export interface ClonedDashboardResponse {
+  resource: ClonedDashboardModel
+}
+
 export interface CreateDashboardRequest {
   dashboardId?: number
   description?: string
@@ -65,6 +83,8 @@ export interface FolderModel {
 }
 
 export interface GetFolderResponse {
+  items?: number
+  pages?: number
   resource?: FolderModel[]
   responseMessages?: string
 }
@@ -158,9 +178,67 @@ export const updateDashboardPromise = (
     signal
   )
 
+export interface CloneDashboardQueryParams {
+  accountId: string
+}
+
+export type CloneDashboardProps = Omit<
+  MutateProps<ClonedDashboardResponse, ErrorResponse, CloneDashboardQueryParams, CloneDashboardRequestBody, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Clone a dashboard.
+ */
+export const CloneDashboard = (props: CloneDashboardProps) => (
+  <Mutate<ClonedDashboardResponse, ErrorResponse, CloneDashboardQueryParams, CloneDashboardRequestBody, void>
+    verb="POST"
+    path={`/clone`}
+    base={getConfig('dashboard/')}
+    {...props}
+  />
+)
+
+export type UseCloneDashboardProps = Omit<
+  UseMutateProps<ClonedDashboardResponse, ErrorResponse, CloneDashboardQueryParams, CloneDashboardRequestBody, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Clone a dashboard.
+ */
+export const useCloneDashboard = (props: UseCloneDashboardProps) =>
+  useMutate<ClonedDashboardResponse, ErrorResponse, CloneDashboardQueryParams, CloneDashboardRequestBody, void>(
+    'POST',
+    `/clone`,
+    { base: getConfig('dashboard/'), ...props }
+  )
+
+/**
+ * Clone a dashboard.
+ */
+export const cloneDashboardPromise = (
+  props: MutateUsingFetchProps<
+    ClonedDashboardResponse,
+    ErrorResponse,
+    CloneDashboardQueryParams,
+    CloneDashboardRequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<ClonedDashboardResponse, ErrorResponse, CloneDashboardQueryParams, CloneDashboardRequestBody, void>(
+    'POST',
+    getConfig('dashboard/'),
+    `/clone`,
+    props,
+    signal
+  )
+
 export interface GetFolderQueryParams {
   accountId: string
   pageSize?: number
+  isAdmin?: boolean
   page?: number
 }
 
@@ -317,11 +395,11 @@ export const createFolderPromise = (
   )
 
 export interface GetFoldersQueryParams {
-  sortBy?: string
-  accountId: string
-  searchTerm?: string
   page: number
+  accountId: string
   pageSize: number
+  searchTerm?: string
+  sortBy?: string
 }
 
 export type GetFoldersProps = Omit<GetProps<GetFoldersResponse, ErrorResponse, GetFoldersQueryParams, void>, 'path'>

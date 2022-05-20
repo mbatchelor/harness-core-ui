@@ -8,7 +8,7 @@
 import React, { SyntheticEvent } from 'react'
 import { Drawer, Intent, Position } from '@blueprintjs/core'
 import { Button, useConfirmationDialog } from '@wings-software/uicore'
-import { cloneDeep, defaultTo, get, isEmpty, isEqual, isNil, set } from 'lodash-es'
+import { cloneDeep, defaultTo, get, isEmpty, isNil, set } from 'lodash-es'
 import cx from 'classnames'
 import produce from 'immer'
 import { parse } from 'yaml'
@@ -38,6 +38,7 @@ import type { TemplateStepNode } from 'services/pipeline-ng'
 import type { StringsMap } from 'stringTypes'
 import { FeatureFlag } from '@common/featureFlags'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import type { TemplateSummaryResponse } from 'services/template-ng'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import { DrawerData, DrawerSizes, DrawerTypes, PipelineViewData } from '../PipelineContext/PipelineActions'
 import { StepCommandsWithRef as StepCommands, StepFormikRef } from '../StepCommands/StepCommands'
@@ -146,8 +147,8 @@ const processNodeImpl = (
   item: Partial<Values>,
   data: any,
   trackEvent: TrackEvent
-): StepElementConfig & TemplateStepNode => {
-  return produce(data.stepConfig.node as StepElementConfig & TemplateStepNode, node => {
+): StepElementConfig & TemplateStepNode & StepGroupElementConfig => {
+  return produce(data.stepConfig.node as StepElementConfig & TemplateStepNode & StepGroupElementConfig, node => {
     // Add/replace values only if they are presented
     addReplace(item, node)
 
@@ -160,8 +161,10 @@ const processNodeImpl = (
       }))
       telemetryData.length && trackEvent(StepActions.AddEditFailureStrategy, { data: JSON.stringify(telemetryData) })
     }
-    if (item.delegateSelectors && item.tab === TabTypes.Advanced) {
+    if (!data.stepConfig?.isStepGroup && item.delegateSelectors && item.tab === TabTypes.Advanced) {
       set(node, 'spec.delegateSelectors', item.delegateSelectors)
+    } else if (data.stepConfig?.isStepGroup && item.delegateSelectors && item.tab === TabTypes.Advanced) {
+      set(node, 'delegateSelectors', item.delegateSelectors)
     }
     if ((item as StepElementConfig)?.spec?.commandOptions && item.tab !== TabTypes.Advanced) {
       set(node, 'spec.commandOptions', (item as StepElementConfig)?.spec?.commandOptions)
@@ -174,11 +177,20 @@ const processNodeImpl = (
     if (node.failureStrategies && !item.failureStrategies && item.tab === TabTypes.Advanced)
       delete node.failureStrategies
     if (
+      !data.stepConfig?.isStepGroup &&
       node.spec?.delegateSelectors &&
       (!item.delegateSelectors || item.delegateSelectors?.length === 0) &&
       item.tab === TabTypes.Advanced
     ) {
       delete node.spec.delegateSelectors
+    }
+    if (
+      data.stepConfig?.isStepGroup &&
+      node.delegateSelectors &&
+      (!item.delegateSelectors || item.delegateSelectors?.length === 0) &&
+      item.tab === TabTypes.Advanced
+    ) {
+      delete node.delegateSelectors
     }
     if (
       node.spec?.commandOptions &&
@@ -648,7 +660,7 @@ export function RightDrawer(): React.ReactElement {
     drawerData.data?.stepConfig?.onUpdate?.(processNode)
   }
 
-  const addOrUpdateTemplate = async () => {
+  const addOrUpdateTemplate = async (selectedTemplate?: TemplateSummaryResponse) => {
     try {
       const stepType =
         (data?.stepConfig?.node as StepElementConfig)?.type ||
@@ -656,21 +668,9 @@ export function RightDrawer(): React.ReactElement {
       const { template, isCopied } = await getTemplate({
         templateType: 'Step',
         selectedChildType: stepType,
-        ...((data?.stepConfig?.node as TemplateStepNode)?.template && {
-          selectedTemplateRef: getIdentifierFromValue(
-            (data?.stepConfig?.node as TemplateStepNode).template.templateRef
-          ),
-          selectedVersionLabel: (data?.stepConfig?.node as TemplateStepNode).template.versionLabel
-        })
+        selectedTemplate
       })
       const node = drawerData.data?.stepConfig?.node as StepOrStepGroupOrTemplateStepData
-      if (
-        !isCopied &&
-        isEqual((node as TemplateStepNode)?.template?.templateRef, template.identifier) &&
-        isEqual((node as TemplateStepNode)?.template?.versionLabel, template.versionLabel)
-      ) {
-        return
-      }
       const processNode = isCopied
         ? produce(defaultTo(parse(defaultTo(template?.yaml, '')).template.spec, {}) as StepElementConfig, draft => {
             draft.name = defaultTo(node?.name, '')

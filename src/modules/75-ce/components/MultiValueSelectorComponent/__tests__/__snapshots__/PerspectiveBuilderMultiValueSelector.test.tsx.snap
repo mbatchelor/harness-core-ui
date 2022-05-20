@@ -1,0 +1,212 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test Cases For PerspectiveBuilderMultiValueSelector Should Be Able To Select All 1`] = `
+<div>
+  <div
+    class="StyledProps--font StyledProps--main valueContainer createPerspectiveMvs"
+  >
+    <div
+      class="StyledProps--font StyledProps--main createValueContainer highlight"
+    >
+      <span
+        class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-primary7"
+      >
+        create
+      </span>
+      <span
+        class="StyledProps--font StyledProps--main searchText StyledProps--inline StyledProps--color StyledProps--color-grey500 StyledProps--margin-left-small"
+        style="display: inline-flex; align-items: center;"
+      >
+        val
+        <span
+          class="bp3-icon bp3-icon-cross StyledProps--main Text--icon StyledProps--padding-left-xsmall StyledProps--color StyledProps--color-grey500"
+          icon="cross"
+        >
+          <svg
+            data-icon="cross"
+            height="12"
+            viewBox="0 0 16 16"
+            width="12"
+          >
+            <desc>
+              cross
+            </desc>
+            <path
+              d="M9.41 8l3.29-3.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71L8 6.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42L6.59 8 3.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71L8 9.41l3.29 3.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71L9.41 8z"
+              fill-rule="evenodd"
+            />
+          </svg>
+        </span>
+      </span>
+    </div>
+    <div
+      class="StyledProps--font StyledProps--main separator"
+    />
+    <div
+      class="StyledProps--font StyledProps--main multiSelectOption StyledProps--flex StyledProps--flex-justifyContent-flex-start"
+    >
+      <label
+        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox checkbox StyledProps--main StyledProps--inline"
+      >
+        <input
+          type="checkbox"
+        />
+        <span
+          class="bp3-control-indicator"
+        />
+      </label>
+      <span
+        class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-grey700 StyledProps--font-variation-small-semi"
+      >
+        ce.perspectives.createPerspective.filters.selectAll
+      </span>
+    </div>
+    <div
+      class="StyledProps--font StyledProps--main"
+    >
+      <div
+        data-test-id="virtuoso-scroller"
+        data-virtuoso-scroller="true"
+        style="height: 344px; outline: none; overflow-y: auto; position: relative;"
+        tabindex="0"
+      >
+        <div
+          data-viewport-type="element"
+          style="width: 100%; height: 100%; position: absolute; top: 0px;"
+        >
+          <div
+            data-test-id="virtuoso-item-list"
+            style="box-sizing: border-box; padding-top: 0px; padding-bottom: 0px; margin-top: 0px;"
+          >
+            <div
+              data-index="0"
+              data-item-index="0"
+              data-known-size="0"
+            >
+              <div
+                class="StyledProps--font StyledProps--main multiSelectOption StyledProps--flex StyledProps--flex-justifyContent-flex-start"
+              >
+                <label
+                  class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox checkbox labelItem StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-primary7"
+                >
+                  <input
+                    checked=""
+                    type="checkbox"
+                    value="value1"
+                  />
+                  <span
+                    class="bp3-control-indicator"
+                  />
+                </label>
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey700 StyledProps--font-variation-small-semi"
+                  style="--text-line-clamp: 1;"
+                >
+                  <span
+                    class="StyledProps--font StyledProps--main StyledProps--inline"
+                  >
+                    
+                  </span>
+                  <span
+                    class="StyledProps--font StyledProps--main searchTextHighlight StyledProps--inline"
+                  >
+                    val
+                  </span>
+                  <span
+                    class="StyledProps--font StyledProps--main StyledProps--inline"
+                  >
+                    ue1
+                  </span>
+                </p>
+              </div>
+            </div>
+            <div
+              data-index="1"
+              data-item-index="1"
+              data-known-size="0"
+            >
+              <div
+                class="StyledProps--font StyledProps--main multiSelectOption StyledProps--flex StyledProps--flex-justifyContent-flex-start"
+              >
+                <label
+                  class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox checkbox labelItem StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-primary7"
+                >
+                  <input
+                    type="checkbox"
+                    value="value2"
+                  />
+                  <span
+                    class="bp3-control-indicator"
+                  />
+                </label>
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey700 StyledProps--font-variation-small-semi"
+                  style="--text-line-clamp: 1;"
+                >
+                  <span
+                    class="StyledProps--font StyledProps--main StyledProps--inline"
+                  >
+                    
+                  </span>
+                  <span
+                    class="StyledProps--font StyledProps--main searchTextHighlight StyledProps--inline"
+                  >
+                    val
+                  </span>
+                  <span
+                    class="StyledProps--font StyledProps--main StyledProps--inline"
+                  >
+                    ue2
+                  </span>
+                </p>
+              </div>
+            </div>
+            <div
+              data-index="2"
+              data-item-index="2"
+              data-known-size="0"
+            >
+              <div
+                class="StyledProps--font StyledProps--main multiSelectOption StyledProps--flex StyledProps--flex-justifyContent-flex-start"
+              >
+                <label
+                  class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox checkbox labelItem StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-primary7"
+                >
+                  <input
+                    type="checkbox"
+                    value="value3"
+                  />
+                  <span
+                    class="bp3-control-indicator"
+                  />
+                </label>
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey700 StyledProps--font-variation-small-semi"
+                  style="--text-line-clamp: 1;"
+                >
+                  <span
+                    class="StyledProps--font StyledProps--main StyledProps--inline"
+                  >
+                    
+                  </span>
+                  <span
+                    class="StyledProps--font StyledProps--main searchTextHighlight StyledProps--inline"
+                  >
+                    val
+                  </span>
+                  <span
+                    class="StyledProps--font StyledProps--main StyledProps--inline"
+                  >
+                    ue3
+                  </span>
+                </p>
+              </div>
+            </div>
+          </div>
+          <div />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

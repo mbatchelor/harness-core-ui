@@ -57,6 +57,9 @@ interface DetailsStepInterface {
   validationRepo?: string
 }
 
+/**
+ * Function to getTooltipAnchorForHeading
+ */
 const getTooltipAnchorForHeading = (connectorType: ConnectorInfoDTO['type']): string => {
   if (connectorType === 'Aws') {
     return 'awsCCDetailsTooltip'
@@ -72,6 +75,9 @@ const getTooltipAnchorForHeading = (connectorType: ConnectorInfoDTO['type']): st
   return 'connectorDetailsTooltip'
 }
 
+/**
+ * Function to GitDetailsStep
+ */
 const GitDetailsStep: React.FC<StepProps<ConnectorConfigDTO> & ConnectorDetailsStepProps> = props => {
   const { prevStepData, nextStep } = props
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
@@ -103,6 +109,9 @@ const GitDetailsStep: React.FC<StepProps<ConnectorConfigDTO> & ConnectorDetailsS
     }
   ]
 
+  /**
+   * Function to getUrlLabel
+   */
   const getUrlLabel = (connectorType: ConnectorInfoDTO['type'], urlType: string): string => {
     switch (connectorType) {
       case Connectors.GIT:
@@ -126,6 +135,9 @@ const GitDetailsStep: React.FC<StepProps<ConnectorConfigDTO> & ConnectorDetailsS
     }
   }
 
+  /**
+   * Function to getUrlLabelPlaceholder
+   */
   const getUrlLabelPlaceholder = (connectorType: ConnectorInfoDTO['type'], connectionType: string): string => {
     switch (connectorType) {
       case Connectors.GIT:
@@ -146,6 +158,9 @@ const GitDetailsStep: React.FC<StepProps<ConnectorConfigDTO> & ConnectorDetailsS
     }
   }
 
+  /**
+   * Function to handleSubmit
+   */
   const handleSubmit = async (formData: ConnectorConfigDTO): Promise<void> => {
     mounted.current = true
     if (isEdit) {
@@ -188,6 +203,9 @@ const GitDetailsStep: React.FC<StepProps<ConnectorConfigDTO> & ConnectorDetailsS
     }
   }
 
+  /**
+   * Function to getInitialValues
+   */
   const getInitialValues = (): DetailsStepInterface => {
     if (isEdit && props.connectorInfo) {
       return {
@@ -233,6 +251,8 @@ const GitDetailsStep: React.FC<StepProps<ConnectorConfigDTO> & ConnectorDetailsS
             }
             if (this.parent.connectionType === GitConnectionType.SSH) {
               return trimmedUrl.startsWith('git@') || trimmedUrl.startsWith('ssh://') ? true : false
+            } else if (this.parent.connectionType === GitConnectionType.HTTP) {
+              return trimmedUrl.startsWith('http://') || trimmedUrl.startsWith('https://') ? true : false
             }
             try {
               const url = new URL(_url)

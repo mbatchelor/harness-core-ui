@@ -146,7 +146,7 @@ export interface ExecutionPathParams {
 export interface ExecutionQueryParams {
   stage?: string
   step?: string
-  view?: 'log' | 'graph'
+  view?: string
   filterAnomalous?: string
   type?: string
 }

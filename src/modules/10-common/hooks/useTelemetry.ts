@@ -11,6 +11,7 @@ import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useModuleInfo } from '@common/hooks/useModuleInfo'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+import { useShouldIntegrateHotJar } from '3rd-party/hotjarUtil'
 import { useTelemetryInstance } from './useTelemetryInstance'
 
 type TrackEvent = (eventName: string, properties: Record<string, unknown>) => void
@@ -50,6 +51,7 @@ export function useTelemetry(pageParams: PageParams = {}): TelemetryReturnType {
     userId,
     groupId
   }
+  const shouldIntegrateHotJar = useShouldIntegrateHotJar()
 
   useEffect(() => {
     pageParams.pageName &&
@@ -78,7 +80,19 @@ export function useTelemetry(pageParams: PageParams = {}): TelemetryReturnType {
 
   const identifyUser: IdentifyUser = (email: string | undefined) => {
     if (!email) return
-    telemetry.identify(email)
+
+    // if there is a hotjar recording, send the list as properties to segment
+    let hotjar_link
+    if (shouldIntegrateHotJar) {
+      hotjar_link = `https://insights.hotjar.com/sites/2868172/workspaces/2461812/playbacks/list?filters=%7B%22AND%22:%5B%7B%22DAYS_AGO%22:%7B%22created%22:0%7D%7D,%7B%22EQUAL%22:%7B%22user_attributes.accountId%22:%22${groupId}%22%7D%7D%5D%7D`
+    }
+
+    telemetry.identify({
+      userId: email,
+      properties: {
+        hotjar_link
+      }
+    })
   }
   return { trackEvent, identifyUser, trackPage }
 }

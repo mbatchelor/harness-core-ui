@@ -280,13 +280,16 @@ function OpenShiftParamWithGit({
                   [css.folderRunTimeInput]: getMultiTypeFromValue(formik.values?.paths) === MultiTypeInputType.RUNTIME
                 })}
               >
-                <DragnDropPaths
-                  formik={formik}
-                  expressions={expressions}
-                  allowableTypes={allowableTypes}
-                  pathLabel={getString('pipelineSteps.paths')}
-                />
-
+                <div className={templateCss.halfWidth}>
+                  <DragnDropPaths
+                    formik={formik}
+                    expressions={expressions}
+                    allowableTypes={allowableTypes}
+                    pathLabel={getString('pipelineSteps.paths')}
+                    fieldPath="paths"
+                    placeholder={getString('pipeline.manifestType.pathPlaceholder')}
+                  />
+                </div>
                 {getMultiTypeFromValue(formik.values.paths) === MultiTypeInputType.RUNTIME && (
                   <ConfigureOptions
                     value={formik.values.paths}

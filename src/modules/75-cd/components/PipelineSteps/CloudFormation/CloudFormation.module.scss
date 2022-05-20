@@ -1,0 +1,177 @@
+/*
+ * Copyright 2021 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.optionalDetails {
+  margin: 0px 6px;
+  margin-top: 4px;
+}
+
+.addMarginTop {
+  margin-top: var(--spacing-medium) !important;
+}
+
+.addMarginBottom {
+  margin-bottom: var(--spacing-medium) !important;
+}
+
+.configField {
+  display: flex;
+  justify-content: space-between;
+  width: 100% !important;
+  height: 32px;
+  background: var(--white);
+  border: 1px solid var(--primary-bg);
+  align-items: center;
+  padding: 10px;
+  margin-top: 10px !important;
+}
+
+.configWizard {
+  width: 100%;
+
+  [class*='stepDetails'] {
+    background-color: var(--white) !important;
+  }
+  [class*='navBarList'] {
+    grid-template-rows: repeat(auto-fill, var(--spacing-xxxlarge)) !important;
+  }
+
+  div[class*='nestedStep']:nth-of-type(2) {
+    margin-top: var(--spacing-medium) !important;
+  }
+}
+
+.wizard {
+  flex-grow: 1;
+  display: flex;
+}
+
+.squareCardContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 85px;
+  margin-right: var(--spacing-small);
+}
+
+.filePath {
+  height: 100%;
+  position: relative;
+  div[class*='OverlaySpinner'] {
+    height: 100%;
+  }
+  :global(.bp3-collapse-body > div) {
+    background-color: var(--white) !important;
+  }
+  .formContainerStepOne {
+    margin-top: 20px !important;
+    height: 80%;
+    min-height: 280px;
+  }
+
+  .filePathForm {
+    height: 100%;
+    min-height: 400px;
+  }
+  .modal {
+    [class*='bp3-dialog-header'] button {
+      z-index: 2;
+    }
+  }
+}
+
+.formComponent {
+  height: 100%;
+  padding-bottom: var(--spacing-10);
+}
+
+.crossIcon {
+  position: absolute;
+  right: var(--spacing-large);
+  top: var(--spacing-large);
+}
+
+.configPlaceHolder {
+  color: var(--primary-7) !important;
+}
+
+.configPlaceHolder:hover {
+  text-decoration: none;
+}
+
+.dragging {
+  background-color: var(--yellow-450) !important;
+}
+
+.dragOver {
+  border-top: 2px solid var(--primary-7);
+}
+
+.drag {
+  cursor: move;
+}
+
+.iconPosition {
+  position: relative;
+  top: 2px;
+  right: 5px;
+}
+
+.configFile {
+  display: flex;
+  align-items: center;
+}
+
+.configLabel {
+  display: flex;
+  flex-direction: row;
+  align-self: flex-start;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  color: var(--grey-900) !important;
+}
+
+.divider {
+  width: 100%;
+  margin-top: var(--spacing-3);
+  margin-bottom: var(--spacing-5);
+  border-top: 0.5px solid var(--grey-200);
+}
+
+.newConnectorButton {
+  margin-top: 40px !important;
+}
+
+.templateDropdown {
+  border: none;
+  background-color: unset;
+  font-size: var(--font-size-normal);
+  font-weight: 400 !important;
+  color: var(--grey-900) !important;
+}
+
+.formContainer {
+  display: flex;
+  background: none !important;
+}
+
+.horizontalFlex {
+  justify-content: 'flex-start';
+  align-items: 'flex-start';
+}
+
+.inputWidth {
+  width: 300px;
+}
+
+.overrideSelect {
+  width: 45% !important;
+}
+
+.overridesInputHeader {
+  margin-top: var(--spacing-5) !important;
+}

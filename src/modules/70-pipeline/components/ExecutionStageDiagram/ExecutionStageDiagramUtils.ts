@@ -9,7 +9,7 @@ import { defaultTo, delay } from 'lodash-es'
 import type { DiagramEngine } from '@projectstorm/react-diagrams-core'
 import { IconName, Utils } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
-import type { IconProps } from '@wings-software/uicore/dist/icons/Icon'
+import type { IconProps } from '@harness/icons'
 import type { CSSProperties } from 'react'
 import {
   ExecutionStatusEnum,

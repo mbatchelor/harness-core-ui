@@ -2026,3 +2026,13 @@ export const isSMConnector = (type?: ConnectorInfoDTO['type']): boolean | undefi
     type
   )
 }
+
+export const showCustomErrorSuggestion = (connectorType: string) => {
+  const connectorsList: string[] = [Connectors.CE_KUBERNETES, Connectors.CEAWS, Connectors.CE_AZURE, Connectors.CE_GCP]
+  return Boolean(connectorsList.includes(connectorType))
+}
+
+export const showEditAndViewPermission = (connectorType: string) => {
+  const connectorsList: string[] = [Connectors.CE_KUBERNETES, Connectors.CEAWS, Connectors.CE_AZURE, Connectors.CE_GCP]
+  return Boolean(connectorsList.includes(connectorType))
+}

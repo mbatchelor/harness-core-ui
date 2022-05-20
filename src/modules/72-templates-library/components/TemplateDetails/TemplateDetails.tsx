@@ -50,7 +50,6 @@ import css from './TemplateDetails.module.scss'
 
 export interface TemplateDetailsProps {
   template: TemplateSummaryResponse
-  defaultVersionLabel?: string
   allowStableSelection?: boolean
   setTemplate?: (template: TemplateSummaryResponse) => void
 }
@@ -69,7 +68,7 @@ export enum ParentTemplateTabs {
 const DefaultStableVersionValue = '-1'
 
 export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
-  const { template, defaultVersionLabel, allowStableSelection = false, setTemplate } = props
+  const { template, allowStableSelection = false, setTemplate } = props
   const { getString } = useStrings()
   const history = useHistory()
   const [versionOptions, setVersionOptions] = React.useState<SelectOption[]>([])
@@ -129,10 +128,7 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
       } as SelectOption
     })
     setVersionOptions(newVersionOptions)
-    const selectedVersionLabel = allowStableSelection
-      ? defaultVersionLabel
-      : defaultTo(defaultVersionLabel, template.versionLabel)
-    setSelectedTemplate(templates.find(item => item.versionLabel === selectedVersionLabel))
+    setSelectedTemplate(templates.find(item => item.versionLabel === template.versionLabel))
   }, [templates])
 
   React.useEffect(() => {

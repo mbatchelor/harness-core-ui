@@ -17,6 +17,9 @@ import { illegalIdentifiers, regexIdentifier } from '@common/utils/StringUtils'
 import { ManifestStoreMap, ManifestDataType } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import type { StringKeys, UseStringsReturn } from 'framework/strings'
 import { ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
+import { getStageDeploymentType, isServerlessDeploymentType } from '@pipeline/utils/stageHelpers'
+import { getStageFromPipeline } from '@pipeline/components/PipelineStudio/PipelineContext/helpers'
+import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import type { StringsMap } from 'framework/strings/StringsContext'
 import { isCronValid } from '../views/subviews/ScheduleUtils'
 import type { AddConditionInterface } from '../views/AddConditionsSection'
@@ -26,7 +29,8 @@ import type {
   artifactTableItem,
   ManifestInterface,
   TriggerConfigDTO,
-  TriggerTypeSourceInterface
+  TriggerTypeSourceInterface,
+  FlatOnEditValuesInterface
 } from '../interface/TriggersWizardInterface'
 export const CUSTOM = 'Custom'
 export const AWS_CODECOMMIT = 'AWS_CODECOMMIT'
@@ -1224,17 +1228,19 @@ export const TriggerDefaultFieldList = {
 
 export const replaceTriggerDefaultBuild = ({
   build,
-  chartVersion
+  chartVersion,
+  artifactPath
 }: {
   build?: string
   chartVersion?: string
+  artifactPath?: string
 }): string => {
   if (chartVersion === '<+input>') {
     return TriggerDefaultFieldList.chartVersion
-  } else if (build === '<+input>') {
+  } else if (build === '<+input>' || artifactPath === '<+input>') {
     return TriggerDefaultFieldList.build
   }
-  return build || chartVersion || ''
+  return build || chartVersion || artifactPath || ''
 }
 const getManifestTableItem = ({
   stageId,
@@ -1245,7 +1251,8 @@ const getManifestTableItem = ({
   location,
   isStageOverrideManifest,
   getString,
-  isManifest
+  isManifest,
+  isServerlessDeploymentTypeSelected = false
 }: {
   stageId: string
   manifest: any
@@ -1256,6 +1263,7 @@ const getManifestTableItem = ({
   buildTag?: string
   getString?: (key: StringKeys) => string
   isManifest?: boolean
+  isServerlessDeploymentTypeSelected?: boolean
 }): artifactTableItem => {
   const { identifier: artifactId } = manifest
   const manifestSpecObjectValues = Object.values(manifest?.spec || {})
@@ -1271,6 +1279,13 @@ const getManifestTableItem = ({
           getString?.('pipeline.artifactTriggerConfigPanel.runtimeInput')
       )
     } else {
+      if (isServerlessDeploymentTypeSelected) {
+        return (
+          !manifest?.spec?.artifactPath ||
+          getRuntimeInputLabel({ str: manifest?.spec?.artifactPath, getString }) !==
+            getString?.('pipeline.artifactTriggerConfigPanel.runtimeInput')
+        )
+      }
       return (
         !manifest?.spec?.tag ||
         getRuntimeInputLabel({ str: manifest?.spec?.tag, getString }) !==
@@ -1351,6 +1366,18 @@ const getPipelineOverrideArtifacts = (pipelineObj: any, stageId: string): any =>
     }
   }
 }
+
+const isServerlessDeploymentStage = (stageId: string, pipeline: PipelineInfoConfig): boolean => {
+  const currentStage = getStageFromPipeline(stageId, pipeline)
+    .stage as StageElementWrapper<DeploymentStageElementConfig>
+  const selectedDeploymentType = getStageDeploymentType(
+    pipeline,
+    currentStage,
+    !!currentStage?.stage?.spec?.serviceConfig?.useFromStage?.stage
+  )
+  return isServerlessDeploymentType(selectedDeploymentType)
+}
+
 // data is already filtered w/ correct manifest
 export const getArtifactTableDataFromData = ({
   data,
@@ -1447,6 +1474,13 @@ export const getArtifactTableDataFromData = ({
   } else if (appliedArtifact && stageId && !isManifest) {
     const pipelineArtifacts = getArtifacts(pipeline.stages, stageId)
     const stageOverrideArtifacts = getPipelineOverrideArtifacts(pipeline.stages, stageId)
+
+    // To decide whether stage is serverless or not serverless below function is called
+    // If stage is serverless, there is not such field as "tag" instead simialr field name called "artifactPath" is present
+    // Similarly, there is not such field as "tagRefex" instead simialr field name called "artifactPathFilter" is present
+    const isServerlessDeploymentTypeSelected = isServerlessDeploymentStage(stageId, pipeline)
+    // End of code which figures out deployment type of the stage and decides if it is serverless / non-serverless deployment type
+
     if (appliedArtifact?.sidecar) {
       const { location, tag } = getArtifactDetailsFromPipeline({
         artifacts: pipelineArtifacts,
@@ -1476,7 +1510,12 @@ export const getArtifactTableDataFromData = ({
     } else if (pipelineArtifacts?.primary) {
       const primaryArtifact =
         pipelineArtifacts?.primary?.type === appliedArtifact?.type ? pipelineArtifacts?.primary : null
-      const location = primaryArtifact?.spec?.imagePath
+      let location = primaryArtifact?.spec?.imagePath
+      let tag = primaryArtifact?.spec?.tag
+      if (isServerlessDeploymentTypeSelected) {
+        location = primaryArtifact?.spec?.artifactDirectory
+        tag = primaryArtifact?.spec?.artifactPath
+      }
       const artifactRepository = primaryArtifact?.spec?.connectorRef
       artifactTableData.push(
         getManifestTableItem({
@@ -1484,7 +1523,7 @@ export const getArtifactTableDataFromData = ({
           manifest: appliedArtifact,
           artifactRepository,
           location,
-          buildTag: primaryArtifact?.spec?.tag,
+          buildTag: tag,
           getString,
           isStageOverrideManifest: false,
           isManifest: false
@@ -1493,7 +1532,12 @@ export const getArtifactTableDataFromData = ({
     } else if (stageOverrideArtifacts?.primary) {
       const primaryArtifact =
         stageOverrideArtifacts?.primary?.type === appliedArtifact?.type ? stageOverrideArtifacts?.primary : null
-      const location = primaryArtifact?.spec?.imagePath
+      let location = primaryArtifact?.spec?.imagePath
+      let tag = stageOverrideArtifacts?.primary?.tag
+      if (isServerlessDeploymentTypeSelected) {
+        location = primaryArtifact?.spec?.artifactDirectory
+        tag = primaryArtifact?.spec?.artifactPath
+      }
       const artifactRepository = primaryArtifact?.spec?.connectorRef
       artifactTableData.push(
         getManifestTableItem({
@@ -1501,7 +1545,7 @@ export const getArtifactTableDataFromData = ({
           manifest: appliedArtifact,
           artifactRepository,
           location,
-          buildTag: stageOverrideArtifacts?.primary?.tag,
+          buildTag: tag,
           getString,
           isStageOverrideManifest: false,
           isManifest: false
@@ -1519,11 +1563,23 @@ export const getArtifactTableDataFromData = ({
       const primaryArtifact = pipelineArtifacts?.primary?.type === artifactType ? pipelineArtifacts?.primary : null
       const stageOverridePrimaryArtifact =
         stageOverridesArtifacts?.primary?.type === artifactType ? stageOverridesArtifacts?.primary : null
+
+      // To decide whether stage is serverless or not serverless below function is called
+      // If stage is serverless, there is not such field as "tag" instead simialr field name called "artifactPath" is present
+      // Similarly, there is not such field as "tagRefex" instead simialr field name called "artifactPathFilter" is present
+      const isServerlessDeploymentTypeSelected = isServerlessDeploymentStage(dataStageId, pipeline)
+      // End of code which figures out deployment type of the stage and decides if it is serverless / non-serverless deployment type
+
       if (primaryArtifact) {
         const artifactObj = primaryArtifact
-        const location = primaryArtifact?.spec?.imagePath
-        const tag = primaryArtifact?.spec?.tag
+        let location = primaryArtifact?.spec?.imagePath
+        let tag = primaryArtifact?.spec?.tag
         const artifactRepository = primaryArtifact?.spec?.connectorRef
+        if (isServerlessDeploymentTypeSelected) {
+          location = primaryArtifact?.spec?.artifactDirectory
+          tag = primaryArtifact?.spec?.artifactPath
+        }
+
         artifactTableData.push(
           getManifestTableItem({
             stageId: dataStageId,
@@ -1533,15 +1589,20 @@ export const getArtifactTableDataFromData = ({
             buildTag: tag,
             getString,
             isStageOverrideManifest: false,
-            isManifest
+            isManifest,
+            isServerlessDeploymentTypeSelected
           })
         )
       }
       if (stageOverridePrimaryArtifact) {
         const artifactObj = stageOverridePrimaryArtifact
-        const location = stageOverridePrimaryArtifact?.spec?.imagePath
-        const tag = stageOverridePrimaryArtifact?.spec?.tag
+        let location = stageOverridePrimaryArtifact?.spec?.imagePath
+        let tag = stageOverridePrimaryArtifact?.spec?.tag
         const artifactRepository = stageOverridePrimaryArtifact?.spec?.connectorRef
+        if (isServerlessDeploymentTypeSelected) {
+          location = stageOverridePrimaryArtifact?.spec?.artifactDirectory
+          tag = stageOverridePrimaryArtifact?.spec?.artifactPath
+        }
         artifactTableData.push(
           getManifestTableItem({
             stageId: dataStageId,
@@ -1551,7 +1612,8 @@ export const getArtifactTableDataFromData = ({
             buildTag: tag,
             getString,
             isStageOverrideManifest: false,
-            isManifest
+            isManifest,
+            isServerlessDeploymentTypeSelected
           })
         )
       }
@@ -1832,4 +1894,18 @@ export const clearUndefinedArtifactId = (newPipelineObj = {}): any => {
   })
 
   return clearedNewPipeline
+}
+
+export const getModifiedTemplateValues = (
+  initialValuesForEdit: FlatOnEditValuesInterface
+): FlatOnEditValuesInterface => {
+  const returnInitialValuesForEdit = { ...initialValuesForEdit }
+  if (
+    returnInitialValuesForEdit?.pipeline?.template?.templateInputs?.properties?.ci?.codebase?.repoName === '' &&
+    !!returnInitialValuesForEdit.pipeline.template.templateInputs.properties.ci.codebase.connectorRef
+  ) {
+    // for CI Codebase, remove repoName: "" onEdit since connector is repo url type
+    delete returnInitialValuesForEdit.pipeline.template.templateInputs.properties.ci.codebase.repoName
+  }
+  return returnInitialValuesForEdit
 }

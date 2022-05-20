@@ -26,10 +26,10 @@ export default function ErrorTrackingHealthSource(props: ErrorTrackingHealthSour
   )
 
   return (
-    <Formik
+    <Formik<any>
       enableReinitialize
       formName={'errorTrackingHealthSourceform'}
-      initialValues={null}
+      initialValues={{}}
       onSubmit={async () => {
         await handleOnSubmit()
       }}

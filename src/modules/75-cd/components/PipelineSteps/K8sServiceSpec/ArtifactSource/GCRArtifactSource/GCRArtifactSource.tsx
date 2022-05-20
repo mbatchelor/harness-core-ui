@@ -19,7 +19,6 @@ import { ArtifactToConnectorMap, ENABLED_ARTIFACT_TYPES } from '@pipeline/compon
 import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { shouldFetchTagsSource } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import ExperimentalInput from '../../K8sServiceSpecForms/ExperimentalInput'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
@@ -28,7 +27,8 @@ import {
   getYamlData,
   isArtifactSourceRuntime,
   isFieldfromTriggerTabDisabled,
-  resetTags
+  resetTags,
+  shouldFetchTagsSource
 } from '../artifactSourceUtils'
 import ArtifactTagRuntimeField from '../ArtifactSourceRuntimeFields/ArtifactTagRuntimeField'
 import css from '../../K8sServiceSpec.module.scss'
@@ -62,7 +62,7 @@ const Content = (props: GCRRenderContent): JSX.Element => {
   const { getString } = useStrings()
   const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')
   const { expressions } = useVariablesExpression()
-  const [lastQueryData, setLastQueryData] = useState({ imagePath: '', registryHostname: '' })
+  const [lastQueryData, setLastQueryData] = useState({ connectorRef: '', imagePath: '', registryHostname: '' })
   const {
     data: gcrTagsData,
     loading: fetchingTags,
@@ -111,15 +111,21 @@ const Content = (props: GCRRenderContent): JSX.Element => {
 
   const fetchTags = (): void => {
     if (canFetchTags()) {
-      setLastQueryData({ imagePath: imagePathValue, registryHostname: registryHostnameValue })
+      setLastQueryData({
+        connectorRef: connectorRefValue,
+        imagePath: imagePathValue,
+        registryHostname: registryHostnameValue
+      })
       refetch()
     }
   }
 
   const canFetchTags = (): boolean => {
     return !!(
-      (lastQueryData.imagePath !== imagePathValue || lastQueryData.registryHostname !== registryHostnameValue) &&
-      shouldFetchTagsSource(connectorRefValue, [imagePathValue, registryHostnameValue])
+      (lastQueryData.connectorRef != connectorRefValue ||
+        lastQueryData.imagePath !== imagePathValue ||
+        lastQueryData.registryHostname !== registryHostnameValue) &&
+      shouldFetchTagsSource([connectorRefValue, imagePathValue, registryHostnameValue])
     )
   }
 

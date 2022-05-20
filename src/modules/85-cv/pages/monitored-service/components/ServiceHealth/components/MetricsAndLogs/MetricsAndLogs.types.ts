@@ -24,4 +24,5 @@ export interface MetricsAndLogsProps {
   startTime?: number
   endTime?: number
   showTimelineSlider?: boolean
+  isErrorTrackingEnabled?: boolean
 }

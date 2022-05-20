@@ -34,7 +34,7 @@ import type { CustomMappedMetric } from '../../common/CustomMetric/CustomMetric.
 export const convertStringBasePathToObject = (baseFolder: string | BasePathData): BasePathData => {
   let basePathObj = {} as any
   if (typeof baseFolder === 'string') {
-    const list = [...baseFolder?.split('|'), '']
+    const list = [...baseFolder.split('|'), '']
     list.forEach((item, index) => {
       basePathObj[`basePathDropdown_${index}`] = {
         path: index === 0 ? '' : list.slice(0, index).join('|'),
@@ -50,7 +50,7 @@ export const convertStringBasePathToObject = (baseFolder: string | BasePathData)
 export const convertStringMetricPathToObject = (metricPath: string | MetricPathData): MetricPathData => {
   let metricPathObj = {} as any
   if (typeof metricPath === 'string') {
-    const list = [...metricPath?.split('|'), '']
+    const list = [...metricPath.split('|'), '']
     let secondLastIndex = 0
     if (list.length > 1) {
       secondLastIndex = list.length - 2

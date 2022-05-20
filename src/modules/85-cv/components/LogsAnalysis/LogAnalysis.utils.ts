@@ -13,7 +13,7 @@ import { LogAnalysisRowData, LogEvents } from './LogAnalysis.types'
 
 export const getClusterTypes = (getString: UseStringsReturn['getString']): SelectOption[] => {
   return [
-    { label: getString('auditTrail.allEvents'), value: '' },
+    // { label: getString('auditTrail.allEvents'), value: '' },
     { label: getString('cv.known'), value: LogEvents.KNOWN },
     { label: getString('cv.unknown'), value: LogEvents.UNKNOWN },
     { label: getString('cv.unexpected'), value: LogEvents.UNEXPECTED }

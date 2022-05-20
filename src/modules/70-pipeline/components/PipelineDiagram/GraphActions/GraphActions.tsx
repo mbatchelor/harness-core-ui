@@ -51,7 +51,8 @@ function GraphActions({
             variation={ButtonVariation.TERTIARY}
             icon="zoom-in"
             tooltip={getString('canvasButtons.zoomIn')}
-            onClick={() => {
+            onClick={e => {
+              e.stopPropagation()
               Number(graphScale.toFixed(1)) < 2 && setGraphScale(graphScale + ZOOM_INC_DEC_LEVEL)
             }}
           />
@@ -59,7 +60,8 @@ function GraphActions({
             variation={ButtonVariation.TERTIARY}
             icon="zoom-out"
             tooltip={getString('canvasButtons.zoomOut')}
-            onClick={() => {
+            onClick={e => {
+              e.stopPropagation()
               Number(graphScale.toFixed(1)) > 0.3 && setGraphScale(graphScale - ZOOM_INC_DEC_LEVEL)
             }}
           />

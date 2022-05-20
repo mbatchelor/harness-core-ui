@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { defaultTo, isEqual } from 'lodash-es'
+import { defaultTo } from 'lodash-es'
 import { parse } from 'yaml'
 import produce from 'immer'
 import { useCallback } from 'react'
@@ -13,10 +13,10 @@ import type { StageElementConfig } from 'services/cd-ng'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useTemplateSelector } from '@pipeline/utils/useTemplateSelector'
 import { createTemplate, getStageType } from '@pipeline/utils/templateUtils'
-import { getIdentifierFromValue } from '@common/components/EntityReference/EntityReference'
+import type { TemplateSummaryResponse } from 'services/template-ng'
 
 interface TemplateActionsReturnType {
-  addOrUpdateTemplate: () => Promise<void>
+  addOrUpdateTemplate: (selectedTemplate?: TemplateSummaryResponse) => Promise<void>
   removeTemplate: () => Promise<void>
 }
 
@@ -32,35 +32,28 @@ export function useStageTemplateActions(): TemplateActionsReturnType {
   const { stage } = getStageFromPipeline(selectedStageId)
   const { getTemplate } = useTemplateSelector()
 
-  const addOrUpdateTemplate = useCallback(async () => {
-    try {
-      const { template, isCopied } = await getTemplate({
-        templateType: 'Stage',
-        selectedChildType: getStageType(stage?.stage, templateTypes),
-        ...(stage?.stage?.template && {
-          selectedTemplateRef: getIdentifierFromValue(stage.stage.template.templateRef),
-          selectedVersionLabel: stage.stage.template.versionLabel
+  const addOrUpdateTemplate = useCallback(
+    async (selectedTemplate?: TemplateSummaryResponse) => {
+      try {
+        const { template, isCopied } = await getTemplate({
+          templateType: 'Stage',
+          selectedChildType: getStageType(stage?.stage, templateTypes),
+          selectedTemplate
         })
-      })
-      const node = stage?.stage
-      if (
-        !isCopied &&
-        isEqual(node?.template?.templateRef, template.identifier) &&
-        isEqual(node?.template?.versionLabel, template.versionLabel)
-      ) {
-        return
+        const node = stage?.stage
+        const processNode = isCopied
+          ? produce(defaultTo(parse(template?.yaml || '')?.template.spec, {}) as StageElementConfig, draft => {
+              draft.name = defaultTo(node?.name, '')
+              draft.identifier = defaultTo(node?.identifier, '')
+            })
+          : createTemplate(node, template)
+        await updateStage(processNode)
+      } catch (_) {
+        // Do nothing.. user cancelled template selection
       }
-      const processNode = isCopied
-        ? produce(defaultTo(parse(template?.yaml || '')?.template.spec, {}) as StageElementConfig, draft => {
-            draft.name = defaultTo(node?.name, '')
-            draft.identifier = defaultTo(node?.identifier, '')
-          })
-        : createTemplate(node, template)
-      await updateStage(processNode)
-    } catch (_) {
-      // Do nothing.. user cancelled template selection
-    }
-  }, [stage?.stage, templateTypes, getTemplate, updateStage])
+    },
+    [stage?.stage, templateTypes, getTemplate, updateStage]
+  )
 
   const removeTemplate = useCallback(async () => {
     const node = stage?.stage

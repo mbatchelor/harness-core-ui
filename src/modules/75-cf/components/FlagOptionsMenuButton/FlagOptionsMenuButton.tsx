@@ -22,7 +22,6 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { useConfirmAction } from '@common/hooks'
 import { GitSyncFormValues, GIT_SYNC_ERROR_CODE, UseGitSync } from '@cf/hooks/useGitSync'
-import { AUTO_COMMIT_MESSAGES } from '@cf/constants/GitSyncConstants'
 import { getErrorMessage, showToaster } from '@cf/utils/CFUtils'
 import SaveFlagToGitModal from '../SaveFlagToGitModal/SaveFlagToGitModal'
 
@@ -40,6 +39,7 @@ export interface FlagOptionsMenuButtonProps {
 
 const FlagOptionsMenuButton = (props: FlagOptionsMenuButtonProps): ReactElement => {
   const { environment, flagData, gitSync, deleteFlag, queryParams, refetchFlags } = props
+  const { gitSyncInitialValues, gitSyncValidationSchema } = gitSync.getGitSyncFormMeta()
 
   const history = useHistory()
   const { projectIdentifier, orgIdentifier, accountId } = useParams<Record<string, string>>()
@@ -64,13 +64,15 @@ const FlagOptionsMenuButton = (props: FlagOptionsMenuButtonProps): ReactElement 
       <SaveFlagToGitModal
         flagName={flagData.name}
         flagIdentifier={flagData.identifier}
+        gitSyncInitialValues={gitSyncInitialValues}
+        gitSyncValidationSchema={gitSyncValidationSchema}
         onSubmit={handleDeleteFlag}
         onClose={() => {
           hideGitModal()
         }}
       />
     )
-  }, [flagData.name, flagData.identifier])
+  }, [flagData.name, flagData.identifier, gitSync])
 
   const confirmDeleteFlag = useConfirmAction({
     title: getString('cf.featureFlags.deleteFlag'),
@@ -90,8 +92,6 @@ const FlagOptionsMenuButton = (props: FlagOptionsMenuButtonProps): ReactElement 
     let commitMsg = ''
 
     if (gitSync.isGitSyncEnabled) {
-      const { gitSyncInitialValues } = gitSync.getGitSyncFormMeta(AUTO_COMMIT_MESSAGES.DELETED_FLAG)
-
       if (gitSync.isAutoCommitEnabled) {
         commitMsg = gitSyncInitialValues.gitDetails.commitMsg
       } else {

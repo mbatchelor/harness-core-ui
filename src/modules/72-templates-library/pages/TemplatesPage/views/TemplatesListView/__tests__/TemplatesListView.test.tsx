@@ -42,7 +42,7 @@ describe('<TemplatesListView /> tests', () => {
   test('should match snapshot without three dots and a template is selected', () => {
     const { container } = render(
       <TestWrapper>
-        <TemplatesListView {...baseProps} selectedIdentifier={'manjutesttemplate'} />
+        <TemplatesListView {...baseProps} selectedTemplate={mockTemplates.data?.content?.[0]} />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()

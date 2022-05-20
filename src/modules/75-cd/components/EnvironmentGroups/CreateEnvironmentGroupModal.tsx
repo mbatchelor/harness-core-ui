@@ -86,7 +86,7 @@ export default function CreateEnvironmentGroupModal({ closeModal }: CreateEnviro
     setCreateLoading(true)
     try {
       const values = cleanData(value)
-      const body = yamlStringify(
+      const valuesYaml = yamlStringify(
         JSON.parse(
           JSON.stringify({
             environmentGroup: { ...values }
@@ -94,11 +94,14 @@ export default function CreateEnvironmentGroupModal({ closeModal }: CreateEnviro
         )
       )
       const response = await createEnvironmentGroupPromise({
-        body,
+        body: {
+          identifier: values.identifier,
+          orgIdentifier: values.orgIdentifier,
+          projectIdentifier: values.projectIdentifier,
+          yaml: valuesYaml
+        },
         queryParams: {
-          accountIdentifier: accountId,
-          orgIdentifier,
-          projectIdentifier
+          accountIdentifier: accountId
         },
         requestOptions: { headers: { 'Content-Type': 'application/yaml' } }
       })

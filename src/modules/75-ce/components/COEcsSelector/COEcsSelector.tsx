@@ -22,7 +22,7 @@ import {
   TableV2
 } from '@wings-software/uicore'
 import type { CellProps } from 'react-table'
-import { Color } from '@harness/design-system'
+import { Color, FontVariation } from '@harness/design-system'
 import type { SelectOption } from '@wings-software/uicore'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import {
@@ -265,79 +265,89 @@ const COEcsSelector: React.FC<COEcsSelectorProps> = props => {
   return (
     <Container>
       <Layout.Vertical spacing="xlarge">
-        <Container style={{ paddingBottom: 20, borderBottom: '1px solid #CDD3DD' }}>
-          <Text font={'large'}>{getString('ce.co.autoStoppingRule.configuration.ecsModal.title')}</Text>
+        <Container>
+          <Text font={{ variation: FontVariation.H3 }}>
+            {getString('ce.co.autoStoppingRule.configuration.ecsModal.title')}
+          </Text>
         </Container>
-        <Layout.Vertical
-          style={{
-            paddingBottom: 30,
-            paddingTop: 30,
-            borderBottom: '1px solid #CDD3DD'
-          }}
-        >
-          <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
-            <Layout.Horizontal flex={{ alignItems: 'center' }} spacing={'large'}>
-              <Button
-                onClick={handleAddSelection}
-                disabled={isDisabled}
-                loading={loadingDescribeService}
-                variation={ButtonVariation.PRIMARY}
-              >
-                {getString('ce.co.autoStoppingRule.configuration.addSelectedBtnText')}
-              </Button>
-              <div onClick={handleRefresh}>
-                <Icon name="refresh" color="primary7" size={14} />
-                <span style={{ color: 'var(--primary-7)', margin: '0 5px', cursor: 'pointer' }}>Refresh</span>
-              </div>
-            </Layout.Horizontal>
-            <ExpandingSearchInput onChange={handleSearch} />
-          </Layout.Horizontal>
+        <div className={css.sectionSeparator} />
+        <Layout.Vertical style={{ paddingTop: 20 }}>
           <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} spacing={'large'} style={{ maxWidth: '40%' }}>
-            <Select
-              items={allRegions}
-              onChange={handleRegionFilterChange}
-              disabled={regionsLoading}
-              value={selectedRegion}
-              inputProps={{
-                placeholder: getString('ce.allRegions')
-              }}
-              name={'region'}
-            />
-            <Select
-              items={allContainers}
-              onChange={item => setSelectedContainer(item)}
-              disabled={loadingContainers}
-              value={selectedContainer}
-              inputProps={{
-                placeholder: getString('ce.allClusters')
-              }}
-              name={'cluster'}
-            />
+            <div>
+              <Text font={{ variation: FontVariation.FORM_LABEL }} className={css.filterLabel}>
+                {getString('ce.co.autoStoppingRule.configuration.instanceModal.labels.selectRegion')}
+              </Text>
+              <Select
+                items={allRegions}
+                onChange={handleRegionFilterChange}
+                disabled={regionsLoading}
+                value={selectedRegion}
+                name={'region'}
+              />
+            </div>
+            <div>
+              <Text font={{ variation: FontVariation.FORM_LABEL }} className={css.filterLabel}>
+                {getString('ce.co.autoStoppingRule.configuration.ecsModal.labels.selectCluster')}
+              </Text>
+              <Select
+                items={allContainers}
+                onChange={item => setSelectedContainer(item)}
+                disabled={loadingContainers}
+                value={selectedContainer}
+                name={'cluster'}
+              />
+            </div>
           </Layout.Horizontal>
         </Layout.Vertical>
+        <div className={css.sectionSeparator} />
         <Container style={{ minHeight: 250 }}>
-          {loading && (
-            <Layout.Horizontal flex={{ justifyContent: 'center' }}>
-              <Icon name="spinner" size={24} color="blue500" />
+          <Layout.Vertical spacing={'medium'}>
+            <Layout.Horizontal className={css.searchAndFilterWrapper}>
+              <ExpandingSearchInput className={css.searchContainer} onChange={handleSearch} alwaysExpanded />
             </Layout.Horizontal>
-          )}
-          {!loading && (!selectedRegion || !selectedContainer) && (
-            <Layout.Horizontal flex={{ justifyContent: 'center' }}>
-              <Text icon={'execution-warning'} font={{ size: 'medium' }} iconProps={{ size: 20 }}>
-                {getString('ce.co.autoStoppingRule.configuration.ecsModal.emptyDescription')}
-              </Text>
-            </Layout.Horizontal>
-          )}
-          {!loading && selectedRegion && selectedContainer && (
-            <ECSServicesTable
-              data={servicesToShow}
-              pageIndex={pageIndex}
-              selectedService={selectedClusterService}
-              setSelectedService={setSelectedClusterService}
-              setPageIndex={setPageIndex}
-            />
-          )}
+            {loading && (
+              <Container>
+                <Layout.Horizontal flex={{ justifyContent: 'center' }}>
+                  <Icon name="spinner" size={24} color={Color.BLUE_500} />
+                </Layout.Horizontal>
+              </Container>
+            )}
+            {!loading && (!selectedRegion || !selectedContainer) && (
+              <Container>
+                <Layout.Horizontal flex={{ justifyContent: 'center' }}>
+                  <Text icon={'execution-warning'} font={{ variation: FontVariation.BODY1 }} iconProps={{ size: 20 }}>
+                    {getString('ce.co.autoStoppingRule.configuration.ecsModal.emptyDescription')}
+                  </Text>
+                </Layout.Horizontal>
+              </Container>
+            )}
+            {!loading && selectedRegion && selectedContainer && (
+              <ECSServicesTable
+                data={servicesToShow}
+                pageIndex={pageIndex}
+                selectedService={selectedClusterService}
+                setSelectedService={setSelectedClusterService}
+                setPageIndex={setPageIndex}
+              />
+            )}
+          </Layout.Vertical>
         </Container>
+        <Layout.Horizontal flex={{ alignItems: 'center' }} spacing={'large'}>
+          <Button
+            onClick={handleAddSelection}
+            disabled={isDisabled}
+            loading={loadingDescribeService}
+            variation={ButtonVariation.PRIMARY}
+          >
+            {getString('ce.co.autoStoppingRule.configuration.addSelectedBtnText')}
+          </Button>
+          <div onClick={handleRefresh}>
+            <Icon name="refresh" color="primary7" size={14} />
+            <span style={{ color: 'var(--primary-7)', margin: '0 5px', cursor: 'pointer' }}>
+              {getString('ce.common.refresh')}
+            </span>
+          </div>
+        </Layout.Horizontal>
       </Layout.Vertical>
     </Container>
   )

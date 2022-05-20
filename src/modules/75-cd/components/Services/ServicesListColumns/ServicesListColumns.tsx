@@ -31,8 +31,8 @@ import { useStrings } from 'framework/strings'
 import { useDeleteServiceV2 } from 'services/cd-ng'
 
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
-import { NewEditServiceModal } from '@cd/components/PipelineSteps/DeployServiceStep/DeployServiceStep'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { NewEditServiceModal } from '@cd/components/PipelineSteps/DeployServiceStep/NewEditServiceModal'
 import { ServiceTabs } from '../utils/ServiceUtils'
 import css from './ServicesListColumns.module.scss'
 

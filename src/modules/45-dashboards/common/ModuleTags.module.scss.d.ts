@@ -7,12 +7,16 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly card: string
   readonly cdTag: string
   readonly ceTag: string
   readonly cfTag: string
   readonly cgCdTag: string
   readonly ciTag: string
+  readonly customTag: string
+  readonly customTagButton: string
   readonly harnessTag: string
   readonly moduleTag: string
+  readonly predefinedTags: string
 }
 export default styles

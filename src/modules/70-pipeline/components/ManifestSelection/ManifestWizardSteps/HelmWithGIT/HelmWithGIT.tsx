@@ -41,6 +41,7 @@ import {
 } from '../../Manifesthelper'
 import GitRepositoryName from '../GitRepositoryName/GitRepositoryName'
 import { getRepositoryName, handleCommandFlagsSubmitData } from '../ManifestUtils'
+import DragnDropPaths from '../../DragnDropPaths'
 import css from '../ManifestWizardSteps.module.scss'
 import helmcss from './HelmWithGIT.module.scss'
 
@@ -95,6 +96,10 @@ function HelmWithGIT({
         repoName: getRepositoryName(prevStepData, initialValues),
         helmVersion: initialValues.spec?.helmVersion,
         skipResourceVersioning: initialValues?.spec?.skipResourceVersioning,
+        valuesPaths:
+          typeof initialValues?.spec?.valuesPaths === 'string'
+            ? initialValues?.spec?.valuesPaths
+            : initialValues?.spec?.valuesPaths?.map((path: string) => ({ path, uuid: uuid(path, nameSpace()) })),
         commandFlags: initialValues.spec?.commandFlags?.map((commandFlag: { commandType: string; flag: string }) => ({
           commandType: commandFlag.commandType,
           flag: commandFlag.flag
@@ -129,6 +134,10 @@ function HelmWithGIT({
               folderPath: formData?.folderPath
             }
           },
+          valuesPaths:
+            typeof formData?.valuesPaths === 'string'
+              ? formData?.valuesPaths
+              : formData?.valuesPaths?.map((path: { path: string }) => path.path),
           skipResourceVersioning: formData?.skipResourceVersioning,
           helmVersion: formData?.helmVersion
         }
@@ -183,6 +192,16 @@ function HelmWithGIT({
             return !isEmpty(value) && value?.length > 0
           }),
           helmVersion: Yup.string().trim().required(getString('pipeline.manifestType.helmVersionRequired')),
+          valuesPaths: Yup.lazy((value): Yup.Schema<unknown> => {
+            if (getMultiTypeFromValue(value as any) === MultiTypeInputType.FIXED) {
+              return Yup.array().of(
+                Yup.object().shape({
+                  path: Yup.string().min(1).required(getString('pipeline.manifestType.pathRequired'))
+                })
+              )
+            }
+            return Yup.string().required(getString('pipeline.manifestType.pathRequired'))
+          }),
           commandFlags: Yup.array().of(
             Yup.object().shape({
               flag: Yup.string().when('commandType', {
@@ -325,6 +344,16 @@ function HelmWithGIT({
                   <FormInput.Select name="helmVersion" label={getString('helmVersion')} items={helmVersions} />
                 </div>
               </Layout.Horizontal>
+              <div className={helmcss.halfWidth}>
+                <DragnDropPaths
+                  formik={formik}
+                  expressions={expressions}
+                  allowableTypes={allowableTypes}
+                  fieldPath="valuesPaths"
+                  pathLabel={getString('pipeline.manifestType.valuesYamlPath')}
+                  placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
+                />
+              </div>
               <Accordion
                 activeId={isActiveAdvancedStep ? getString('advancedTitle') : ''}
                 className={cx({

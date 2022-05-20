@@ -8,6 +8,8 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly addManifest: string
+  readonly addManifestPathBtn: string
+  readonly addValuesYaml: string
   readonly borderRadius: string
   readonly columnId: string
   readonly connectorName: string
@@ -21,5 +23,7 @@ declare const styles: {
   readonly noWrap: string
   readonly rowItem: string
   readonly type: string
+  readonly valuesList: string
+  readonly valuesListItem: string
 }
 export default styles

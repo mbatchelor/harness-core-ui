@@ -7,7 +7,11 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly emptyLabel: string
+  readonly filterLabel: string
   readonly instancesTable: string
-  readonly search: string
+  readonly searchAndFilterWrapper: string
+  readonly searchContainer: string
+  readonly sectionSeparator: string
 }
 export default styles

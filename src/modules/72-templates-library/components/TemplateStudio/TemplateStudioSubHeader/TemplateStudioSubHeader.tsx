@@ -51,7 +51,7 @@ export const TemplateStudioSubHeader: (props: TemplateStudioSubHeaderProps) => J
   return (
     <Container
       className={css.subHeader}
-      height={52}
+      height={49}
       padding={{ right: 'xlarge', left: 'xlarge' }}
       border={{ bottom: true, color: Color.GREY_200 }}
       background={Color.WHITE}

@@ -9,7 +9,7 @@ import React from 'react'
 
 import { Icon, IconName, Layout, Text } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
-import type { IconProps } from '@wings-software/uicore/dist/icons/Icon'
+import type { IconProps } from '@harness/icons'
 import type { StringsMap } from 'framework/strings/StringsContext'
 import { useStrings } from 'framework/strings'
 

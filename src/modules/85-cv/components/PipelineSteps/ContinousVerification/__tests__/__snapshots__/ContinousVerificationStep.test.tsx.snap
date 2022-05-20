@@ -5,43 +5,39 @@ exports[`Test ContinousVerificationStep Step renders empty inputSetView 1`] = `
   <div
     class="OverlaySpinner--overlaySpinner"
   >
-    <div
-      class="OverlaySpinner--overlaySpinner"
+    <form
+      action="#"
+      class="FormikForm--main"
     >
-      <form
-        action="#"
-        class="FormikForm--main"
-      >
-        <div>
+      <div>
+        <div
+          class="StyledProps--font StyledProps--main container"
+        >
           <div
-            class="StyledProps--font StyledProps--main container"
+            class="StyledProps--font StyledProps--main content"
           >
             <div
-              class="StyledProps--font StyledProps--main content"
+              class="emptyFields"
             >
               <div
-                class="emptyFields"
+                class="emptyFieldItem"
               >
-                <div
-                  class="emptyFieldItem"
-                >
-                  
+                
               connectors.cdng.runTimeMonitoredService.pleaseSpecify 
               service
               and
               environment
               connectors.cdng.runTimeMonitoredService.toFetchMonitoredService
             
-                </div>
               </div>
             </div>
           </div>
-          <div
-            class="StyledProps--font StyledProps--main container"
-          />
         </div>
-      </form>
-    </div>
+        <div
+          class="StyledProps--font StyledProps--main container"
+        />
+      </div>
+    </form>
     <p
       class="StyledProps--font StyledProps--main"
     >
@@ -69,603 +65,599 @@ exports[`Test ContinousVerificationStep Step renders inputSetView 1`] = `
   <div
     class="OverlaySpinner--overlaySpinner"
   >
-    <div
-      class="OverlaySpinner--overlaySpinner"
+    <form
+      action="#"
+      class="FormikForm--main"
     >
-      <form
-        action="#"
-        class="FormikForm--main"
-      >
-        <div>
+      <div>
+        <div
+          class="StyledProps--font StyledProps--main container"
+        >
           <div
-            class="StyledProps--font StyledProps--main container"
+            class="StyledProps--font StyledProps--main content"
           >
             <div
-              class="StyledProps--font StyledProps--main content"
+              class="emptyFields"
             >
               <div
-                class="emptyFields"
+                class="emptyFieldItem"
               >
-                <div
-                  class="emptyFieldItem"
-                >
-                  
+                
               connectors.cdng.runTimeMonitoredService.pleaseSpecify 
               service
               and
               environment
               connectors.cdng.runTimeMonitoredService.toFetchMonitoredService
             
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="StyledProps--font StyledProps--main container"
+        >
+          <div
+            class="StyledProps--font StyledProps--main itemRuntimeSetting"
+          >
+            <div
+              class="bp3-form-group"
+              data-id="spec.spec.sensitivity-0"
+            >
+              <label
+                class="bp3-label"
+                for="spec.spec.sensitivity"
+              >
+                <span
+                  class="Tooltip--acenter"
+                  data-tooltip-id="stepTestUtilForm_spec.spec.sensitivity"
+                >
+                  sensitivity
+                </span>
+                 
+                <span
+                  class="bp3-text-muted"
+                />
+              </label>
+              <div
+                class="bp3-form-content"
+              >
+                <div
+                  class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                >
+                  <div
+                    class="bp3-popover-wrapper MultiTypeInput--select MultiTypeInput--fixedValueInput Select--main bp3-fill"
+                  >
+                    <div
+                      class="bp3-popover-target"
+                    >
+                      <div
+                        class="bp3-input-group"
+                      >
+                        <input
+                          autocomplete="off"
+                          class="bp3-input"
+                          name="spec.spec.sensitivity"
+                          placeholder="Search..."
+                          style="padding-right: 0px;"
+                          type="text"
+                          value=""
+                        />
+                        <span
+                          class="bp3-input-action"
+                        >
+                          <span
+                            class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                            icon="chevron-down"
+                          >
+                            <svg
+                              data-icon="chevron-down"
+                              height="14"
+                              viewBox="0 0 16 16"
+                              width="14"
+                            >
+                              <desc>
+                                chevron-down
+                              </desc>
+                              <path
+                                d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                                fill-rule="evenodd"
+                              />
+                            </svg>
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <span
+                    class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                  >
+                    <span
+                      class="bp3-popover-target"
+                    >
+                      <button
+                        class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      >
+                        <span
+                          class="bp3-icon StyledProps--main"
+                          data-icon="fixed-input"
+                        >
+                          <svg
+                            height="12"
+                            viewBox="0 0 9 9"
+                            width="12"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                              fill="currentColor"
+                            />
+                          </svg>
+                        </span>
+                      </button>
+                    </span>
+                  </span>
                 </div>
               </div>
             </div>
           </div>
           <div
-            class="StyledProps--font StyledProps--main container"
+            class="StyledProps--font StyledProps--main itemRuntimeSetting"
           >
             <div
-              class="StyledProps--font StyledProps--main itemRuntimeSetting"
+              class="bp3-form-group"
+              data-id="spec.spec.duration-1"
             >
-              <div
-                class="bp3-form-group"
-                data-id="spec.spec.sensitivity-0"
+              <label
+                class="bp3-label"
+                for="spec.spec.duration"
               >
-                <label
-                  class="bp3-label"
-                  for="spec.spec.sensitivity"
+                <span
+                  class="Tooltip--acenter"
+                  data-tooltip-id="stepTestUtilForm_spec.spec.duration"
                 >
-                  <span
-                    class="Tooltip--acenter"
-                    data-tooltip-id="stepTestUtilForm_spec.spec.sensitivity"
-                  >
-                    sensitivity
-                  </span>
-                   
-                  <span
-                    class="bp3-text-muted"
-                  />
-                </label>
+                  duration
+                </span>
+                 
+                <span
+                  class="bp3-text-muted"
+                />
+              </label>
+              <div
+                class="bp3-form-content"
+              >
                 <div
-                  class="bp3-form-content"
+                  class="Layout--horizontal StyledProps--main MultiTypeInput--main"
                 >
                   <div
-                    class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                    class="bp3-popover-wrapper MultiTypeInput--select MultiTypeInput--fixedValueInput Select--main bp3-fill"
                   >
                     <div
-                      class="bp3-popover-wrapper MultiTypeInput--select MultiTypeInput--fixedValueInput Select--main bp3-fill"
+                      class="bp3-popover-target"
                     >
                       <div
-                        class="bp3-popover-target"
+                        class="bp3-input-group"
                       >
-                        <div
-                          class="bp3-input-group"
-                        >
-                          <input
-                            autocomplete="off"
-                            class="bp3-input"
-                            name="spec.spec.sensitivity"
-                            placeholder="Search..."
-                            style="padding-right: 0px;"
-                            type="text"
-                            value=""
-                          />
-                          <span
-                            class="bp3-input-action"
-                          >
-                            <span
-                              class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
-                              icon="chevron-down"
-                            >
-                              <svg
-                                data-icon="chevron-down"
-                                height="14"
-                                viewBox="0 0 16 16"
-                                width="14"
-                              >
-                                <desc>
-                                  chevron-down
-                                </desc>
-                                <path
-                                  d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
-                                  fill-rule="evenodd"
-                                />
-                              </svg>
-                            </span>
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <span
-                      class="bp3-popover-wrapper MultiTypeInput--wrapper"
-                    >
-                      <span
-                        class="bp3-popover-target"
-                      >
-                        <button
-                          class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        <input
+                          autocomplete="off"
+                          class="bp3-input"
+                          name="spec.spec.duration"
+                          placeholder="Search..."
+                          style="padding-right: 0px;"
+                          type="text"
+                          value=""
+                        />
+                        <span
+                          class="bp3-input-action"
                         >
                           <span
-                            class="bp3-icon StyledProps--main"
-                            data-icon="fixed-input"
+                            class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                            icon="chevron-down"
                           >
                             <svg
-                              height="12"
-                              viewBox="0 0 9 9"
-                              width="12"
-                              xmlns="http://www.w3.org/2000/svg"
+                              data-icon="chevron-down"
+                              height="14"
+                              viewBox="0 0 16 16"
+                              width="14"
                             >
+                              <desc>
+                                chevron-down
+                              </desc>
                               <path
-                                d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                                fill="currentColor"
+                                d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                                fill-rule="evenodd"
                               />
                             </svg>
                           </span>
-                        </button>
-                      </span>
-                    </span>
+                        </span>
+                      </div>
+                    </div>
                   </div>
+                  <span
+                    class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                  >
+                    <span
+                      class="bp3-popover-target"
+                    >
+                      <button
+                        class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      >
+                        <span
+                          class="bp3-icon StyledProps--main"
+                          data-icon="fixed-input"
+                        >
+                          <svg
+                            height="12"
+                            viewBox="0 0 9 9"
+                            width="12"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                              fill="currentColor"
+                            />
+                          </svg>
+                        </span>
+                      </button>
+                    </span>
+                  </span>
                 </div>
               </div>
             </div>
+          </div>
+          <div
+            class="StyledProps--font StyledProps--main itemRuntimeSetting"
+          >
             <div
-              class="StyledProps--font StyledProps--main itemRuntimeSetting"
+              class="bp3-form-group"
+              data-id="spec.spec.baseline-2"
             >
-              <div
-                class="bp3-form-group"
-                data-id="spec.spec.duration-1"
+              <label
+                class="bp3-label"
+                for="spec.spec.baseline"
               >
-                <label
-                  class="bp3-label"
-                  for="spec.spec.duration"
+                <span
+                  class="Tooltip--acenter"
+                  data-tooltip-id="stepTestUtilForm_spec.spec.baseline"
                 >
-                  <span
-                    class="Tooltip--acenter"
-                    data-tooltip-id="stepTestUtilForm_spec.spec.duration"
-                  >
-                    duration
-                  </span>
-                   
-                  <span
-                    class="bp3-text-muted"
-                  />
-                </label>
+                  connectors.cdng.baseline
+                </span>
+                 
+                <span
+                  class="bp3-text-muted"
+                />
+              </label>
+              <div
+                class="bp3-form-content"
+              >
                 <div
-                  class="bp3-form-content"
+                  class="Layout--horizontal StyledProps--main MultiTypeInput--main"
                 >
                   <div
-                    class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                    class="bp3-popover-wrapper MultiTypeInput--select MultiTypeInput--fixedValueInput Select--main bp3-fill"
                   >
                     <div
-                      class="bp3-popover-wrapper MultiTypeInput--select MultiTypeInput--fixedValueInput Select--main bp3-fill"
+                      class="bp3-popover-target"
                     >
                       <div
-                        class="bp3-popover-target"
+                        class="bp3-input-group"
                       >
-                        <div
-                          class="bp3-input-group"
-                        >
-                          <input
-                            autocomplete="off"
-                            class="bp3-input"
-                            name="spec.spec.duration"
-                            placeholder="Search..."
-                            style="padding-right: 0px;"
-                            type="text"
-                            value=""
-                          />
-                          <span
-                            class="bp3-input-action"
-                          >
-                            <span
-                              class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
-                              icon="chevron-down"
-                            >
-                              <svg
-                                data-icon="chevron-down"
-                                height="14"
-                                viewBox="0 0 16 16"
-                                width="14"
-                              >
-                                <desc>
-                                  chevron-down
-                                </desc>
-                                <path
-                                  d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
-                                  fill-rule="evenodd"
-                                />
-                              </svg>
-                            </span>
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <span
-                      class="bp3-popover-wrapper MultiTypeInput--wrapper"
-                    >
-                      <span
-                        class="bp3-popover-target"
-                      >
-                        <button
-                          class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        <input
+                          autocomplete="off"
+                          class="bp3-input"
+                          name="spec.spec.baseline"
+                          placeholder="Search..."
+                          style="padding-right: 0px;"
+                          type="text"
+                          value=""
+                        />
+                        <span
+                          class="bp3-input-action"
                         >
                           <span
-                            class="bp3-icon StyledProps--main"
-                            data-icon="fixed-input"
+                            class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                            icon="chevron-down"
                           >
                             <svg
-                              height="12"
-                              viewBox="0 0 9 9"
-                              width="12"
-                              xmlns="http://www.w3.org/2000/svg"
+                              data-icon="chevron-down"
+                              height="14"
+                              viewBox="0 0 16 16"
+                              width="14"
                             >
+                              <desc>
+                                chevron-down
+                              </desc>
                               <path
-                                d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                                fill="currentColor"
+                                d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                                fill-rule="evenodd"
                               />
                             </svg>
                           </span>
-                        </button>
-                      </span>
-                    </span>
+                        </span>
+                      </div>
+                    </div>
                   </div>
+                  <span
+                    class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                  >
+                    <span
+                      class="bp3-popover-target"
+                    >
+                      <button
+                        class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      >
+                        <span
+                          class="bp3-icon StyledProps--main"
+                          data-icon="fixed-input"
+                        >
+                          <svg
+                            height="12"
+                            viewBox="0 0 9 9"
+                            width="12"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                              fill="currentColor"
+                            />
+                          </svg>
+                        </span>
+                      </button>
+                    </span>
+                  </span>
                 </div>
               </div>
             </div>
+          </div>
+          <div
+            class="StyledProps--font StyledProps--main itemRuntimeSetting"
+          >
             <div
-              class="StyledProps--font StyledProps--main itemRuntimeSetting"
+              class="bp3-form-group"
+              data-id="spec.spec.trafficsplit-3"
             >
-              <div
-                class="bp3-form-group"
-                data-id="spec.spec.baseline-2"
+              <label
+                class="bp3-label"
+                for="spec.spec.trafficsplit"
               >
-                <label
-                  class="bp3-label"
-                  for="spec.spec.baseline"
+                <span
+                  class="Tooltip--acenter"
+                  data-tooltip-id="stepTestUtilForm_spec.spec.trafficsplit"
                 >
-                  <span
-                    class="Tooltip--acenter"
-                    data-tooltip-id="stepTestUtilForm_spec.spec.baseline"
-                  >
-                    connectors.cdng.baseline
-                  </span>
-                   
-                  <span
-                    class="bp3-text-muted"
-                  />
-                </label>
+                  connectors.cdng.trafficsplit
+                </span>
+                 
+                <span
+                  class="bp3-text-muted"
+                />
+              </label>
+              <div
+                class="bp3-form-content"
+              >
                 <div
-                  class="bp3-form-content"
+                  class="Layout--horizontal StyledProps--main MultiTypeInput--main"
                 >
                   <div
-                    class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                    class="bp3-popover-wrapper MultiTypeInput--select MultiTypeInput--fixedValueInput Select--main bp3-fill"
                   >
                     <div
-                      class="bp3-popover-wrapper MultiTypeInput--select MultiTypeInput--fixedValueInput Select--main bp3-fill"
+                      class="bp3-popover-target"
                     >
                       <div
-                        class="bp3-popover-target"
+                        class="bp3-input-group"
                       >
-                        <div
-                          class="bp3-input-group"
+                        <input
+                          autocomplete="off"
+                          class="bp3-input"
+                          name="spec.spec.trafficsplit"
+                          placeholder="Search..."
+                          style="padding-right: 0px;"
+                          type="text"
+                          value=""
+                        />
+                        <span
+                          class="bp3-input-action"
                         >
-                          <input
-                            autocomplete="off"
-                            class="bp3-input"
-                            name="spec.spec.baseline"
-                            placeholder="Search..."
-                            style="padding-right: 0px;"
-                            type="text"
-                            value=""
-                          />
                           <span
-                            class="bp3-input-action"
+                            class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                            icon="chevron-down"
                           >
-                            <span
-                              class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
-                              icon="chevron-down"
+                            <svg
+                              data-icon="chevron-down"
+                              height="14"
+                              viewBox="0 0 16 16"
+                              width="14"
                             >
-                              <svg
-                                data-icon="chevron-down"
-                                height="14"
-                                viewBox="0 0 16 16"
-                                width="14"
-                              >
-                                <desc>
-                                  chevron-down
-                                </desc>
-                                <path
-                                  d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
-                                  fill-rule="evenodd"
-                                />
-                              </svg>
-                            </span>
+                              <desc>
+                                chevron-down
+                              </desc>
+                              <path
+                                d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                                fill-rule="evenodd"
+                              />
+                            </svg>
                           </span>
-                        </div>
+                        </span>
                       </div>
                     </div>
-                    <span
-                      class="bp3-popover-wrapper MultiTypeInput--wrapper"
-                    >
-                      <span
-                        class="bp3-popover-target"
-                      >
-                        <button
-                          class="MultiTypeInput--btn MultiTypeInput--FIXED"
-                        >
-                          <span
-                            class="bp3-icon StyledProps--main"
-                            data-icon="fixed-input"
-                          >
-                            <svg
-                              height="12"
-                              viewBox="0 0 9 9"
-                              width="12"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                                fill="currentColor"
-                              />
-                            </svg>
-                          </span>
-                        </button>
-                      </span>
-                    </span>
                   </div>
+                  <span
+                    class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                  >
+                    <span
+                      class="bp3-popover-target"
+                    >
+                      <button
+                        class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      >
+                        <span
+                          class="bp3-icon StyledProps--main"
+                          data-icon="fixed-input"
+                        >
+                          <svg
+                            height="12"
+                            viewBox="0 0 9 9"
+                            width="12"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                              fill="currentColor"
+                            />
+                          </svg>
+                        </span>
+                      </button>
+                    </span>
+                  </span>
                 </div>
               </div>
             </div>
+          </div>
+          <div
+            class="StyledProps--font StyledProps--main itemRuntimeSetting"
+          >
             <div
-              class="StyledProps--font StyledProps--main itemRuntimeSetting"
+              class="bp3-form-group"
+              data-id="spec.spec.deploymentTag-4"
             >
-              <div
-                class="bp3-form-group"
-                data-id="spec.spec.trafficsplit-3"
+              <label
+                class="bp3-label"
+                for="spec.spec.deploymentTag"
               >
-                <label
-                  class="bp3-label"
-                  for="spec.spec.trafficsplit"
+                <span
+                  class="Tooltip--acenter"
+                  data-tooltip-id="stepTestUtilForm_spec.spec.deploymentTag"
                 >
-                  <span
-                    class="Tooltip--acenter"
-                    data-tooltip-id="stepTestUtilForm_spec.spec.trafficsplit"
-                  >
-                    connectors.cdng.trafficsplit
-                  </span>
-                   
-                  <span
-                    class="bp3-text-muted"
-                  />
-                </label>
+                  connectors.cdng.artifactTag
+                </span>
+                 
+                <span
+                  class="bp3-text-muted"
+                />
+              </label>
+              <div
+                class="bp3-form-content"
+              >
                 <div
-                  class="bp3-form-content"
+                  class="Layout--horizontal StyledProps--main MultiTypeInput--main"
                 >
                   <div
-                    class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                    class="bp3-input-group MultiTypeInput--input"
                   >
-                    <div
-                      class="bp3-popover-wrapper MultiTypeInput--select MultiTypeInput--fixedValueInput Select--main bp3-fill"
-                    >
-                      <div
-                        class="bp3-popover-target"
-                      >
-                        <div
-                          class="bp3-input-group"
-                        >
-                          <input
-                            autocomplete="off"
-                            class="bp3-input"
-                            name="spec.spec.trafficsplit"
-                            placeholder="Search..."
-                            style="padding-right: 0px;"
-                            type="text"
-                            value=""
-                          />
-                          <span
-                            class="bp3-input-action"
-                          >
-                            <span
-                              class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
-                              icon="chevron-down"
-                            >
-                              <svg
-                                data-icon="chevron-down"
-                                height="14"
-                                viewBox="0 0 16 16"
-                                width="14"
-                              >
-                                <desc>
-                                  chevron-down
-                                </desc>
-                                <path
-                                  d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
-                                  fill-rule="evenodd"
-                                />
-                              </svg>
-                            </span>
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <span
-                      class="bp3-popover-wrapper MultiTypeInput--wrapper"
-                    >
-                      <span
-                        class="bp3-popover-target"
-                      >
-                        <button
-                          class="MultiTypeInput--btn MultiTypeInput--FIXED"
-                        >
-                          <span
-                            class="bp3-icon StyledProps--main"
-                            data-icon="fixed-input"
-                          >
-                            <svg
-                              height="12"
-                              viewBox="0 0 9 9"
-                              width="12"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                                fill="currentColor"
-                              />
-                            </svg>
-                          </span>
-                        </button>
-                      </span>
-                    </span>
+                    <input
+                      autocomplete="off"
+                      class="bp3-input"
+                      name="spec.spec.deploymentTag"
+                      type="text"
+                      value=""
+                    />
                   </div>
+                  <span
+                    class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                  >
+                    <span
+                      class="bp3-popover-target"
+                    >
+                      <button
+                        class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      >
+                        <span
+                          class="bp3-icon StyledProps--main"
+                          data-icon="fixed-input"
+                        >
+                          <svg
+                            height="12"
+                            viewBox="0 0 9 9"
+                            width="12"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                              fill="currentColor"
+                            />
+                          </svg>
+                        </span>
+                      </button>
+                    </span>
+                  </span>
                 </div>
               </div>
             </div>
+          </div>
+          <div
+            class="StyledProps--font StyledProps--main itemRuntimeSetting"
+          >
             <div
-              class="StyledProps--font StyledProps--main itemRuntimeSetting"
+              class="bp3-form-group"
+              data-id="timeout-5"
             >
-              <div
-                class="bp3-form-group"
-                data-id="spec.spec.deploymentTag-4"
+              <label
+                class="bp3-label"
+                for="timeout"
               >
-                <label
-                  class="bp3-label"
-                  for="spec.spec.deploymentTag"
+                <span
+                  class="Tooltip--acenter"
+                  data-tooltip-id="stepTestUtilForm_timeout"
                 >
-                  <span
-                    class="Tooltip--acenter"
-                    data-tooltip-id="stepTestUtilForm_spec.spec.deploymentTag"
-                  >
-                    connectors.cdng.artifactTag
-                  </span>
-                   
-                  <span
-                    class="bp3-text-muted"
-                  />
-                </label>
+                  pipelineSteps.timeoutLabel
+                </span>
+                 
+                <span
+                  class="bp3-text-muted"
+                />
+              </label>
+              <div
+                class="bp3-form-content"
+              >
                 <div
-                  class="bp3-form-content"
+                  class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                  style="flex-grow: 1;"
                 >
                   <div
-                    class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                    class="bp3-input-group bp3-fill"
                   >
-                    <div
-                      class="bp3-input-group MultiTypeInput--input"
-                    >
-                      <input
-                        autocomplete="off"
-                        class="bp3-input"
-                        name="spec.spec.deploymentTag"
-                        type="text"
-                        value=""
-                      />
-                    </div>
-                    <span
-                      class="bp3-popover-wrapper MultiTypeInput--wrapper"
-                    >
-                      <span
-                        class="bp3-popover-target"
-                      >
-                        <button
-                          class="MultiTypeInput--btn MultiTypeInput--FIXED"
-                        >
-                          <span
-                            class="bp3-icon StyledProps--main"
-                            data-icon="fixed-input"
-                          >
-                            <svg
-                              height="12"
-                              viewBox="0 0 9 9"
-                              width="12"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                                fill="currentColor"
-                              />
-                            </svg>
-                          </span>
-                        </button>
-                      </span>
-                    </span>
+                    <input
+                      class="bp3-input"
+                      name="timeout"
+                      placeholder="Enter w/d/h/m/s/ms"
+                      type="text"
+                      value=""
+                    />
                   </div>
-                </div>
-              </div>
-            </div>
-            <div
-              class="StyledProps--font StyledProps--main itemRuntimeSetting"
-            >
-              <div
-                class="bp3-form-group"
-                data-id="timeout-5"
-              >
-                <label
-                  class="bp3-label"
-                  for="timeout"
-                >
                   <span
-                    class="Tooltip--acenter"
-                    data-tooltip-id="stepTestUtilForm_timeout"
+                    class="bp3-popover-wrapper MultiTypeInput--wrapper"
                   >
-                    pipelineSteps.timeoutLabel
+                    <span
+                      class="bp3-popover-target"
+                    >
+                      <button
+                        class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      >
+                        <span
+                          class="bp3-icon StyledProps--main"
+                          data-icon="fixed-input"
+                        >
+                          <svg
+                            height="12"
+                            viewBox="0 0 9 9"
+                            width="12"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                              fill="currentColor"
+                            />
+                          </svg>
+                        </span>
+                      </button>
+                    </span>
                   </span>
-                   
-                  <span
-                    class="bp3-text-muted"
-                  />
-                </label>
-                <div
-                  class="bp3-form-content"
-                >
-                  <div
-                    class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                    style="flex-grow: 1;"
-                  >
-                    <div
-                      class="bp3-input-group bp3-fill"
-                    >
-                      <input
-                        class="bp3-input"
-                        name="timeout"
-                        placeholder="Enter w/d/h/m/s/ms"
-                        type="text"
-                        value=""
-                      />
-                    </div>
-                    <span
-                      class="bp3-popover-wrapper MultiTypeInput--wrapper"
-                    >
-                      <span
-                        class="bp3-popover-target"
-                      >
-                        <button
-                          class="MultiTypeInput--btn MultiTypeInput--FIXED"
-                        >
-                          <span
-                            class="bp3-icon StyledProps--main"
-                            data-icon="fixed-input"
-                          >
-                            <svg
-                              height="12"
-                              viewBox="0 0 9 9"
-                              width="12"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                                fill="currentColor"
-                              />
-                            </svg>
-                          </span>
-                        </button>
-                      </span>
-                    </span>
-                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </form>
-    </div>
+      </div>
+    </form>
     <p
       class="StyledProps--font StyledProps--main"
     >

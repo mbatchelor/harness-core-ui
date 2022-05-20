@@ -9,6 +9,7 @@ import React from 'react'
 import { fireEvent, getAllByText, getByText, render, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import mockImport from 'framework/utils/mockImport'
+import { FFGitSyncProvider } from '@cf/contexts/ff-git-sync-context/FFGitSyncContext'
 import { SegmentDetailPage } from '../SegmentDetailPage'
 import mockSegment from './mockSegment'
 import mockTargets from './mockTargets'
@@ -137,7 +138,9 @@ describe('SegmentDetailsPage', () => {
         path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/onboarding/detail"
         pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
       >
-        <SegmentDetailPage />
+        <FFGitSyncProvider>
+          <SegmentDetailPage />
+        </FFGitSyncProvider>
       </TestWrapper>
     )
 

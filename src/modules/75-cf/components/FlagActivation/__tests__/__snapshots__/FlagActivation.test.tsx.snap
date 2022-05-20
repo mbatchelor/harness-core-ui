@@ -330,6 +330,7 @@ exports[`FlagActivation it should render correctly 1`] = `
 exports[`FlagActivation it should render form correctly 1`] = `
 <div
   class="StyledProps--font StyledProps--main StyledProps--padding-bottom-xlarge StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge"
+  data-testid="save-flag-to-git-modal-body"
   id="save-flag-to-git-modal-body"
 >
   <h3

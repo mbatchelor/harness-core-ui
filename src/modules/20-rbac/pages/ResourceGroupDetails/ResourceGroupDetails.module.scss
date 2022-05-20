@@ -7,7 +7,7 @@
 
 .resourceGroupDetails {
   .subHeader {
-    width: 100%;
+    width: 100% !important;
   }
   .resourceTypeListContainer {
     background-color: var(--white) !important;
@@ -16,6 +16,7 @@
   .pageContainer {
     display: grid;
     grid-auto-flow: column;
+    width: 100%;
     grid-template-columns: 320px 1fr;
   }
   .colorDiv {
