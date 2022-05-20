@@ -95,7 +95,10 @@ export const NGBreadcrumbs: React.FC<Partial<NGBreadcrumbsProps>> = ({
         url = paths.toCF(params)
         label = getString('featureFlagsText')
         break
-      //TODO: add chaos here?
+      case ModuleName.CHAOS:
+        url = paths.toChaos(params)
+        label = getString('common.chaosText')
+        break
     }
 
     if (projectIdentifier) {

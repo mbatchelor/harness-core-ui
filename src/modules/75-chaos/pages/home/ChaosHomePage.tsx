@@ -12,9 +12,9 @@ import { useStrings } from 'framework/strings'
 import type { Project } from 'services/cd-ng'
 import routes from '@common/RouteDefinitions'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
-import bgImageURL from './chaos.svg'
+import bgImageURL from './images/chaos.svg'
 
-const CVHomePage: React.FC = () => {
+const ChaosHomePage: React.FC = () => {
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
   const history = useHistory()
@@ -22,10 +22,11 @@ const CVHomePage: React.FC = () => {
   const projectCreateSuccessHandler = (project?: Project): void => {
     if (project) {
       history.push(
-        routes.toChaosMicroFrontend({
+        routes.toProjectOverview({
           projectIdentifier: project.identifier,
           orgIdentifier: project.orgIdentifier || '',
-          accountId
+          accountId,
+          module: 'chaos'
         })
       )
     }
@@ -42,4 +43,4 @@ const CVHomePage: React.FC = () => {
   )
 }
 
-export default CVHomePage
+export default ChaosHomePage

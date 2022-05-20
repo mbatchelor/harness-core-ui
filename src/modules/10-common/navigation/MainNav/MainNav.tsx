@@ -34,6 +34,7 @@ export default function L1Nav(): React.ReactElement {
     CING_ENABLED,
     CENG_ENABLED,
     CFNG_ENABLED,
+    CHAOS_ENABLED,
     SECURITY,
     RESOURCE_CENTER_ENABLED,
     NG_DASHBOARDS
@@ -59,21 +60,23 @@ export default function L1Nav(): React.ReactElement {
             </Layout.Vertical>
           </Link>
         </li>
-        <li className={css.navItem}>
-          <Link {...commonLinkProps} to={paths.toChaos(params)}>
-            <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
-              <Icon name="chaos-logo" size={30} />
-              <Text
-                font={{ weight: 'semi-bold', align: 'center' }}
-                padding={{ bottom: 'xsmall' }}
-                color={Color.WHITE}
-                className={css.text}
-              >
-                <String stringID="common.chaos" />
-              </Text>
-            </Layout.Vertical>
-          </Link>
-        </li>
+        {CHAOS_ENABLED && (
+          <li className={css.navItem}>
+            <Link {...commonLinkProps} to={paths.toChaos(params)}>
+              <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
+                <Icon name="chaos-main" size={30} />
+                <Text
+                  font={{ weight: 'semi-bold', align: 'center' }}
+                  padding={{ bottom: 'xsmall' }}
+                  color={Color.WHITE}
+                  className={css.text}
+                >
+                  <String stringID="common.chaosText" />
+                </Text>
+              </Layout.Vertical>
+            </Link>
+          </li>
+        )}
         {CDNG_ENABLED && (
           <li className={css.navItem}>
             <Link {...commonLinkProps} to={paths.toCD(params)}>

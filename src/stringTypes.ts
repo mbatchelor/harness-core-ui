@@ -119,7 +119,7 @@ export interface StringsMap {
   'common.changeIntelligence': string
   'common.changesUnsaved': string
   'common.channel': string
-  'common.chaos': string
+  'common.chaosText': string
   'common.clearSelection': string
   'common.clientId': string
   'common.clientSecret': string

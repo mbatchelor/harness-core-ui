@@ -27,6 +27,8 @@ const ChildAppError = path.resolve(CONTEXT, './src/microfrontends/ChildAppError.
 
 const enableGovernance = process.env.ENABLE_GOVERNANCE !== 'false'
 const enableGitOpsUI = process.env.ENABLE_GITOPSUI !== 'false'
+// TODO: change condition to !== 'false' upon GA
+const enableChaosUI = process.env.ENABLE_CHAOS === 'true'
 const enableSTO = process.env.ENABLE_STO !== 'false'
 const HARNESS_ENABLE_NG_AUTH_UI = process.env.HARNESS_ENABLE_NG_AUTH_UI !== 'false'
 
@@ -174,7 +176,7 @@ const config = {
   },
   plugins: [
     new ExternalRemotesPlugin(),
-    new ModuleFederationPlugin(moduleFederationConfig({ enableGovernance, enableGitOpsUI, enableSTO })),
+    new ModuleFederationPlugin(moduleFederationConfig({ enableGovernance, enableGitOpsUI, enableSTO, enableChaosUI })),
     new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en/),
     new webpack.DefinePlugin({
       'process.env': '{}' // required for @blueprintjs/core
@@ -193,6 +195,11 @@ const config = {
 if (!enableGitOpsUI) {
   // render a mock app when Gitops MF is disabled
   config.resolve.alias['gitopsui/MicroFrontendApp'] = ChildAppError
+}
+
+if (!enableChaosUI) {
+  // render a mock app when Chaos MF is disabled
+  config.resolve.alias['chaos/MicroFrontendApp'] = ChildAppError
 }
 
 if (!enableSTO) {

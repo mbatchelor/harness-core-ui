@@ -254,7 +254,8 @@ purpose:
     subtitle: Spot and quickly debug inefficiencies and optimize them to reduce costs.
     continuous: Cloud Cost Management
     descriptionOnly: 'Gain cloud cost visibility and optimize costs across projects, environments, deployments, and more.'
-    description: 'Gain Cloud cost visibilty and optimize costs across projects, environments, clusters, deployments, etc
+    description:
+      'Gain Cloud cost visibilty and optimize costs across projects, environments, clusters, deployments, etc
       <br><br>You can access this module via your free trial. Benefits include: Your software delivery pipeline can now include build stages, Test intelligence - faster and more reliable build processes'
     moduleSelectionSubHeading: Take your cloud cost management the next level using our Harness Cloud Cost Management
   cf:
@@ -864,4 +865,4 @@ noSearchResultsFound: No results found for '{{searchTerm}}'.
 searchOther: Please search something else.
 
 # Chaos Module
-chaos: Chaos
+chaosText: Chaos

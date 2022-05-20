@@ -1,4 +1,4 @@
-import React, { Context } from 'react'
+import React from 'react'
 import { Redirect, useParams } from 'react-router-dom'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { SidebarContext } from '@common/navigation/SidebarProvider'
@@ -14,9 +14,7 @@ import {
   userPathProps
 } from '@common/utils/routeUtils'
 import { String as LocaleString } from 'framework/strings'
-import ExecutionGraphView from '@pipeline/pages/execution/ExecutionPipelineView/ExecutionGraphView/ExecutionGraphView'
 import ChildAppMounter from 'microfrontends/ChildAppMounter'
-import type { ExecutionContextParams } from '@pipeline/context/ExecutionContext'
 import AccessControlPage from '@rbac/pages/AccessControl/AccessControlPage'
 import UsersPage from '@rbac/pages/Users/UsersPage'
 import UserDetails from '@rbac/pages/UserDetails/UserDetails'
@@ -32,6 +30,7 @@ import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
 import RbacFactory from '@rbac/factories/RbacFactory'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import ChaosSideNav from './components/ChaosSideNav/ChaosSideNav'
 import ChaosHomePage from './pages/home/ChaosHomePage'
 
@@ -39,15 +38,12 @@ import ChaosHomePage from './pages/home/ChaosHomePage'
 const ChaosMicroFrontend = React.lazy(() => import('chaos/MicroFrontendApp'))
 
 export interface ChaosCustomMicroFrontendProps {
-  customComponents: {
-    ExecutionGraphView: React.ComponentType
-    ExecutionContext?: Context<ExecutionContextParams>
-  }
+  customComponents: Record<string, never>
 }
 
 RbacFactory.registerResourceCategory(ResourceCategory.CHAOS, {
   icon: 'ci-dev-exp',
-  label: 'common.chaos'
+  label: 'common.chaosText'
 })
 
 RbacFactory.registerResourceTypeHandler(ResourceType.CHAOS_HUB, {
@@ -61,11 +57,11 @@ RbacFactory.registerResourceTypeHandler(ResourceType.CHAOS_HUB, {
   }
 })
 
-const chaosSideNavProps: SidebarContext = {
+const ChaosSideNavProps: SidebarContext = {
   navComponent: ChaosSideNav,
   subtitle: 'Chaos',
   title: 'Engineering',
-  icon: 'cd-main'
+  icon: 'chaos-main'
 }
 
 const chaosModuleParams: ModulePathParams = {
@@ -100,40 +96,33 @@ const RedirectToChaosProject = (): React.ReactElement => {
 
 export default (
   <>
-    <RouteWithLayout
-      // licenseRedirectData={licenseRedirectData}
-      sidebarProps={chaosSideNavProps}
-      path={routes.toChaos({ ...accountPathProps })}
-      exact
-      // pageName={PAGE_NAME.ChaosHomePage}
-    >
+    <RouteWithLayout sidebarProps={ChaosSideNavProps} path={routes.toChaos({ ...accountPathProps })} exact>
       <RedirectToChaosProject />
     </RouteWithLayout>
 
     {/* Chaos Routes */}
     <RouteWithLayout
-      // licenseRedirectData={licenseRedirectData}
-      sidebarProps={chaosSideNavProps}
+      sidebarProps={ChaosSideNavProps}
       path={routes.toModuleHome({ ...projectPathProps, ...chaosModuleParams })}
       exact
-      // pageName={PAGE_NAME.ChaosHomePage}
+      pageName={PAGE_NAME.ChaosHomePage}
     >
       <ChaosHomePage />
     </RouteWithLayout>
 
     {/* Access Control */}
-
     <RouteWithLayout
-      sidebarProps={chaosSideNavProps}
+      sidebarProps={ChaosSideNavProps}
       path={routes.toAccessControl({ ...projectPathProps, ...chaosModuleParams })}
       exact
     >
       <RedirectToAccessControlHome />
     </RouteWithLayout>
     <RouteWithLayout
-      sidebarProps={chaosSideNavProps}
+      sidebarProps={ChaosSideNavProps}
       path={[routes.toUsers({ ...projectPathProps, ...chaosModuleParams })]}
       exact
+      pageName={PAGE_NAME.UsersPage}
     >
       <AccessControlPage>
         <UsersPage />
@@ -141,17 +130,19 @@ export default (
     </RouteWithLayout>
 
     <RouteWithLayout
-      sidebarProps={chaosSideNavProps}
+      sidebarProps={ChaosSideNavProps}
       path={routes.toUserDetails({ ...projectPathProps, ...chaosModuleParams, ...userPathProps })}
       exact
+      pageName={PAGE_NAME.UserDetails}
     >
       <UserDetails />
     </RouteWithLayout>
 
     <RouteWithLayout
-      sidebarProps={chaosSideNavProps}
+      sidebarProps={ChaosSideNavProps}
       path={[routes.toUserGroups({ ...projectPathProps, ...chaosModuleParams })]}
       exact
+      pageName={PAGE_NAME.UserGroups}
     >
       <AccessControlPage>
         <UserGroups />
@@ -159,17 +150,19 @@ export default (
     </RouteWithLayout>
 
     <RouteWithLayout
-      sidebarProps={chaosSideNavProps}
+      sidebarProps={ChaosSideNavProps}
       path={routes.toUserGroupDetails({ ...projectPathProps, ...chaosModuleParams, ...userGroupPathProps })}
       exact
+      pageName={PAGE_NAME.UserGroupDetails}
     >
       <UserGroupDetails />
     </RouteWithLayout>
 
     <RouteWithLayout
-      sidebarProps={chaosSideNavProps}
+      sidebarProps={ChaosSideNavProps}
       path={routes.toServiceAccounts({ ...projectPathProps, ...chaosModuleParams })}
       exact
+      pageName={PAGE_NAME.ServiceAccountsPage}
     >
       <AccessControlPage>
         <ServiceAccountsPage />
@@ -177,17 +170,19 @@ export default (
     </RouteWithLayout>
 
     <RouteWithLayout
-      sidebarProps={chaosSideNavProps}
+      sidebarProps={ChaosSideNavProps}
       path={routes.toServiceAccountDetails({ ...projectPathProps, ...chaosModuleParams, ...serviceAccountProps })}
       exact
+      pageName={PAGE_NAME.ServiceAccountDetails}
     >
       <ServiceAccountDetails />
     </RouteWithLayout>
 
     <RouteWithLayout
-      sidebarProps={chaosSideNavProps}
+      sidebarProps={ChaosSideNavProps}
       path={[routes.toResourceGroups({ ...projectPathProps, ...chaosModuleParams })]}
       exact
+      pageName={PAGE_NAME.ResourceGroups}
     >
       <AccessControlPage>
         <ResourceGroups />
@@ -195,9 +190,10 @@ export default (
     </RouteWithLayout>
 
     <RouteWithLayout
-      sidebarProps={chaosSideNavProps}
+      sidebarProps={ChaosSideNavProps}
       path={[routes.toRoles({ ...projectPathProps, ...chaosModuleParams })]}
       exact
+      pageName={PAGE_NAME.Roles}
     >
       <AccessControlPage>
         <Roles />
@@ -205,33 +201,28 @@ export default (
     </RouteWithLayout>
 
     <RouteWithLayout
-      sidebarProps={chaosSideNavProps}
+      sidebarProps={ChaosSideNavProps}
       path={[routes.toRoleDetails({ ...projectPathProps, ...chaosModuleParams, ...rolePathProps })]}
       exact
+      pageName={PAGE_NAME.RoleDetails}
     >
       <RoleDetails />
     </RouteWithLayout>
     <RouteWithLayout
-      sidebarProps={chaosSideNavProps}
+      sidebarProps={ChaosSideNavProps}
       path={[routes.toResourceGroupDetails({ ...projectPathProps, ...chaosModuleParams, ...resourceGroupPathProps })]}
       exact
+      pageName={PAGE_NAME.ResourceGroupDetails}
     >
       <ResourceGroupDetails />
     </RouteWithLayout>
 
-    {/* Loading the Chaos MicroFrontend */}
+    {/* Loads the Chaos MicroFrontend */}
     <RouteWithLayout
-      // licenseRedirectData={licenseRedirectData}
-      sidebarProps={chaosSideNavProps}
+      sidebarProps={ChaosSideNavProps}
       path={routes.toChaosMicroFrontend({ ...projectPathProps, ...chaosModuleParams })}
-      // pageName={PAGE_NAME.ChaosHomePage}
     >
-      <ChildAppMounter<ChaosCustomMicroFrontendProps>
-        ChildApp={ChaosMicroFrontend}
-        customComponents={{
-          ExecutionGraphView
-        }}
-      />
+      <ChildAppMounter<ChaosCustomMicroFrontendProps> ChildApp={ChaosMicroFrontend} customComponents={{}} />
     </RouteWithLayout>
   </>
 )

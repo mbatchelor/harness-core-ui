@@ -22,7 +22,7 @@ const ExactSharedPackages = [
   'restful-react'
 ]
 
-module.exports = ({ enableGitOpsUI, enableSTO }) => {
+module.exports = ({ enableGitOpsUI, enableSTO, enableChaosUI }) => {
   const remotes = {}
 
   if (enableGitOpsUI) {
@@ -39,7 +39,9 @@ module.exports = ({ enableGitOpsUI, enableSTO }) => {
     remotes.sto = "sto@[window.getApiBaseUrl('sto/remoteEntry.js')]"
   }
 
-  remotes.chaos = "chaos@[window.getApiBaseUrl('chaos/remoteEntry.js')]"
+  if (enableChaosUI) {
+    remotes.chaos = "chaos@[window.getApiBaseUrl('chaos/remoteEntry.js')]"
+  }
 
   if (process.env.TARGET_LOCALHOST) {
     remotes.errortracking = 'errortracking@http://localhost:3091/remoteEntry.js'
