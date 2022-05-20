@@ -1,0 +1,40 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Chaos Homepage Test Ensure project success handler calls history push 1`] = `
+<div>
+  <div>
+    <h1>
+      Not Found
+    </h1>
+    <div
+      data-testid="location"
+    >
+      /account/undefined/undefined/orgs//projects/testID/
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Chaos Homepage Test Ensure project success handler does not redirect when project is empty 1`] = `
+<div>
+  <div
+    class="homepagetemplate"
+  >
+    <button
+      class="projectCreate"
+    />
+  </div>
+</div>
+`;
+
+exports[`Chaos Homepage Test should render ChaosHomePage with proper headings 1`] = `
+<div>
+  <div
+    class="homepagetemplate"
+  >
+    <button
+      class="projectCreate"
+    />
+  </div>
+</div>
+`;
