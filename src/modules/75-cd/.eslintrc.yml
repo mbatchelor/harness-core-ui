@@ -7,11 +7,13 @@ rules:
         - '!microfrontends/ChildAppMounter'
         - modules/75-ce/*
         - modules/75-cf/*
+        - modules/75-chaos/*
         - modules/75-ci/*
         - modules/85-cv/*
         - modules/85-sto-steps/*
         - '@ce/*'
         - '@cf/*'
+        - '@chaos/*'
         - '@ci/*'
         - '@cv/*'
         - '@sto-steps/*'

@@ -12,6 +12,7 @@ rules:
         - modules/75-cd/*
         - modules/75-ce/*
         - modules/75-cf/*
+        - modules/75-chaos/*
         - modules/75-ci/*
         - modules/85-cv/*
         - modules/85-sto-steps/*
@@ -20,6 +21,7 @@ rules:
         - '@cd/*'
         - '@ce/*'
         - '@cf/*'
+        - '@chaos/*'
         - '@ci/*'
         - '@cv/*'
         - '@sto-steps/*'
