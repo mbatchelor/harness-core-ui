@@ -7,6 +7,7 @@
 
 import React from 'react'
 import { fireEvent, render, waitFor } from '@testing-library/react'
+import { Utils } from '@wings-software/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { SelectHealthSourceServicesProps } from '@cv/pages/health-source/common/SelectHealthSourceServices/SelectHealthSourceServices.types'
 import * as cvServices from 'services/cv'
@@ -119,5 +120,36 @@ describe('NewRelicMappedMetric component', () => {
         timestampJSONPath: '$.timeSeries.[*].endTimeSeconds'
       })
     )
+  })
+
+  test('should check whether fetch sample data call for NRQL is happening during component mount if query is present', () => {
+    jest.spyOn(Utils, 'randomId').mockReturnValue('abc')
+    const refetchFn = jest.fn()
+    jest
+      .spyOn(cvServices, 'useGetSampleDataForNRQL')
+      .mockReturnValue({ refetch: refetchFn, data: { data: 'Query response json ' } } as any)
+
+    render(
+      <TestWrapper>
+        <NewRelicCustomMetricForm
+          connectorIdentifier={'account.new_relic'}
+          mappedMetrics={mappedMetricsMap}
+          selectedMetric={'New Relic Metric'}
+          formikValues={formikValues as any}
+          formikSetField={jest.fn()}
+        />
+      </TestWrapper>
+    )
+
+    expect(refetchFn).toHaveBeenCalledWith({
+      queryParams: {
+        accountId: undefined,
+        connectorIdentifier: 'account.new_relic',
+        nrql: "SELECT average(`apm.service.transaction.duration`) FROM Metric WHERE appName = 'My Application' TIMESERIES",
+        orgIdentifier: undefined,
+        projectIdentifier: undefined,
+        requestGuid: 'abc'
+      }
+    })
   })
 })

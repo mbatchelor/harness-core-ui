@@ -202,6 +202,6 @@ export const channelImgMap = {
 }
 
 export enum RulesMode {
-  ACTIVE = 'ACTIVE MODE',
-  DRY = 'DRY RUN MODE'
+  ACTIVE = 'active',
+  DRY = 'dryrun'
 }

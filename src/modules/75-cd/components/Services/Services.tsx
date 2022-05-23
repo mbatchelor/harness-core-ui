@@ -10,6 +10,7 @@ import { Tabs } from '@harness/uicore'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { Page } from '@common/exports'
 import { useStrings } from 'framework/strings'
+import { isCommunityPlan } from '@common/utils/utils'
 import { ServiceStoreContext, useServiceStore } from './common'
 
 import { ServicesListPage } from './ServicesListPage/ServicesListPage'
@@ -20,6 +21,7 @@ import css from './Services.module.scss'
 export const Services: React.FC = () => {
   const { view, setView, fetchDeploymentList } = useServiceStore()
   const { getString } = useStrings()
+  const isCommunity = isCommunityPlan()
 
   return (
     <ServiceStoreContext.Provider
@@ -30,21 +32,24 @@ export const Services: React.FC = () => {
       }}
     >
       <Page.Header title={getString('services')} breadcrumbs={<NGBreadcrumbs />} />
-
-      <div className={css.tabs}>
-        <Tabs
-          id={'serviceLandingPageTabs'}
-          defaultSelectedTabId={'dashboard'}
-          tabList={[
-            {
-              id: 'dashboard',
-              title: 'Dashboard',
-              panel: <ServicesDashboardPage />
-            },
-            { id: 'manageServices', title: 'Manage Services', panel: <ServicesListPage /> }
-          ]}
-        />
-      </div>
+      {isCommunity ? (
+        <ServicesListPage />
+      ) : (
+        <div className={css.tabs}>
+          <Tabs
+            id={'serviceLandingPageTabs'}
+            defaultSelectedTabId={'dashboard'}
+            tabList={[
+              {
+                id: 'dashboard',
+                title: 'Dashboard',
+                panel: <ServicesDashboardPage />
+              },
+              { id: 'manageServices', title: 'Manage Services', panel: <ServicesListPage /> }
+            ]}
+          />
+        </div>
+      )}
     </ServiceStoreContext.Provider>
   )
 }

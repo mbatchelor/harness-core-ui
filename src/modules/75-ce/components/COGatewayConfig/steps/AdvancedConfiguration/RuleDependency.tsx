@@ -53,7 +53,7 @@ const RuleDependency: React.FC<RuleDependencyProps> = props => {
         icon={'plus'}
         style={{ maxWidth: '180px' }}
       >
-        {' Add dependency'}
+        {getString('ce.co.gatewayConfig.addDependency')}
       </Button>
     </Layout.Vertical>
   )

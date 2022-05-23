@@ -16,5 +16,9 @@ declare const styles: {
   readonly instanceManager: string
   readonly spotUsage: string
   readonly summaryHeading: string
+  readonly totalSavingsInfoCard: string
+  readonly totalSavingsInfoCardDryRun: string
+  readonly totalSpendInfoCard: string
+  readonly totalSpendInfoCardDryRun: string
 }
 export default styles

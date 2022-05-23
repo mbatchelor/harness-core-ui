@@ -10,7 +10,7 @@ exports[`Cumulative Analytics tests render component 1`] = `
         class="StyledProps--font StyledProps--main summaryHeading"
         data-tooltip-id="summaryOfRulesHeader"
       >
-        SUMMARY OF RULES
+        ce.co.summarySection.sectionHeader
       </p>
       <div
         class="Layout--horizontal Layout--layout-spacing-xxlarge StyledProps--main analyticsContainer StyledProps--background-white"
@@ -22,7 +22,7 @@ exports[`Cumulative Analytics tests render component 1`] = `
           <p
             class="StyledProps--font StyledProps--main analyticsColHeader"
           >
-            TOTAL SPEND VS SAVINGS
+            ce.co.summarySection.graphHeader
           </p>
           <div />
         </div>
@@ -36,7 +36,7 @@ exports[`Cumulative Analytics tests render component 1`] = `
             <p
               class="StyledProps--font StyledProps--main analyticsColHeader"
             >
-              SAVINGS PERCENTAGE
+              ce.co.summarySection.savingsPercentage
             </p>
             <h1
               class="StyledProps--font StyledProps--font-h1 StyledProps--main"
@@ -54,7 +54,7 @@ exports[`Cumulative Analytics tests render component 1`] = `
           <p
             class="StyledProps--font StyledProps--main analyticsColHeader"
           >
-            ACTIVE RULES
+            ce.co.activeModeLabel
           </p>
           <div
             class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
@@ -78,49 +78,41 @@ exports[`Cumulative Analytics tests render component 1`] = `
           style="flex: 1;"
         >
           <div
-            class="Layout--vertical Layout--layout-spacing-large StyledProps--main"
+            class="totalSavingsInfoCard"
           >
             <div
-              class="StyledProps--font StyledProps--main StyledProps--padding-small"
-              style="border-radius: 4px; background-color: rgba(71, 213, 223, 0.05);"
+              class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
             >
-              <div
-                class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-h6 StyledProps--color StyledProps--color-grey700"
               >
-                <p
-                  class="StyledProps--font StyledProps--main analyticsColHeader StyledProps--color StyledProps--color-teal800"
-                >
-                  TOTAL SAVINGS TILL DATE
-                </p>
-                <h1
-                  class="StyledProps--font StyledProps--font-h1 StyledProps--main StyledProps--color StyledProps--color-teal800"
-                  level="1"
-                >
-                  $
-                  21
-                </h1>
-              </div>
+                ce.co.summarySection.totalSavings
+              </p>
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-h2 StyledProps--color StyledProps--color-grey700"
+              >
+                $
+                21
+              </p>
             </div>
+          </div>
+          <div
+            class="totalSpendInfoCard"
+          >
             <div
-              class="StyledProps--font StyledProps--main StyledProps--padding-small"
-              style="border-radius: 4px; background-color: rgba(124, 77, 211, 0.05);"
+              class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
             >
-              <div
-                class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-h6 StyledProps--color StyledProps--color-grey500"
               >
-                <p
-                  class="StyledProps--font StyledProps--main analyticsColHeader StyledProps--color StyledProps--color-purple700"
-                >
-                  TOTAL SPEND TILL DATE
-                </p>
-                <h1
-                  class="StyledProps--font StyledProps--font-h1 StyledProps--main StyledProps--color StyledProps--color-purple700"
-                  level="1"
-                >
-                  $
-                  0
-                </h1>
-              </div>
+                ce.co.summarySection.totalSpend
+              </p>
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-h3 StyledProps--color StyledProps--color-grey500"
+              >
+                $
+                0
+              </p>
             </div>
           </div>
         </div>

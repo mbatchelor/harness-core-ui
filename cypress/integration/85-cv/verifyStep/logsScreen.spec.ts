@@ -84,7 +84,7 @@ describe('Verify step', () => {
     cy.wait('@gitSyncCall')
   })
 
-  it('should verify logs screen', () => {
+  it.skip('should verify logs screen', () => {
     cy.intercept('GET', logsListCall, logsListCallResponse).as('logsListCall')
     cy.intercept('GET', logsRadarChartDataCall, logsRadarChartDataCallResponse).as('logsRadarChartDataCall')
     cy.intercept('GET', logsListNodeFilterCall, logsListCallResponse).as('logsListNodeFilterCall')

@@ -3897,6 +3897,7 @@ export interface StringsMap {
   'ce.co.accessPoint.vpcLabel': string
   'ce.co.accessPoint.zone': string
   'ce.co.activeMode': string
+  'ce.co.activeModeLabel': string
   'ce.co.autoStopping': string
   'ce.co.autoStoppingRule.configuration.addSelectedBtnText': string
   'ce.co.autoStoppingRule.configuration.asgModal.title': string
@@ -4078,10 +4079,13 @@ export interface StringsMap {
   'ce.co.autoStoppingRule.setupAccess.selectLbHelpText': string
   'ce.co.breadCrumb.rules': string
   'ce.co.cloudProviders.aws': string
+  'ce.co.deleteRuleSuccessMessage': string
   'ce.co.dnsSetup.autoURL': string
   'ce.co.dnsSetup.customURL': string
   'ce.co.dnsSetup.isURLaccessible': string
+  'ce.co.dryRunLabel': string
   'ce.co.dryRunMode': string
+  'ce.co.dryRunModeLabel': string
   'ce.co.emptyResultText': string
   'ce.co.gatewayAccess.accessDescription': string
   'ce.co.gatewayAccess.backgroundTasks': string
@@ -4107,6 +4111,7 @@ export interface StringsMap {
   'ce.co.gatewayConfig.healthCheck': string
   'ce.co.gatewayConfig.healthCheckDescription': string
   'ce.co.gatewayConfig.info': string
+  'ce.co.gatewayConfig.invalidInputError': string
   'ce.co.gatewayConfig.k8sroutingDescription': string
   'ce.co.gatewayConfig.name': string
   'ce.co.gatewayConfig.routingDescription': string
@@ -4138,6 +4143,8 @@ export interface StringsMap {
   'ce.co.landingPageText': string
   'ce.co.newAutoStoppingRule': string
   'ce.co.noData': string
+  'ce.co.noDataForActiveRulesMsg': string
+  'ce.co.noDataForDryRunMsg': string
   'ce.co.noOfInstances': string
   'ce.co.noOfTasks': string
   'ce.co.reducedEmissions': string
@@ -4163,6 +4170,15 @@ export interface StringsMap {
   'ce.co.selectResourceGroupPlaceholder': string
   'ce.co.setupCloudProvider': string
   'ce.co.sshSetup': string
+  'ce.co.summarySection.dryRunGraphHeader': string
+  'ce.co.summarySection.dryRunSavings': string
+  'ce.co.summarySection.dryRunSavingsPercentage': string
+  'ce.co.summarySection.dryRunSpend': string
+  'ce.co.summarySection.graphHeader': string
+  'ce.co.summarySection.savingsPercentage': string
+  'ce.co.summarySection.sectionHeader': string
+  'ce.co.summarySection.totalSavings': string
+  'ce.co.summarySection.totalSpend': string
   'ce.co.totalEmissions': string
   'ce.common.and': string
   'ce.common.budget': string

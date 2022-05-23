@@ -7,7 +7,12 @@
 
 import {
   monitoredServiceListCall,
-  monitoredServiceListResponse
+  monitoredServiceListResponse,
+  newRelicServiceResponse,
+  newrelicURL,
+  notificationRules as notificationRulesURL,
+  parseSampleDataResponse,
+  parseSampleDataURL
 } from '../../../support/85-cv/monitoredService/constants'
 import {
   metricPackCall,
@@ -149,5 +154,29 @@ describe('Create empty monitored service', () => {
     // Creating the monitored service.
     cy.findByRole('button', { name: /Save/i }).click()
     cy.findByText('Monitored Service created').should('be.visible')
+
+    cy.intercept('GET', newrelicURL, newRelicServiceResponse).as('newrelicServiceCall')
+    cy.intercept('POST', parseSampleDataURL, parseSampleDataResponse).as('parseSampleDataCall')
+
+    cy.findByText(/service-1/i).click()
+
+    cy.wait('@newrelicServiceCall')
+
+    cy.findByText(/Configurations/i).click({ force: true })
+
+    cy.get('.TableV2--clickable').scrollIntoView().click()
+
+    cy.findByText(/Customize Health Source/i).click()
+
+    cy.wait('@SampleDataCall').then(interception => {
+      expect(interception.request.url).contains(
+        'nrql=SELECT%20average%28%60apm.service.transaction.duration%60%29%20FROM%20Metric%20WHERE%20appName%20%3D%20%27My%20Application%27%20TIMESERIES'
+      )
+    })
+
+    cy.findByText(/Metric values and charts/i).click()
+    cy.findByRole('button', { name: /Build Chart/i }).click()
+
+    cy.wait('@parseSampleDataCall')
   })
 })

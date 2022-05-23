@@ -155,13 +155,14 @@ const AddKeyDialog: React.FC<Props> = ({ disabled, primary, environment, onCreat
   return (
     <RbacButton
       disabled={disabled}
+      variation={ButtonVariation.PRIMARY}
       onClick={() => {
         trackEvent(FeatureActions.CreateSDKKeyClick, {
           category: Category.FEATUREFLAG
         })
         openModal()
       }}
-      text={getString('cf.environments.apiKeys.addKeyTitle')}
+      text={getString('cf.environments.apiKeys.addKey')}
       minimal={!primary}
       intent="primary"
       permission={{

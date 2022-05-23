@@ -18,6 +18,7 @@ import {
 } from '@harness/uicore'
 import { useHistory, useParams } from 'react-router-dom'
 import { useModalHook } from '@harness/use-modal'
+import { defaultTo } from 'lodash-es'
 import { useServiceStore } from '@cd/components/Services/common'
 import { useStrings } from 'framework/strings'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -28,6 +29,7 @@ import RbacButton from '@rbac/components/Button/Button'
 import { GetServiceListQueryParams, ServiceResponseDTO, useGetServiceList } from 'services/cd-ng'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
+import { isCommunityPlan } from '@common/utils/utils'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { NewEditServiceModal } from '@cd/components/PipelineSteps/DeployServiceStep/NewEditServiceModal'
 import ServicesGridView from '../ServicesGridView/ServicesGridView'
@@ -37,18 +39,47 @@ import css from './ServicesListPage.module.scss'
 
 export const ServicesListPage: React.FC = () => {
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
+  const isCommunity = isCommunityPlan()
   const { NG_SVC_ENV_REDESIGN } = useFeatureFlags()
+  const { getString } = useStrings()
+  const { showError } = useToaster()
+  const { fetchDeploymentList } = useServiceStore()
+  const history = useHistory()
+
   const [view, setView] = useState(Views.LIST)
   const [page, setPage] = useState(0)
-  const { getString } = useStrings()
-  const { fetchDeploymentList } = useServiceStore()
   const [mode, setMode] = useState<SelectedView>(SelectedView.VISUAL)
-  const { showError } = useToaster()
+  const [isEdit, setIsEdit] = useState(false)
+  const [serviceDetails, setServiceDetails] = useState({
+    name: '',
+    identifier: '',
+    orgIdentifier,
+    projectIdentifier,
+    description: '',
+    tags: {}
+  })
 
-  const history = useHistory()
+  useEffect(() => {
+    if (isEdit) {
+      showModal()
+    }
+  }, [isEdit])
 
   const goToServiceDetails = useCallback(
     (selectedService: ServiceResponseDTO): void => {
+      if (isCommunity) {
+        const newServiceData = {
+          name: defaultTo(selectedService.name, ''),
+          identifier: defaultTo(selectedService.identifier, ''),
+          orgIdentifier,
+          projectIdentifier,
+          description: defaultTo(selectedService.description, ''),
+          tags: defaultTo(selectedService.tags, {})
+        }
+        setServiceDetails({ ...newServiceData })
+        setIsEdit(true)
+        return
+      }
       if (selectedService?.identifier) {
         history.push({
           pathname: routes.toServiceStudio({
@@ -88,23 +119,32 @@ export const ServicesListPage: React.FC = () => {
         enforceFocus={false}
         canEscapeKeyClose
         canOutsideClickClose
-        onClose={hideModal}
-        title={getString('cd.addService')}
+        onClose={() => {
+          hideModal()
+          setIsEdit(false)
+        }}
+        title={isEdit ? getString('editService') : getString('cd.addService')}
         isCloseButtonShown
         className={cx('padded-dialog', css.dialogStyles)}
       >
         <Container>
           <NewEditServiceModal
-            data={{ name: '', identifier: '', orgIdentifier, projectIdentifier }}
-            isEdit={false}
-            isService
-            onCreateOrUpdate={values => onServiceCreate(values)}
-            closeModal={hideModal}
+            data={isEdit ? serviceDetails : { name: '', identifier: '', orgIdentifier, projectIdentifier }}
+            isEdit={isEdit}
+            isService={!isEdit}
+            onCreateOrUpdate={values => {
+              onServiceCreate(values)
+              setIsEdit(false)
+            }}
+            closeModal={() => {
+              hideModal()
+              setIsEdit(false)
+            }}
           />
         </Container>
       </Dialog>
     ),
-    [fetchDeploymentList, orgIdentifier, projectIdentifier, mode]
+    [fetchDeploymentList, orgIdentifier, projectIdentifier, mode, isEdit, serviceDetails]
   )
 
   const queryParams: GetServiceListQueryParams = {

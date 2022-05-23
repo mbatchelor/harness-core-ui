@@ -6,7 +6,7 @@ export const module = 'cd'
 // APIs
 export const environmentsCall = `/ng/api/environmentsV2?routingId=${accountIdentifier}&accountIdentifier=${accountIdentifier}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&page=0&size=10`
 export const environmentGroupsCall = `/ng/api/environmentGroup/list?routingId=${accountIdentifier}&accountIdentifier=${accountIdentifier}&projectIdentifier=${projectIdentifier}&orgIdentifier=${orgIdentifier}&size=10&page=0&sort=lastModifiedAt%2CDESC`
-export const createEnvironmentGroupsCall = `/ng/api/environmentGroup?accountIdentifier=${accountIdentifier}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}`
+export const createEnvironmentGroupsCall = `/ng/api/environmentGroup?accountIdentifier=${accountIdentifier}`
 export const environmentGroupDetailsCall = `/ng/api/environmentGroup/testEnvGroup?routingId=${accountIdentifier}&accountIdentifier=${accountIdentifier}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}`
 export const environmentGroupYamlSchemaCall = `/ng/api/yaml-schema?routingId=${accountIdentifier}&entityType=EnvironmentGroup&projectIdentifier=${projectIdentifier}&orgIdentifier=${orgIdentifier}&accountIdentifier=${accountIdentifier}&scope=project`
 

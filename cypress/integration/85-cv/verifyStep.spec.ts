@@ -20,7 +20,7 @@ import {
   transactionsFilterAPI
 } from '../../support/85-cv/verifyStep/constants'
 
-describe('Verify step', () => {
+describe.skip('Verify step', () => {
   beforeEach(() => {
     cy.intercept('POST', pipelineListAPI, { fixture: '/pipeline/api/pipelines/getPipelineList' }).as('pipelineList')
     cy.intercept('GET', pipelineSummaryAPI, { fixture: '/pipeline/api/pipelines/pipelineSummary' }).as(

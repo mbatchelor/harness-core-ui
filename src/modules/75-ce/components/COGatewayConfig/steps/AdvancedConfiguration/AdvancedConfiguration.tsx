@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react'
-import { Layout, Toggle, Tabs, Tab } from '@wings-software/uicore'
+import { Layout, Toggle, Tabs, Tab, HarnessDocTooltip } from '@wings-software/uicore'
 import { defaultTo as _defaultTo } from 'lodash-es'
 import { AdvancedConfigTabs, CONFIG_STEP_IDS, RESOURCES } from '@ce/constants'
 import { useStrings } from 'framework/strings'
@@ -84,17 +84,21 @@ const AdvancedConfiguration: React.FC<AdvancedConfigurationProps> = props => {
             />
           )}
           {dryRunModeEnabled && (
-            <Toggle
-              label={getString('ce.co.dryRunMode')}
-              checked={props.gatewayDetails.opts.dry_run}
-              onToggle={isToggled => {
-                props.setGatewayDetails({
-                  ...props.gatewayDetails,
-                  opts: { ...props.gatewayDetails.opts, dry_run: isToggled }
-                })
-              }}
-              data-testid={'dryRunToggle'}
-            />
+            <Layout.Horizontal flex={{ alignItems: 'baseline' }}>
+              <Toggle
+                label={getString('ce.co.dryRunLabel')}
+                checked={props.gatewayDetails.opts.dry_run}
+                onToggle={isToggled => {
+                  props.setGatewayDetails({
+                    ...props.gatewayDetails,
+                    opts: { ...props.gatewayDetails.opts, dry_run: isToggled }
+                  })
+                }}
+                data-testid={'dryRunToggle'}
+                data-tooltip-id="dryRunToggleTooltip"
+              />
+              <HarnessDocTooltip tooltipId="dryRunToggleTooltip" useStandAlone={true} />
+            </Layout.Horizontal>
           )}
         </Layout.Horizontal>
         <Tabs id="advancedConfigTabs" selectedTabId={selectedTab} onChange={handleTabChange}>

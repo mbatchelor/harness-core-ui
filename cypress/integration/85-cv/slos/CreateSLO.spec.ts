@@ -188,7 +188,7 @@ describe('Create SLO', () => {
     cy.contains('p', 'SLO recalculation in progress').should('be.visible')
   })
 
-  it('should validate all form field errors and default values', () => {
+  it.skip('should validate all form field errors and default values', () => {
     cy.intercept('GET', getUserJourneysCall, listUserJourneysCallResponse)
     cy.intercept('GET', listMonitoredServices, listMonitoredServicesCallResponse)
     cy.intercept('GET', getMonitoredService, getMonitoredServiceResponse)

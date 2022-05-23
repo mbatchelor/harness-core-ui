@@ -7,9 +7,11 @@
 
 import React, { useEffect, useState } from 'react'
 import { Color } from '@harness/design-system'
+import { isEmpty } from 'lodash-es'
 import { Icon, Layout, Table, Select, SelectOption, TextInput, Text } from '@wings-software/uicore'
 import type { CellProps } from 'react-table'
 import type { Service, ServiceDep } from 'services/lw'
+import { useStrings } from 'framework/strings'
 import css from './COGatewayConfig.module.scss'
 
 interface CORuleDendencySelectorProps {
@@ -20,27 +22,42 @@ interface CORuleDendencySelectorProps {
 }
 
 const CORuleDendencySelector: React.FC<CORuleDendencySelectorProps> = props => {
-  const [serviceList, setServiceList] = useState<SelectOption[]>([])
+  const { getString } = useStrings()
+  const [allServices, setAllServices] = useState<SelectOption[]>([])
+  const [serviceListToShow, setServiceListToShow] = useState<SelectOption[]>([])
   const [error, setError] = useState<{ indices: number[]; val: string }>()
 
-  useEffect(() => {
-    if (!props.allServices) {
-      setServiceList([])
-      return
-    }
+  const setFilteredServicesList = (serviceIdToBeFiltered?: number) => {
     const services: SelectOption[] = !props.allServices
-      ? []
+      ? /* istanbul ignore next */ []
       : props.allServices
-          .filter(x => x.id != props.service_id)
+          .filter(x => x.id !== serviceIdToBeFiltered)
           .map(r => {
             return {
               label: r.name as string,
               value: r.id as number
             }
-          }) || []
-    setServiceList(services)
+          }) || /* istanbul ignore next */ []
+    setAllServices(services)
+    setServiceListToShow(services)
+  }
+
+  useEffect(() => {
+    if (!props.allServices) {
+      setAllServices([])
+      return
+    }
+    setFilteredServicesList(props.service_id)
   }, [props.allServices])
 
+  useEffect(() => {
+    if (!isEmpty(serviceListToShow)) {
+      const depIds = props.deps.map(d => d.dep_id)
+      setServiceListToShow(prevList => prevList.filter(s => !depIds.includes(s.value as number)))
+    }
+  }, [props.deps])
+
+  /* istanbul ignore next */
   const removeError = (index: number) => {
     if (error?.indices.includes(index)) {
       if (error.indices.length === 1) setError(undefined)
@@ -54,9 +71,10 @@ const CORuleDendencySelector: React.FC<CORuleDendencySelectorProps> = props => {
 
   function updateDependency(index: number, column: string, value: number) {
     if (isNaN(value)) {
+      const val = getString('ce.co.gatewayConfig.invalidInputError')
       setError(prevData => ({
         indices: [...new Set([...(prevData?.indices || []), index])],
-        val: 'Input value is not valid'
+        val
       }))
     } else {
       removeError(index)
@@ -67,6 +85,7 @@ const CORuleDendencySelector: React.FC<CORuleDendencySelectorProps> = props => {
         depsConfig[index]['dep_id'] = value
         break
       }
+      /* istanbul ignore next */
       case 'delay_secs': {
         depsConfig[index]['delay_secs'] = value
         break
@@ -74,21 +93,28 @@ const CORuleDendencySelector: React.FC<CORuleDendencySelectorProps> = props => {
     }
     props.setDeps(depsConfig)
   }
-  function deleteDependency(index: number) {
+
+  const deleteDependency = (index: number, data: ServiceDep) => {
     removeError(index)
     const depConfig = [...props.deps]
     depConfig.splice(index, 1)
+    const deletedService = allServices.find(s => s.value === data.dep_id) as SelectOption
+    if (deletedService) {
+      setServiceListToShow(prevList => [...prevList, deletedService])
+    }
     props.setDeps(depConfig)
   }
-  function getItembyValue(items: SelectOption[], value: string): SelectOption {
+
+  const getItembyValue = (items: SelectOption[], value: string): SelectOption => {
     return items.filter(x => x.value == value)[0]
   }
+
   function ServiceCell(tableProps: CellProps<ServiceDep>): JSX.Element {
     return (
       <Select
         className={css.selectCell}
-        value={getItembyValue(serviceList, tableProps.value)}
-        items={serviceList}
+        value={getItembyValue(allServices, tableProps.value)}
+        items={serviceListToShow}
         onChange={e => {
           updateDependency(tableProps.row.index, tableProps.column.id, e.value as number)
         }}
@@ -107,12 +133,16 @@ const CORuleDendencySelector: React.FC<CORuleDendencySelectorProps> = props => {
             updateDependency(tableProps.row.index, tableProps.column.id, +value)
           }}
         />
-        {error?.val && error.indices.includes(tableProps.row.index) && <Text color={Color.RED_500}>{error.val}</Text>}
+        {
+          /* istanbul ignore next */ error?.val && error.indices.includes(tableProps.row.index) && (
+            <Text color={Color.RED_500}>{error.val}</Text>
+          )
+        }
       </>
     )
   }
   function DeleteCell(tableProps: CellProps<ServiceDep>): JSX.Element {
-    return <Icon name="trash" onClick={() => deleteDependency(tableProps.row.index)}></Icon>
+    return <Icon name="trash" onClick={() => deleteDependency(tableProps.row.index, tableProps.row.original)}></Icon>
   }
 
   return (

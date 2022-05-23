@@ -430,6 +430,7 @@ TriggerFactory.registerTriggerForm(TriggerFormType.Artifact, {
   component: KubernetesArtifacts,
   baseFactory: artifactSourceBaseFactory
 })
+const isCommunity = isCommunityPlan()
 
 export default (
   <>
@@ -500,7 +501,7 @@ export default (
       })}
       pageName={PAGE_NAME.ServiceStudio}
     >
-      <ServiceStudio />
+      {!isCommunity ? <ServiceStudio /> : <Services />}
     </RouteWithLayout>
     <RouteWithLayout
       exact

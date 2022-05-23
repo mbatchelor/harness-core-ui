@@ -7,41 +7,40 @@
 
 import React, { createContext, useContext, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import moment from 'moment'
+import type { DateRange } from '@blueprintjs/datetime'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { Scope } from 'services/cd-ng'
-
-export enum DashboardTimeRange {
-  '30Days' = '30Days',
-  '60Days' = '60Days',
-  '90Days' = '90Days',
-  '1Year' = '1Year'
-}
-
-export enum TimeRangeToDays {
-  '30Days' = 30,
-  '60Days' = 60,
-  '90Days' = 90,
-  '1Year' = 365
-}
+import { startOfDay, TimeRangeSelectorProps } from '@common/components/TimeRangeSelector/TimeRangeSelector'
+import { useStrings } from 'framework/strings'
 
 interface LandingDashboardContextProps {
-  selectedTimeRange: DashboardTimeRange
-  selectTimeRange: (timeRange: DashboardTimeRange) => void
+  selectedTimeRange: TimeRangeSelectorProps
+  selectTimeRange: (timeRange: TimeRangeSelectorProps) => void
   scope: Scope
 }
 
+const defaultRange: DateRange = [startOfDay(moment().subtract(1, 'month').add(1, 'day')), startOfDay(moment())]
+
 const LandingDashboardContext = createContext<LandingDashboardContextProps>({
-  selectedTimeRange: DashboardTimeRange['30Days'],
+  selectedTimeRange: {
+    range: defaultRange,
+    label: ''
+  },
   selectTimeRange: () => void 0,
   scope: {}
 })
 
 export function LandingDashboardContextProvider(props: React.PropsWithChildren<unknown>): React.ReactElement {
-  const [selectedTimeRange, setSelectedTimeRange] = useState(DashboardTimeRange['30Days'])
+  const { getString } = useStrings()
+  const [selectedTimeRange, setSelectedTimeRange] = useState<TimeRangeSelectorProps>({
+    range: defaultRange,
+    label: getString('common.duration.month')
+  })
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
 
-  const selectTimeRange = (timeRange: DashboardTimeRange): void => {
-    setSelectedTimeRange(timeRange)
+  const selectTimeRange = (range: TimeRangeSelectorProps): void => {
+    setSelectedTimeRange(range)
   }
 
   return (

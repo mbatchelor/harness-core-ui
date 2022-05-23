@@ -1699,20 +1699,25 @@ exports[`Test GatewayDetails renders review screen 2`] = `
                       <div
                         class="Layout--horizontal Layout--layout-spacing-large StyledProps--main"
                       >
-                        <label
-                          class="Toggle--toggle StyledProps--main"
-                          data-testid="dryRunToggle"
+                        <div
+                          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-baseline"
                         >
-                          <input
-                            class="Toggle--input"
-                            type="checkbox"
-                            value=""
-                          />
-                          <span
-                            class="Toggle--toggleIcon"
-                          />
-                          ce.co.dryRunMode
-                        </label>
+                          <label
+                            class="Toggle--toggle StyledProps--main"
+                            data-testid="dryRunToggle"
+                            data-tooltip-id="dryRunToggleTooltip"
+                          >
+                            <input
+                              class="Toggle--input"
+                              type="checkbox"
+                              value=""
+                            />
+                            <span
+                              class="Toggle--toggleIcon"
+                            />
+                            ce.co.dryRunLabel
+                          </label>
+                        </div>
                       </div>
                       <div
                         class="bp3-tabs Tabs--main Tabs--horizontal"
@@ -1798,7 +1803,7 @@ exports[`Test GatewayDetails renders review screen 2`] = `
                               <span
                                 class="bp3-button-text"
                               >
-                                 Add dependency
+                                ce.co.gatewayConfig.addDependency
                               </span>
                             </button>
                           </div>
@@ -3520,20 +3525,25 @@ exports[`Test GatewayDetails renders setup access screen and move to previous st
                       <div
                         class="Layout--horizontal Layout--layout-spacing-large StyledProps--main"
                       >
-                        <label
-                          class="Toggle--toggle StyledProps--main"
-                          data-testid="dryRunToggle"
+                        <div
+                          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-baseline"
                         >
-                          <input
-                            class="Toggle--input"
-                            type="checkbox"
-                            value=""
-                          />
-                          <span
-                            class="Toggle--toggleIcon"
-                          />
-                          ce.co.dryRunMode
-                        </label>
+                          <label
+                            class="Toggle--toggle StyledProps--main"
+                            data-testid="dryRunToggle"
+                            data-tooltip-id="dryRunToggleTooltip"
+                          >
+                            <input
+                              class="Toggle--input"
+                              type="checkbox"
+                              value=""
+                            />
+                            <span
+                              class="Toggle--toggleIcon"
+                            />
+                            ce.co.dryRunLabel
+                          </label>
+                        </div>
                       </div>
                       <div
                         class="bp3-tabs Tabs--main Tabs--horizontal"
@@ -3619,7 +3629,7 @@ exports[`Test GatewayDetails renders setup access screen and move to previous st
                               <span
                                 class="bp3-button-text"
                               >
-                                 Add dependency
+                                ce.co.gatewayConfig.addDependency
                               </span>
                             </button>
                           </div>
@@ -4611,20 +4621,25 @@ exports[`Test GatewayDetails renders without crashing 1`] = `
                       <div
                         class="Layout--horizontal Layout--layout-spacing-large StyledProps--main"
                       >
-                        <label
-                          class="Toggle--toggle StyledProps--main"
-                          data-testid="dryRunToggle"
+                        <div
+                          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-baseline"
                         >
-                          <input
-                            class="Toggle--input"
-                            type="checkbox"
-                            value=""
-                          />
-                          <span
-                            class="Toggle--toggleIcon"
-                          />
-                          ce.co.dryRunMode
-                        </label>
+                          <label
+                            class="Toggle--toggle StyledProps--main"
+                            data-testid="dryRunToggle"
+                            data-tooltip-id="dryRunToggleTooltip"
+                          >
+                            <input
+                              class="Toggle--input"
+                              type="checkbox"
+                              value=""
+                            />
+                            <span
+                              class="Toggle--toggleIcon"
+                            />
+                            ce.co.dryRunLabel
+                          </label>
+                        </div>
                       </div>
                       <div
                         class="bp3-tabs Tabs--main Tabs--horizontal"
@@ -4710,7 +4725,7 @@ exports[`Test GatewayDetails renders without crashing 1`] = `
                               <span
                                 class="bp3-button-text"
                               >
-                                 Add dependency
+                                ce.co.gatewayConfig.addDependency
                               </span>
                             </button>
                           </div>

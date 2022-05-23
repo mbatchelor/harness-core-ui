@@ -574,20 +574,25 @@ exports[`Edit rule page render edit rule page successfully 1`] = `
                           />
                           ce.co.autoStoppingRule.review.hideProgressPage
                         </label>
-                        <label
-                          class="Toggle--toggle StyledProps--main"
-                          data-testid="dryRunToggle"
+                        <div
+                          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-baseline"
                         >
-                          <input
-                            class="Toggle--input"
-                            type="checkbox"
-                            value=""
-                          />
-                          <span
-                            class="Toggle--toggleIcon"
-                          />
-                          ce.co.dryRunMode
-                        </label>
+                          <label
+                            class="Toggle--toggle StyledProps--main"
+                            data-testid="dryRunToggle"
+                            data-tooltip-id="dryRunToggleTooltip"
+                          >
+                            <input
+                              class="Toggle--input"
+                              type="checkbox"
+                              value=""
+                            />
+                            <span
+                              class="Toggle--toggleIcon"
+                            />
+                            ce.co.dryRunLabel
+                          </label>
+                        </div>
                       </div>
                       <div
                         class="bp3-tabs Tabs--main Tabs--horizontal"
@@ -673,7 +678,7 @@ exports[`Edit rule page render edit rule page successfully 1`] = `
                               <span
                                 class="bp3-button-text"
                               >
-                                 Add dependency
+                                ce.co.gatewayConfig.addDependency
                               </span>
                             </button>
                           </div>

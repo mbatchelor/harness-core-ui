@@ -259,7 +259,13 @@ const COGatewayReview: React.FC<COGatewayReviewProps> = props => {
                 className={cx(css.equalSpacing, css.borderSpacing)}
               >
                 <Text>{getString('ce.co.autoStoppingRule.review.dryRunMode')}</Text>
-                <Text>{Utils.booleanToString(props.gatewayDetails.opts?.dry_run as boolean)}</Text>
+                <Text>
+                  {Utils.getConditionalResult(
+                    props.gatewayDetails.opts?.dry_run,
+                    getString('enabledLabel'),
+                    getString('common.disable')
+                  )}
+                </Text>
               </Layout.Horizontal>
             )}
             {!_isEmpty(filteredSchedules) && (

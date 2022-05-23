@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Container, Pagination, TableV2 } from '@harness/uicore'
+import { Container, PageSpinner, Pagination, TableV2 } from '@harness/uicore'
 import type { ResponsePageServiceResponse, ServiceResponseDTO } from 'services/cd-ng'
 import { ServiceName, ServiceDescription, ServiceMenu } from '../ServicesListColumns/ServicesListColumns'
 
@@ -19,10 +19,12 @@ interface ServicesListViewProps {
   onServiceSelect: (data: any) => Promise<void>
 }
 const ServicesListView = (props: ServicesListViewProps): React.ReactElement => {
-  const { data, gotoPage, onServiceSelect } = props
+  const { data, gotoPage, onServiceSelect, loading } = props
 
   const services = data?.data?.content?.map(service => service.service) || []
-
+  if (loading) {
+    return <PageSpinner />
+  }
   return (
     <>
       <Container className={css.masonry} style={{ height: 'calc(100% - 66px)', width: '100%' }}>

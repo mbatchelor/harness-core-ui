@@ -27,20 +27,17 @@ export interface IssueCounts {
   unassigned: number
 }
 
-export function useIssueCounts(
-  pipelineIdentifier: string,
-  executionIdentifier: string
-): GetState<IssueCounts, ErrorResponse> {
-  const { projectIdentifier, orgIdentifier, accountId } = useParams<PipelinePathProps>()
+export function useIssueCounts(pipelineId: string, executionId: string): GetState<IssueCounts, ErrorResponse> {
+  const { projectIdentifier: projectId, orgIdentifier: orgId, accountId } = useParams<PipelinePathProps>()
 
   return useGet<IssueCounts, ErrorResponse>({
     path: '/sto/api/v1/issue-counts',
     queryParams: {
-      accountIdentifier: accountId,
-      orgIdentifier,
-      projectIdentifier,
-      pipelineIdentifier,
-      executionIdentifier
+      accountId,
+      orgId,
+      projectId,
+      pipelineId,
+      executionId
     }
   })
 }

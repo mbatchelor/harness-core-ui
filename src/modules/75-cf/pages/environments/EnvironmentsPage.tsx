@@ -31,7 +31,6 @@ import { withTableData } from '@cf/utils/table-utils'
 import RbacOptionsMenuButton from '@rbac/components/RbacOptionsMenuButton/RbacOptionsMenuButton'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import css from '@cf/pages/environments/EnvironmentsPage.module.scss'
 
 type EnvData = { environment: EnvironmentResponseDTO }
 const withEnvironment = withTableData<EnvironmentResponseDTO, EnvData>(({ row }) => ({ environment: row.original }))
@@ -52,21 +51,22 @@ export const NameCell = withEnvironment(({ environment }) => {
   const { getString } = useEnvStrings()
   return (
     <Layout.Horizontal
-      className={css.mediumMaxWidth}
       flex={{ distribution: 'space-between', align: 'center-center' }}
       padding={{ left: 'small', right: 'small' }}
     >
-      <Layout.Vertical className={css.calcMaxWidth} spacing="xsmall">
-        <Text style={{ color: Color.BLACK, font: FontVariation.BODY2 }}>{environment.name}</Text>
+      <Layout.Vertical spacing="xsmall">
+        <Text color={Color.BLACK} font={{ variation: FontVariation.BODY2 }}>
+          {environment.name}
+        </Text>
 
         {environment.description && (
-          <Container>
-            <Text style={{ font: FontVariation.SMALL, color: Color.GREY_600 }}>{environment.description}</Text>
-          </Container>
+          <Text color={Color.GREY_600} font={{ variation: FontVariation.SMALL }}>
+            {environment.description}
+          </Text>
         )}
 
         <Container padding={{ top: 'xsmall' }} margin={{ bottom: 'xsmall' }}>
-          <Text style={{ font: FontVariation.SMALL, color: Color.GREY_600 }}>
+          <Text color={Color.GREY_600} font={{ variation: FontVariation.SMALL }}>
             {getString('cf.environments.environmentID')} {environment.identifier}
           </Text>
         </Container>

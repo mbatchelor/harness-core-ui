@@ -60,3 +60,39 @@
     }
   }
 }
+
+@mixin savingsInfoCard($bgColor, $color, $borderWidth: 0, $borderColor: '') {
+  position: relative;
+  color: $color;
+  padding-left: var(--spacing-large);
+  margin-bottom: var(--spacing-huge) !important;
+  &:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 8px;
+    border-radius: 1px;
+    background-color: $bgColor;
+    @if $borderWidth != 0 {
+      border: $borderWidth dashed $borderColor;
+    }
+  }
+}
+
+.totalSavingsInfoCard {
+  @include savingsInfoCard(var(--teal-500), var(--grey-700));
+}
+
+.totalSpendInfoCard {
+  @include savingsInfoCard(var(--purple-500), var(--grey-500));
+}
+
+.totalSavingsInfoCardDryRun {
+  @include savingsInfoCard(var(--teal-50), var(--grey-700), 1px, var(--teal-500));
+}
+
+.totalSpendInfoCardDryRun {
+  @include savingsInfoCard(var(--purple-50), var(--grey-500), 1px, var(--purple-500));
+}

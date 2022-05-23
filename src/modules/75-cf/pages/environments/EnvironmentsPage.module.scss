@@ -27,11 +27,3 @@
     margin-bottom: var(--spacing-medium);
   }
 }
-
-.mediumMaxWidth {
-  max-width: 'calc(100% - var(--spacing-medium))';
-}
-
-.calcMaxWidth {
-  max-width: 'calc(100% - 100px)';
-}

@@ -7,7 +7,7 @@
 
 import React from 'react'
 import userEvent from '@testing-library/user-event'
-import { render, act, queryByAttribute, fireEvent } from '@testing-library/react'
+import { render, act, queryByAttribute } from '@testing-library/react'
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
@@ -181,24 +181,27 @@ describe('Test Cloudformation delete stack', () => {
         }
       }
     }
-    const { container, getByText } = renderComponent(data)
+    const { container } = renderComponent(data)
 
     const stepName = queryByAttribute('name', container, 'name')
-    fireEvent.change(stepName!, { target: { value: 'new name' } })
+    act(() => {
+      userEvent.clear(stepName!)
+      userEvent.type(stepName!, 'new name')
+    })
     expect(stepName).toHaveDisplayValue('new name')
 
     const timeout = queryByAttribute('name', container, 'timeout')
-    fireEvent.change(timeout!, { target: { value: '20m' } })
+    act(() => {
+      userEvent.clear(timeout!)
+      userEvent.type(timeout!, '20m')
+    })
     expect(timeout).toHaveDisplayValue('20m')
 
-    const region = queryByAttribute('name', container, 'spec.configuration.spec.region')
-    userEvent.click(region!)
-    const selectedRegion = getByText('GovCloud (US-West)')
-    userEvent.click(selectedRegion!)
-    expect(region).toHaveDisplayValue(['GovCloud (US-West)'])
-
     const stackName = queryByAttribute('name', container, 'spec.configuration.spec.stackName')
-    fireEvent.change(stackName!, { target: { value: 'new_name' } })
+    act(() => {
+      userEvent.clear(stackName!)
+      userEvent.type(stackName!, 'new_name')
+    })
     expect(stackName).toHaveDisplayValue('new_name')
     expect(container).toMatchSnapshot()
   })
@@ -276,7 +279,9 @@ describe('Test Cloudformation delete stack', () => {
     const { container, getByText } = renderComponent(data)
 
     const provId = queryByAttribute('name', container, 'spec.configuration.spec.provisionerIdentifier')
-    fireEvent.change(provId!, { target: { value: '' } })
+    act(() => {
+      userEvent.type(provId!, '')
+    })
     expect(provId).toHaveDisplayValue('')
 
     await act(() => ref.current?.submitForm()!)

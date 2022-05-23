@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, fireEvent, queryByAttribute } from '@testing-library/react'
+import { render, queryByAttribute, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Formik, FormikForm, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
@@ -61,10 +61,6 @@ const regionMock = {
     }
   ]
 }
-const rolesMock = {
-  'arn:aws:iam::role/Test': 'TestRole',
-  'arn:aws:iam::role/AnotherTest': 'AnotherTestRole'
-}
 
 const renderComponent = (data: any) => {
   return render(
@@ -117,7 +113,9 @@ describe('Test cloudformation delete stack input set', () => {
     const { container, getByPlaceholderText } = renderComponent(data)
 
     const timeoutInput = getByPlaceholderText('Enter w/d/h/m/s/ms')
-    fireEvent.change(timeoutInput!, { target: { value: '10m' } })
+    act(() => {
+      userEvent.type(timeoutInput!, '10m')
+    })
 
     expect(timeoutInput).toHaveDisplayValue('10m')
     expect(container).toMatchSnapshot()
@@ -129,26 +127,10 @@ describe('Test cloudformation delete stack input set', () => {
     }
     const { container } = renderComponent(data)
     const provId = queryByAttribute('name', container, 'test.spec.configuration.spec.provisionerIdentifier')
-    fireEvent.change(provId!, { target: { value: 'testID' } })
+    act(() => {
+      userEvent.type(provId!, 'testID')
+    })
     expect(provId).toHaveDisplayValue('testID')
-  })
-
-  test('region should be updated', async () => {
-    const data = {
-      region: RUNTIME_INPUT_VALUE
-    }
-    const { container, getByText } = renderComponent(data)
-    jest
-      .spyOn(Portal, 'useListAwsRegions')
-      .mockImplementation(() => ({ loading: false, error: null, data: regionMock, refetch: jest.fn() } as any))
-    const region = queryByAttribute('name', container, 'test.spec.configuration.spec.region')
-    userEvent.click(region!)
-
-    const selectedRegion = getByText('GovCloud (US-West)')
-    userEvent.click(selectedRegion!)
-
-    expect(region).toHaveDisplayValue(['GovCloud (US-West)'])
-    expect(container).toMatchSnapshot()
   })
 
   test('stack name should be updated', () => {
@@ -158,23 +140,11 @@ describe('Test cloudformation delete stack input set', () => {
     const { container } = renderComponent(data)
 
     const stackName = queryByAttribute('name', container, 'test.spec.configuration.spec.stackName')
-    fireEvent.change(stackName!, { target: { value: 'testStackName' } })
+    act(() => {
+      userEvent.type(stackName!, 'testStackName')
+    })
 
     expect(stackName).toHaveDisplayValue('testStackName')
-    expect(container).toMatchSnapshot()
-  })
-
-  test('role arn should be updated', async () => {
-    jest
-      .spyOn(cdServices, 'useGetIamRolesForAws')
-      .mockReturnValue({ loading: false, error: null, data: rolesMock, refetch: jest.fn() } as any)
-    const data = {
-      connectorRef: 'test',
-      roleArn: RUNTIME_INPUT_VALUE
-    }
-    const { container } = renderComponent(data)
-    const roleArn = queryByAttribute('name', container, 'test.spec.configuration.spec.roleArn')
-    userEvent.click(roleArn!)
     expect(container).toMatchSnapshot()
   })
 })

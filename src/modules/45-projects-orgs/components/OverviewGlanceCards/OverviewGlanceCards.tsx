@@ -5,14 +5,14 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { Card, Icon, Layout } from '@wings-software/uicore'
 import { useParams } from 'react-router-dom'
 import { Color } from '@harness/design-system'
 import GlanceCard, { GlanceCardProps } from '@common/components/GlanceCard/GlanceCard'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { CountChangeDetails, ResponseExecutionResponseCountOverview, useGetCounts } from 'services/dashboard-service'
-import { TimeRangeToDays, useLandingDashboardContext } from '@common/factories/LandingDashboardContext'
+import { useLandingDashboardContext } from '@common/factories/LandingDashboardContext'
 import { useStrings } from 'framework/strings'
 import type { StringsMap } from 'stringTypes'
 import type { UseGetMockData } from '@common/utils/testUtils'
@@ -107,7 +107,6 @@ const OverviewGlanceCards: React.FC<OverviewGlanceCardsProp> = props => {
   const { glanceCardData } = props
   const { accountId } = useParams<ProjectPathProps>()
   const { selectedTimeRange } = useLandingDashboardContext()
-  const [range] = useState([Date.now() - TimeRangeToDays[selectedTimeRange] * 24 * 60 * 60000, Date.now()])
   const [pageLoadGlanceCardData, setPageLoadGlanceCardData] =
     React.useState<ResponseExecutionResponseCountOverview | null>(glanceCardData)
   const {
@@ -118,8 +117,8 @@ const OverviewGlanceCards: React.FC<OverviewGlanceCardsProp> = props => {
   } = useGetCounts({
     queryParams: {
       accountIdentifier: accountId,
-      startTime: range[0],
-      endTime: range[1]
+      startTime: selectedTimeRange.range[0]?.getTime() || 0,
+      endTime: selectedTimeRange.range[1]?.getTime() || 0
     },
     lazy: true,
     mock: props.mockData
@@ -132,8 +131,8 @@ const OverviewGlanceCards: React.FC<OverviewGlanceCardsProp> = props => {
       refetch({
         queryParams: {
           accountIdentifier: accountId,
-          startTime: Date.now() - TimeRangeToDays[selectedTimeRange] * 24 * 60 * 60000,
-          endTime: Date.now()
+          startTime: selectedTimeRange.range[0]?.getTime() || 0,
+          endTime: selectedTimeRange.range[1]?.getTime() || 0
         }
       })
     }

@@ -46,7 +46,7 @@ import {
   mockedExecutionSummary
 } from '../../../support/85-cv/slos/constants'
 
-describe('CVSLODetailsPage', () => {
+describe.skip('CVSLODetailsPage', () => {
   beforeEach(() => {
     cy.on('uncaught:exception', () => false)
     cy.login('test', 'test')

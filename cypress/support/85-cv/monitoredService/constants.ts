@@ -551,3 +551,138 @@ export const dataforMS = {
   metaData: null,
   correlationId: 'f3cdbd07-e92d-4162-854e-c6aac938d0c0'
 }
+
+export const newrelicURL = `/cv/api/monitored-service/service1_env1?routingId=accountId&accountId=accountId&orgIdentifier=default&projectIdentifier=project1`
+export const notificationRules = `/cv/api/monitored-service/Service_101_QA/notification-rules?routingId=accountId&accountId=accountId&orgIdentifier=default&projectIdentifier=project1&pageNumber=0&pageSize=10`
+export const parseSampleDataURL = `/cv/api/parse-sample-data?routingId=accountId&accountId=accountId&orgIdentifier=default&projectIdentifier=project1`
+
+export const parseSampleDataResponse = {
+  status: 'SUCCESS',
+  data: [
+    { txnName: 'g1', metricName: null, metricValue: 15.0, timestamp: 1653199200000 },
+    { txnName: 'g1', metricName: null, metricValue: 15.0, timestamp: 1653199260000 },
+    { txnName: 'g1', metricName: null, metricValue: 15.0, timestamp: 1653199320000 },
+    { txnName: 'g1', metricName: null, metricValue: 15.0, timestamp: 1653199380000 },
+    { txnName: 'g1', metricName: null, metricValue: 15.0, timestamp: 1653199440000 },
+    { txnName: 'g1', metricName: null, metricValue: 15.0, timestamp: 1653199500000 },
+    { txnName: 'g1', metricName: null, metricValue: 15.0, timestamp: 1653199560000 },
+    { txnName: 'g1', metricName: null, metricValue: 15.0, timestamp: 1653199620000 },
+    { txnName: 'g1', metricName: null, metricValue: 15.0, timestamp: 1653199680000 },
+    { txnName: 'g1', metricName: null, metricValue: 15.0, timestamp: 1653199740000 },
+    { txnName: 'g1', metricName: null, metricValue: 15.0, timestamp: 1653199800000 },
+    { txnName: 'g1', metricName: null, metricValue: 15.0, timestamp: 1653199860000 },
+    { txnName: 'g1', metricName: null, metricValue: 15.0, timestamp: 1653199920000 },
+    { txnName: 'g1', metricName: null, metricValue: 15.0, timestamp: 1653199980000 },
+    { txnName: 'g1', metricName: null, metricValue: 15.0, timestamp: 1653200040000 },
+    { txnName: 'g1', metricName: null, metricValue: 15.0, timestamp: 1653200100000 },
+    { txnName: 'g1', metricName: null, metricValue: 15.0, timestamp: 1653200160000 },
+    { txnName: 'g1', metricName: null, metricValue: 15.0, timestamp: 1653200220000 },
+    { txnName: 'g1', metricName: null, metricValue: 15.0, timestamp: 1653200280000 },
+    { txnName: 'g1', metricName: null, metricValue: 15.0, timestamp: 1653200340000 },
+    { txnName: 'g1', metricName: null, metricValue: 15.0, timestamp: 1653200400000 },
+    { txnName: 'g1', metricName: null, metricValue: 15.0, timestamp: 1653200460000 },
+    { txnName: 'g1', metricName: null, metricValue: 15.0, timestamp: 1653200520000 },
+    { txnName: 'g1', metricName: null, metricValue: 15.0, timestamp: 1653200580000 },
+    { txnName: 'g1', metricName: null, metricValue: 15.0, timestamp: 1653200640000 },
+    { txnName: 'g1', metricName: null, metricValue: 15.0, timestamp: 1653200700000 },
+    { txnName: 'g1', metricName: null, metricValue: 15.0, timestamp: 1653200760000 },
+    { txnName: 'g1', metricName: null, metricValue: 15.0, timestamp: 1653200820000 },
+    { txnName: 'g1', metricName: null, metricValue: 15.0, timestamp: 1653200880000 },
+    { txnName: 'g1', metricName: null, metricValue: 15.0, timestamp: 1653200940000 }
+  ],
+  metaData: null,
+  correlationId: 'f2c2199e-8bf3-4aa8-a2c2-0a6a9eeaa4a2'
+}
+
+export const newRelicServiceResponse = {
+  status: 'SUCCESS',
+  data: {
+    createdAt: 1650467864366,
+    lastModifiedAt: 1650958959123,
+    monitoredService: {
+      orgIdentifier: 'CVNG',
+      projectIdentifier: 'SRMQASignoff',
+      identifier: 'newrelic',
+      name: 'newrelic',
+      type: 'Application',
+      description: '',
+      serviceRef: 'newrelic',
+      environmentRef: 'prod',
+      environmentRefList: ['prod'],
+      tags: {},
+      sources: {
+        healthSources: [
+          {
+            name: 'newrelic',
+            identifier: 'newrelic',
+            type: 'NewRelic',
+            spec: {
+              connectorRef: 'org.newrelic',
+              applicationName: 'My Application',
+              applicationId: '107019083',
+              feature: 'apm',
+              metricPacks: [{ identifier: 'Performance' }],
+              newRelicMetricDefinitions: [
+                {
+                  identifier: 'New_Relic_Metric',
+                  metricName: 'New Relic Metric',
+                  riskProfile: { category: 'Performance', metricType: 'APDEX', thresholdTypes: ['ACT_WHEN_HIGHER'] },
+                  analysis: {
+                    liveMonitoring: { enabled: true },
+                    deploymentVerification: {
+                      enabled: true,
+                      serviceInstanceFieldName: null,
+                      serviceInstanceMetricPath: null
+                    },
+                    riskProfile: { category: 'Performance', metricType: 'APDEX', thresholdTypes: ['ACT_WHEN_HIGHER'] }
+                  },
+                  sli: { enabled: true },
+                  groupName: 'g1',
+                  nrql: "SELECT count(apm.service.instance.count) FROM Metric WHERE appName LIKE 'My Application' TIMESERIES",
+                  responseMapping: {
+                    metricValueJsonPath: '$.timeSeries.[*].results.[*].count',
+                    timestampJsonPath: '$.timeSeries.[*].beginTimeSeconds',
+                    serviceInstanceJsonPath: null,
+                    timestampFormat: null
+                  }
+                }
+              ],
+              metricDefinitions: [
+                {
+                  identifier: 'New_Relic_Metric',
+                  metricName: 'New Relic Metric',
+                  riskProfile: { category: 'Performance', metricType: 'APDEX', thresholdTypes: ['ACT_WHEN_HIGHER'] },
+                  analysis: {
+                    liveMonitoring: { enabled: true },
+                    deploymentVerification: {
+                      enabled: true,
+                      serviceInstanceFieldName: null,
+                      serviceInstanceMetricPath: null
+                    },
+                    riskProfile: { category: 'Performance', metricType: 'APDEX', thresholdTypes: ['ACT_WHEN_HIGHER'] }
+                  },
+                  sli: { enabled: true },
+                  groupName: 'g1',
+                  nrql: "SELECT count(apm.service.instance.count) FROM Metric WHERE appName LIKE 'My Application' TIMESERIES",
+                  responseMapping: {
+                    metricValueJsonPath: '$.timeSeries.[*].results.[*].count',
+                    timestampJsonPath: '$.timeSeries.[*].beginTimeSeconds',
+                    serviceInstanceJsonPath: null,
+                    timestampFormat: null
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        changeSources: []
+      },
+      dependencies: [],
+      notificationRuleRefs: [],
+      templateIdentifier: null,
+      templateVersionLabel: null
+    }
+  },
+  metaData: null,
+  correlationId: 'af75987e-8e87-408b-b921-8d2ec73af1a2'
+}

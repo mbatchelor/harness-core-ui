@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo, useState, useContext, useCallback } from 'react'
+import React, { useMemo, useState, useContext, useCallback, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import type { GetDataError } from 'restful-react'
 import { Container, Accordion, SelectOption, Utils, Button } from '@wings-software/uicore'
@@ -98,6 +98,12 @@ export default function NewRelicCustomMetricForm(props: NewRelicCustomFormInterf
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [queryParamsForNRQL])
 
+  useEffect(() => {
+    if (query?.trim().length) {
+      fetchNewRelicResponse()
+    }
+  }, [])
+
   const handleBuildChart = useCallback(() => {
     fetchNewRelicTimeSeriesData({
       groupName: formikValues?.groupName?.value,
@@ -107,8 +113,7 @@ export default function NewRelicCustomMetricForm(props: NewRelicCustomFormInterf
     }).then(data => {
       setNewRelicTimeSeriesData(data.data)
     })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [formikValues, queryParamsForTimeSeriesData])
+  }, [fetchNewRelicResponse, fetchNewRelicTimeSeriesData, formikValues, sampleRecord])
 
   const options = useMemo(() => {
     return newRelicTimeSeriesData ? getOptionsForChart(newRelicTimeSeriesData) : []
@@ -217,6 +222,7 @@ export default function NewRelicCustomMetricForm(props: NewRelicCustomFormInterf
                   intent="primary"
                   text={getString('cv.healthSource.connectors.buildChart')}
                   onClick={handleBuildChart}
+                  disabled={!formikValues.query?.trim().length}
                 />
                 <Container padding={{ top: 'small' }}>
                   <MetricLineChart

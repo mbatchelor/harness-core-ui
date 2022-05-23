@@ -82,13 +82,13 @@ exports[`EnvironmentDetails CFEnvironmentDetailsBody should render empty state 1
                 </div>
               </div>
               <button
-                class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
+                class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--variation Button--variation-primary"
                 type="button"
               >
                 <span
                   class="bp3-button-text"
                 >
-                  cf.environments.apiKeys.addKeyTitle
+                  cf.environments.apiKeys.addKey
                 </span>
               </button>
             </div>

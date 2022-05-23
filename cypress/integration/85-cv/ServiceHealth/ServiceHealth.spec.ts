@@ -27,7 +27,7 @@ describe('Load service health dashboard', () => {
     )
     cy.visitChangeIntelligence()
   })
-  it('Load dashboard', () => {
+  it.skip('Load dashboard', () => {
     cy.intercept('GET', '/cv/api/monitored-service/appd_prod?*', monitoredServiceData).as('monitoredServiceCall')
     cy.intercept('GET', heatlhScore.url, heatlhScore.data).as('heatlhScoreCall')
     cy.intercept('GET', heatlhScoreTimeLine.url, heatlhScoreTimeLine.data).as('heatlhScoreTimeLineCall')
