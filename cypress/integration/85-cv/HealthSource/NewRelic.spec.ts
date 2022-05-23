@@ -10,7 +10,6 @@ import {
   monitoredServiceListResponse,
   newRelicServiceResponse,
   newrelicURL,
-  notificationRules as notificationRulesURL,
   parseSampleDataResponse,
   parseSampleDataURL
 } from '../../../support/85-cv/monitoredService/constants'
