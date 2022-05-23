@@ -9,7 +9,7 @@ exports[`Chaos Homepage Test Ensure project success handler calls history push 1
     <div
       data-testid="location"
     >
-      /account/undefined/undefined/orgs//projects/testID/
+      /account/undefined/chaos/orgs//projects/testID/dashboard
     </div>
   </div>
 </div>
