@@ -6,6 +6,7 @@
  */
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-duplicate-imports */
 declare const __DEV__: boolean
 declare const Bugsnag: any
 declare const __BUGSNAG_RELEASE_VERSION__: string
@@ -86,13 +87,14 @@ declare module 'event-source-polyfill'
 
 declare module 'refiner-js'
 
-import type { ChildAppComponent } from './microfrontends'
 declare module 'gitopsui/MicroFrontendApp' {
+  import type { ChildAppComponent } from './microfrontends'
   const ChildApp: ChildAppComponent
   export default ChildApp
 }
 
 declare module 'chaos/MicroFrontendApp' {
+  import type { ChildAppComponent } from './microfrontends'
   const ChildApp: ChildAppComponent
   export default ChildApp
 }
