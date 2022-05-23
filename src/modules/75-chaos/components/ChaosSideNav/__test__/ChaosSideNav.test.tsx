@@ -8,6 +8,7 @@
 import React from 'react'
 import { render, waitFor, fireEvent, screen } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
+import routes from '@common/RouteDefinitions'
 import ChaosSideNav from '../ChaosSideNav'
 
 jest.mock('@projects-orgs/components/ProjectSelector/ProjectSelector', () => ({
@@ -26,7 +27,11 @@ describe('Chaos Sidenav Render', () => {
   test('render the chaos sidenav', () => {
     const { container } = render(
       <TestWrapper
-        path="/account/:accountId/chaos/orgs/:orgIdentifier/projects/:projectIdentifier"
+        path={routes.toChaosMicroFrontend({
+          accountId: ':accountId',
+          orgIdentifier: ':orgIdentifier',
+          projectIdentifier: ':projectIdentifier'
+        })}
         pathParams={{ accountId: 'dummyAccID', orgIdentifier: 'dummyOrgID', projectIdentifier: 'dummyProjID' }}
       >
         <ChaosSideNav />
@@ -37,7 +42,10 @@ describe('Chaos Sidenav Render', () => {
 
   test('should go to chaos dashboard when project is selected', async () => {
     const { container, getByTestId } = render(
-      <TestWrapper path="/account/:accountId/chaos/home" pathParams={{ accountId: 'dummy' }}>
+      <TestWrapper
+        path={routes.toModuleHome({ accountId: ':accountId', module: ':module' })}
+        pathParams={{ accountId: 'dummy', module: 'chaos' }}
+      >
         <ChaosSideNav />
       </TestWrapper>
     )
@@ -58,7 +66,11 @@ describe('Chaos Sidenav Render', () => {
   test('should go to access control when selected from the sidebar', async () => {
     render(
       <TestWrapper
-        path="/account/:accountId/chaos/orgs/:orgIdentifier/projects/:projectIdentifier"
+        path={routes.toChaosMicroFrontend({
+          accountId: ':accountId',
+          orgIdentifier: ':orgIdentifier',
+          projectIdentifier: ':projectIdentifier'
+        })}
         pathParams={{ accountId: 'dummyAccID', orgIdentifier: 'dummyOrgID', projectIdentifier: 'dummyProjID' }}
       >
         <ChaosSideNav />
