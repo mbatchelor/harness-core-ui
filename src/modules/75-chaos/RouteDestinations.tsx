@@ -69,12 +69,14 @@ const chaosModuleParams: ModulePathParams = {
 }
 const module = 'chaos'
 
+// RedirectToAccessControlHome: redirects to users page in access control
 const RedirectToAccessControlHome = (): React.ReactElement => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
 
   return <Redirect to={routes.toUsers({ accountId, projectIdentifier, orgIdentifier, module })} />
 }
 
+// RedirectToChaosProject: if project is selected redirects to project dashboard, else to module homepage
 const RedirectToChaosProject = (): React.ReactElement => {
   const { accountId } = useParams<ProjectPathProps>()
   const { selectedProject } = useAppStore()

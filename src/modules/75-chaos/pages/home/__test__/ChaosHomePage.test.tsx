@@ -27,8 +27,9 @@ jest.mock('@projects-orgs/pages/HomePageTemplate/HomePageTemplate', () => ({
       <div className="homepagetemplate">
         <button
           className="projectCreate"
+          type="button"
           onClick={() => props.projectCreateSuccessHandler(projectExists ? project : undefined)}
-        ></button>
+        />
       </div>
     )
   }
@@ -46,7 +47,7 @@ describe('Chaos Homepage Test', () => {
     expect(container).toMatchSnapshot()
   })
 
-  test('Ensure project success handler calls history push', async () => {
+  test('Ensure project success handler calls history push', () => {
     projectExists = true
     const { container } = render(
       <TestWrapper
@@ -55,11 +56,12 @@ describe('Chaos Homepage Test', () => {
         <ChaosHomePage />
       </TestWrapper>
     )
-    fireEvent.click(container.querySelector('[class~="projectCreate"]')!)
+    const projectCreateButton = container.querySelector('[class~="projectCreate"]')
+    if (projectCreateButton) fireEvent.click(projectCreateButton)
     expect(container).toMatchSnapshot()
   })
 
-  test('Ensure project success handler does not redirect when project is empty', async () => {
+  test('Ensure project success handler does not redirect when project is empty', () => {
     projectExists = false
     const { container } = render(
       <TestWrapper
@@ -68,7 +70,8 @@ describe('Chaos Homepage Test', () => {
         <ChaosHomePage />
       </TestWrapper>
     )
-    fireEvent.click(container.querySelector('[class~="projectCreate"]')!)
+    const projectCreateButton = container.querySelector('[class~="projectCreate"]')
+    if (projectCreateButton) fireEvent.click(projectCreateButton)
     expect(container).toMatchSnapshot()
   })
 })

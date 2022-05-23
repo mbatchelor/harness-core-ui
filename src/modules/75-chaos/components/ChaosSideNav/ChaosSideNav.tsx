@@ -8,6 +8,7 @@ import { ProjectSelector } from '@projects-orgs/components/ProjectSelector/Proje
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import ProjectSetupMenu from '@common/navigation/ProjectSetupMenu/ProjectSetupMenu'
 
+// ChaosSideNav: Renders sidenav for chaos module
 export default function ChaosSideNav(): React.ReactElement {
   const params = useParams<ProjectPathProps>()
   const { accountId, projectIdentifier, orgIdentifier } = params
@@ -32,10 +33,10 @@ export default function ChaosSideNav(): React.ReactElement {
       />
       {projectIdentifier && orgIdentifier ? (
         <>
-          <SidebarLink label="Overview" to={routes.toProjectOverview({ ...params, module: 'chaos' })}></SidebarLink>
-          <SidebarLink label="Workflows" to={routes.toChaosWorkflows({ ...params })}></SidebarLink>
-          <SidebarLink label="ChaosHubs" to={routes.toChaosHubs({ ...params })}></SidebarLink>
-          <SidebarLink label="ChaosAgents" to={routes.toChaosAgents({ ...params })}></SidebarLink>
+          <SidebarLink label="Overview" to={routes.toProjectOverview({ ...params, module: 'chaos' })} />
+          <SidebarLink label="Workflows" to={routes.toChaosWorkflows({ ...params })} />
+          <SidebarLink label="ChaosHubs" to={routes.toChaosHubs({ ...params })} />
+          <SidebarLink label="ChaosAgents" to={routes.toChaosAgents({ ...params })} />
           <ProjectSetupMenu module="chaos" />
         </>
       ) : null}

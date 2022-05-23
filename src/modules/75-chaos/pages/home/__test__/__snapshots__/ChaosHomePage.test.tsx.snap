@@ -22,6 +22,7 @@ exports[`Chaos Homepage Test Ensure project success handler does not redirect wh
   >
     <button
       class="projectCreate"
+      type="button"
     />
   </div>
 </div>
@@ -34,6 +35,7 @@ exports[`Chaos Homepage Test should render ChaosHomePage with proper headings 1`
   >
     <button
       class="projectCreate"
+      type="button"
     />
   </div>
 </div>

@@ -14,9 +14,10 @@ jest.mock('@projects-orgs/components/ProjectSelector/ProjectSelector', () => ({
   ProjectSelector: function ProjectSelectorComp(props: any) {
     return (
       <button
+        type="button"
         onClick={() => props.onSelect({ identifier: 'project', orgIdentifier: 'org' })}
         id="projectSelectorId"
-      ></button>
+      />
     )
   }
 }))
@@ -43,7 +44,7 @@ describe('Chaos Sidenav Render', () => {
 
     const projectButtonSel = '#projectSelectorId'
     const projectButton = await waitFor(() => container.querySelector(projectButtonSel))
-    fireEvent.click(projectButton!)
+    if (projectButton) fireEvent.click(projectButton)
 
     expect(getByTestId('location')).toMatchInlineSnapshot(`
       <div

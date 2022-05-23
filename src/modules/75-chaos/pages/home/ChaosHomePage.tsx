@@ -14,11 +14,13 @@ import routes from '@common/RouteDefinitions'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import bgImageURL from './images/chaos.svg'
 
-const ChaosHomePage: React.FC = () => {
+// ChaosHomePage: Renders home page when no project is selected
+export default function ChaosHomePage(): React.ReactElement {
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
   const history = useHistory()
 
+  // projectCreateSuccessHandler: redirects to the project dashboard upon selection from new project modal
   const projectCreateSuccessHandler = (project?: Project): void => {
     if (project) {
       history.push(
@@ -42,5 +44,3 @@ const ChaosHomePage: React.FC = () => {
     />
   )
 }
-
-export default ChaosHomePage
