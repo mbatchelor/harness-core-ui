@@ -1529,22 +1529,22 @@ const routes = {
   /****************** Chaos Module ************************************************************************************/
   toChaos: withAccountId(() => `/chaos`),
   toChaosMicroFrontend: withAccountId(
-    ({ orgIdentifier, projectIdentifier, module }: Partial<ProjectPathProps & ModulePathParams>) =>
-      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/`
+    ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
+      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/`
   ),
 
   // These RoutesDestinations are defined in the MicroFrontend
   toChaosWorkflows: withAccountId(
-    ({ orgIdentifier, projectIdentifier, module }: Partial<ProjectPathProps & ModulePathParams>) =>
-      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/workflows`
+    ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
+      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/workflows`
   ),
   toChaosHubs: withAccountId(
-    ({ orgIdentifier, projectIdentifier, module }: Partial<ProjectPathProps & ModulePathParams>) =>
-      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/chaos-hubs`
+    ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
+      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/chaos-hubs`
   ),
   toChaosAgents: withAccountId(
-    ({ orgIdentifier, projectIdentifier, module }: Partial<ProjectPathProps & ModulePathParams>) =>
-      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/agents`
+    ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
+      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/agents`
   )
 }
 

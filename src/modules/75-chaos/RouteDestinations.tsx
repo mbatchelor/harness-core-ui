@@ -227,10 +227,7 @@ export default (
     </RouteWithLayout>
 
     {/* Loads the Chaos MicroFrontend */}
-    <RouteWithLayout
-      sidebarProps={ChaosSideNavProps}
-      path={routes.toChaosMicroFrontend({ ...projectPathProps, ...chaosModuleParams })}
-    >
+    <RouteWithLayout sidebarProps={ChaosSideNavProps} path={routes.toChaosMicroFrontend({ ...projectPathProps })}>
       <ChildAppMounter<ChaosCustomMicroFrontendProps> ChildApp={ChaosMicroFrontend} customComponents={{}} />
     </RouteWithLayout>
   </>
