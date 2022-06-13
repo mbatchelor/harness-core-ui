@@ -764,7 +764,7 @@ perspectives:
       opNotNull: 'NOT NULL'
       opLike: 'LIKE'
   reports:
-    title: 'Report Schedules({{ count }})'
+    title: 'Report Schedules ({{ count }})'
     desc: Reports can send a cost report to specified users at the specified frequency.
     msg: You have not created any yet.
     createNew: '+ create new Report schedule'
@@ -785,7 +785,7 @@ perspectives:
     budgetText: '{{ index }}. Budget Amount: {{ amount }}'
     budgetTextWithGrowthRate: '{{ index }}. Budget Amount: {{ amount }} with {{ growth }}% growth rate'
     addBudget: Add a budget to this perspective
-    perspectiveCreateBudgetTitle: '{{ $.ce.common.budget}}({{ count }})'
+    perspectiveCreateBudgetTitle: '{{ $.ce.budgets.sideNavText }} ({{ count }})'
     title: '{{ $.ce.common.budget}}'
     thisMonth: this month
     viewText: '{{ $.common.viewText }}'
@@ -1049,7 +1049,7 @@ anomalyDetection:
     microsoftTeamChannelLabel: '{{ $.notifications.labelMS }}'
     channelSelectionRequiredMsg: Please select a channel
     channelUrlRequiredMsg: Please enter a valid webhook url or email address
-  perspectiveCreateAnomalyAlertTitle: '{{ $.ce.anomalyDetection.notificationAlerts.heading}}({{ count }})'
+  perspectiveCreateAnomalyAlertTitle: '{{ $.ce.anomalyDetection.notificationAlerts.heading}} ({{ count }})'
   addNewAnomalyAlert: add Anomaly Alert
   addAnoamlyAlertDesc: You can recieve alerts whenever an anomaly occurs in the persepective. This can help you rectify any unfavourable cost spikes at the earliest.
   createNewAnomalyAlert: + create new Anomaly Alert

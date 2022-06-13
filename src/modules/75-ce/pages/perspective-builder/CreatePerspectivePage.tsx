@@ -8,7 +8,6 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import {
-  Heading,
   Layout,
   Tabs,
   Tab,
@@ -19,6 +18,7 @@ import {
   PageBody,
   PageSpinner
 } from '@wings-software/uicore'
+import { Color, FontVariation } from '@wings-software/design-system'
 import { Breadcrumbs } from '@common/components/Breadcrumbs/Breadcrumbs'
 import routes from '@common/RouteDefinitions'
 import { useGetPerspective, CEView } from 'services/ce/'
@@ -45,16 +45,16 @@ const PerspectiveHeader: React.FC<{ title: string }> = ({ title }) => {
             }
           ]}
         />
-        <Heading color="grey800" level={2}>
+        <Text color={Color.GREY_800} font={{ variation: FontVariation.H4 }}>
           {title}
-        </Heading>
+        </Text>
       </Layout.Vertical>
     </Layout.Horizontal>
   )
 }
 
 const CreatePerspectivePage: React.FC = () => {
-  const tabHeadings = ['1. Perspective Builder', '2. Reports and Budget']
+  const tabHeadings = ['1. Perspective Builder', '2. Budgets, Reports and Alerts']
   const [selectedTabId, setSelectedTabId] = useState(tabHeadings[0])
 
   const [perspectiveData, setPerspectiveData] = useState<CEView | null>(null)

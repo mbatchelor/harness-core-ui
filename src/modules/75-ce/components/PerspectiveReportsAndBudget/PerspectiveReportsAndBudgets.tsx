@@ -21,10 +21,11 @@ import {
   ButtonSize,
   ButtonVariation,
   Link,
-  getErrorInfoFromErrorObject
+  getErrorInfoFromErrorObject,
+  Card
 } from '@wings-software/uicore'
 import { FontVariation, Color } from '@harness/design-system'
-import { Popover, Position, Classes, PopoverInteractionKind } from '@blueprintjs/core'
+import { Popover, Position, Classes, PopoverInteractionKind, Collapse } from '@blueprintjs/core'
 import { DEFAULT_GROUP_BY } from '@ce/utils/perspectiveUtils'
 import routes from '@common/RouteDefinitions'
 import { QlceViewFieldInputInput, ViewChartType, AlertThreshold } from 'services/ce/services'
@@ -45,6 +46,7 @@ import formatCost from '@ce/utils/formatCost'
 
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { PAGE_NAMES, USER_JOURNEY_EVENTS } from '@ce/TrackingEventsConstants'
+import { useBooleanStatus } from '@common/hooks'
 import Table from './Table'
 import PerspectiveBuilderPreview from '../PerspectiveBuilderPreview/PerspectiveBuilderPreview'
 import useCreateReportModal from './PerspectiveCreateReport'
@@ -205,7 +207,8 @@ export const ScheduledReports: React.FC = () => {
     () => [
       {
         Header: getString('ce.perspectives.reports.reportName'),
-        accessor: 'name'
+        accessor: 'name',
+        Cell: ReportName
       },
       {
         Header: getString('ce.perspectives.reports.frequency'),
@@ -238,16 +241,17 @@ export const ScheduledReports: React.FC = () => {
     openModal()
   }
 
+  const { state: isOpen, toggle: toggleCard } = useBooleanStatus()
+
   return (
-    <Container>
-      <Layout.Horizontal>
-        <Container>
-          <Text color={Color.GREY_800} font={{ variation: FontVariation.H4 }}>
-            {getString('ce.perspectives.reports.title', {
-              count: reports.length || 0
-            })}
-          </Text>
-        </Container>
+    <Card className={css.collapseCard}>
+      <Layout.Horizontal style={{ alignItems: 'center' }}>
+        <Icon name={isOpen ? 'chevron-up' : 'chevron-down'} onClick={toggleCard} className={css.chevron} />
+        <Text color={isOpen ? Color.GREY_800 : Color.GREY_500} font={{ variation: FontVariation.H5 }}>
+          {getString('ce.perspectives.reports.title', {
+            count: reports.length || 0
+          })}
+        </Text>
         <FlexExpander />
         {reports.length ? (
           <Link
@@ -266,20 +270,26 @@ export const ScheduledReports: React.FC = () => {
           </Link>
         ) : null}
       </Layout.Horizontal>
-      <Text padding={{ top: 'large', bottom: 'large' }} color={Color.GREY_800} className={css.subtext}>
-        {`${getString('ce.perspectives.reports.desc')} ${
-          !reports.length ? getString('ce.perspectives.reports.msg') : ''
-        }`}
-      </Text>
-      <List
-        buttonText={getString('ce.perspectives.reports.createNew')}
-        onButtonClick={openCreateReportModal}
-        showCreateButton={!reports.length}
-        hasData={!!reports.length}
-        loading={loading}
-        grid={<Table<CEReportSchedule> data={reports} columns={columns} />}
-      />
-    </Container>
+      <Collapse isOpen={isOpen} keepChildrenMounted>
+        <Text
+          padding={{ top: 'medium', bottom: 'medium' }}
+          color={Color.GREY_800}
+          font={{ variation: FontVariation.SMALL }}
+        >
+          {`${getString('ce.perspectives.reports.desc')} ${
+            !reports.length ? getString('ce.perspectives.reports.msg') : ''
+          }`}
+        </Text>
+        <List
+          buttonText={getString('ce.perspectives.reports.createNew')}
+          onButtonClick={openCreateReportModal}
+          showCreateButton={!reports.length}
+          hasData={!!reports.length}
+          loading={loading}
+          grid={<Table<CEReportSchedule> data={reports} columns={columns} />}
+        />
+      </Collapse>
+    </Card>
   )
 }
 
@@ -383,7 +393,7 @@ export const Budgets = ({ perspectiveName }: { perspectiveName: string }): JSX.E
             alignItems: 'center'
           }}
         >
-          <Text font="small" color={Color.GREY_800}>
+          <Text color={Color.GREY_800} font={{ variation: FontVariation.SMALL }}>
             {getString('ce.perspectives.budgets.sendAlerts')}
           </Text>
           <Container margin={{ right: 'large' }}>
@@ -420,10 +430,13 @@ export const Budgets = ({ perspectiveName }: { perspectiveName: string }): JSX.E
     })
   }
 
+  const { state: isOpen, toggle: toggleCard } = useBooleanStatus()
+
   return (
-    <Container>
-      <Layout.Horizontal>
-        <Text color={Color.GREY_800} font={{ variation: FontVariation.H4 }}>
+    <Card className={css.collapseCard}>
+      <Layout.Horizontal style={{ alignItems: 'center' }}>
+        <Icon name={isOpen ? 'chevron-up' : 'chevron-down'} onClick={toggleCard} className={css.chevron} />
+        <Text color={isOpen ? Color.GREY_800 : Color.GREY_500} font={{ variation: FontVariation.H5 }}>
           {getString('ce.perspectives.budgets.perspectiveCreateBudgetTitle', {
             count: budgets.length || 0
           })}
@@ -446,34 +459,40 @@ export const Budgets = ({ perspectiveName }: { perspectiveName: string }): JSX.E
           </Link>
         ) : null}
       </Layout.Horizontal>
-      <Text padding={{ top: 'large', bottom: 'large' }} color={Color.GREY_800} className={css.subtext}>
-        {getString('ce.perspectives.budgets.desc')}
-      </Text>
-      {budgets.map((budget, idx) => {
-        return (
+      <Collapse isOpen={isOpen} keepChildrenMounted>
+        <Text
+          padding={{ top: 'large', bottom: 'large' }}
+          color={Color.GREY_800}
+          font={{ variation: FontVariation.SMALL }}
+        >
+          {getString('ce.perspectives.budgets.desc')}
+        </Text>
+        {budgets.map((budget, idx) => {
+          return (
+            <List
+              key={budget.uuid}
+              buttonText={getString('ce.perspectives.budgets.createNew')}
+              onButtonClick={openCreateNewBudgetModal}
+              hasData={!isEmpty(budget)}
+              loading={loading}
+              showCreateButton={isEmpty(budget)}
+              meta={renderMeta(budget, idx)}
+              grid={renderGrid(budget)}
+            />
+          )
+        })}
+        {!budgets.length ? (
           <List
-            key={budget.uuid}
-            buttonText={getString('ce.perspectives.budgets.createNew')}
-            onButtonClick={openCreateNewBudgetModal}
-            hasData={!isEmpty(budget)}
+            grid={null}
             loading={loading}
-            showCreateButton={isEmpty(budget)}
-            meta={renderMeta(budget, idx)}
-            grid={renderGrid(budget)}
+            onButtonClick={openCreateNewBudgetModal}
+            buttonText={getString('ce.perspectives.budgets.createNew')}
+            hasData={false}
+            showCreateButton={true}
           />
-        )
-      })}
-      {!budgets.length ? (
-        <List
-          grid={null}
-          loading={loading}
-          onButtonClick={openCreateNewBudgetModal}
-          buttonText={getString('ce.perspectives.budgets.createNew')}
-          hasData={false}
-          showCreateButton={true}
-        />
-      ) : null}
-    </Container>
+        ) : null}
+      </Collapse>
+    </Card>
   )
 }
 
@@ -565,10 +584,13 @@ export const AnomalyAlerts = () => {
     []
   )
 
+  const { state: isOpen, toggle: toggleCard } = useBooleanStatus()
+
   return (
-    <Container>
-      <Layout.Horizontal>
-        <Text color={Color.GREY_800} font={{ variation: FontVariation.H4 }}>
+    <Card className={css.collapseCard}>
+      <Layout.Horizontal style={{ alignItems: 'center' }}>
+        <Icon name={isOpen ? 'chevron-up' : 'chevron-down'} onClick={toggleCard} className={css.chevron} />
+        <Text color={isOpen ? Color.GREY_800 : Color.GREY_500} font={{ variation: FontVariation.H5 }}>
           {getString('ce.anomalyDetection.perspectiveCreateAnomalyAlertTitle', {
             count: channelsList.length || 0
           })}
@@ -591,27 +613,33 @@ export const AnomalyAlerts = () => {
           </Link>
         ) : null}
       </Layout.Horizontal>
-      <Text padding={{ top: 'large', bottom: 'large' }} color={Color.GREY_800} className={css.subtext}>
-        {getString('ce.anomalyDetection.addAnoamlyAlertDesc')}
-      </Text>
-      <Container className={css.anomalyAlertsWrapper}>
-        {channelsList.length ? (
-          <RenderEditDeleteActions
-            onClickEdit={() => onEdit()}
-            onClickDelete={() => deleteNotification()}
-            className={css.anomalyAlertsActionBtn}
+      <Collapse isOpen={isOpen} keepChildrenMounted>
+        <Text
+          padding={{ top: 'large', bottom: 'large' }}
+          color={Color.GREY_800}
+          font={{ variation: FontVariation.SMALL }}
+        >
+          {getString('ce.anomalyDetection.addAnoamlyAlertDesc')}
+        </Text>
+        <Container className={css.anomalyAlertsWrapper}>
+          {channelsList.length ? (
+            <RenderEditDeleteActions
+              onClickEdit={() => onEdit()}
+              onClickDelete={() => deleteNotification()}
+              className={css.anomalyAlertsActionBtn}
+            />
+          ) : null}
+          <List
+            buttonText={getString('ce.anomalyDetection.createNewAnomalyAlert')}
+            onButtonClick={openAnomaliesAlertModal}
+            showCreateButton={!channelsList.length}
+            hasData={!!channelsList.length}
+            loading={loading}
+            grid={<Table<CCMNotificationChannel> data={channelsList} columns={columns} />}
           />
-        ) : null}
-        <List
-          buttonText={getString('ce.anomalyDetection.createNewAnomalyAlert')}
-          onButtonClick={openAnomaliesAlertModal}
-          showCreateButton={!channelsList.length}
-          hasData={!!channelsList.length}
-          loading={loading}
-          grid={<Table<CCMNotificationChannel> data={channelsList} columns={columns} />}
-        />
-      </Container>
-    </Container>
+        </Container>
+      </Collapse>
+    </Card>
   )
 }
 
@@ -647,11 +675,7 @@ const List = (props: ListProps): JSX.Element => {
   }
 
   return (
-    <Container
-      margin={{
-        bottom: 'xlarge'
-      }}
-    >
+    <Container>
       {loading && renderLoader()}
       {!loading && hasData && (
         <>
@@ -667,6 +691,14 @@ const List = (props: ListProps): JSX.Element => {
 const RenderReportFrequency: Renderer<CellProps<CEReportSchedule>> = ({ row }) => {
   const cron = row.original.userCron || ''
   return <span>{cronstrue.toString(cron)}</span>
+}
+
+const ReportName: Renderer<CellProps<CEReportSchedule>> = ({ row }) => {
+  return (
+    <Text color={Color.GREY_700} font={{ variation: FontVariation.SMALL }} lineClamp={1}>
+      {row.original.name}
+    </Text>
+  )
 }
 
 const RenderBasedOn: Renderer<CellProps<AlertThreshold>> = ({ row }) => {
