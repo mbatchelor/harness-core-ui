@@ -53,7 +53,8 @@ export const ENABLED_ARTIFACT_TYPES: { [key: string]: ArtifactType } = {
   ArtifactoryRegistry: 'ArtifactoryRegistry',
   CustomArtifact: 'CustomArtifact',
   Acr: 'Acr',
-  Jenkins: 'Jenkins'
+  Jenkins: 'Jenkins',
+  AmazonS3: 'AmazonS3'
 }
 
 export const ArtifactToConnectorMap: Record<string, ConnectorInfoDTO['type']> = {
@@ -63,7 +64,8 @@ export const ArtifactToConnectorMap: Record<string, ConnectorInfoDTO['type']> = 
   Nexus3Registry: Connectors.NEXUS,
   ArtifactoryRegistry: Connectors.ARTIFACTORY,
   Acr: Connectors.AZURE,
-  Jenkins: Connectors.JENKINS
+  Jenkins: Connectors.JENKINS,
+  AmazonS3: Connectors.AWS
 }
 
 export const ArtifactConnectorLabelMap: Record<string, string> = {
@@ -73,7 +75,8 @@ export const ArtifactConnectorLabelMap: Record<string, string> = {
   Nexus3Registry: 'Nexus',
   ArtifactoryRegistry: 'Artifactory',
   Acr: 'Azure',
-  Jenkins: 'Jenkins'
+  Jenkins: 'Jenkins',
+  AmazonS3: 'AWS'
 }
 
 export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<ArtifactType>> = {

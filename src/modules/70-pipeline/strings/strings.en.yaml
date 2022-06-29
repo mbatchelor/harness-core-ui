@@ -743,10 +743,12 @@ artifactsSelection:
   artifactTyperequired: Artifact Type is required
   loadingTags: Loading Tags...
   loadingArtifactPaths: Loading Artifact Paths...
-  artifactNamePlaceholder: Enter Artifact Path
+  artifactPathPlaceholder: Enter Artifact Path
   artifactDirectory: Artifact Directory
   artifactDirectoryPlaceholder: Enter Artifact Directory
   versionPlaceholder: Enter Version
+  filePathRegexLabel: File Path Regex
+  filePathRegexPlaceholder: Enter File Path Regex
   amazonS3Title: Amazon S3
   existingDocker:
     sidecarId: Sidecar Identifier

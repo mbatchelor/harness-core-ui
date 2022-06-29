@@ -72,7 +72,9 @@ import type {
   InitialArtifactDataType,
   ConnectorRefLabelType,
   ArtifactType,
-  ImagePathProps
+  ImagePathProps,
+  ImagePathTypes,
+  AmazonS3InitialValuesType
 } from './ArtifactInterface'
 import {
   ArtifactToConnectorMap,
@@ -88,6 +90,7 @@ import Artifactory from './ArtifactRepository/ArtifactLastSteps/Artifactory/Arti
 import { CustomArtifact } from './ArtifactRepository/ArtifactLastSteps/CustomArtifact/CustomArtifact'
 import { showConnectorStep } from './ArtifactUtils'
 import { ACRArtifact } from './ArtifactRepository/ArtifactLastSteps/ACRArtifact/ACRArtifact'
+import { AmazonS3 } from './ArtifactRepository/ArtifactLastSteps/AmazonS3Artifact/AmazonS3'
 import css from './ArtifactsSelection.module.scss'
 
 export default function ArtifactsSelection({
@@ -470,7 +473,7 @@ export default function ArtifactsSelection({
     }
   }, [selectedArtifact])
 
-  const artifactLastStepProps = useCallback((): ImagePathProps => {
+  const artifactLastStepProps = useCallback((): ImagePathProps<ImagePathTypes & AmazonS3InitialValuesType> => {
     return {
       key: getString('connectors.stepFourName'),
       name: getString('connectors.stepFourName'),
@@ -620,6 +623,8 @@ export default function ArtifactsSelection({
         return <NexusArtifact {...artifactLastStepProps()} />
       case ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry:
         return <Artifactory {...artifactLastStepProps()} />
+      case ENABLED_ARTIFACT_TYPES.AmazonS3:
+        return <AmazonS3 {...artifactLastStepProps()} />
       case ENABLED_ARTIFACT_TYPES.CustomArtifact:
         return <CustomArtifact {...artifactLastStepProps()} />
       case ENABLED_ARTIFACT_TYPES.Acr:

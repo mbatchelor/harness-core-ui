@@ -245,6 +245,13 @@ export const defaultArtifactInitialValues = (selectedArtifact: ArtifactType): an
         identifier: '',
         version: RUNTIME_INPUT_VALUE
       }
+    case ENABLED_ARTIFACT_TYPES.AmazonS3:
+      return {
+        identifier: '',
+        bucketList: '',
+        artifactPath: '',
+        filePathRegex: ''
+      }
     case ENABLED_ARTIFACT_TYPES.Acr:
     case ENABLED_ARTIFACT_TYPES.DockerRegistry:
     case ENABLED_ARTIFACT_TYPES.Gcr:

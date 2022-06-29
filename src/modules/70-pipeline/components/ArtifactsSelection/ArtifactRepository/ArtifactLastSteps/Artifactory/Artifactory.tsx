@@ -74,7 +74,7 @@ function Artifactory({
   isReadonly = false,
   selectedArtifact,
   selectedDeploymentType
-}: StepProps<ConnectorConfigDTO> & ImagePathProps): React.ReactElement {
+}: StepProps<ConnectorConfigDTO> & ImagePathProps<ImagePathTypes>): React.ReactElement {
   const { getString } = useStrings()
   const [lastQueryData, setLastQueryData] = useState({ artifactPath: '', repository: '' })
 
