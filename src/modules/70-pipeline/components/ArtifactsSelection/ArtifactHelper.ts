@@ -29,7 +29,8 @@ export const ArtifactIconByType: Record<ArtifactType, IconName> = {
   ArtifactoryRegistry: 'service-artifactory',
   CustomArtifact: 'custom-artifact',
   Acr: 'service-azure',
-  Jenkins: 'service-jenkins'
+  Jenkins: 'service-jenkins',
+  AmazonS3: 'service-service-s3'
 }
 
 export const ArtifactTitleIdByType: Record<ArtifactType, StringKeys> = {
@@ -40,7 +41,8 @@ export const ArtifactTitleIdByType: Record<ArtifactType, StringKeys> = {
   ArtifactoryRegistry: 'connectors.artifactory.artifactoryLabel',
   CustomArtifact: 'common.repo_provider.customLabel',
   Acr: 'pipeline.ACR.name',
-  Jenkins: 'connectors.jenkins.jenkins'
+  Jenkins: 'connectors.jenkins.jenkins',
+  AmazonS3: 'pipeline.artifactsSelection.amazonS3Title'
 }
 
 export const ENABLED_ARTIFACT_TYPES: { [key: string]: ArtifactType } = {
@@ -84,7 +86,8 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
   NativeHelm: [ENABLED_ARTIFACT_TYPES.DockerRegistry, ENABLED_ARTIFACT_TYPES.Gcr, ENABLED_ARTIFACT_TYPES.Ecr],
   ServerlessAwsLambda: [ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry, ENABLED_ARTIFACT_TYPES.Ecr],
   Ssh: [],
-  WinRm: []
+  WinRm: [],
+  AzureWebApps: []
 }
 
 export const tagOptions: IOptionProps[] = [

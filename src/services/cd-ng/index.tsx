@@ -65,6 +65,7 @@ export interface AccessControlCheckError {
     | 'SOCKET_CONNECTION_ERROR'
     | 'CONNECTION_ERROR'
     | 'SOCKET_CONNECTION_TIMEOUT'
+    | 'WINRM_COMMAND_EXECUTION_TIMEOUT'
     | 'CONNECTION_TIMEOUT'
     | 'SSH_CONNECTION_ERROR'
     | 'USER_GROUP_ERROR'
@@ -623,6 +624,13 @@ export interface AddUsersResponse {
       | 'USER_ALREADY_INVITED'
       | 'FAIL'
   }
+}
+
+export type AmazonS3ArtifactConfig = ArtifactConfig & {
+  artifactPath: string
+  bucketName: string
+  connectorRef: string
+  filePathRegex?: string
 }
 
 export interface ApiKeyAggregateDTO {
@@ -1230,6 +1238,12 @@ export type AzureWebAppRollbackStepInfo = StepSpecType & {
   delegateSelectors?: string[]
 }
 
+export type AzureWebAppServiceSpec = ServiceSpec & {
+  applicationSettings?: StoreConfigWrapper
+  connectionStrings?: StoreConfigWrapper
+  startupScript?: StoreConfigWrapper
+}
+
 export type AzureWebAppSlotDeploymentStepInfo = StepSpecType & {
   delegateSelectors?: string[]
 }
@@ -1544,6 +1558,10 @@ export interface ClusterBatchRequest {
   orgIdentifier?: string
   projectIdentifier?: string
   searchTerm?: string
+}
+
+export interface ClusterBatchResponse {
+  linked?: number
 }
 
 export interface ClusterInternal {
@@ -2900,6 +2918,7 @@ export interface Error {
     | 'SOCKET_CONNECTION_ERROR'
     | 'CONNECTION_ERROR'
     | 'SOCKET_CONNECTION_TIMEOUT'
+    | 'WINRM_COMMAND_EXECUTION_TIMEOUT'
     | 'CONNECTION_TIMEOUT'
     | 'SSH_CONNECTION_ERROR'
     | 'USER_GROUP_ERROR'
@@ -3302,6 +3321,7 @@ export interface Failure {
     | 'SOCKET_CONNECTION_ERROR'
     | 'CONNECTION_ERROR'
     | 'SOCKET_CONNECTION_TIMEOUT'
+    | 'WINRM_COMMAND_EXECUTION_TIMEOUT'
     | 'CONNECTION_TIMEOUT'
     | 'SSH_CONNECTION_ERROR'
     | 'USER_GROUP_ERROR'
@@ -7260,6 +7280,7 @@ export interface PrimaryArtifact {
     | 'CustomArtifact'
     | 'Acr'
     | 'Jenkins'
+    | 'AmazonS3'
 }
 
 export interface Principal {
@@ -7715,6 +7736,13 @@ export interface ResponseCDPipelineModuleInfo {
 export interface ResponseCDStageModuleInfo {
   correlationId?: string
   data?: CDStageModuleInfo
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseClusterBatchResponse {
+  correlationId?: string
+  data?: ClusterBatchResponse
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -8412,7 +8440,7 @@ export interface ResponseListServiceAccountDTO {
 
 export interface ResponseListServiceDefinitionType {
   correlationId?: string
-  data?: ('Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda')[]
+  data?: ('Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda' | 'AzureWebApps')[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -8560,6 +8588,7 @@ export interface ResponseMessage {
     | 'SOCKET_CONNECTION_ERROR'
     | 'CONNECTION_ERROR'
     | 'SOCKET_CONNECTION_TIMEOUT'
+    | 'WINRM_COMMAND_EXECUTION_TIMEOUT'
     | 'CONNECTION_TIMEOUT'
     | 'SSH_CONNECTION_ERROR'
     | 'USER_GROUP_ERROR'
@@ -10416,7 +10445,7 @@ export interface ServiceDashboardInfo {
 
 export interface ServiceDefinition {
   spec: ServiceSpec
-  type: 'Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda'
+  type: 'Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda' | 'AzureWebApps'
 }
 
 export interface ServiceDeployment {
@@ -10678,6 +10707,7 @@ export interface SidecarArtifact {
     | 'CustomArtifact'
     | 'Acr'
     | 'Jenkins'
+    | 'AmazonS3'
 }
 
 export interface SidecarArtifactWrapper {
@@ -11781,7 +11811,7 @@ export type GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody = string
 
 export type GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody = string
 
-export type SubscribeBodyRequestBody = string[]
+export type UnsubscribeBodyRequestBody = string[]
 
 export type UpdateWhitelistedDomainsBodyRequestBody = string[]
 
@@ -17970,6 +18000,8 @@ export interface GetGCSBucketListQueryParams {
   accountIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
+  fqnPath?: string
+  serviceId?: string
 }
 
 export type GetGCSBucketListProps = Omit<
@@ -18017,11 +18049,13 @@ export const getGCSBucketListPromise = (
   )
 
 export interface GetBucketListForS3QueryParams {
-  region: string
-  connectorRef: string
+  region?: string
+  connectorRef?: string
   accountIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
+  fqnPath?: string
+  serviceId?: string
 }
 
 export type GetBucketListForS3Props = Omit<
@@ -27689,7 +27723,7 @@ export interface LinkClustersQueryParams {
 }
 
 export type LinkClustersProps = Omit<
-  MutateProps<ResponsePageClusterResponse, Failure | Error, LinkClustersQueryParams, ClusterBatchRequest, void>,
+  MutateProps<ResponseClusterBatchResponse, Failure | Error, LinkClustersQueryParams, ClusterBatchRequest, void>,
   'path' | 'verb'
 >
 
@@ -27697,7 +27731,7 @@ export type LinkClustersProps = Omit<
  * Link gitops clusters to an environment
  */
 export const LinkClusters = (props: LinkClustersProps) => (
-  <Mutate<ResponsePageClusterResponse, Failure | Error, LinkClustersQueryParams, ClusterBatchRequest, void>
+  <Mutate<ResponseClusterBatchResponse, Failure | Error, LinkClustersQueryParams, ClusterBatchRequest, void>
     verb="POST"
     path={`/gitops/clusters/batch`}
     base={getConfig('ng/api')}
@@ -27706,7 +27740,7 @@ export const LinkClusters = (props: LinkClustersProps) => (
 )
 
 export type UseLinkClustersProps = Omit<
-  UseMutateProps<ResponsePageClusterResponse, Failure | Error, LinkClustersQueryParams, ClusterBatchRequest, void>,
+  UseMutateProps<ResponseClusterBatchResponse, Failure | Error, LinkClustersQueryParams, ClusterBatchRequest, void>,
   'path' | 'verb'
 >
 
@@ -27714,7 +27748,7 @@ export type UseLinkClustersProps = Omit<
  * Link gitops clusters to an environment
  */
 export const useLinkClusters = (props: UseLinkClustersProps) =>
-  useMutate<ResponsePageClusterResponse, Failure | Error, LinkClustersQueryParams, ClusterBatchRequest, void>(
+  useMutate<ResponseClusterBatchResponse, Failure | Error, LinkClustersQueryParams, ClusterBatchRequest, void>(
     'POST',
     `/gitops/clusters/batch`,
     { base: getConfig('ng/api'), ...props }
@@ -27725,7 +27759,7 @@ export const useLinkClusters = (props: UseLinkClustersProps) =>
  */
 export const linkClustersPromise = (
   props: MutateUsingFetchProps<
-    ResponsePageClusterResponse,
+    ResponseClusterBatchResponse,
     Failure | Error,
     LinkClustersQueryParams,
     ClusterBatchRequest,
@@ -27733,7 +27767,7 @@ export const linkClustersPromise = (
   >,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<ResponsePageClusterResponse, Failure | Error, LinkClustersQueryParams, ClusterBatchRequest, void>(
+  mutateUsingFetch<ResponseClusterBatchResponse, Failure | Error, LinkClustersQueryParams, ClusterBatchRequest, void>(
     'POST',
     getConfig('ng/api'),
     `/gitops/clusters/batch`,
@@ -32001,7 +32035,7 @@ export const getServiceDefinitionTypesPromise = (
   )
 
 export interface GetStepsQueryParams {
-  serviceDefinitionType: 'Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda'
+  serviceDefinitionType: 'Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda' | 'AzureWebApps'
 }
 
 export type GetStepsProps = Omit<GetProps<ResponseStepCategory, Failure | Error, GetStepsQueryParams, void>, 'path'>
@@ -32138,7 +32172,7 @@ export const getProvisionerExecutionStrategyYamlPromise = (
   )
 
 export interface GetExecutionStrategyYamlQueryParams {
-  serviceDefinitionType: 'Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda'
+  serviceDefinitionType: 'Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda' | 'AzureWebApps'
   strategyType: 'Basic' | 'Canary' | 'BlueGreen' | 'Rolling' | 'Default' | 'GitOps'
   includeVerify?: boolean
 }
@@ -32200,7 +32234,7 @@ export type ProcessPollingResultNgProps = Omit<
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    SubscribeBodyRequestBody,
+    UnsubscribeBodyRequestBody,
     ProcessPollingResultNgPathParams
   >,
   'path' | 'verb'
@@ -32212,7 +32246,7 @@ export const ProcessPollingResultNg = ({ perpetualTaskId, ...props }: ProcessPol
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    SubscribeBodyRequestBody,
+    UnsubscribeBodyRequestBody,
     ProcessPollingResultNgPathParams
   >
     verb="POST"
@@ -32227,7 +32261,7 @@ export type UseProcessPollingResultNgProps = Omit<
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    SubscribeBodyRequestBody,
+    UnsubscribeBodyRequestBody,
     ProcessPollingResultNgPathParams
   >,
   'path' | 'verb'
@@ -32239,7 +32273,7 @@ export const useProcessPollingResultNg = ({ perpetualTaskId, ...props }: UseProc
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    SubscribeBodyRequestBody,
+    UnsubscribeBodyRequestBody,
     ProcessPollingResultNgPathParams
   >(
     'POST',
@@ -32255,7 +32289,7 @@ export const processPollingResultNgPromise = (
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    SubscribeBodyRequestBody,
+    UnsubscribeBodyRequestBody,
     ProcessPollingResultNgPathParams
   > & { perpetualTaskId: string },
   signal?: RequestInit['signal']
@@ -32264,17 +32298,17 @@ export const processPollingResultNgPromise = (
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    SubscribeBodyRequestBody,
+    UnsubscribeBodyRequestBody,
     ProcessPollingResultNgPathParams
   >('POST', getConfig('ng/api'), `/polling/delegate-response/${perpetualTaskId}`, props, signal)
 
 export type SubscribeProps = Omit<
-  MutateProps<ResponsePollingResponseDTO, Failure | Error, void, SubscribeBodyRequestBody, void>,
+  MutateProps<ResponsePollingResponseDTO, Failure | Error, void, UnsubscribeBodyRequestBody, void>,
   'path' | 'verb'
 >
 
 export const Subscribe = (props: SubscribeProps) => (
-  <Mutate<ResponsePollingResponseDTO, Failure | Error, void, SubscribeBodyRequestBody, void>
+  <Mutate<ResponsePollingResponseDTO, Failure | Error, void, UnsubscribeBodyRequestBody, void>
     verb="POST"
     path={`/polling/subscribe`}
     base={getConfig('ng/api')}
@@ -32283,22 +32317,22 @@ export const Subscribe = (props: SubscribeProps) => (
 )
 
 export type UseSubscribeProps = Omit<
-  UseMutateProps<ResponsePollingResponseDTO, Failure | Error, void, SubscribeBodyRequestBody, void>,
+  UseMutateProps<ResponsePollingResponseDTO, Failure | Error, void, UnsubscribeBodyRequestBody, void>,
   'path' | 'verb'
 >
 
 export const useSubscribe = (props: UseSubscribeProps) =>
-  useMutate<ResponsePollingResponseDTO, Failure | Error, void, SubscribeBodyRequestBody, void>(
+  useMutate<ResponsePollingResponseDTO, Failure | Error, void, UnsubscribeBodyRequestBody, void>(
     'POST',
     `/polling/subscribe`,
     { base: getConfig('ng/api'), ...props }
   )
 
 export const subscribePromise = (
-  props: MutateUsingFetchProps<ResponsePollingResponseDTO, Failure | Error, void, SubscribeBodyRequestBody, void>,
+  props: MutateUsingFetchProps<ResponsePollingResponseDTO, Failure | Error, void, UnsubscribeBodyRequestBody, void>,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<ResponsePollingResponseDTO, Failure | Error, void, SubscribeBodyRequestBody, void>(
+  mutateUsingFetch<ResponsePollingResponseDTO, Failure | Error, void, UnsubscribeBodyRequestBody, void>(
     'POST',
     getConfig('ng/api'),
     `/polling/subscribe`,
@@ -32307,12 +32341,12 @@ export const subscribePromise = (
   )
 
 export type UnsubscribeProps = Omit<
-  MutateProps<boolean, Failure | Error, void, SubscribeBodyRequestBody, void>,
+  MutateProps<boolean, Failure | Error, void, UnsubscribeBodyRequestBody, void>,
   'path' | 'verb'
 >
 
 export const Unsubscribe = (props: UnsubscribeProps) => (
-  <Mutate<boolean, Failure | Error, void, SubscribeBodyRequestBody, void>
+  <Mutate<boolean, Failure | Error, void, UnsubscribeBodyRequestBody, void>
     verb="POST"
     path={`/polling/unsubscribe`}
     base={getConfig('ng/api')}
@@ -32321,21 +32355,21 @@ export const Unsubscribe = (props: UnsubscribeProps) => (
 )
 
 export type UseUnsubscribeProps = Omit<
-  UseMutateProps<boolean, Failure | Error, void, SubscribeBodyRequestBody, void>,
+  UseMutateProps<boolean, Failure | Error, void, UnsubscribeBodyRequestBody, void>,
   'path' | 'verb'
 >
 
 export const useUnsubscribe = (props: UseUnsubscribeProps) =>
-  useMutate<boolean, Failure | Error, void, SubscribeBodyRequestBody, void>('POST', `/polling/unsubscribe`, {
+  useMutate<boolean, Failure | Error, void, UnsubscribeBodyRequestBody, void>('POST', `/polling/unsubscribe`, {
     base: getConfig('ng/api'),
     ...props
   })
 
 export const unsubscribePromise = (
-  props: MutateUsingFetchProps<boolean, Failure | Error, void, SubscribeBodyRequestBody, void>,
+  props: MutateUsingFetchProps<boolean, Failure | Error, void, UnsubscribeBodyRequestBody, void>,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<boolean, Failure | Error, void, SubscribeBodyRequestBody, void>(
+  mutateUsingFetch<boolean, Failure | Error, void, UnsubscribeBodyRequestBody, void>(
     'POST',
     getConfig('ng/api'),
     `/polling/unsubscribe`,
@@ -35518,7 +35552,7 @@ export interface GetServiceListQueryParams {
   searchTerm?: string
   serviceIdentifiers?: string[]
   sort?: string[]
-  type?: 'Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda'
+  type?: 'Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda' | 'AzureWebApps'
 }
 
 export type GetServiceListProps = Omit<

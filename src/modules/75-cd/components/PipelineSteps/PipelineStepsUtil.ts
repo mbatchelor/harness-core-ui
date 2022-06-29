@@ -31,7 +31,8 @@ export enum InfraDeploymentType {
   ServerlessGoogleFunctions = 'ServerlessGoogleFunctions',
   ServerlessAzureFunctions = 'ServerlessAzureFunctions',
   AmazonSAM = 'AwsSAM',
-  AzureFunctions = 'AzureFunctions'
+  AzureFunctions = 'AzureFunctions',
+  AzureWebApps = 'AzureWebApps'
 }
 
 export const deploymentTypeToInfraTypeMap = {

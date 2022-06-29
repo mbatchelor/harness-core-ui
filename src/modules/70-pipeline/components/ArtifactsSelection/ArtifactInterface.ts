@@ -52,6 +52,7 @@ export type ArtifactType =
   | 'CustomArtifact'
   | 'Acr'
   | 'Jenkins'
+  | 'AmazonS3'
 export interface OrganizationCreationType {
   type: ArtifactType
 }
