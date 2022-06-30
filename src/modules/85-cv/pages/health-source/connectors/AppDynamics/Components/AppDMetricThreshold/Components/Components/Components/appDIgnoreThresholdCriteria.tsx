@@ -2,21 +2,8 @@ import React from 'react'
 import cx from 'classnames'
 import { Layout, FormInput } from '@harness/uicore'
 import type { UseStringsReturn } from 'framework/strings'
-import { getItembyValue } from './AppDThresholdSelectUtils'
+import { getCriterialItems, getItembyValue } from './AppDThresholdSelectUtils'
 import css from '../../AppDMetricThresholdContent.module.scss'
-
-const getCriterialItems = (getString: UseStringsReturn['getString']) => {
-  return [
-    {
-      label: getString('cv.monitoringSources.appD.absoluteValue'),
-      value: 'absolute'
-    },
-    {
-      label: getString('cv.monitoringSources.appD.percentageDeviation'),
-      value: 'percentage'
-    }
-  ]
-}
 
 export default function appDIgnoreThresholdCriteria(
   rowData: any,
@@ -43,7 +30,6 @@ export default function appDIgnoreThresholdCriteria(
       )}
       <FormInput.Text
         inline
-        style={{ width: 150 }}
         className={css.appDMetricThresholdContentInput}
         label={getString('cv.monitoringSources.appD.lesserThan')}
         inputGroup={{ type: 'number' }}

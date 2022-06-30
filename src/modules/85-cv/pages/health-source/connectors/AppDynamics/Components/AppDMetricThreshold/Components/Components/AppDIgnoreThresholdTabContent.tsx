@@ -1,50 +1,11 @@
 import React, { useContext } from 'react'
 import { Container, Text, FieldArray } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import { useStrings, UseStringsReturn } from 'framework/strings'
+import { useStrings } from 'framework/strings'
 import { AppDMetricThresholdContext } from '../../AppDMetricThreshold'
 import appDThresholdSelect from './Components/appDThresholdSelect'
 import appDIgnoreThresholdCriteria from './Components/appDIgnoreThresholdCriteria'
-import type { SelectItem } from '../../AppDMetricThreshold.types'
-
-function getMetricTypeItems(getString: UseStringsReturn['getString']): SelectItem[] {
-  return [
-    {
-      label: getString('performance'),
-      value: 'performance'
-    },
-    {
-      label: getString('cv.monitoringSources.appD.customMetric'),
-      value: 'customMetric'
-    }
-  ]
-}
-
-function getTransactionItems(getString: UseStringsReturn['getString']): SelectItem[] {
-  return [
-    {
-      label: getString('cv.monitoringSources.appD.register'),
-      value: 'register'
-    },
-    {
-      label: getString('cv.monitoringSources.appD.verificationService'),
-      value: 'verificationService'
-    }
-  ]
-}
-
-function getMetricItems(getString: UseStringsReturn['getString']): SelectItem[] {
-  return [
-    {
-      label: getString('cv.monitoringSources.appD.averageWaitTime'),
-      value: 'averageWaitTime'
-    },
-    {
-      label: getString('cv.monitoringSources.appD.callsPerMinute'),
-      value: 'callsPerMinute'
-    }
-  ]
-}
+import { getMetricItems, getMetricTypeItems, getTransactionItems } from './Components/AppDThresholdSelectUtils'
 
 export default function AppDIgnoreThresholdTabContent(): JSX.Element {
   const { getString } = useStrings()

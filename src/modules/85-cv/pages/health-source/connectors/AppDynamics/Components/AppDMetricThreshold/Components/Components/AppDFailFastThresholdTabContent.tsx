@@ -1,71 +1,22 @@
 import React, { useContext } from 'react'
 import { Container, Text, FieldArray } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import { useStrings, UseStringsReturn } from 'framework/strings'
+import { useStrings } from 'framework/strings'
 import { AppDMetricThresholdContext } from '../../AppDMetricThreshold'
 import appDThresholdSelect from './Components/appDThresholdSelect'
-import type { SelectItem } from '../../AppDMetricThreshold.types'
 import appDThresholdInput from './Components/appDThresholdInput'
 import appDFailFastThresholdCriteria from './Components/appDFailFastThresholdCriteria'
-
-function getMetricTypeItems(getString: UseStringsReturn['getString']): SelectItem[] {
-  return [
-    {
-      label: getString('performance'),
-      value: 'performance'
-    },
-    {
-      label: getString('cv.monitoringSources.appD.customMetric'),
-      value: 'customMetric'
-    }
-  ]
-}
-
-function getTransactionItems(getString: UseStringsReturn['getString']): SelectItem[] {
-  return [
-    {
-      label: getString('cv.monitoringSources.appD.register'),
-      value: 'register'
-    },
-    {
-      label: getString('cv.monitoringSources.appD.verificationService'),
-      value: 'verificationService'
-    }
-  ]
-}
-
-function getMetricItems(getString: UseStringsReturn['getString']): SelectItem[] {
-  return [
-    {
-      label: getString('cv.monitoringSources.appD.averageWaitTime'),
-      value: 'averageWaitTime'
-    },
-    {
-      label: getString('cv.monitoringSources.appD.callsPerMinute'),
-      value: 'callsPerMinute'
-    }
-  ]
-}
-
-function getActionItems(getString: UseStringsReturn['getString']): SelectItem[] {
-  return [
-    {
-      label: getString('cv.monitoringSources.appD.failImmediately'),
-      value: 'failImmediately'
-    },
-    {
-      label: getString('cv.monitoringSources.appD.failAfterMulti'),
-      value: 'failAfterMulti'
-    }
-  ]
-}
+import {
+  getActionItems,
+  getMetricItems,
+  getMetricTypeItems,
+  getTransactionItems
+} from './Components/AppDThresholdSelectUtils'
 
 export default function AppDFailFastThresholdTabContent(): JSX.Element {
   const { getString } = useStrings()
 
   const { formikValues } = useContext(AppDMetricThresholdContext)
-
-  console.log('formikValues', formikValues.failFastThreshold)
 
   return (
     <Container margin={{ top: 'large' }}>
@@ -107,7 +58,7 @@ export default function AppDFailFastThresholdTabContent(): JSX.Element {
               name: 'count',
               label: <Text>{getString('action')}</Text>,
               // defaultValue: 'test1',
-              renderer: (...args) => appDThresholdInput('count', getActionItems(getString), ...args)
+              renderer: (...args) => appDThresholdInput('count', ...args)
             },
             {
               name: 'criteria',

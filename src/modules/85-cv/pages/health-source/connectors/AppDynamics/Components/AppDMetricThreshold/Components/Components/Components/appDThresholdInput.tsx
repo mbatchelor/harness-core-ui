@@ -5,7 +5,6 @@ import css from '../../AppDMetricThresholdContent.module.scss'
 
 export default function appDThresholdInput(
   name: string,
-  items: SelectItem[],
   value: string,
   index: number,
   handleChange: (value: any) => void,
