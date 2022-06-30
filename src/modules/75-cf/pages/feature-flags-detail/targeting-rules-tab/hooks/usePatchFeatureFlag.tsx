@@ -45,7 +45,6 @@ const usePatchFeatureFlag = ({
   const { projectIdentifier, orgIdentifier, accountId: accountIdentifier } = useParams<Record<string, string>>()
   const { activeEnvironment: environmentIdentifier } = useActiveEnvironment()
   const { handleError: handleGovernanceError, isGovernanceError } = useGovernance()
-
   const { handleResponseError } = useResponseError()
 
   const { getString } = useStrings()

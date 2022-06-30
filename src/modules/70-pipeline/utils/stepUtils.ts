@@ -175,6 +175,11 @@ export function getStepDataFromValues(
       } else if (node.spec?.delegateSelectors) {
         delete node.spec.delegateSelectors
       }
+      if (!isEmpty(item.strategy)) {
+        node.strategy = item.strategy
+      } else if (node.strategy) {
+        delete node.strategy
+      }
     }
     // default strategies can be present without having the need to click on Advanced Tab. For eg. in CV step.
     if (Array.isArray(item.failureStrategies) && !isEmpty(item.failureStrategies)) {

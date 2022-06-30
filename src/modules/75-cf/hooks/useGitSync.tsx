@@ -74,6 +74,7 @@ export const useGitSync = (): UseGitSync => {
     accountId: accountIdentifier,
     orgIdentifier
   } = useParams<ProjectPathProps & ModulePathParams>()
+
   const { getString } = useStrings()
 
   const getGitRepo = useGetGitRepo({

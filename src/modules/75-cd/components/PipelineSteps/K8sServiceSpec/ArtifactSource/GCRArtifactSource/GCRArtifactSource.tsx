@@ -7,14 +7,12 @@
 
 import React, { useState } from 'react'
 import { defaultTo, get } from 'lodash-es'
-
-import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType } from '@wings-software/uicore'
+import { FormInput, Layout, MultiTypeInputType } from '@wings-software/uicore'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useMutateAsGet } from '@common/hooks'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { SidecarArtifact, useGetBuildDetailsForGcrWithYaml } from 'services/cd-ng'
-
 import { ArtifactToConnectorMap, ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
 import { useStrings } from 'framework/strings'
@@ -23,15 +21,20 @@ import ExperimentalInput from '../../K8sServiceSpecForms/ExperimentalInput'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
   gcrUrlList,
+  getDefaultQueryParam,
+  getFinalQueryParamValue,
+  getFqnPath,
   getImagePath,
   getYamlData,
   isArtifactSourceRuntime,
   isFieldfromTriggerTabDisabled,
+  isNewServiceEnvEntity,
   resetTags,
   shouldFetchTagsSource
 } from '../artifactSourceUtils'
 import ArtifactTagRuntimeField from '../ArtifactSourceRuntimeFields/ArtifactTagRuntimeField'
 import css from '../../K8sServiceSpec.module.scss'
+
 interface GCRRenderContent extends ArtifactSourceRenderProps {
   isTagsSelectionDisabled: (data: ArtifactSourceRenderProps) => boolean
 }
@@ -51,6 +54,7 @@ const Content = (props: GCRRenderContent): JSX.Element => {
     pipelineIdentifier,
     branch,
     stageIdentifier,
+    serviceIdentifier,
     isTagsSelectionDisabled,
     allowableTypes,
     fromTrigger,
@@ -63,10 +67,23 @@ const Content = (props: GCRRenderContent): JSX.Element => {
   const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')
   const { expressions } = useVariablesExpression()
   const [lastQueryData, setLastQueryData] = useState({ connectorRef: '', imagePath: '', registryHostname: '' })
+  const imagePathValue = getImagePath(
+    artifact?.spec?.imagePath,
+    get(initialValues, `artifacts.${artifactPath}.spec.imagePath`, '')
+  )
+  const connectorRefValue = getDefaultQueryParam(
+    artifact?.spec?.connectorRef,
+    get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, '')
+  )
+  const registryHostnameValue = getDefaultQueryParam(
+    artifact?.spec?.registryHostname,
+    get(initialValues, `artifacts.${artifactPath}.spec.registryHostname`, '')
+  )
+
   const {
     data: gcrTagsData,
     loading: fetchingTags,
-    refetch,
+    refetch: refetchTags,
     error: fetchTagsError
   } = useMutateAsGet(useGetBuildDetailsForGcrWithYaml, {
     body: yamlStringify(getYamlData(formik?.values)),
@@ -81,33 +98,15 @@ const Content = (props: GCRRenderContent): JSX.Element => {
       orgIdentifier,
       repoIdentifier,
       branch,
-      imagePath: getImagePath(
-        artifact?.spec?.imagePath,
-        get(initialValues, `artifacts.${artifactPath}.spec.imagePath`, '')
-      ),
-      connectorRef:
-        getMultiTypeFromValue(artifact?.spec?.connectorRef) !== MultiTypeInputType.RUNTIME
-          ? artifact?.spec?.connectorRef
-          : get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, ''),
-      registryHostname:
-        getMultiTypeFromValue(artifact?.spec?.registryHostname) !== MultiTypeInputType.RUNTIME
-          ? artifact?.spec?.registryHostname
-          : get(initialValues?.artifacts, `${artifactPath}.spec.registryHostname`, ''),
+      imagePath: getFinalQueryParamValue(imagePathValue),
+      connectorRef: getFinalQueryParamValue(connectorRefValue),
+      registryHostname: getFinalQueryParamValue(registryHostnameValue),
       pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
-      fqnPath: isPropagatedStage
-        ? `pipeline.stages.${stageIdentifier}.spec.serviceConfig.stageOverrides.artifacts.${artifactPath}.spec.tag`
-        : `pipeline.stages.${stageIdentifier}.spec.serviceConfig.serviceDefinition.spec.artifacts.${artifactPath}.spec.tag`
+      serviceId: isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined,
+      fqnPath: getFqnPath(path as string, !!isPropagatedStage, stageIdentifier, defaultTo(artifactPath, ''))
     },
     lazy: true
   })
-  const imagePathValue = getImagePath(
-    artifact?.spec?.imagePath,
-    get(initialValues, `artifacts.${artifactPath}.spec.imagePath`, '')
-  )
-  const connectorRefValue =
-    get(initialValues, `artifacts.${artifactPath}.spec.connectorRef`, '') || artifact?.spec?.connectorRef
-  const registryHostnameValue =
-    get(initialValues, `artifacts.${artifactPath}.spec.registryHostname`, '') || artifact?.spec?.registryHostname
 
   const fetchTags = (): void => {
     if (canFetchTags()) {
@@ -116,7 +115,7 @@ const Content = (props: GCRRenderContent): JSX.Element => {
         imagePath: imagePathValue,
         registryHostname: registryHostnameValue
       })
-      refetch()
+      refetchTags()
     }
   }
 
@@ -265,14 +264,14 @@ export class GCRArtifactSource extends ArtifactSourceBase<ArtifactSourceRenderPr
       artifact?.spec?.imagePath,
       get(initialValues, `artifacts.${artifactPath}.spec.imagePath`, '')
     )
-    const isConnectorPresent =
-      getMultiTypeFromValue(artifact?.spec?.connectorRef) !== MultiTypeInputType.RUNTIME
-        ? artifact?.spec?.connectorRef
-        : get(initialValues, `artifacts.${artifactPath}.spec.connectorRef`, '')
-    const isRegistryHostnamePresent =
-      getMultiTypeFromValue(artifact?.spec?.registryHostname) !== MultiTypeInputType.RUNTIME
-        ? artifact?.spec?.registryHostname
-        : get(initialValues, `artifacts.${artifactPath}.spec.registryHostname`, '')
+    const isConnectorPresent = getDefaultQueryParam(
+      artifact?.spec?.connectorRef,
+      get(initialValues, `artifacts.${artifactPath}.spec.connectorRef`, '')
+    )
+    const isRegistryHostnamePresent = getDefaultQueryParam(
+      artifact?.spec?.registryHostname,
+      get(initialValues, `artifacts.${artifactPath}.spec.registryHostname`, '')
+    )
     return !(isImagePathPresent && isConnectorPresent && isRegistryHostnamePresent)
   }
 

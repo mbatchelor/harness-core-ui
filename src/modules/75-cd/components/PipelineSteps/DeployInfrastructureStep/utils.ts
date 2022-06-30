@@ -102,7 +102,7 @@ export function processNonGitOpsInitialValues(initialValues: DeployStageConfig) 
       environmentRef: defaultTo(initialValues.environment?.environmentRef, ''),
       deployToAll: defaultTo(initialValues.environment?.deployToAll, false)
     },
-    infrastructureRef: (initialValues.environment?.infrastructureDefinitions?.[0].ref ||
+    infrastructureRef: (initialValues.environment?.infrastructureDefinitions?.[0].identifier ||
       initialValues.environment?.infrastructureDefinitions ||
       '') as string
   }
@@ -127,7 +127,7 @@ export function processNonGitOpsFormValues(data: DeployStageConfig) {
               ? RUNTIME_INPUT_VALUE
               : [
                   {
-                    ref: data.infrastructureRef
+                    identifier: data.infrastructureRef
                   }
                 ]
         })
@@ -156,8 +156,8 @@ export function processGitOpsEnvironmentInitialValues(
           ]
         : defaultTo(initialValues.environment?.gitOpsClusters, [])?.map(cluster => {
             return {
-              label: cluster.ref,
-              value: cluster.ref
+              label: cluster.identifier,
+              value: cluster.identifier
             }
           })
   }
@@ -179,7 +179,7 @@ export function processGitOpsEnvironmentFormValues(data: DeployStageConfig, getS
           gitOpsClusters:
             data.clusterRef === RUNTIME_INPUT_VALUE
               ? RUNTIME_INPUT_VALUE
-              : (data.clusterRef as SelectOption[])?.map(cluster => ({ ref: cluster.value }))
+              : (data.clusterRef as SelectOption[])?.map(cluster => ({ identifier: cluster.value }))
         })
     }
   }
@@ -202,7 +202,7 @@ export function processGitOpsEnvGroupInitialValues(
               name: getString('all')
             }
           ]
-        : defaultTo(initialValues.environmentGroup?.envGroupConfig, [])?.map(environment => {
+        : defaultTo(initialValues.environmentGroup?.environments, [])?.map(environment => {
             return {
               name: environment.environmentRef,
               deployToAll: environment.deployToAll,
@@ -210,8 +210,8 @@ export function processGitOpsEnvGroupInitialValues(
             }
           }),
     deployToAll: defaultTo(initialValues.environmentGroup?.deployToAll, false),
-    ...(getMultiTypeFromValue(initialValues.environmentGroup?.envGroupConfig as any) !== MultiTypeInputType.RUNTIME && {
-      clusterRef: initialValues.environmentGroup?.envGroupConfig?.reduce((prev, environment) => {
+    ...(getMultiTypeFromValue(initialValues.environmentGroup?.environments as any) !== MultiTypeInputType.RUNTIME && {
+      clusterRef: initialValues.environmentGroup?.environments?.reduce((prev, environment) => {
         return [
           ...prev,
           ...(environment.deployToAll
@@ -225,8 +225,8 @@ export function processGitOpsEnvGroupInitialValues(
               ]
             : defaultTo(
                 environment?.gitOpsClusters?.map(cluster => ({
-                  label: cluster.ref,
-                  value: cluster.ref,
+                  label: cluster.identifier,
+                  value: cluster.identifier,
                   parentLabel: environment.environmentRef,
                   parentValue: environment.environmentRef
                 })),
@@ -260,7 +260,7 @@ export function processGitOpsEnvGroupFormValues(data: DeployStageConfig, getStri
           : defaultTo((data.environmentOrEnvGroupRef as SelectOption)?.value, ''),
       deployToAll: data.environmentOrEnvGroupRef === RUNTIME_INPUT_VALUE || allEnvironmentsSelected,
       ...(!(data.environmentOrEnvGroupRef === RUNTIME_INPUT_VALUE || allEnvironmentsSelected) && {
-        envGroupConfig:
+        environments:
           data.environmentInEnvGroupRef === RUNTIME_INPUT_VALUE
             ? RUNTIME_INPUT_VALUE
             : (data?.environmentInEnvGroupRef as SelectOption[])?.map(environmentInEnvGroup => {
@@ -272,7 +272,9 @@ export function processGitOpsEnvGroupFormValues(data: DeployStageConfig, getStri
                     gitOpsClusters:
                       data.clusterRef === RUNTIME_INPUT_VALUE
                         ? RUNTIME_INPUT_VALUE
-                        : environmentClusterMap[environmentInEnvGroup.value]?.map((cluster: any) => ({ ref: cluster }))
+                        : environmentClusterMap[environmentInEnvGroup.value]?.map((cluster: any) => ({
+                            identifier: cluster
+                          }))
                   })
                 }
               })

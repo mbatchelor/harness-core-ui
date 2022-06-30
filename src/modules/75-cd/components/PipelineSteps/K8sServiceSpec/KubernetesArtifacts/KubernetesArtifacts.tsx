@@ -17,6 +17,7 @@ export const KubernetesArtifacts: React.FC<KubernetesArtifactsProps> = props => 
     artifactSourceBaseFactory: props.artifactSourceBaseFactory,
     stepViewType: props.stepViewType,
     stageIdentifier: props.stageIdentifier,
+    serviceIdentifier: props.serviceIdentifier,
     formik: props.formik,
     path: props.path,
     initialValues: props.initialValues,

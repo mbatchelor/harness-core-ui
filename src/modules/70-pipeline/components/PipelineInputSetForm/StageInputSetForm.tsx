@@ -856,6 +856,7 @@ export function StageInputSetFormInternal({
                 readonly={readonly}
                 customStepProps={{
                   stageIdentifier,
+                  serviceIdentifier: (deploymentStage as unknown as DeployStageConfig)?.service?.serviceRef,
                   allValues: (deploymentStage as unknown as DeployStageConfig)?.service?.serviceInputs
                     ?.serviceDefinition?.spec
                 }}

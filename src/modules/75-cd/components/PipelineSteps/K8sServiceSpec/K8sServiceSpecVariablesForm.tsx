@@ -32,6 +32,7 @@ export interface K8sServiceSpecVariablesFormProps {
   initialValues: ServiceSpec
   stepsFactory: AbstractStepFactory
   stageIdentifier: string
+  serviceIdentifier?: string
   onUpdate?(data: ServiceSpec): void
   metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
   variablesData: ServiceSpec

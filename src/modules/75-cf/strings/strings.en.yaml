@@ -245,6 +245,19 @@ featureFlags:
     targetServed: Target Served  ({{ count }})
     noData: No metrics found in this time range.
     totalEvaluations: Total Evaluations
+  flagPipeline:
+    title: Flag Pipeline
+    noDataMessage: Automate processes with Flag Pipelines
+    noDataDescription: Flag Pipelines help to automate routine processes like approval requests, notifications, Jira ticket creation or update
+    noDataButtonText: Add Flag Pipeline
+    drawerTitle: Flag Pipelines
+    drawerDescription:
+      Flag pipelines allow to automate routine actions and execute automatically after any change. Flag pipelines
+      have no CI or CD steps, instead they have only one flag change step. Flag, target and environment are all set
+      to runtime input
+    drawerEnvText: 'Set all flags in {{ env }}'
+    drawerButtonText: Set as Flag Pipeline
+    noAvailablePipelines: No available pipelines found
 featureFlagDetail:
   variationCount: '{{ count }} variations'
 flagFilters:

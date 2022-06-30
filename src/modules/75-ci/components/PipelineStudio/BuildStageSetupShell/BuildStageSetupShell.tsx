@@ -76,6 +76,7 @@ const BuildStageSetupShell: React.FC<BuildStageSetupShellProps> = ({ moduleIcon 
   const icon = moduleIcon ? moduleIcon : 'ci-main'
   const { getString } = useStrings()
   const isTemplatesEnabled = useFeatureFlag(FeatureFlag.NG_TEMPLATES)
+  const ciStepGroupEnabled = useFeatureFlag(FeatureFlag.CI_STEP_GROUP_ENABLED)
   const [selectedTabId, setSelectedTabId] = React.useState<BuildTabs>(BuildTabs.OVERVIEW)
   const [filledUpStages, setFilledUpStages] = React.useState<StagesFilledStateFlags>({
     specifications: false,
@@ -317,7 +318,7 @@ const BuildStageSetupShell: React.FC<BuildStageSetupShellProps> = ({ moduleIcon 
           panel={
             selectedStageClone ? (
               <ExecutionGraph
-                allowAddGroup={false}
+                allowAddGroup={ciStepGroupEnabled}
                 hasRollback={false}
                 isReadonly={isReadonly}
                 hasDependencies={true}

@@ -52,6 +52,7 @@ import {
   ConnectorSecretScope,
   getBackendServerUrl,
   isEnvironmentAllowedForOAuth,
+  MAX_TIMEOUT_OAUTH,
   OAUTH_PLACEHOLDER_VALUE,
   OAUTH_REDIRECT_URL_PREFIX
 } from '../../CreateConnectorUtils'
@@ -219,14 +220,20 @@ const StepGithubAuthentication: React.FC<StepProps<StepGithubAuthenticationProps
       )
     }, [prevStepData, isGithubConnectorOAuthBased, props.status?.status])
 
+    const markOAuthAsFailed = useCallback(() => {
+      setOAuthStatus(Status.FAILURE)
+      clear()
+      showError(getString('connectors.oAuth.failed'))
+    }, [])
+
     const handleOAuthServerEvent = (event: MessageEvent): void => {
       if (oAuthStatus === Status.IN_PROGRESS) {
         if (event.origin !== getBackendServerUrl() && !isEnvironmentAllowedForOAuth()) {
-          setOAuthStatus(Status.FAILURE)
+          markOAuthAsFailed()
           return
         }
         if (!event || !event.data) {
-          setOAuthStatus(Status.FAILURE)
+          markOAuthAsFailed()
           return
         }
         const { accessTokenRef, refreshTokenRef, status, errorMessage } = event.data
@@ -257,9 +264,7 @@ const StepGithubAuthentication: React.FC<StepProps<StepGithubAuthenticationProps
               }
               formikRef.current?.setValues(updatedFormValues)
             } else if (errorMessage !== OAUTH_PLACEHOLDER_VALUE) {
-              setOAuthStatus(Status.FAILURE)
-              clear()
-              showError('connectors.oAuth.failed')
+              markOAuthAsFailed()
             }
           }
         }
@@ -267,6 +272,11 @@ const StepGithubAuthentication: React.FC<StepProps<StepGithubAuthenticationProps
     }
 
     const handleOAuthLinking = useCallback(async () => {
+      setTimeout(() => {
+        if (oAuthStatus !== Status.SUCCESS) {
+          markOAuthAsFailed()
+        }
+      }, MAX_TIMEOUT_OAUTH)
       setOAuthStatus(Status.IN_PROGRESS)
       if (isExistingOAuthConnectionHealthy) {
         setIsOAuthGettingRelinked(true)
@@ -283,13 +293,17 @@ const StepGithubAuthentication: React.FC<StepProps<StepGithubAuthenticationProps
           window.open(oAuthURL, '_blank')
         }
       } catch (e) {
-        setOAuthStatus(Status.FAILURE)
-        clear()
-        showError(getString('connectors.oAuth.failed'))
+        markOAuthAsFailed()
       }
     }, [isExistingOAuthConnectionHealthy, accountId])
 
-    window.addEventListener('message', handleOAuthServerEvent)
+    useEffect(() => {
+      window.addEventListener('message', handleOAuthServerEvent)
+
+      return () => {
+        window.removeEventListener('message', handleOAuthServerEvent)
+      }
+    }, [])
 
     useEffect(() => {
       if (isGithubConnectorOAuthBased) {

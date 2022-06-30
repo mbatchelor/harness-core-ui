@@ -7,7 +7,7 @@
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { defaultTo, get, merge, set } from 'lodash-es'
+import { defaultTo, get, isBoolean, isEmpty, merge, set } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import { parse } from 'yaml'
 import produce from 'immer'
@@ -264,7 +264,7 @@ function BootstrapDeployInfraDefinition({
       tags: newTags,
       orgIdentifier,
       projectIdentifier,
-      type: (pipeline.stages?.[0].stage?.spec as any)?.infrastructure?.infrastructureDefinition?.type,
+      type: values.type || (pipeline.stages?.[0].stage?.spec as any)?.infrastructure?.infrastructureDefinition?.type,
       environmentRef: environmentIdentifier || envIdentifier
     }
 
@@ -273,10 +273,13 @@ function BootstrapDeployInfraDefinition({
       yaml: yamlStringify({
         infrastructureDefinition: {
           ...body,
-          spec: (pipeline.stages?.[0].stage?.spec as DeploymentStageConfig)?.infrastructure?.infrastructureDefinition
-            ?.spec,
-          allowSimultaneousDeployments: (pipeline.stages?.[0].stage?.spec as DeploymentStageConfig)?.infrastructure
-            ?.allowSimultaneousDeployments
+          spec: !isEmpty(values.spec)
+            ? values.spec
+            : (pipeline.stages?.[0].stage?.spec as DeploymentStageConfig)?.infrastructure?.infrastructureDefinition
+                ?.spec,
+          allowSimultaneousDeployments: isBoolean(values.allowSimultaneousDeployments)
+            ? values.allowSimultaneousDeployments
+            : (pipeline.stages?.[0].stage?.spec as DeploymentStageConfig)?.infrastructure?.allowSimultaneousDeployments
         }
       })
     })

@@ -16,6 +16,7 @@ export interface NoDataProps extends LayoutProps {
   message: string
   description?: ReactNode
   width?: number | string
+  imgWidth?: number
   buttonText?: string
   buttonWidth?: number
   onClick?: ButtonProps['onClick']
@@ -27,6 +28,7 @@ export const NoData: React.FC<NoDataProps> = ({
   message,
   description,
   width,
+  imgWidth,
   buttonText,
   buttonWidth,
   onClick,
@@ -36,7 +38,7 @@ export const NoData: React.FC<NoDataProps> = ({
 }) => {
   return (
     <Layout.Vertical flex={{ justifyContent: 'center' }} spacing="xxxlarge" width={width || 540} {...props}>
-      <img src={imageURL} width={320} height={220} alt="" data-testid="nodata-image" />
+      <img src={imageURL} width={imgWidth || 320} height={220} alt="" data-testid="nodata-image" />
 
       <Container>
         <Layout.Vertical spacing="small">

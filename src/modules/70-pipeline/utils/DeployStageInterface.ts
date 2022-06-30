@@ -23,7 +23,7 @@ export interface EnvironmentYamlV2 {
 
 export interface EnvironmentGroupYaml {
   deployToAll?: boolean
-  envGroupConfig?: EnvironmentYamlV2[]
+  environments?: EnvironmentYamlV2[]
   envGroupRef: string
   metadata?: string
 }
@@ -40,12 +40,12 @@ export interface InfraStructureDefinitionYaml {
     [key: string]: { [key: string]: any }
   }
   metadata?: string
-  ref: string
+  identifier: string
 }
 
 export interface ClusterYaml {
   metadata?: string
-  ref: string
+  identifier: string
 }
 
 export type EnvironmentInEnvGroup = {

@@ -251,6 +251,8 @@ export interface Feature {
      * The variation to serve for this flag in this environment when the flag is off
      */
     offVariation: string
+    pipelineConfigured: boolean
+    pipelineDetails?: FeaturePipeline
     /**
      * A list of rules to use when evaluating this flag in this environment
      */
@@ -315,6 +317,39 @@ export interface Feature {
    * The variations that can be returned for this flag
    */
   variations: Variation[]
+}
+
+/**
+ * A Feature Flag pipeline is a pipeline that is able to perform a flag update
+ */
+export interface FeatureAvailablePipeline {
+  /**
+   * creation date in milliseconds
+   */
+  createdAt?: number
+  /**
+   * The description of the pipeline
+   */
+  description?: string
+  /**
+   * The identifier of the pipeline
+   */
+  identifier: string
+  /**
+   * last updated date in milliseconds
+   */
+  lastUpdatedAt?: number
+  /**
+   * The name of the pipeline
+   */
+  name: string
+}
+
+/**
+ * A list of Available Pipelines
+ */
+export type FeatureAvailablePipelines = Pagination & {
+  availablePipelines: FeatureAvailablePipeline[]
 }
 
 export interface FeatureCounts {
@@ -403,6 +438,37 @@ export interface FeatureMetrics {
   metrics?: FeatureMetric[]
 }
 
+/**
+ * A pipeline configured to update a feature
+ */
+export interface FeaturePipeline {
+  /**
+   * creation date in milliseconds
+   */
+  createdAt?: number
+  /**
+   * The description of the pipeline
+   */
+  description?: string
+  /**
+   * The identifier of the pipeline
+   */
+  identifier: string
+  /**
+   * last updated date in milliseconds
+   */
+  lastUpdatedAt?: number
+  /**
+   * The name of the pipeline
+   */
+  name: string
+}
+
+export interface FeaturePipelineResp {
+  pipelineConfigured: boolean
+  pipelineDetails?: FeaturePipeline
+}
+
 export interface FeatureResponseMetadata {
   /**
    * Additional metadata about the request
@@ -425,7 +491,7 @@ export type FeatureState = 'on' | 'off'
  */
 export interface FeatureStatus {
   lastAccess: number
-  status: 'active' | 'inactive' | 'never-requested' | 'potentially-stale'
+  status: 'active' | 'inactive' | 'never-requested'
 }
 
 /**
@@ -1076,6 +1142,11 @@ export type FeatureFlagRequestRequestBody = {
 
 export type FeaturePatchRequestRequestBody = GitSyncPatchOperation
 
+export interface FeaturePipelineRequestRequestBody {
+  pipelineIdentifier: string
+  pipelineName: string
+}
+
 export type FeatureYamlRequestRequestBody = FeatureFlagsYaml
 
 export type GitRepoPatchRequestRequestBody = PatchOperation
@@ -1177,6 +1248,11 @@ export interface EnvironmentsResponseResponse {
 /**
  * OK
  */
+export type FeatureAvailablePipelinesResponseResponse = FeatureAvailablePipelines
+
+/**
+ * OK
+ */
 export type FeatureEditResponseResponse = FeatureResponseMetadata
 
 /**
@@ -1188,6 +1264,11 @@ export type FeatureEvaluationsResponseResponse = FeatureEvaluations
  * OK
  */
 export type FeatureMetricsResponseResponse = FeatureMetrics
+
+/**
+ * OK
+ */
+export type FeaturePipelineResponseResponse = FeaturePipelineResp
 
 /**
  * OK
@@ -2851,6 +2932,105 @@ export const createFeatureFlagPromise = (
     void
   >('POST', getConfig('cf'), `/admin/features`, props, signal)
 
+export interface GetAvailableFeaturePipelinesQueryParams {
+  /**
+   * Account Identifier
+   */
+  accountIdentifier: string
+  /**
+   * Organization Identifier
+   */
+  orgIdentifier: string
+  /**
+   * The Project identifier
+   */
+  projectIdentifier: string
+  /**
+   * Filter for pipelines with specific name
+   */
+  pipelineName?: string
+  /**
+   * PageNumber
+   */
+  pageNumber?: number
+  /**
+   * PageSize
+   */
+  pageSize?: number
+}
+
+export type GetAvailableFeaturePipelinesProps = Omit<
+  GetProps<
+    FeatureAvailablePipelinesResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetAvailableFeaturePipelinesQueryParams,
+    void
+  >,
+  'path'
+>
+
+/**
+ * Retrieve available Pipelines for feature updates
+ *
+ * Used to retrieve pipeline info for a given feature
+ */
+export const GetAvailableFeaturePipelines = (props: GetAvailableFeaturePipelinesProps) => (
+  <Get<
+    FeatureAvailablePipelinesResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetAvailableFeaturePipelinesQueryParams,
+    void
+  >
+    path={`/admin/features/available_pipelines`}
+    base={getConfig('cf')}
+    {...props}
+  />
+)
+
+export type UseGetAvailableFeaturePipelinesProps = Omit<
+  UseGetProps<
+    FeatureAvailablePipelinesResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetAvailableFeaturePipelinesQueryParams,
+    void
+  >,
+  'path'
+>
+
+/**
+ * Retrieve available Pipelines for feature updates
+ *
+ * Used to retrieve pipeline info for a given feature
+ */
+export const useGetAvailableFeaturePipelines = (props: UseGetAvailableFeaturePipelinesProps) =>
+  useGet<
+    FeatureAvailablePipelinesResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetAvailableFeaturePipelinesQueryParams,
+    void
+  >(`/admin/features/available_pipelines`, { base: getConfig('cf'), ...props })
+
+/**
+ * Retrieve available Pipelines for feature updates
+ *
+ * Used to retrieve pipeline info for a given feature
+ */
+export const getAvailableFeaturePipelinesPromise = (
+  props: GetUsingFetchProps<
+    FeatureAvailablePipelinesResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetAvailableFeaturePipelinesQueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    FeatureAvailablePipelinesResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetAvailableFeaturePipelinesQueryParams,
+    void
+  >(getConfig('cf'), `/admin/features/available_pipelines`, props, signal)
+
 export interface GetFeatureMetricsQueryParams {
   /**
    * Account Identifier
@@ -3689,6 +3869,523 @@ export const getFeatureEvaluationsPromise = (
     GetFeatureEvaluationsQueryParams,
     GetFeatureEvaluationsPathParams
   >(getConfig('cf'), `/admin/features/${identifier}/evaluations`, props, signal)
+
+export interface DeleteFeaturePipelineQueryParams {
+  /**
+   * Account Identifier
+   */
+  accountIdentifier: string
+  /**
+   * Organization Identifier
+   */
+  orgIdentifier: string
+  /**
+   * The Project identifier
+   */
+  projectIdentifier: string
+  /**
+   * Environment Identifier
+   */
+  environmentIdentifier: string
+}
+
+export interface DeleteFeaturePipelinePathParams {
+  /**
+   * Unique identifier for the object in the API.
+   */
+  identifier: string
+}
+
+export type DeleteFeaturePipelineProps = Omit<
+  MutateProps<
+    void,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    DeleteFeaturePipelineQueryParams,
+    void,
+    DeleteFeaturePipelinePathParams
+  >,
+  'path' | 'verb'
+> &
+  DeleteFeaturePipelinePathParams
+
+/**
+ * Delete a Feature Pipeline
+ *
+ * Deletes a feature pipeline configured for a flag in an env
+ */
+export const DeleteFeaturePipeline = ({ identifier, ...props }: DeleteFeaturePipelineProps) => (
+  <Mutate<
+    void,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    DeleteFeaturePipelineQueryParams,
+    void,
+    DeleteFeaturePipelinePathParams
+  >
+    verb="DELETE"
+    path={`/admin/features/${identifier}/pipeline`}
+    base={getConfig('cf')}
+    {...props}
+  />
+)
+
+export type UseDeleteFeaturePipelineProps = Omit<
+  UseMutateProps<
+    void,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    DeleteFeaturePipelineQueryParams,
+    void,
+    DeleteFeaturePipelinePathParams
+  >,
+  'path' | 'verb'
+> &
+  DeleteFeaturePipelinePathParams
+
+/**
+ * Delete a Feature Pipeline
+ *
+ * Deletes a feature pipeline configured for a flag in an env
+ */
+export const useDeleteFeaturePipeline = ({ identifier, ...props }: UseDeleteFeaturePipelineProps) =>
+  useMutate<
+    void,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    DeleteFeaturePipelineQueryParams,
+    void,
+    DeleteFeaturePipelinePathParams
+  >(
+    'DELETE',
+    (paramsInPath: DeleteFeaturePipelinePathParams) => `/admin/features/${paramsInPath.identifier}/pipeline`,
+    { base: getConfig('cf'), pathParams: { identifier }, ...props }
+  )
+
+/**
+ * Delete a Feature Pipeline
+ *
+ * Deletes a feature pipeline configured for a flag in an env
+ */
+export const deleteFeaturePipelinePromise = (
+  {
+    identifier,
+    ...props
+  }: MutateUsingFetchProps<
+    void,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    DeleteFeaturePipelineQueryParams,
+    void,
+    DeleteFeaturePipelinePathParams
+  > & {
+    /**
+     * Unique identifier for the object in the API.
+     */
+    identifier: string
+  },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    void,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    DeleteFeaturePipelineQueryParams,
+    void,
+    DeleteFeaturePipelinePathParams
+  >('DELETE', getConfig('cf'), `/admin/features/${identifier}/pipeline`, props, signal)
+
+export interface GetFeaturePipelineQueryParams {
+  /**
+   * Account Identifier
+   */
+  accountIdentifier: string
+  /**
+   * Organization Identifier
+   */
+  orgIdentifier: string
+  /**
+   * The Project identifier
+   */
+  projectIdentifier: string
+  /**
+   * Environment Identifier
+   */
+  environmentIdentifier: string
+}
+
+export interface GetFeaturePipelinePathParams {
+  /**
+   * Unique identifier for the object in the API.
+   */
+  identifier: string
+}
+
+export type GetFeaturePipelineProps = Omit<
+  GetProps<
+    FeaturePipelineResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetFeaturePipelineQueryParams,
+    GetFeaturePipelinePathParams
+  >,
+  'path'
+> &
+  GetFeaturePipelinePathParams
+
+/**
+ * Retrieve the configured pipeline for a feature
+ *
+ * Used to retrieve the pipeline configured to update a feature
+ */
+export const GetFeaturePipeline = ({ identifier, ...props }: GetFeaturePipelineProps) => (
+  <Get<
+    FeaturePipelineResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetFeaturePipelineQueryParams,
+    GetFeaturePipelinePathParams
+  >
+    path={`/admin/features/${identifier}/pipeline`}
+    base={getConfig('cf')}
+    {...props}
+  />
+)
+
+export type UseGetFeaturePipelineProps = Omit<
+  UseGetProps<
+    FeaturePipelineResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetFeaturePipelineQueryParams,
+    GetFeaturePipelinePathParams
+  >,
+  'path'
+> &
+  GetFeaturePipelinePathParams
+
+/**
+ * Retrieve the configured pipeline for a feature
+ *
+ * Used to retrieve the pipeline configured to update a feature
+ */
+export const useGetFeaturePipeline = ({ identifier, ...props }: UseGetFeaturePipelineProps) =>
+  useGet<
+    FeaturePipelineResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetFeaturePipelineQueryParams,
+    GetFeaturePipelinePathParams
+  >((paramsInPath: GetFeaturePipelinePathParams) => `/admin/features/${paramsInPath.identifier}/pipeline`, {
+    base: getConfig('cf'),
+    pathParams: { identifier },
+    ...props
+  })
+
+/**
+ * Retrieve the configured pipeline for a feature
+ *
+ * Used to retrieve the pipeline configured to update a feature
+ */
+export const getFeaturePipelinePromise = (
+  {
+    identifier,
+    ...props
+  }: GetUsingFetchProps<
+    FeaturePipelineResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetFeaturePipelineQueryParams,
+    GetFeaturePipelinePathParams
+  > & {
+    /**
+     * Unique identifier for the object in the API.
+     */
+    identifier: string
+  },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    FeaturePipelineResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetFeaturePipelineQueryParams,
+    GetFeaturePipelinePathParams
+  >(getConfig('cf'), `/admin/features/${identifier}/pipeline`, props, signal)
+
+export interface PatchFeaturePipelineQueryParams {
+  /**
+   * Account Identifier
+   */
+  accountIdentifier: string
+  /**
+   * Organization Identifier
+   */
+  orgIdentifier: string
+  /**
+   * The Project identifier
+   */
+  projectIdentifier: string
+  /**
+   * Environment Identifier
+   */
+  environmentIdentifier: string
+}
+
+export interface PatchFeaturePipelinePathParams {
+  /**
+   * Unique identifier for the object in the API.
+   */
+  identifier: string
+}
+
+export type PatchFeaturePipelineProps = Omit<
+  MutateProps<
+    void,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | InternalServerErrorResponse,
+    PatchFeaturePipelineQueryParams,
+    FeaturePipelineRequestRequestBody,
+    PatchFeaturePipelinePathParams
+  >,
+  'path' | 'verb'
+> &
+  PatchFeaturePipelinePathParams
+
+/**
+ * Updates a feature pipeline details
+ *
+ * Updates a feature pipeline details for the given flag in an env
+ */
+export const PatchFeaturePipeline = ({ identifier, ...props }: PatchFeaturePipelineProps) => (
+  <Mutate<
+    void,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | InternalServerErrorResponse,
+    PatchFeaturePipelineQueryParams,
+    FeaturePipelineRequestRequestBody,
+    PatchFeaturePipelinePathParams
+  >
+    verb="PATCH"
+    path={`/admin/features/${identifier}/pipeline`}
+    base={getConfig('cf')}
+    {...props}
+  />
+)
+
+export type UsePatchFeaturePipelineProps = Omit<
+  UseMutateProps<
+    void,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | InternalServerErrorResponse,
+    PatchFeaturePipelineQueryParams,
+    FeaturePipelineRequestRequestBody,
+    PatchFeaturePipelinePathParams
+  >,
+  'path' | 'verb'
+> &
+  PatchFeaturePipelinePathParams
+
+/**
+ * Updates a feature pipeline details
+ *
+ * Updates a feature pipeline details for the given flag in an env
+ */
+export const usePatchFeaturePipeline = ({ identifier, ...props }: UsePatchFeaturePipelineProps) =>
+  useMutate<
+    void,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | InternalServerErrorResponse,
+    PatchFeaturePipelineQueryParams,
+    FeaturePipelineRequestRequestBody,
+    PatchFeaturePipelinePathParams
+  >('PATCH', (paramsInPath: PatchFeaturePipelinePathParams) => `/admin/features/${paramsInPath.identifier}/pipeline`, {
+    base: getConfig('cf'),
+    pathParams: { identifier },
+    ...props
+  })
+
+/**
+ * Updates a feature pipeline details
+ *
+ * Updates a feature pipeline details for the given flag in an env
+ */
+export const patchFeaturePipelinePromise = (
+  {
+    identifier,
+    ...props
+  }: MutateUsingFetchProps<
+    void,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | InternalServerErrorResponse,
+    PatchFeaturePipelineQueryParams,
+    FeaturePipelineRequestRequestBody,
+    PatchFeaturePipelinePathParams
+  > & {
+    /**
+     * Unique identifier for the object in the API.
+     */
+    identifier: string
+  },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    void,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | InternalServerErrorResponse,
+    PatchFeaturePipelineQueryParams,
+    FeaturePipelineRequestRequestBody,
+    PatchFeaturePipelinePathParams
+  >('PATCH', getConfig('cf'), `/admin/features/${identifier}/pipeline`, props, signal)
+
+export interface CreateFlagPipelineQueryParams {
+  /**
+   * Account Identifier
+   */
+  accountIdentifier: string
+  /**
+   * Organization Identifier
+   */
+  orgIdentifier: string
+  /**
+   * The Project identifier
+   */
+  projectIdentifier: string
+  /**
+   * Environment Identifier
+   */
+  environmentIdentifier: string
+}
+
+export interface CreateFlagPipelinePathParams {
+  /**
+   * Unique identifier for the object in the API.
+   */
+  identifier: string
+}
+
+export type CreateFlagPipelineProps = Omit<
+  MutateProps<
+    void,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | ConflictResponse
+    | InternalServerErrorResponse,
+    CreateFlagPipelineQueryParams,
+    FeaturePipelineRequestRequestBody,
+    CreateFlagPipelinePathParams
+  >,
+  'path' | 'verb'
+> &
+  CreateFlagPipelinePathParams
+
+/**
+ * Adds feature pipeline details
+ *
+ * Adds feature pipeline details for a flag in an environment for a project
+ */
+export const CreateFlagPipeline = ({ identifier, ...props }: CreateFlagPipelineProps) => (
+  <Mutate<
+    void,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | ConflictResponse
+    | InternalServerErrorResponse,
+    CreateFlagPipelineQueryParams,
+    FeaturePipelineRequestRequestBody,
+    CreateFlagPipelinePathParams
+  >
+    verb="POST"
+    path={`/admin/features/${identifier}/pipeline`}
+    base={getConfig('cf')}
+    {...props}
+  />
+)
+
+export type UseCreateFlagPipelineProps = Omit<
+  UseMutateProps<
+    void,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | ConflictResponse
+    | InternalServerErrorResponse,
+    CreateFlagPipelineQueryParams,
+    FeaturePipelineRequestRequestBody,
+    CreateFlagPipelinePathParams
+  >,
+  'path' | 'verb'
+> &
+  CreateFlagPipelinePathParams
+
+/**
+ * Adds feature pipeline details
+ *
+ * Adds feature pipeline details for a flag in an environment for a project
+ */
+export const useCreateFlagPipeline = ({ identifier, ...props }: UseCreateFlagPipelineProps) =>
+  useMutate<
+    void,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | ConflictResponse
+    | InternalServerErrorResponse,
+    CreateFlagPipelineQueryParams,
+    FeaturePipelineRequestRequestBody,
+    CreateFlagPipelinePathParams
+  >('POST', (paramsInPath: CreateFlagPipelinePathParams) => `/admin/features/${paramsInPath.identifier}/pipeline`, {
+    base: getConfig('cf'),
+    pathParams: { identifier },
+    ...props
+  })
+
+/**
+ * Adds feature pipeline details
+ *
+ * Adds feature pipeline details for a flag in an environment for a project
+ */
+export const createFlagPipelinePromise = (
+  {
+    identifier,
+    ...props
+  }: MutateUsingFetchProps<
+    void,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | ConflictResponse
+    | InternalServerErrorResponse,
+    CreateFlagPipelineQueryParams,
+    FeaturePipelineRequestRequestBody,
+    CreateFlagPipelinePathParams
+  > & {
+    /**
+     * Unique identifier for the object in the API.
+     */
+    identifier: string
+  },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    void,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | ConflictResponse
+    | InternalServerErrorResponse,
+    CreateFlagPipelineQueryParams,
+    FeaturePipelineRequestRequestBody,
+    CreateFlagPipelinePathParams
+  >('POST', getConfig('cf'), `/admin/features/${identifier}/pipeline`, props, signal)
 
 export interface GetOSByIDPathParams {
   /**

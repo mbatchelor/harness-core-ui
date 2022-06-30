@@ -14,6 +14,8 @@ const mockFeature: Feature = {
   defaultOnVariation: 'true',
   description: '',
   envProperties: {
+    pipelineConfigured: false,
+    pipelineDetails: undefined,
     defaultServe: { variation: 'false' },
     environment: 'testnonprod',
     modifiedAt: 1635333973373,

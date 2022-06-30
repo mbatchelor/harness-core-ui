@@ -52,7 +52,8 @@ import {
   getBackendServerUrl,
   isEnvironmentAllowedForOAuth,
   OAUTH_REDIRECT_URL_PREFIX,
-  OAUTH_PLACEHOLDER_VALUE
+  OAUTH_PLACEHOLDER_VALUE,
+  MAX_TIMEOUT_OAUTH
 } from '@connectors/components/CreateConnector/CreateConnectorUtils'
 import {
   AllSaaSGitProviders,
@@ -64,7 +65,8 @@ import {
   Hosting,
   GitProviderPermissions,
   ACCOUNT_SCOPE_PREFIX,
-  DEFAULT_HARNESS_KMS
+  DEFAULT_HARNESS_KMS,
+  AccessTokenPermissionsDocLinks
 } from './Constants'
 import { getOAuthConnectorPayload } from '../../../utils/HostedBuildsUtils'
 
@@ -131,6 +133,12 @@ const SelectGitProviderRef = (
     return gitProvider?.type && [Connectors.GITLAB, Connectors.BITBUCKET].includes(gitProvider.type)
   }, [gitProvider?.type])
 
+  const markOAuthAsFailed = useCallback(() => {
+    setOAuthStatus(Status.FAILURE)
+    clear()
+    showError(getString('connectors.oAuth.failed'))
+  }, [])
+
   /* Event listener for OAuth server event, this is essential for landing user back to the same tab from where the OAuth started, once it's done */
   const handleOAuthServerEvent = (event: MessageEvent): void => {
     if (oAuthStatus === Status.IN_PROGRESS) {
@@ -138,11 +146,11 @@ const SelectGitProviderRef = (
         return
       }
       if (event.origin !== getBackendServerUrl() && !isEnvironmentAllowedForOAuth()) {
-        setOAuthStatus(Status.FAILURE)
+        markOAuthAsFailed()
         return
       }
       if (!event || !event.data) {
-        setOAuthStatus(Status.FAILURE)
+        markOAuthAsFailed()
         return
       }
       const { accessTokenRef, refreshTokenRef, status, errorMessage } = event.data
@@ -157,16 +165,20 @@ const SelectGitProviderRef = (
             oAuthSecretIntercepted.current = true
             createOAuthConnector({ tokenRef: accessTokenRef, refreshTokenRef })
           } else if (errorMessage !== OAUTH_PLACEHOLDER_VALUE) {
-            setOAuthStatus(Status.FAILURE)
-            clear()
-            showError(getString('connectors.oAuth.failed'))
+            markOAuthAsFailed()
           }
         }
       }
     }
   }
 
-  window.addEventListener('message', handleOAuthServerEvent)
+  useEffect(() => {
+    window.addEventListener('message', handleOAuthServerEvent)
+
+    return () => {
+      window.removeEventListener('message', handleOAuthServerEvent)
+    }
+  }, [])
 
   useEffect(() => {
     if (oAuthSecretIntercepted.current) {
@@ -426,6 +438,12 @@ const SelectGitProviderRef = (
                         } else {
                           setTestConnectionStatus(TestStatus.FAILED)
                           const errorMsgs: ResponseMessage[] = []
+                          if (scmCtrData?.connectorValidationResult?.errorSummary) {
+                            errorMsgs.push({
+                              level: 'ERROR',
+                              message: scmCtrData?.connectorValidationResult?.errorSummary
+                            })
+                          }
                           if (!connectorId) {
                             errorMsgs.push({
                               level: 'ERROR',
@@ -867,6 +885,11 @@ const SelectGitProviderRef = (
                             round
                             text={getString('common.oAuthLabel')}
                             onClick={async () => {
+                              setTimeout(() => {
+                                if (oAuthStatus !== Status.SUCCESS) {
+                                  markOAuthAsFailed()
+                                }
+                              }, MAX_TIMEOUT_OAUTH)
                               formikProps.setFieldValue('gitAuthenticationMethod', GitAuthenticationMethod.OAuth)
                               setOAuthStatus(Status.IN_PROGRESS)
                               setIsOAuthSetup(false)
@@ -961,13 +984,17 @@ const SelectGitProviderRef = (
                         <Container padding={{ top: formikProps.errors.url ? 'xsmall' : 'xlarge' }} width="100%">
                           {renderNonOAuthView(formikProps)}
                         </Container>
-                        {/* Show when doc links are available */}
-                        {/* <Button
+                        <Button
                           variation={ButtonVariation.LINK}
                           text={getString('ci.getStartedWithCI.learnMoreAboutPermissions')}
                           className={css.learnMore}
                           tooltipProps={{ dataTooltipId: 'learnMoreAboutPermissions' }}
-                        /> */}
+                          rightIcon="link"
+                          onClick={(event: React.MouseEvent<Element, MouseEvent>) => {
+                            event.preventDefault()
+                            window.open(AccessTokenPermissionsDocLinks.get(gitProvider?.type), '_blank')
+                          }}
+                        />
                         <Layout.Horizontal>
                           {permissionsForSelectedGitProvider.type &&
                           Array.isArray(permissionsForSelectedGitProvider.permissions) &&

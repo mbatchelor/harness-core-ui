@@ -16,7 +16,8 @@ import {
   Layout,
   MultiTypeInputType,
   SelectOption,
-  shouldShowError
+  shouldShowError,
+  FormikForm
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import * as Yup from 'yup'
@@ -353,77 +354,79 @@ function DeployServiceWidget({
           formikRef.current = formik as FormikProps<unknown> | null
           const { values, setFieldValue } = formik
           return (
-            <Layout.Horizontal
-              className={css.formRow}
-              spacing="medium"
-              flex={{ alignItems: flexStart, justifyContent: flexStart }}
-            >
-              <FormInput.MultiTypeInput
-                tooltipProps={{ dataTooltipId: 'specifyYourService' }}
-                label={serviceLabel ? serviceLabel : getString('cd.pipelineSteps.serviceTab.specifyYourService')}
-                name="serviceRef"
-                useValue
-                disabled={readonly || (type === MultiTypeInputType.FIXED && loading)}
-                placeholder={loading ? getString('loading') : getString('cd.pipelineSteps.serviceTab.selectService')}
-                multiTypeInputProps={{
-                  onTypeChange: setType,
-                  width: 300,
-                  expressions,
-                  onChange: val => onServiceChange(val as SelectOption, values, setFieldValue),
-                  selectProps: {
-                    addClearBtn: !readonly,
-                    items: defaultTo(selectOptions, [])
-                  },
-                  allowableTypes
-                }}
-                selectItems={selectOptions || []}
-              />
-              {getMultiTypeFromValue(formik.values.serviceRef) === MultiTypeInputType.FIXED && (
-                <>
-                  {isEditService(values) && !loading ? (
-                    <RbacButton
-                      size={ButtonSize.SMALL}
-                      text={getString('editService')}
-                      variation={ButtonVariation.LINK}
-                      id="edit-service"
-                      disabled={readonly}
-                      permission={{
-                        permission: PermissionIdentifier.EDIT_SERVICE,
-                        resource: {
-                          resourceType: ResourceType.SERVICE,
-                          resourceIdentifier: services ? (services[0]?.identifier as string) : ''
-                        },
-                        options: {
-                          skipCondition: ({ resourceIdentifier }) => !resourceIdentifier
-                        }
-                      }}
-                      onClick={() => editService(values)}
-                    />
-                  ) : (
-                    <RbacButton
-                      size={ButtonSize.SMALL}
-                      text={getString('cd.pipelineSteps.serviceTab.plusNewService')}
-                      variation={ButtonVariation.LINK}
-                      id="add-new-service"
-                      disabled={readonly}
-                      permission={{
-                        permission: PermissionIdentifier.EDIT_SERVICE,
-                        resource: {
-                          resourceType: ResourceType.SERVICE
-                        }
-                      }}
-                      onClick={() => {
-                        setState({
-                          isEdit: false,
-                          isService: false
-                        })
-                        showModal()
-                      }}
-                    />
-                  )}
-                </>
-              )}
-            </Layout.Horizontal>
+            <FormikForm>
+              <Layout.Horizontal
+                className={css.formRow}
+                spacing="medium"
+                flex={{ alignItems: flexStart, justifyContent: flexStart }}
+              >
+                <FormInput.MultiTypeInput
+                  tooltipProps={{ dataTooltipId: 'specifyYourService' }}
+                  label={serviceLabel ? serviceLabel : getString('cd.pipelineSteps.serviceTab.specifyYourService')}
+                  name="serviceRef"
+                  useValue
+                  disabled={readonly || (type === MultiTypeInputType.FIXED && loading)}
+                  placeholder={loading ? getString('loading') : getString('cd.pipelineSteps.serviceTab.selectService')}
+                  multiTypeInputProps={{
+                    onTypeChange: setType,
+                    width: 300,
+                    expressions,
+                    onChange: val => onServiceChange(val as SelectOption, values, setFieldValue),
+                    selectProps: {
+                      addClearBtn: !readonly,
+                      items: defaultTo(selectOptions, [])
+                    },
+                    allowableTypes
+                  }}
+                  selectItems={selectOptions || []}
+                />
+                {type === MultiTypeInputType.FIXED && (
+                  <>
+                    {isEditService(values) && !loading ? (
+                      <RbacButton
+                        size={ButtonSize.SMALL}
+                        text={getString('editService')}
+                        variation={ButtonVariation.LINK}
+                        id="edit-service"
+                        disabled={readonly}
+                        permission={{
+                          permission: PermissionIdentifier.EDIT_SERVICE,
+                          resource: {
+                            resourceType: ResourceType.SERVICE,
+                            resourceIdentifier: services ? (services[0]?.identifier as string) : ''
+                          },
+                          options: {
+                            skipCondition: ({ resourceIdentifier }) => !resourceIdentifier
+                          }
+                        }}
+                        onClick={() => editService(values)}
+                      />
+                    ) : (
+                      <RbacButton
+                        size={ButtonSize.SMALL}
+                        text={getString('cd.pipelineSteps.serviceTab.plusNewService')}
+                        variation={ButtonVariation.LINK}
+                        id="add-new-service"
+                        disabled={readonly}
+                        permission={{
+                          permission: PermissionIdentifier.EDIT_SERVICE,
+                          resource: {
+                            resourceType: ResourceType.SERVICE
+                          }
+                        }}
+                        onClick={() => {
+                          setState({
+                            isEdit: false,
+                            isService: false
+                          })
+                          showModal()
+                        }}
+                      />
+                    )}
+                  </>
+                )}
+              </Layout.Horizontal>
+            </FormikForm>
           )
         }}
       </Formik>

@@ -14,6 +14,8 @@ const mockFeature: Feature = {
   defaultOnVariation: 'true',
   description: '',
   envProperties: {
+    pipelineConfigured: false,
+    pipelineDetails: undefined,
     defaultServe: { variation: 'true' },
     environment: 'qatest',
     modifiedAt: 1646928280967,

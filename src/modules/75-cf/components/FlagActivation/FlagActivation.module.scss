@@ -82,3 +82,7 @@
   font-weight: 600 !important;
   color: var(gray-900) !important;
 }
+
+.flagPipelinePanel {
+  height: calc(100vh - 120px);
+}

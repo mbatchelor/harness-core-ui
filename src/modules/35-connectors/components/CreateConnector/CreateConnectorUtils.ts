@@ -66,3 +66,5 @@ export const GATEWAY_URL = `${location.protocol}//${location.host}/gateway`
 export const OAUTH_REDIRECT_URL_PREFIX = `${GATEWAY_URL}/api/secrets/oauth2Redirect`
 
 export const OAUTH_PLACEHOLDER_VALUE = 'placeholder'
+
+export const MAX_TIMEOUT_OAUTH = 1000 * 60 * 5 // five minutes

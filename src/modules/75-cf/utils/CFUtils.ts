@@ -54,7 +54,8 @@ export const formatToCompactNumber = (longNumber: number): string => {
 export enum FFDetailPageTab {
   TARGETING = 'targeting',
   METRICS = 'metrics',
-  ACTIVITY = 'activity'
+  ACTIVITY = 'activity',
+  FLAG_PIPELINE = 'flag_pipeline'
 }
 
 export enum FeatureFlagMutivariateKind {

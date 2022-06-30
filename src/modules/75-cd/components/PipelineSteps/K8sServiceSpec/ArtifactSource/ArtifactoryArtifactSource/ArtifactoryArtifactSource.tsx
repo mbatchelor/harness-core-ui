@@ -35,10 +35,14 @@ import type { StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import { getStageFromPipeline } from '@pipeline/components/PipelineStudio/PipelineContext/helpers'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
+  getDefaultQueryParam,
+  getFinalQueryParamValue,
+  getFqnPath,
   getImagePath,
   getYamlData,
   isArtifactSourceRuntime,
   isFieldfromTriggerTabDisabled,
+  isNewServiceEnvEntity,
   resetTags,
   shouldFetchTagsSource
 } from '../artifactSourceUtils'
@@ -170,6 +174,7 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
     pipelineIdentifier,
     branch,
     stageIdentifier,
+    serviceIdentifier,
     isTagsSelectionDisabled,
     allowableTypes,
     fromTrigger,
@@ -200,36 +205,35 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
 
   // Initial values
   const artifactPathValue = isServerlessDeploymentTypeSelected
-    ? get(initialValues?.artifacts, `${artifactPath}.spec.artifactDirectory`, '') || artifact?.spec?.artifactDirectory
-    : getImagePath(
-        props.artifact?.spec?.artifactPath,
-        get(props.initialValues, `artifacts.${artifactPath}.spec.artifactPath`, '')
+    ? getDefaultQueryParam(
+        artifact?.spec?.artifactDirectory,
+        get(initialValues?.artifacts, `${artifactPath}.spec.artifactDirectory`, '')
       )
-  const connectorRefValue =
-    get(initialValues, `artifacts.${artifactPath}.spec.connectorRef`, '') || artifact?.spec?.connectorRef
-  const repositoryValue =
-    get(initialValues?.artifacts, `${artifactPath}.spec.repository`, '') || artifact?.spec?.repository
+    : getImagePath(artifact?.spec?.artifactPath, get(initialValues, `artifacts.${artifactPath}.spec.artifactPath`, ''))
+  const connectorRefValue = getDefaultQueryParam(
+    artifact?.spec?.connectorRef,
+    get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, '')
+  )
+  const repositoryValue = getDefaultQueryParam(
+    artifact?.spec?.repository,
+    get(initialValues?.artifacts, `${artifactPath}.spec.repository`, '')
+  )
 
   const artifactoryTagsDataCallMetadataQueryParams = React.useMemo(() => {
     if (isServerlessDeploymentTypeSelected) {
       return {
-        artifactPath: getImagePath(
-          artifact?.spec?.artifactDirectory,
-          get(initialValues, `artifacts.${artifactPath}.spec.artifactDirectory`, '')
+        artifactPath: getFinalQueryParamValue(
+          getDefaultQueryParam(
+            artifact?.spec?.artifactDirectory,
+            get(initialValues?.artifacts, `${artifactPath}.spec.artifactDirectory`, '')
+          )
         ),
-        connectorRef:
-          getMultiTypeFromValue(artifact?.spec?.connectorRef) !== MultiTypeInputType.RUNTIME
-            ? artifact?.spec?.connectorRef
-            : get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, ''),
-        repository:
-          getMultiTypeFromValue(artifact?.spec?.repository) !== MultiTypeInputType.RUNTIME
-            ? artifact?.spec?.repository
-            : get(initialValues?.artifacts, `${artifactPath}.spec.repository`, ''),
+        connectorRef: getFinalQueryParamValue(connectorRefValue),
+        repository: getFinalQueryParamValue(repositoryValue),
         repositoryFormat: 'generic',
         pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
-        fqnPath: isPropagatedStage
-          ? `pipeline.stages.${stageIdentifier}.spec.serviceConfig.stageOverrides.artifacts.${artifactPath}.spec.tag`
-          : `pipeline.stages.${stageIdentifier}.spec.serviceConfig.serviceDefinition.spec.artifacts.${artifactPath}.spec.tag`
+        serviceId: isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined,
+        fqnPath: getFqnPath(path as string, !!isPropagatedStage, stageIdentifier, defaultTo(artifactPath, ''))
       }
     }
 
@@ -238,28 +242,26 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
         artifact?.spec?.artifactPath,
         get(initialValues, `artifacts.${artifactPath}.spec.artifactPath`, '')
       ),
-      connectorRef:
-        getMultiTypeFromValue(artifact?.spec?.connectorRef) !== MultiTypeInputType.RUNTIME
-          ? artifact?.spec?.connectorRef
-          : get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, ''),
-      repository:
-        getMultiTypeFromValue(artifact?.spec?.repository) !== MultiTypeInputType.RUNTIME
-          ? artifact?.spec?.repository
-          : get(initialValues?.artifacts, `${artifactPath}.spec.repository`, ''),
+      connectorRef: getFinalQueryParamValue(connectorRefValue),
+      repository: getFinalQueryParamValue(repositoryValue),
       repositoryFormat,
       pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
-      fqnPath: isPropagatedStage
-        ? `pipeline.stages.${stageIdentifier}.spec.serviceConfig.stageOverrides.artifacts.${artifactPath}.spec.tag`
-        : `pipeline.stages.${stageIdentifier}.spec.serviceConfig.serviceDefinition.spec.artifacts.${artifactPath}.spec.tag`
+      serviceId: isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined,
+      fqnPath: getFqnPath(path as string, !!isPropagatedStage, stageIdentifier, defaultTo(artifactPath, ''))
     }
   }, [
     isServerlessDeploymentTypeSelected,
-    artifact,
-    artifactPath,
-    formik.values.identifier,
+    artifact?.spec?.artifactPath,
+    artifact?.spec?.artifactDirectory,
     initialValues,
-    isPropagatedStage,
+    artifactPath,
+    connectorRefValue,
+    repositoryValue,
     pipelineIdentifier,
+    formik?.values?.identifier,
+    path,
+    serviceIdentifier,
+    isPropagatedStage,
     stageIdentifier
   ])
 
@@ -267,7 +269,7 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
   const {
     data: artifactoryTagsData,
     loading: fetchingTags,
-    refetch,
+    refetch: refetchTags,
     error: fetchTagsError
   } = useMutateAsGet(useGetBuildDetailsForArtifactoryArtifactWithYaml, {
     body: yamlStringify(getYamlData(formik?.values)),
@@ -303,7 +305,7 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
         artifactPaths: artifactPathValue,
         repository: repositoryValue
       })
-      refetch()
+      refetchTags()
     }
   }
 
@@ -469,14 +471,14 @@ export class ArtifactoryArtifactSource extends ArtifactSourceBase<ArtifactSource
       artifact?.spec?.artifactPath,
       get(initialValues, `artifacts.${artifactPath}.spec.artifactPath`, '')
     )
-    const isConnectorPresent =
-      getMultiTypeFromValue(artifact?.spec?.connectorRef) !== MultiTypeInputType.RUNTIME
-        ? artifact?.spec?.connectorRef
-        : get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, '')
-    const isRepositoryPresent =
-      getMultiTypeFromValue(artifact?.spec?.repository) !== MultiTypeInputType.RUNTIME
-        ? artifact?.spec?.repository
-        : get(initialValues?.artifacts, `${artifactPath}.spec.repository`, '')
+    const isConnectorPresent = getDefaultQueryParam(
+      artifact?.spec?.connectorRef,
+      get(initialValues, `artifacts.${artifactPath}.spec.connectorRef`, '')
+    )
+    const isRepositoryPresent = getDefaultQueryParam(
+      artifact?.spec?.repository,
+      get(initialValues, `artifacts.${artifactPath}.spec.repository`, '')
+    )
     return !(isArtifactPathPresent && isConnectorPresent && isRepositoryPresent)
   }
 

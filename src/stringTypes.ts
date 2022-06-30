@@ -5189,6 +5189,15 @@ export interface StringsMap {
   'cf.featureFlags.flagFilters.term': string
   'cf.featureFlags.flagOff': string
   'cf.featureFlags.flagOn': string
+  'cf.featureFlags.flagPipeline.drawerButtonText': string
+  'cf.featureFlags.flagPipeline.drawerDescription': string
+  'cf.featureFlags.flagPipeline.drawerEnvText': string
+  'cf.featureFlags.flagPipeline.drawerTitle': string
+  'cf.featureFlags.flagPipeline.noAvailablePipelines': string
+  'cf.featureFlags.flagPipeline.noDataButtonText': string
+  'cf.featureFlags.flagPipeline.noDataDescription': string
+  'cf.featureFlags.flagPipeline.noDataMessage': string
+  'cf.featureFlags.flagPipeline.title': string
   'cf.featureFlags.flagWillTurnOff': string
   'cf.featureFlags.flagWillTurnOn': string
   'cf.featureFlags.ifClause': string

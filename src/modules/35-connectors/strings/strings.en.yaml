@@ -884,7 +884,7 @@ linkToGitProvider: 'Link to {{gitProvider}}'
 relinkToGitProvider: 'Re-link to {{gitProvider}}'
 oAuth:
   inProgress: OAuth in progress...
-  failed: OAuth failed
+  failed: Error while authorizing user via OAuth. Please try using an access token instead.
   configured: OAuth configured successfully
   reConfigured: OAuth re-configured successfully
   accessRevoked: Access revoked. Please reconfigure the connection.

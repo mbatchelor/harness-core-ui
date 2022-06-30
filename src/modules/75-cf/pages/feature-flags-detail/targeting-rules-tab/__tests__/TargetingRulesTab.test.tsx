@@ -83,6 +83,8 @@ describe('TargetingRulesTab', () => {
         featureFlagData: {
           ...mockFeature,
           envProperties: {
+            pipelineConfigured: false,
+            pipelineDetails: undefined,
             defaultServe: { variation: 'false' },
             environment: 'qatest',
             modifiedAt: 1635333973373,
@@ -217,6 +219,8 @@ describe('TargetingRulesTab', () => {
         featureFlagData: {
           ...mockFeature,
           envProperties: {
+            pipelineConfigured: false,
+            pipelineDetails: undefined,
             defaultServe: { variation: 'false' },
             environment: 'qatest',
             modifiedAt: 1635333973373,
@@ -241,6 +245,8 @@ describe('TargetingRulesTab', () => {
             environment: 'qatest',
             modifiedAt: 1635333973373,
             offVariation: 'false',
+            pipelineConfigured: false,
+            pipelineDetails: undefined,
             rules: [
               {
                 clauses: [
@@ -329,6 +335,8 @@ describe('TargetingRulesTab', () => {
         featureFlagData: {
           ...mockFeature,
           envProperties: {
+            pipelineConfigured: false,
+            pipelineDetails: undefined,
             defaultServe: { variation: 'false' },
             environment: 'qatest',
             modifiedAt: 1635333973373,
@@ -370,6 +378,8 @@ describe('TargetingRulesTab', () => {
         featureFlagData: {
           ...mockFeature,
           envProperties: {
+            pipelineConfigured: false,
+            pipelineDetails: undefined,
             defaultServe: { variation: 'false' },
             environment: 'qatest',
             modifiedAt: 1635333973373,
@@ -416,6 +426,8 @@ describe('TargetingRulesTab', () => {
         featureFlagData: {
           ...mockFeature,
           envProperties: {
+            pipelineConfigured: false,
+            pipelineDetails: undefined,
             defaultServe: { variation: 'false' },
             environment: 'qatest',
             modifiedAt: 1635333973373,

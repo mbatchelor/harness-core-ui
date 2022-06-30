@@ -16,7 +16,7 @@ import { TestWrapper } from '@common/utils/testUtils'
 import type { Feature, FeatureState, ServingRule } from 'services/cf'
 import type { FlagActivationFormValues } from '@cf/components/FlagActivation/FlagActivation'
 import TabTargeting, { TabTargetingProps } from '../TabTargeting'
-import mockFeatureData from './mockFeature.json'
+import mockFeatureData from './mockFeature'
 
 const mockFeature: Feature = mockFeatureData as Feature
 

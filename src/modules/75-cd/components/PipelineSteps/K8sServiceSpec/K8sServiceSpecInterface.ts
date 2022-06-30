@@ -57,6 +57,7 @@ export interface KubernetesArtifactsProps {
   stepViewType?: StepViewType
   artifactSourceBaseFactory: ArtifactSourceBaseFactory
   stageIdentifier: string
+  serviceIdentifier?: string
   artifacts?: ArtifactListConfig
   formik?: any
   path?: string
@@ -78,6 +79,7 @@ export interface KubernetesManifestsProps {
   initialValues: K8SDirectServiceStep
   readonly: boolean
   stageIdentifier: string
+  serviceIdentifier?: string
   formik?: any
   fromTrigger?: boolean
   allowableTypes: MultiTypeInputType[]

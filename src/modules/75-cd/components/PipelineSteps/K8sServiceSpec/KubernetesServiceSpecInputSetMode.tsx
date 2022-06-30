@@ -36,6 +36,7 @@ export interface KubernetesInputSetProps {
   factory?: AbstractStepFactory
   path?: string
   stageIdentifier: string
+  serviceIdentifier?: string
   formik?: any
   allowableTypes: MultiTypeInputType[]
 }
@@ -49,6 +50,7 @@ const KubernetesServiceSpecInputSetModeFormikForm = (props: KubernetesInputSetPr
     onUpdate,
     readonly = false,
     stageIdentifier,
+    serviceIdentifier,
     stepViewType,
     formik,
     allowableTypes
@@ -64,6 +66,7 @@ const KubernetesServiceSpecInputSetModeFormikForm = (props: KubernetesInputSetPr
           artifactSourceBaseFactory={artifactSourceBaseFactory}
           stepViewType={stepViewType}
           stageIdentifier={stageIdentifier}
+          serviceIdentifier={serviceIdentifier}
           formik={formik}
           path={path}
           initialValues={initialValues}
@@ -79,6 +82,7 @@ const KubernetesServiceSpecInputSetModeFormikForm = (props: KubernetesInputSetPr
           manifestSourceBaseFactory={manifestSourceBaseFactory}
           stepViewType={stepViewType}
           stageIdentifier={stageIdentifier}
+          serviceIdentifier={serviceIdentifier}
           formik={formik}
           path={path}
           initialValues={initialValues}
