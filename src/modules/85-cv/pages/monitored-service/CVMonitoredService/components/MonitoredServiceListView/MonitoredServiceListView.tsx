@@ -190,6 +190,9 @@ const MonitoredServiceListView: React.FC<MonitoredServiceListViewProps> = ({
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
 
   const { content, pageSize = 0, pageIndex = 0, totalPages = 0, totalItems = 0 } = monitoredServiceListData || {}
+
+  console.log('content', content)
+
   const RenderStatusToggle: Renderer<CellProps<MonitoredServiceListItemDTO>> = ({ row }) => {
     const monitoredService = row.original
 

@@ -552,7 +552,47 @@ export const createAppDFormData = (
     metricData: nonCustomFeilds.metricData,
     metricName: selectedMetric,
     showCustomMetric,
-    metricIdentifier
+    metricIdentifier,
+    ignoreThresholds: [
+      {
+        metricType: 'performance',
+        transaction: 'register',
+        metric: 'averageWaitTime',
+        criteria: {
+          spec: {
+            type: 'percentage',
+            greaterThan: 10,
+            lessThan: 20
+          }
+        }
+      },
+      {
+        metricType: 'customMetric',
+        transaction: 'verificationService',
+        metric: 'callsPerMinute',
+        criteria: {
+          spec: {
+            type: 'absolute',
+            greaterThan: 200,
+            lessThan: 300
+          }
+        }
+      }
+    ],
+    failFastThreshold: [
+      {
+        metricType: 'performance',
+        transaction: 'register',
+        metric: 'averageWaitTime',
+        criteria: {
+          spec: {
+            type: 'percentage',
+            greaterThan: 10,
+            lessThan: 20
+          }
+        }
+      }
+    ]
   }
 }
 

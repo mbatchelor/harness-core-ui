@@ -13,6 +13,11 @@
     box-shadow: 5px 7px 7px -3px var(--grey-300);
   }
 
+  [class='Accordion--panel'] [class~='bp3-tab-list'] {
+    box-shadow: none !important;
+    border-top: none !important;
+  }
+
   [class~='bp3-tab-panel'] {
     flex: 1;
     display: flex;

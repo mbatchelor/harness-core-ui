@@ -6008,25 +6008,36 @@ export interface StringsMap {
   'cv.monitoredServices.youHaveNoMonitoredServices': string
   'cv.monitoringSources.addMetric': string
   'cv.monitoringSources.addQuery': string
+  'cv.monitoringSources.appD.advancedOptional': string
   'cv.monitoringSources.appD.appDApplications': string
   'cv.monitoringSources.appD.appDTier': string
   'cv.monitoringSources.appD.appdChartTitle': string
   'cv.monitoringSources.appD.appdMetricDetail': string
   'cv.monitoringSources.appD.appdPathDetail': string
   'cv.monitoringSources.appD.appdPathTitle': string
+  'cv.monitoringSources.appD.averageWaitTime': string
   'cv.monitoringSources.appD.basePathPlaceholder': string
+  'cv.monitoringSources.appD.callsPerMinute': string
   'cv.monitoringSources.appD.connectToMonitoringSource': string
   'cv.monitoringSources.appD.createConnectorText': string
+  'cv.monitoringSources.appD.customMetric': string
   'cv.monitoringSources.appD.defaultAppDMetricName': string
   'cv.monitoringSources.appD.envDescription': string
   'cv.monitoringSources.appD.errorsFound': string
+  'cv.monitoringSources.appD.failFastThresholdHint': string
+  'cv.monitoringSources.appD.failFastThresholds': string
   'cv.monitoringSources.appD.firstTimeSetupText': string
+  'cv.monitoringSources.appD.greaterThan': string
+  'cv.monitoringSources.appD.groupTransaction': string
   'cv.monitoringSources.appD.harnessEnv': string
   'cv.monitoringSources.appD.harnessServices': string
+  'cv.monitoringSources.appD.ignoreThresholdHint': string
+  'cv.monitoringSources.appD.ignoreThresholds': string
   'cv.monitoringSources.appD.infoPanel.applicationsDesc': string
   'cv.monitoringSources.appD.infoPanel.mapDashboards': string
   'cv.monitoringSources.appD.infoPanel.mapDashboardsMsg': string
   'cv.monitoringSources.appD.infoPanel.tiers': string
+  'cv.monitoringSources.appD.lesserThan': string
   'cv.monitoringSources.appD.mapApplicationsToEnv': string
   'cv.monitoringSources.appD.mapTiersToServices': string
   'cv.monitoringSources.appD.mapToHarnessEnvironment': string
@@ -6034,6 +6045,7 @@ export interface StringsMap {
   'cv.monitoringSources.appD.mappedToHarnessService': string
   'cv.monitoringSources.appD.mappingToHarnessService': string
   'cv.monitoringSources.appD.metricPathPlaceholder': string
+  'cv.monitoringSources.appD.metricType': string
   'cv.monitoringSources.appD.newGroupName': string
   'cv.monitoringSources.appD.noAppsMsg': string
   'cv.monitoringSources.appD.noData': string
@@ -6044,6 +6056,7 @@ export interface StringsMap {
   'cv.monitoringSources.appD.product.businessMonitoring': string
   'cv.monitoringSources.appD.product.endUserMonitoring': string
   'cv.monitoringSources.appD.product.machineMonitoring': string
+  'cv.monitoringSources.appD.register': string
   'cv.monitoringSources.appD.searchPlaceholderApplications': string
   'cv.monitoringSources.appD.searchTiersPlaceHolder': string
   'cv.monitoringSources.appD.selectProduct': string
@@ -6055,6 +6068,7 @@ export interface StringsMap {
   'cv.monitoringSources.appD.validations.selectTier': string
   'cv.monitoringSources.appD.validationsFailed': string
   'cv.monitoringSources.appD.validationsPassed': string
+  'cv.monitoringSources.appD.verificationService': string
   'cv.monitoringSources.appD.verificationsInProgress': string
   'cv.monitoringSources.assign': string
   'cv.monitoringSources.baselineDeviation': string

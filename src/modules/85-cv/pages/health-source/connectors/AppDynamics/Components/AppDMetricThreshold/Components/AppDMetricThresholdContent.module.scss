@@ -1,0 +1,56 @@
+.appDMetricThresholdContent {
+  &Card {
+    width: 100%;
+
+    th > p {
+      font-weight: bold !important;
+      text-transform: uppercase;
+      font-size: var(--font-size-small) !important;
+      // color: var(--black) !important;
+    }
+  }
+
+  &Tabs {
+    color: black;
+  }
+
+  &IgnoreTableHeader {
+    display: grid;
+    grid-template-columns: 20% 20% 20% 1fr;
+
+    > p {
+      color: var(--black) !important;
+      text-transform: uppercase;
+      font-size: var(--font-size-small) !important;
+      font-weight: bold !important;
+    }
+  }
+
+  &Select {
+    margin-bottom: 0 !important;
+
+    input {
+      width: 150px !important;
+      border-color: transparent;
+    }
+  }
+
+  &Input {
+    margin-bottom: 0 !important;
+    input {
+      width: 80px !important;
+    }
+
+    label span {
+      white-space: nowrap;
+    }
+
+    &:not(:last-child) {
+      margin-right: var(--spacing-3);
+    }
+  }
+
+  &Criteria {
+    margin-right: var(--spacing-3);
+  }
+}

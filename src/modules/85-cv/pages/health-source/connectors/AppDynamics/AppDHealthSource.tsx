@@ -60,6 +60,7 @@ import CustomMetric from '../../common/CustomMetric/CustomMetric'
 import AppDCustomMetricForm from './Components/AppDCustomMetricForm/AppDCustomMetricForm'
 import AppDApplications from './Components/AppDApplications/AppDApplications'
 import AppDynamicsTier from './Components/AppDynamicsTier/AppDynamicsTier'
+import AppDMetricThreshold from './Components/AppDMetricThreshold/AppDMetricThreshold'
 import css from './AppDHealthSource.module.scss'
 
 export default function AppDMonitoredSource({
@@ -413,6 +414,7 @@ export default function AppDMonitoredSource({
                 </Button>
               </CardWithOuterTitle>
             )}
+            <AppDMetricThreshold formikValues={formik.values} />
             <DrawerFooter
               isSubmit
               onPrevious={onPrevious}

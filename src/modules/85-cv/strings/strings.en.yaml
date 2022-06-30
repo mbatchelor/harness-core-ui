@@ -210,6 +210,20 @@ monitoringSources:
   addQuery: Add Query
   totalMappedQueries: '{{total}} {{query}} mapped'
   appD:
+    advancedOptional: Advanced (Optional)
+    ignoreThresholds: Ignore Thresholds
+    failFastThresholds: Fail-Fast Thresholds
+    ignoreThresholdHint: You can select the type of events that you want to set the thresholds for Continuous Verification only, and all metrics that match any of the following rules will not be flagged as anomalous regardless of the analysis.
+    failFastThresholdHint: You can select the type of events that you want to set the thresholds for Continuous Verification only, and all metrics that match any of the following rules will be marked as anomalous, causing the Workflow state to fail.
+    metricType: Metric Type
+    groupTransaction: Group/Transaction
+    greaterThan: Greater than
+    lesserThan: Lesser than
+    customMetric: Custom Metric
+    register: Register
+    verificationService: Verification service
+    averageWaitTime: Average Wait Time
+    callsPerMinute: Calls per Minute
     appdPathTitle: AppDynamics Path
     appdChartTitle: Chart & Record
     appdPathDetail: Select base path for AppD Metric
