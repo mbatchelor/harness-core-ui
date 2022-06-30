@@ -6,7 +6,6 @@
       font-weight: bold !important;
       text-transform: uppercase;
       font-size: var(--font-size-small) !important;
-      // color: var(--black) !important;
     }
   }
 
@@ -47,6 +46,10 @@
 
     &:not(:last-child) {
       margin-right: var(--spacing-3);
+    }
+
+    &Wrapper {
+      margin-bottom: 0 !important;
     }
   }
 

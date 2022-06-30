@@ -3,9 +3,10 @@ import cx from 'classnames'
 import { Layout, FormInput } from '@harness/uicore'
 import type { UseStringsReturn } from 'framework/strings'
 import { getItembyValue } from './AppDThresholdSelectUtils'
+import type { SelectItem } from '../../../AppDMetricThreshold.types'
 import css from '../../AppDMetricThresholdContent.module.scss'
 
-const getCriterialItems = (getString: UseStringsReturn['getString']) => {
+const getCriterialItems = (getString: UseStringsReturn['getString']): SelectItem[] => {
   return [
     {
       label: getString('cv.monitoringSources.appD.absoluteValue'),
@@ -18,7 +19,7 @@ const getCriterialItems = (getString: UseStringsReturn['getString']) => {
   ]
 }
 
-export default function appDIgnoreThresholdCriteria(
+export default function appDFailFastThresholdCriteria(
   rowData: any,
   rowIndex: number,
   getString: UseStringsReturn['getString'],
@@ -29,7 +30,7 @@ export default function appDIgnoreThresholdCriteria(
       <FormInput.Select
         items={getCriterialItems(getString)}
         className={cx(css.appDMetricThresholdContentSelect, css.appDMetricThresholdContentCriteria)}
-        name={`ignoreThresholds.${rowIndex}.criteria.spec.type`}
+        name={`failFastThreshold.${rowIndex}.criteria.spec.type`}
         value={getItembyValue(getCriterialItems(getString), rowData?.criteria?.spec?.type)}
       ></FormInput.Select>
       {rowData?.criteria?.spec?.type !== 'percentage' && (
@@ -38,7 +39,7 @@ export default function appDIgnoreThresholdCriteria(
           className={css.appDMetricThresholdContentInput}
           label={getString('cv.monitoringSources.appD.greaterThan')}
           inputGroup={{ type: 'number' }}
-          name={`ignoreThresholds.${rowIndex}.criteria.spec.greaterThan`}
+          name={`failFastThreshold.${rowIndex}.criteria.spec.greaterThan`}
         />
       )}
       <FormInput.Text
@@ -47,7 +48,7 @@ export default function appDIgnoreThresholdCriteria(
         className={css.appDMetricThresholdContentInput}
         label={getString('cv.monitoringSources.appD.lesserThan')}
         inputGroup={{ type: 'number' }}
-        name={`ignoreThresholds.${rowIndex}.criteria.spec.lessThan`}
+        name={`failFastThreshold.${rowIndex}.criteria.spec.lessThan`}
       />
     </Layout.Horizontal>
   )

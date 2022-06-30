@@ -584,6 +584,8 @@ export const createAppDFormData = (
         metricType: 'performance',
         transaction: 'register',
         metric: 'averageWaitTime',
+        action: 'failImmediately',
+        count: 21,
         criteria: {
           spec: {
             type: 'percentage',

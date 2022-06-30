@@ -3,7 +3,7 @@ import { Container, Text, FieldArray } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings, UseStringsReturn } from 'framework/strings'
 import { AppDMetricThresholdContext } from '../../AppDMetricThreshold'
-import appDIgnoreThresholdSelect from './Components/appDIgnoreThresholdSelect'
+import appDThresholdSelect from './Components/appDThresholdSelect'
 import appDIgnoreThresholdCriteria from './Components/appDIgnoreThresholdCriteria'
 import type { SelectItem } from '../../AppDMetricThreshold.types'
 
@@ -67,19 +67,19 @@ export default function AppDIgnoreThresholdTabContent(): JSX.Element {
               name: 'metricType',
               label: <Text>{getString('cv.monitoringSources.appD.metricType')}</Text>,
               defaultValue: 'test1',
-              renderer: (...args) => appDIgnoreThresholdSelect('metricType', getMetricTypeItems(getString), ...args)
+              renderer: (...args) => appDThresholdSelect('metricType', getMetricTypeItems(getString), ...args)
             },
             {
               name: 'transaction',
               label: <Text>{getString('cv.monitoringSources.appD.groupTransaction')}</Text>,
               defaultValue: 'test1',
-              renderer: (...args) => appDIgnoreThresholdSelect('transaction', getTransactionItems(getString), ...args)
+              renderer: (...args) => appDThresholdSelect('transaction', getTransactionItems(getString), ...args)
             },
             {
               name: 'metric',
               label: <Text>{getString('cv.monitoringSources.metricLabel')}</Text>,
               defaultValue: 'test1',
-              renderer: (...args) => appDIgnoreThresholdSelect('metric', getMetricItems(getString), ...args)
+              renderer: (...args) => appDThresholdSelect('metric', getMetricItems(getString), ...args)
             },
             {
               name: 'criteria',
