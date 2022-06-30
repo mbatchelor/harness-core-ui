@@ -1226,7 +1226,7 @@ export type AzureWebAppInfrastructure = Infrastructure & {
   deploymentSlot: string
   resourceGroup: string
   subscriptionId: string
-  targetSlot?: ParameterFieldString
+  targetSlot?: string
   webApp: string
 }
 
@@ -1337,6 +1337,10 @@ export type BitbucketUsernameTokenApiAccess = BitbucketApiAccessSpecDTO & {
   tokenRef: string
   username?: string
   usernameRef?: string
+}
+
+export interface BucketResponse {
+  bucketName?: string
 }
 
 export interface BuildDetails {
@@ -1966,7 +1970,6 @@ export interface CreatePRDTO {
 
 export interface CreatePRRequest {
   connectorRef?: string
-  gitRepoScopeParams?: GitRepoScopeParams
   orgIdentifier?: string
   projectIdentifier?: string
   repoName?: string
@@ -2673,6 +2676,7 @@ export interface EntityDetail {
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
+    | 'JenkinsBuild'
 }
 
 export interface EntityGitDetails {
@@ -3677,9 +3681,11 @@ export interface FeatureRestrictionDetailListRequestDTO {
     | 'AZURE_TRAFFIC_SHIFT'
     | 'AZURE_SWAP_SLOT'
     | 'AZURE_WEBAPP_ROLLBACK'
+    | 'JENKINS_BUILD'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
+    | 'JENKINS_ARTIFACT'
   )[]
 }
 
@@ -3740,9 +3746,11 @@ export interface FeatureRestrictionDetailRequestDTO {
     | 'AZURE_TRAFFIC_SHIFT'
     | 'AZURE_SWAP_SLOT'
     | 'AZURE_WEBAPP_ROLLBACK'
+    | 'JENKINS_BUILD'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
+    | 'JENKINS_ARTIFACT'
 }
 
 export interface FeatureRestrictionDetailsDTO {
@@ -3805,9 +3813,11 @@ export interface FeatureRestrictionDetailsDTO {
     | 'AZURE_TRAFFIC_SHIFT'
     | 'AZURE_SWAP_SLOT'
     | 'AZURE_WEBAPP_ROLLBACK'
+    | 'JENKINS_BUILD'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
+    | 'JENKINS_ARTIFACT'
   restriction?: RestrictionDTO
   restrictionType?:
     | 'AVAILABILITY'
@@ -3878,9 +3888,11 @@ export interface FeatureRestrictionMetadataDTO {
     | 'AZURE_TRAFFIC_SHIFT'
     | 'AZURE_SWAP_SLOT'
     | 'AZURE_WEBAPP_ROLLBACK'
+    | 'JENKINS_BUILD'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
+    | 'JENKINS_ARTIFACT'
   restrictionMetadata?: {
     [key: string]: RestrictionMetadataDTO
   }
@@ -3990,8 +4002,15 @@ export interface FilterProperties {
   }
 }
 
-export type FolderNodeDTO = FileStoreNodeDTO & {
+export interface FolderNodeDTO {
   children?: FileStoreNodeDTO[]
+  identifier: string
+  lastModifiedAt?: number
+  lastModifiedBy?: EmbeddedUserDetailsDTO
+  name: string
+  parentIdentifier?: string
+  path?: string
+  type: 'FILE' | 'FOLDER'
 }
 
 export interface GatewayAccountRequestDTO {
@@ -4230,6 +4249,7 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
+    | 'JenkinsBuild'
   )[]
   moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE'
   searchTerm?: string
@@ -4325,6 +4345,7 @@ export interface GitEntityFilterProperties {
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
+    | 'JenkinsBuild'
   )[]
   gitSyncConfigIdentifiers?: string[]
   moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE'
@@ -4453,6 +4474,7 @@ export interface GitFullSyncEntityInfoDTO {
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
+    | 'JenkinsBuild'
   errorMessage?: string
   filePath?: string
   identifier?: string
@@ -4556,6 +4578,7 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
+    | 'JenkinsBuild'
   )[]
   syncStatus?: 'QUEUED' | 'SUCCESS' | 'FAILED' | 'OVERRIDDEN'
 }
@@ -4610,10 +4633,6 @@ export interface GitPRCreateRequest {
   title: string
   useUserFromToken?: boolean
   yamlGitConfigRef?: string
-}
-
-export interface GitRepoScopeParams {
-  gitProjectName?: string
 }
 
 export interface GitRepositoryResponseDTO {
@@ -4741,6 +4760,7 @@ export interface GitSyncEntityDTO {
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
+    | 'JenkinsBuild'
   entityUrl?: string
   folderPath?: string
   gitConnectorId?: string
@@ -4838,6 +4858,7 @@ export interface GitSyncEntityListDTO {
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
+    | 'JenkinsBuild'
   gitSyncEntities?: GitSyncEntityDTO[]
 }
 
@@ -4952,6 +4973,7 @@ export interface GitSyncErrorDTO {
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
+    | 'JenkinsBuild'
   errorType?: 'GIT_TO_HARNESS' | 'CONNECTIVITY_ISSUE' | 'FULL_SYNC'
   failureReason?: string
   repoId?: string
@@ -5600,6 +5622,16 @@ export type JenkinsBearerTokenDTO = JenkinsAuthCredentialsDTO & {
   tokenRef: string
 }
 
+export type JenkinsBuildStepInfo = StepSpecType & {
+  captureEnvironmentVariable?: boolean
+  connectorRef: string
+  delegateSelectors?: string[]
+  jobName: string
+  jobParameter?: JenkinsParameterField[]
+  metadata?: string
+  unstableStatusAsSuccess?: boolean
+}
+
 export type JenkinsConnectorDTO = ConnectorConfigDTO & {
   auth?: JenkinsAuthenticationDTO
   delegateSelectors?: string[]
@@ -5608,6 +5640,11 @@ export type JenkinsConnectorDTO = ConnectorConfigDTO & {
 
 export interface JenkinsJobDetailsDTO {
   jobDetails?: JobDetails[]
+}
+
+export interface JenkinsParameterField {
+  name?: string
+  value: string
 }
 
 export type JenkinsUserNamePasswordDTO = JenkinsAuthCredentialsDTO & {
@@ -7467,6 +7504,7 @@ export interface ReferencedByDTO {
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
+    | 'JenkinsBuild'
 }
 
 export type ReleaseRepoManifest = ManifestAttributes & {
@@ -7964,13 +8002,6 @@ export interface ResponseFileDTO {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
-export interface ResponseFileStoreNodeDTO {
-  correlationId?: string
-  data?: FileStoreNodeDTO
-  metaData?: { [key: string]: any }
-  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
-}
-
 export interface ResponseFilterDTO {
   correlationId?: string
   data?: FilterDTO
@@ -8195,6 +8226,13 @@ export interface ResponseListAwsVPC {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseListBucketResponse {
+  correlationId?: string
+  data?: BucketResponse[]
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseListBuildDetails {
   correlationId?: string
   data?: BuildDetails[]
@@ -8300,6 +8338,7 @@ export interface ResponseListEntityType {
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
+    | 'JenkinsBuild'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -8392,6 +8431,13 @@ export interface ResponseListJiraProjectBasicNG {
 export interface ResponseListJiraStatusNG {
   correlationId?: string
   data?: JiraStatusNG[]
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseListJobParameter {
+  correlationId?: string
+  data?: JobParameter[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -10909,6 +10955,7 @@ export interface StepData {
     | 'ServerlessAwsLambdaDeploy'
     | 'ServerlessAwsLambdaRollback'
     | 'Command'
+    | 'JenkinsBuild'
 }
 
 export interface StepElementConfig {
@@ -11751,8 +11798,6 @@ export type GitFullSyncConfigRequestDTORequestBody = GitFullSyncConfigRequestDTO
 
 export type GitOpsProviderRequestBody = GitOpsProvider
 
-export type GitRepoScopeParamsRequestBody = GitRepoScopeParams
-
 export type GitSyncConfigRequestBody = GitSyncConfig
 
 export type GitSyncSettingsDTORequestBody = GitSyncSettingsDTO
@@ -11811,7 +11856,7 @@ export type GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody = string
 
 export type GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody = string
 
-export type UnsubscribeBodyRequestBody = string[]
+export type ProcessPollingResultNgBodyRequestBody = string[]
 
 export type UpdateWhitelistedDomainsBodyRequestBody = string[]
 
@@ -12380,6 +12425,7 @@ export interface ListActivitiesQueryParams {
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
+    | 'JenkinsBuild'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -12469,6 +12515,7 @@ export interface ListActivitiesQueryParams {
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
+    | 'JenkinsBuild'
 }
 
 export type ListActivitiesProps = Omit<GetProps<ResponsePageActivity, unknown, ListActivitiesQueryParams, void>, 'path'>
@@ -12662,6 +12709,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
+    | 'JenkinsBuild'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -12751,6 +12799,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
+    | 'JenkinsBuild'
 }
 
 export type GetActivitiesSummaryProps = Omit<
@@ -15701,6 +15750,95 @@ export const getBuildsForJenkinsPromise = (
     GetBuildsForJenkinsPathParams
   >(getConfig('ng/api'), `/artifacts/jenkins/job/${jobName}/builds`, props, signal)
 
+export interface GetJobParametersForJenkinsQueryParams {
+  connectorRef?: string
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+}
+
+export interface GetJobParametersForJenkinsPathParams {
+  jobName: string
+}
+
+export type GetJobParametersForJenkinsProps = Omit<
+  GetProps<
+    ResponseListJobParameter,
+    Failure | Error,
+    GetJobParametersForJenkinsQueryParams,
+    GetJobParametersForJenkinsPathParams
+  >,
+  'path'
+> &
+  GetJobParametersForJenkinsPathParams
+
+/**
+ * Gets Jenkins Job paramter
+ */
+export const GetJobParametersForJenkins = ({ jobName, ...props }: GetJobParametersForJenkinsProps) => (
+  <Get<
+    ResponseListJobParameter,
+    Failure | Error,
+    GetJobParametersForJenkinsQueryParams,
+    GetJobParametersForJenkinsPathParams
+  >
+    path={`/artifacts/jenkins/job/${jobName}/details`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetJobParametersForJenkinsProps = Omit<
+  UseGetProps<
+    ResponseListJobParameter,
+    Failure | Error,
+    GetJobParametersForJenkinsQueryParams,
+    GetJobParametersForJenkinsPathParams
+  >,
+  'path'
+> &
+  GetJobParametersForJenkinsPathParams
+
+/**
+ * Gets Jenkins Job paramter
+ */
+export const useGetJobParametersForJenkins = ({ jobName, ...props }: UseGetJobParametersForJenkinsProps) =>
+  useGet<
+    ResponseListJobParameter,
+    Failure | Error,
+    GetJobParametersForJenkinsQueryParams,
+    GetJobParametersForJenkinsPathParams
+  >((paramsInPath: GetJobParametersForJenkinsPathParams) => `/artifacts/jenkins/job/${paramsInPath.jobName}/details`, {
+    base: getConfig('ng/api'),
+    pathParams: { jobName },
+    ...props
+  })
+
+/**
+ * Gets Jenkins Job paramter
+ */
+export const getJobParametersForJenkinsPromise = (
+  {
+    jobName,
+    ...props
+  }: GetUsingFetchProps<
+    ResponseListJobParameter,
+    Failure | Error,
+    GetJobParametersForJenkinsQueryParams,
+    GetJobParametersForJenkinsPathParams
+  > & { jobName: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponseListJobParameter,
+    Failure | Error,
+    GetJobParametersForJenkinsQueryParams,
+    GetJobParametersForJenkinsPathParams
+  >(getConfig('ng/api'), `/artifacts/jenkins/job/${jobName}/details`, props, signal)
+
 export interface GetArtifactPathForJenkinsQueryParams {
   connectorRef?: string
   accountIdentifier: string
@@ -18098,6 +18236,58 @@ export const getBucketListForS3Promise = (
   getUsingFetch<ResponseMapStringString, Failure | Error, GetBucketListForS3QueryParams, void>(
     getConfig('ng/api'),
     `/buckets/s3/getBuckets`,
+    props,
+    signal
+  )
+
+export interface GetV2BucketListForS3QueryParams {
+  region?: string
+  connectorRef: string
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export type GetV2BucketListForS3Props = Omit<
+  GetProps<ResponseListBucketResponse, Failure | Error, GetV2BucketListForS3QueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets s3 buckets
+ */
+export const GetV2BucketListForS3 = (props: GetV2BucketListForS3Props) => (
+  <Get<ResponseListBucketResponse, Failure | Error, GetV2BucketListForS3QueryParams, void>
+    path={`/buckets/s3/getBucketsV2`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetV2BucketListForS3Props = Omit<
+  UseGetProps<ResponseListBucketResponse, Failure | Error, GetV2BucketListForS3QueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets s3 buckets
+ */
+export const useGetV2BucketListForS3 = (props: UseGetV2BucketListForS3Props) =>
+  useGet<ResponseListBucketResponse, Failure | Error, GetV2BucketListForS3QueryParams, void>(
+    `/buckets/s3/getBucketsV2`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Gets s3 buckets
+ */
+export const getV2BucketListForS3Promise = (
+  props: GetUsingFetchProps<ResponseListBucketResponse, Failure | Error, GetV2BucketListForS3QueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseListBucketResponse, Failure | Error, GetV2BucketListForS3QueryParams, void>(
+    getConfig('ng/api'),
+    `/buckets/s3/getBucketsV2`,
     props,
     signal
   )
@@ -22189,9 +22379,11 @@ export interface FetchFeatureRestrictionMetadataPathParams {
     | 'AZURE_TRAFFIC_SHIFT'
     | 'AZURE_SWAP_SLOT'
     | 'AZURE_WEBAPP_ROLLBACK'
+    | 'JENKINS_BUILD'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
+    | 'JENKINS_ARTIFACT'
 }
 
 export type FetchFeatureRestrictionMetadataProps = Omit<
@@ -22322,9 +22514,11 @@ export const fetchFeatureRestrictionMetadataPromise = (
       | 'AZURE_TRAFFIC_SHIFT'
       | 'AZURE_SWAP_SLOT'
       | 'AZURE_WEBAPP_ROLLBACK'
+      | 'JENKINS_BUILD'
       | 'SECURITY'
       | 'DEVELOPERS'
       | 'MONTHLY_ACTIVE_USERS'
+      | 'JENKINS_ARTIFACT'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -22431,6 +22625,7 @@ export interface ListReferredByEntitiesQueryParams {
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
+    | 'JenkinsBuild'
   searchTerm?: string
   branch?: string
   repoIdentifier?: string
@@ -22575,6 +22770,7 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
+    | 'JenkinsBuild'
   searchTerm?: string
 }
 
@@ -24883,68 +25079,6 @@ export const listFilesWithFilterPromise = (
     signal
   )
 
-export interface GetFileQueryParams {
-  accountIdentifier?: string
-  orgIdentifier?: string
-  projectIdentifier?: string
-  includeContent?: boolean
-}
-
-export interface GetFilePathParams {
-  identifier: string
-}
-
-export type GetFileProps = Omit<
-  GetProps<ResponseFileStoreNodeDTO, Failure | Error, GetFileQueryParams, GetFilePathParams>,
-  'path'
-> &
-  GetFilePathParams
-
-/**
- * Get file
- */
-export const GetFile = ({ identifier, ...props }: GetFileProps) => (
-  <Get<ResponseFileStoreNodeDTO, Failure | Error, GetFileQueryParams, GetFilePathParams>
-    path={`/file-store/files/${identifier}`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseGetFileProps = Omit<
-  UseGetProps<ResponseFileStoreNodeDTO, Failure | Error, GetFileQueryParams, GetFilePathParams>,
-  'path'
-> &
-  GetFilePathParams
-
-/**
- * Get file
- */
-export const useGetFile = ({ identifier, ...props }: UseGetFileProps) =>
-  useGet<ResponseFileStoreNodeDTO, Failure | Error, GetFileQueryParams, GetFilePathParams>(
-    (paramsInPath: GetFilePathParams) => `/file-store/files/${paramsInPath.identifier}`,
-    { base: getConfig('ng/api'), pathParams: { identifier }, ...props }
-  )
-
-/**
- * Get file
- */
-export const getFilePromise = (
-  {
-    identifier,
-    ...props
-  }: GetUsingFetchProps<ResponseFileStoreNodeDTO, Failure | Error, GetFileQueryParams, GetFilePathParams> & {
-    identifier: string
-  },
-  signal?: RequestInit['signal']
-) =>
-  getUsingFetch<ResponseFileStoreNodeDTO, Failure | Error, GetFileQueryParams, GetFilePathParams>(
-    getConfig('ng/api'),
-    `/file-store/files/${identifier}`,
-    props,
-    signal
-  )
-
 export interface DownloadFileQueryParams {
   accountIdentifier?: string
   orgIdentifier?: string
@@ -25310,6 +25444,67 @@ export const deleteFilePromise = (
     signal
   )
 
+export interface GetFileQueryParams {
+  accountIdentifier?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export interface GetFilePathParams {
+  identifier: string
+}
+
+export type GetFileProps = Omit<
+  GetProps<ResponseFileDTO, Failure | Error, GetFileQueryParams, GetFilePathParams>,
+  'path'
+> &
+  GetFilePathParams
+
+/**
+ * Get file
+ */
+export const GetFile = ({ identifier, ...props }: GetFileProps) => (
+  <Get<ResponseFileDTO, Failure | Error, GetFileQueryParams, GetFilePathParams>
+    path={`/file-store/${identifier}`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetFileProps = Omit<
+  UseGetProps<ResponseFileDTO, Failure | Error, GetFileQueryParams, GetFilePathParams>,
+  'path'
+> &
+  GetFilePathParams
+
+/**
+ * Get file
+ */
+export const useGetFile = ({ identifier, ...props }: UseGetFileProps) =>
+  useGet<ResponseFileDTO, Failure | Error, GetFileQueryParams, GetFilePathParams>(
+    (paramsInPath: GetFilePathParams) => `/file-store/${paramsInPath.identifier}`,
+    { base: getConfig('ng/api'), pathParams: { identifier }, ...props }
+  )
+
+/**
+ * Get file
+ */
+export const getFilePromise = (
+  {
+    identifier,
+    ...props
+  }: GetUsingFetchProps<ResponseFileDTO, Failure | Error, GetFileQueryParams, GetFilePathParams> & {
+    identifier: string
+  },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseFileDTO, Failure | Error, GetFileQueryParams, GetFilePathParams>(
+    getConfig('ng/api'),
+    `/file-store/${identifier}`,
+    props,
+    signal
+  )
+
 export interface UpdateQueryParams {
   accountIdentifier?: string
   orgIdentifier?: string
@@ -25469,6 +25664,7 @@ export interface GetReferencedByQueryParams {
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
+    | 'JenkinsBuild'
   searchTerm?: string
 }
 
@@ -26768,6 +26964,7 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
+    | 'JenkinsBuild'
 }
 
 export type ListGitSyncEntitiesByTypeProps = Omit<
@@ -26925,6 +27122,7 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'AzureTrafficShift'
       | 'AzureSwapSlot'
       | 'AzureWebAppRollback'
+      | 'JenkinsBuild'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -31571,6 +31769,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
+    | 'JenkinsBuild'
   yamlGroup?: string
 }
 
@@ -31788,6 +31987,7 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
+    | 'JenkinsBuild'
 }
 
 export type GetEntityYamlSchemaProps = Omit<
@@ -32234,7 +32434,7 @@ export type ProcessPollingResultNgProps = Omit<
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    UnsubscribeBodyRequestBody,
+    ProcessPollingResultNgBodyRequestBody,
     ProcessPollingResultNgPathParams
   >,
   'path' | 'verb'
@@ -32246,7 +32446,7 @@ export const ProcessPollingResultNg = ({ perpetualTaskId, ...props }: ProcessPol
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    UnsubscribeBodyRequestBody,
+    ProcessPollingResultNgBodyRequestBody,
     ProcessPollingResultNgPathParams
   >
     verb="POST"
@@ -32261,7 +32461,7 @@ export type UseProcessPollingResultNgProps = Omit<
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    UnsubscribeBodyRequestBody,
+    ProcessPollingResultNgBodyRequestBody,
     ProcessPollingResultNgPathParams
   >,
   'path' | 'verb'
@@ -32273,7 +32473,7 @@ export const useProcessPollingResultNg = ({ perpetualTaskId, ...props }: UseProc
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    UnsubscribeBodyRequestBody,
+    ProcessPollingResultNgBodyRequestBody,
     ProcessPollingResultNgPathParams
   >(
     'POST',
@@ -32289,7 +32489,7 @@ export const processPollingResultNgPromise = (
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    UnsubscribeBodyRequestBody,
+    ProcessPollingResultNgBodyRequestBody,
     ProcessPollingResultNgPathParams
   > & { perpetualTaskId: string },
   signal?: RequestInit['signal']
@@ -32298,17 +32498,17 @@ export const processPollingResultNgPromise = (
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    UnsubscribeBodyRequestBody,
+    ProcessPollingResultNgBodyRequestBody,
     ProcessPollingResultNgPathParams
   >('POST', getConfig('ng/api'), `/polling/delegate-response/${perpetualTaskId}`, props, signal)
 
 export type SubscribeProps = Omit<
-  MutateProps<ResponsePollingResponseDTO, Failure | Error, void, UnsubscribeBodyRequestBody, void>,
+  MutateProps<ResponsePollingResponseDTO, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>,
   'path' | 'verb'
 >
 
 export const Subscribe = (props: SubscribeProps) => (
-  <Mutate<ResponsePollingResponseDTO, Failure | Error, void, UnsubscribeBodyRequestBody, void>
+  <Mutate<ResponsePollingResponseDTO, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>
     verb="POST"
     path={`/polling/subscribe`}
     base={getConfig('ng/api')}
@@ -32317,22 +32517,28 @@ export const Subscribe = (props: SubscribeProps) => (
 )
 
 export type UseSubscribeProps = Omit<
-  UseMutateProps<ResponsePollingResponseDTO, Failure | Error, void, UnsubscribeBodyRequestBody, void>,
+  UseMutateProps<ResponsePollingResponseDTO, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>,
   'path' | 'verb'
 >
 
 export const useSubscribe = (props: UseSubscribeProps) =>
-  useMutate<ResponsePollingResponseDTO, Failure | Error, void, UnsubscribeBodyRequestBody, void>(
+  useMutate<ResponsePollingResponseDTO, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>(
     'POST',
     `/polling/subscribe`,
     { base: getConfig('ng/api'), ...props }
   )
 
 export const subscribePromise = (
-  props: MutateUsingFetchProps<ResponsePollingResponseDTO, Failure | Error, void, UnsubscribeBodyRequestBody, void>,
+  props: MutateUsingFetchProps<
+    ResponsePollingResponseDTO,
+    Failure | Error,
+    void,
+    ProcessPollingResultNgBodyRequestBody,
+    void
+  >,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<ResponsePollingResponseDTO, Failure | Error, void, UnsubscribeBodyRequestBody, void>(
+  mutateUsingFetch<ResponsePollingResponseDTO, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>(
     'POST',
     getConfig('ng/api'),
     `/polling/subscribe`,
@@ -32341,12 +32547,12 @@ export const subscribePromise = (
   )
 
 export type UnsubscribeProps = Omit<
-  MutateProps<boolean, Failure | Error, void, UnsubscribeBodyRequestBody, void>,
+  MutateProps<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>,
   'path' | 'verb'
 >
 
 export const Unsubscribe = (props: UnsubscribeProps) => (
-  <Mutate<boolean, Failure | Error, void, UnsubscribeBodyRequestBody, void>
+  <Mutate<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>
     verb="POST"
     path={`/polling/unsubscribe`}
     base={getConfig('ng/api')}
@@ -32355,21 +32561,22 @@ export const Unsubscribe = (props: UnsubscribeProps) => (
 )
 
 export type UseUnsubscribeProps = Omit<
-  UseMutateProps<boolean, Failure | Error, void, UnsubscribeBodyRequestBody, void>,
+  UseMutateProps<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>,
   'path' | 'verb'
 >
 
 export const useUnsubscribe = (props: UseUnsubscribeProps) =>
-  useMutate<boolean, Failure | Error, void, UnsubscribeBodyRequestBody, void>('POST', `/polling/unsubscribe`, {
-    base: getConfig('ng/api'),
-    ...props
-  })
+  useMutate<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>(
+    'POST',
+    `/polling/unsubscribe`,
+    { base: getConfig('ng/api'), ...props }
+  )
 
 export const unsubscribePromise = (
-  props: MutateUsingFetchProps<boolean, Failure | Error, void, UnsubscribeBodyRequestBody, void>,
+  props: MutateUsingFetchProps<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<boolean, Failure | Error, void, UnsubscribeBodyRequestBody, void>(
+  mutateUsingFetch<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>(
     'POST',
     getConfig('ng/api'),
     `/polling/unsubscribe`,
@@ -43045,6 +43252,7 @@ export interface GetYamlSchemaQueryParams {
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
+    | 'JenkinsBuild'
   subtype?:
     | 'K8sCluster'
     | 'Git'

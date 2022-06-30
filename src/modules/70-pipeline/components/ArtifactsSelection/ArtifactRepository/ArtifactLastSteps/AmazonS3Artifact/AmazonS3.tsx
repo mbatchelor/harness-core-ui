@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback } from 'react'
-import { Form } from 'formik'
+import { Form, FormikValues } from 'formik'
 import { useParams } from 'react-router-dom'
 import { defaultTo, get, memoize, merge } from 'lodash-es'
 import * as Yup from 'yup'
@@ -25,7 +25,7 @@ import {
   Text
 } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
-import { ConnectorConfigDTO, useGetBucketListForS3 } from 'services/cd-ng'
+import { BucketResponse, ConnectorConfigDTO, useGetV2BucketListForS3 } from 'services/cd-ng'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
@@ -63,6 +63,41 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
 
+  const {
+    data: bucketData,
+    error,
+    loading,
+    refetch: refetchBuckets
+  } = useGetV2BucketListForS3({
+    lazy: true,
+    debounce: 300
+  })
+
+  const fetchBuckets = (): void => {
+    refetchBuckets({
+      queryParams: {
+        accountIdentifier: accountId,
+        orgIdentifier,
+        projectIdentifier,
+        connectorRef: prevStepData?.connectorId?.value ?? prevStepData?.connectorId
+      }
+    })
+  }
+
+  const getSelectItems = useCallback(() => {
+    return bucketData?.data?.map((bucket: BucketResponse) => ({
+      value: defaultTo(bucket.bucketName, ''),
+      label: defaultTo(bucket.bucketName, '')
+    }))
+  }, [bucketData?.data])
+
+  const getBuckets = (): { label: string; value: string }[] => {
+    if (loading) {
+      return [{ label: 'Loading Buckets...', value: 'Loading Buckets...' }]
+    }
+    return defaultTo(getSelectItems(), [])
+  }
+
   const schemaObject = {
     bucketName: Yup.mixed().required(getString('pipeline.manifestType.bucketNameRequired')),
     artifactPath: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.artifactPath')),
@@ -97,17 +132,13 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
   const primarySchema = Yup.object().shape(schemaObject)
   const primarySchemaServerless = Yup.object().shape(schemaObjectServerless)
   const sidecarSchemaServerless = Yup.object().shape({
-    ...schemaObject,
+    ...schemaObjectServerless,
     ...ArtifactIdentifierValidation(
       artifactIdentifiers,
       initialValues?.identifier,
       getString('pipeline.uniqueIdentifier')
     )
   })
-
-  const submitFormData = (formData: AmazonS3InitialValuesType & { connectorId?: string }): void => {
-    handleSubmit({ spec: formData })
-  }
 
   const getValidationSchema = useCallback(() => {
     if (isServerlessDeploymentTypeSelected) {
@@ -122,41 +153,6 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
     return primarySchema
   }, [context, isServerlessDeploymentTypeSelected, primarySchema, primarySchemaServerless, sidecarSchema])
 
-  const {
-    data: bucketData,
-    error,
-    loading,
-    refetch: refetchBuckets
-  } = useGetBucketListForS3({
-    lazy: true,
-    debounce: 300
-  })
-
-  const fetchBuckets = (): void => {
-    refetchBuckets({
-      queryParams: {
-        connectorRef: prevStepData?.connectorId?.value ?? prevStepData?.connectorId,
-        accountIdentifier: accountId,
-        projectIdentifier,
-        orgIdentifier
-      }
-    })
-  }
-
-  const getSelectItems = useCallback(() => {
-    return Object.keys(defaultTo(bucketData?.data, [])).map(bucket => ({
-      value: bucket,
-      label: bucket
-    }))
-  }, [bucketData?.data])
-
-  const getBuckets = (): { label: string; value: string }[] => {
-    if (loading) {
-      return [{ label: 'Loading Buckets...', value: 'Loading Buckets...' }]
-    }
-    return getSelectItems()
-  }
-
   const getInitialValues = useCallback((): AmazonS3InitialValuesType => {
     const specValues = get(initialValues, 'spec', null)
     if (selectedArtifact !== (initialValues as any)?.type || !specValues) {
@@ -167,6 +163,22 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
     }
     return specValues
   }, [context, initialValues, selectedArtifact])
+
+  const submitFormData = (formData: AmazonS3InitialValuesType & { connectorId?: string }): void => {
+    const artifactObj = {
+      spec: {
+        connectorRef: formData.connectorId,
+        bucketName: formData.bucketName,
+        artifactPath: formData.artifactPath,
+        filePathRegex: formData.filePathRegex
+      }
+    }
+    if (context === ModalViewFor.SIDECAR) {
+      merge(artifactObj, { identifier: formData?.identifier })
+    }
+
+    handleSubmit(artifactObj)
+  }
 
   const itemRenderer = memoize((item: { label: string }, { handleClick }) => (
     <div key={item.label.toString()}>
@@ -181,6 +193,82 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
       />
     </div>
   ))
+
+  const renderS3BucketField = (formik: FormikValues): JSX.Element => {
+    if (
+      getMultiTypeFromValue(formik.values?.region) !== MultiTypeInputType.FIXED ||
+      getMultiTypeFromValue(prevStepData?.connectorId) !== MultiTypeInputType.FIXED
+    ) {
+      return (
+        <div className={css.imagePathContainer}>
+          <FormInput.MultiTextInput
+            label={getString('pipeline.manifestType.bucketName')}
+            placeholder={getString('pipeline.manifestType.bucketNamePlaceholder')}
+            name="bucketName"
+            multiTextInputProps={{ expressions, allowableTypes }}
+          />
+          {getMultiTypeFromValue(formik.values?.bucketName) === MultiTypeInputType.RUNTIME && (
+            <div className={css.configureOptions}>
+              <ConfigureOptions
+                style={{ alignSelf: 'center', marginBottom: 3 }}
+                value={formik.values?.bucketName as string}
+                type="String"
+                variableName="bucketName"
+                showRequiredField={false}
+                showDefaultField={false}
+                showAdvanced={true}
+                onChange={value => formik.setFieldValue('bucketName', value)}
+                isReadonly={isReadonly}
+              />
+            </div>
+          )}
+        </div>
+      )
+    }
+    return (
+      <div className={css.imagePathContainer}>
+        <FormInput.MultiTypeInput
+          selectItems={getBuckets()}
+          label={getString('pipeline.manifestType.bucketName')}
+          placeholder={getString('pipeline.manifestType.bucketPlaceHolder')}
+          name="bucketName"
+          useValue
+          multiTypeInputProps={{
+            expressions,
+            allowableTypes,
+            selectProps: {
+              noResults: (
+                <Text lineClamp={1}>{getRBACErrorMessage(error as RBACError) || getString('pipeline.noBuckets')}</Text>
+              ),
+              itemRenderer: itemRenderer,
+              items: getBuckets(),
+              allowCreatingNewItems: true
+            },
+            onFocus: () => {
+              if (!bucketData?.data) {
+                fetchBuckets()
+              }
+            }
+          }}
+        />
+        {getMultiTypeFromValue(formik.values?.bucketName) === MultiTypeInputType.RUNTIME && (
+          <div className={css.configureOptions}>
+            <ConfigureOptions
+              style={{ alignSelf: 'center', marginBottom: 3 }}
+              value={formik.values?.bucketName as string}
+              type="String"
+              variableName="bucketName"
+              showRequiredField={false}
+              showDefaultField={false}
+              showAdvanced={true}
+              onChange={value => formik.setFieldValue('bucketName', value)}
+              isReadonly={isReadonly}
+            />
+          </div>
+        )}
+      </div>
+    )
+  }
 
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
@@ -204,44 +292,34 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
             <div className={css.connectorForm}>
               {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
 
+              {renderS3BucketField(formik)}
+
               <div className={css.imagePathContainer}>
-                <FormInput.MultiTypeInput
-                  selectItems={getBuckets()}
-                  label={getString('pipeline.manifestType.bucketName')}
-                  placeholder={getString('pipeline.manifestType.bucketPlaceHolder')}
-                  name="bucketName"
-                  multiTypeInputProps={{
+                <FormInput.MultiTextInput
+                  label={getString('pipeline.artifactsSelection.filePathRegexLabel')}
+                  name="filePathRegex"
+                  placeholder={getString('pipeline.artifactsSelection.filePathRegexPlaceholder')}
+                  multiTextInputProps={{
                     expressions,
-                    allowableTypes,
-                    selectProps: {
-                      noResults: (
-                        <Text lineClamp={1}>
-                          {getRBACErrorMessage(error as RBACError) || getString('pipeline.noBuckets')}
-                        </Text>
-                      ),
-                      itemRenderer: itemRenderer,
-                      items: getBuckets(),
-                      allowCreatingNewItems: true
-                    },
-                    onFocus: () => {
-                      if (!bucketData?.data) {
-                        fetchBuckets()
-                      }
-                    }
+                    allowableTypes
                   }}
                 />
-                {getMultiTypeFromValue(formik.values.bucketName) === MultiTypeInputType.RUNTIME && (
-                  <ConfigureOptions
-                    style={{ alignSelf: 'center', marginBottom: 3 }}
-                    value={formik.values?.bucketName as string}
-                    type="String"
-                    variableName="bucketName"
-                    showRequiredField={false}
-                    showDefaultField={false}
-                    showAdvanced={true}
-                    onChange={value => formik.setFieldValue('bucketName', value)}
-                    isReadonly={isReadonly}
-                  />
+                {getMultiTypeFromValue(formik.values.filePathRegex) === MultiTypeInputType.RUNTIME && (
+                  <div className={css.configureOptions}>
+                    <ConfigureOptions
+                      style={{ alignSelf: 'center' }}
+                      value={formik.values?.filePathRegex as string}
+                      type={getString('string')}
+                      variableName="filePathRegex"
+                      showRequiredField={false}
+                      showDefaultField={false}
+                      showAdvanced={true}
+                      onChange={value => {
+                        formik.setFieldValue('filePathRegex', value)
+                      }}
+                      isReadonly={isReadonly}
+                    />
+                  </div>
                 )}
               </div>
 
@@ -267,35 +345,6 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
                       showAdvanced={true}
                       onChange={value => {
                         formik.setFieldValue('artifactPath', value)
-                      }}
-                      isReadonly={isReadonly}
-                    />
-                  </div>
-                )}
-              </div>
-
-              <div className={css.imagePathContainer}>
-                <FormInput.MultiTextInput
-                  label={getString('pipeline.artifactsSelection.filePathRegexLabel')}
-                  name="filePathRegex"
-                  placeholder={getString('pipeline.artifactsSelection.filePathRegexPlaceholder')}
-                  multiTextInputProps={{
-                    expressions,
-                    allowableTypes
-                  }}
-                />
-                {getMultiTypeFromValue(formik.values.filePathRegex) === MultiTypeInputType.RUNTIME && (
-                  <div className={css.configureOptions}>
-                    <ConfigureOptions
-                      style={{ alignSelf: 'center' }}
-                      value={formik.values?.filePathRegex as string}
-                      type={getString('string')}
-                      variableName="filePathRegex"
-                      showRequiredField={false}
-                      showDefaultField={false}
-                      showAdvanced={true}
-                      onChange={value => {
-                        formik.setFieldValue('filePathRegex', value)
                       }}
                       isReadonly={isReadonly}
                     />
