@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { Form, FormikValues } from 'formik'
 import { useParams } from 'react-router-dom'
 import { defaultTo, get, memoize, merge } from 'lodash-es'
@@ -84,7 +84,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
     })
   }
 
-  const getSelectItems = useCallback(() => {
+  const selectItems = useMemo(() => {
     return bucketData?.data?.map((bucket: BucketResponse) => ({
       value: defaultTo(bucket.bucketName, ''),
       label: defaultTo(bucket.bucketName, '')
@@ -95,7 +95,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
     if (loading) {
       return [{ label: 'Loading Buckets...', value: 'Loading Buckets...' }]
     }
-    return defaultTo(getSelectItems(), [])
+    return defaultTo(selectItems, [])
   }
 
   const schemaObject = {
@@ -153,7 +153,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
     return primarySchema
   }, [context, isServerlessDeploymentTypeSelected, primarySchema, primarySchemaServerless, sidecarSchema])
 
-  const getInitialValues = useCallback((): AmazonS3InitialValuesType => {
+  const getInitialValues = (): AmazonS3InitialValuesType => {
     const specValues = get(initialValues, 'spec', null)
     if (selectedArtifact !== (initialValues as any)?.type || !specValues) {
       return defaultArtifactInitialValues(defaultTo(selectedArtifact, 'AmazonS3'))
@@ -162,7 +162,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
       merge(specValues, { identifier: initialValues?.identifier })
     }
     return specValues
-  }, [context, initialValues, selectedArtifact])
+  }
 
   const submitFormData = (formData: AmazonS3InitialValuesType & { connectorId?: string }): void => {
     const artifactObj = {

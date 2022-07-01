@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback } from 'react'
+import React, { useMemo } from 'react'
 import type { FormikValues } from 'formik'
 import { defaultTo, get, memoize } from 'lodash-es'
 import { Menu } from '@blueprintjs/core'
@@ -85,7 +85,7 @@ const Content = (props: AmazonS3ContentProps): JSX.Element => {
     })
   }
 
-  const getSelectItems = useCallback(() => {
+  const selectItems = useMemo(() => {
     return bucketData?.data?.map((bucket: BucketResponse) => ({
       value: defaultTo(bucket.bucketName, ''),
       label: defaultTo(bucket.bucketName, '')
@@ -96,7 +96,7 @@ const Content = (props: AmazonS3ContentProps): JSX.Element => {
     if (loading) {
       return [{ label: 'Loading Buckets...', value: 'Loading Buckets...' }]
     }
-    return defaultTo(getSelectItems(), [])
+    return defaultTo(selectItems, [])
   }
 
   const isFieldDisabled = (fieldName: string, isBucket = false): boolean => {
