@@ -667,7 +667,8 @@ slos:
   sloCreated: SLO created successfully
   sloUpdated: SLO updated successfully
   noData: You don’t have any SLO created yet
-  noMatchingData: No matching data for applied filters
+  noDataMS: There are no SLOs available for this service
+  noMatchingData: No matching data for the applied filters.
   monitoredServiceText: A Monitored Service is automatically created by Harness by concatenating the names of the Service and Environment.
   createMonitoredService: Create a Monitored Service
   confirmDeleteSLO: 'Are you sure you want to delete SLO: {{ name }}?'
@@ -692,7 +693,7 @@ slos:
   sloDefinition: Define SLO identification
   reviewChanges: Review changes
   sloEditWarningMessage: It may take a few minutes to recalculate the Error Budget. Are you sure you want to proceed?
-  noSLOsStateMessage: A service level objective (SLO) is the sum of a collection of performance metrics (Service Level Indicator or SLI) such as uptime, response time, and error rate that are used to measure the services performance. At least one SLO is required to monitor a service
+  noSLOsStateMessage: Service level objectives (SLOs) are used to describe and measure service level performance and reliability for any service/microservice applications.
   validations:
     nameValidation: SLO name is required
     userJourneyRequired: User journey is required

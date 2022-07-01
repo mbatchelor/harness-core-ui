@@ -19,7 +19,8 @@ import {
   FlexExpander,
   Container,
   Heading,
-  HarnessDocTooltip
+  HarnessDocTooltip,
+  SelectOption
 } from '@wings-software/uicore'
 import { FontVariation } from '@harness/design-system'
 import slosEmptyState from '@cv/assets/slosEmptyState.svg'
@@ -45,6 +46,7 @@ import { getErrorMessage } from '@cv/utils/CommonUtils'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import SLOCardSelect from './components/SLOCardSelect/SLOCardSelect'
 import type { CVSLOsListingPageProps, SLORiskFilter } from './CVSLOsListingPage.types'
+import _ from 'lodash'
 import {
   getErrorObject,
   getIsSLODashboardAPIsLoading,
@@ -59,7 +61,8 @@ import {
   getUserJourneyParams,
   getMonitoredServicesInitialState,
   getInitialFilterState,
-  getClassNameForMonitoredServicePage
+  getClassNameForMonitoredServicePage,
+  getIsDataEmpty
 } from './CVSLOListingPage.utils'
 import SLODashbordFilters from './components/SLODashbordFilters/SLODashbordFilters'
 import SLOCardHeader from './SLOCard/SLOCardHeader'
@@ -216,7 +219,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
 
   return (
     <>
-      {!monitoredService?.identifier && (
+      {!monitoredService?.identifier && !!riskCountResponse?.data?.riskCounts && (
         <>
           <Page.Header
             breadcrumbs={<NGBreadcrumbs />}
@@ -314,7 +317,27 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
           )}
 
           {getIsWidgetDataEmpty(content?.length, dashboardWidgetsLoading) && (
-            <NoDataCard image={slosEmptyState} message={getString('cv.slos.noMatchingData')} />
+            // <NoDataCard
+            //   image={slosEmptyState}
+            //   messageTitle= {monitoredService?.identifier} ? {getString('cv.slos.noDataMS')}
+            //   : {getIsWidgetDataEmpty(content?.length, dashboardWidgetsLoading)} ? getString('cv.slos.noData') : getString('cv.slos.noMatchingData')
+            //   message={getString('cv.slos.noSLOsStateMessage')}
+            //   className={css.noSloData}
+            // />
+            <NoDataCard
+              image={slosEmptyState}
+              messageTitle={
+                monitoredService?.identifier
+                  ? getString('cv.slos.noDataMS')
+                  : !riskCountResponse?.data?.riskCounts ||
+                    _.isEmpty(_.filter(_.compact(_.values(filterState)), ({ label }: SelectOption) => label !== 'All'))
+                  ? getString('cv.slos.noData')
+                  : getString('cv.slos.noMatchingData')
+              }
+              message={getString('cv.slos.noSLOsStateMessage')}
+              className={css.noSloData}
+            />
+            // <NoDataCard image={slosEmptyState} message={getString('cv.slos.noMatchingData')} />
           )}
         </Layout.Vertical>
       </Page.Body>
