@@ -33,6 +33,10 @@ import ChildAppMounter from 'microfrontends/ChildAppMounter'
 import STOSideNav from '@sto-steps/components/STOSideNav/STOSideNav'
 import STOExecutionCardSummary from '@sto-steps/components/STOExecutionCardSummary/STOExecutionCardSummary'
 import '@sto-steps/components/PipelineStages/SecurityTestsStage'
+import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
+import RbacFactory from '@rbac/factories/RbacFactory'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { String as LocaleString } from 'framework/strings'
 
 const STOApp = React.lazy(() => import('sto/App')) // eslint-disable-line import/no-unresolved
 
@@ -45,6 +49,47 @@ const STOSideNavProps: SidebarContext = {
 const moduleParams: ModulePathParams = {
   module: ':module(sto)'
 }
+
+RbacFactory.registerResourceCategory(ResourceCategory.STO, {
+  icon: 'sto-color-filled',
+  label: 'common.purpose.sto.continuous'
+})
+
+RbacFactory.registerResourceTypeHandler(ResourceType.STO_TESTTARGET, {
+  icon: 'sto-color-filled',
+  label: 'stoSteps.targets.testTargets',
+  category: ResourceCategory.STO,
+  permissionLabels: {
+    [PermissionIdentifier.VIEW_STO_TESTTARGET]: <LocaleString stringID="rbac.permissionLabels.view" />,
+    [PermissionIdentifier.EDIT_STO_TESTTARGET]: <LocaleString stringID="rbac.permissionLabels.createEdit" />
+  }
+})
+RbacFactory.registerResourceTypeHandler(ResourceType.STO_EXCEPTION, {
+  icon: 'sto-color-filled',
+  label: 'stoSteps.exceptions',
+  category: ResourceCategory.STO,
+  permissionLabels: {
+    [PermissionIdentifier.VIEW_STO_EXCEPTION]: <LocaleString stringID="rbac.permissionLabels.view" />,
+    [PermissionIdentifier.CREATE_STO_EXCEPTION]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
+    [PermissionIdentifier.APPROVE_STO_EXCEPTION]: <LocaleString stringID="common.approve" />
+  }
+})
+RbacFactory.registerResourceTypeHandler(ResourceType.STO_SCAN, {
+  icon: 'sto-color-filled',
+  label: 'stoSteps.scans',
+  category: ResourceCategory.STO,
+  permissionLabels: {
+    [PermissionIdentifier.VIEW_STO_SCAN]: <LocaleString stringID="rbac.permissionLabels.view" />
+  }
+})
+RbacFactory.registerResourceTypeHandler(ResourceType.STO_ISSUE, {
+  icon: 'sto-color-filled',
+  label: 'stoSteps.issues',
+  category: ResourceCategory.STO,
+  permissionLabels: {
+    [PermissionIdentifier.VIEW_STO_ISSUE]: <LocaleString stringID="rbac.permissionLabels.view" />
+  }
+})
 
 executionFactory.registerCardInfo(StageType.SECURITY, {
   icon: 'sto-color-filled',

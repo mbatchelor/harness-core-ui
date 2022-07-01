@@ -17,9 +17,9 @@ import { getDiffInDays, getStaticSchedulePeriodTime } from '@ce/utils/momentUtil
 import { convertNumberToFixedDecimalPlaces } from '@ce/utils/convertNumberToFixedDecimalPlaces'
 import type { CumulativeSavings } from 'services/lw'
 import { useStrings } from 'framework/strings'
-import CEChart from '../CEChart/CEChart'
-import { getDay } from './Utils'
-import css from './COGatewayCumulativeAnalytics.module.scss'
+import CEChart from '@ce/components/CEChart/CEChart'
+import { getDay } from '../Utils'
+import css from '../COGatewayCumulativeAnalytics.module.scss'
 
 interface SpendVsSavingsChartProps {
   data?: CumulativeSavings

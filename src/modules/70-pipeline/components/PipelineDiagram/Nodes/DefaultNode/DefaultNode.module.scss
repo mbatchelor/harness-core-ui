@@ -58,7 +58,7 @@
   height: fit-content;
   cursor: default;
   position: relative;
-  margin-bottom: 55px;
+  margin-bottom: 80px;
 
   &.marginBottom {
     margin-bottom: 20px;
@@ -145,6 +145,12 @@
     position: absolute;
     top: 5px;
     left: 5px;
+  }
+
+  .loopingStrategy {
+    position: absolute;
+    top: 0;
+    right: 5px;
   }
 
   .conditional {

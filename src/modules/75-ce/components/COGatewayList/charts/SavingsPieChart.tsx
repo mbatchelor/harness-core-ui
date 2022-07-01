@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { RulesMode } from '@ce/constants'
-import CEChart from '../CEChart/CEChart'
+import CEChart from '@ce/components/CEChart/CEChart'
 
 interface SavingsPieChartProps {
   savingsPercentage: number
@@ -47,7 +47,8 @@ const chartOptions = (data: number, mode = RulesMode.ACTIVE) => {
             enabled: false,
             brightness: 0
           }
-        }
+        },
+        enableMouseTracking: false
       }
     },
     tooltip: {

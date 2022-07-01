@@ -7,12 +7,8 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly canvas: string
-  readonly canvasContainer: string
-  readonly canvasWrapper: string
-  readonly container: string
-  readonly graphLink: string
-  readonly renderPopover: string
-  readonly stageList: string
+  readonly runningAnimation: string
+  readonly stepCount: string
+  readonly stepCountWrapper: string
 }
 export default styles

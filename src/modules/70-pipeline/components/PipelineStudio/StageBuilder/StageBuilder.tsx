@@ -782,7 +782,7 @@ function StageBuilder(): JSX.Element {
         >
           {newPipelineStudioEnabled ? (
             <div
-              className={cx(css.canvas, { [css.graphActions]: !isSplitViewOpen })}
+              className={css.canvas}
               ref={canvasRef}
               onClick={e => {
                 const div = e.target as HTMLDivElement

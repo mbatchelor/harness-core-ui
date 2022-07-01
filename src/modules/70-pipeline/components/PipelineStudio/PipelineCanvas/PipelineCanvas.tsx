@@ -495,8 +495,8 @@ export function PipelineCanvas({
   React.useEffect(() => {
     if (useTemplate && (!isGitSyncEnabled || !isEmpty(gitDetails))) {
       getPipelineTemplate()
-        .catch(_error => {
-          onCloseCreate()
+        .catch(_ => {
+          // Do nothing.. user cancelled template selection
         })
         .finally(() => {
           setUseTemplate(false)
@@ -794,7 +794,7 @@ export function PipelineCanvas({
             history.push(newPath)
           }}
         />
-        <div>
+        <Layout.Vertical height={'100%'}>
           <div className={css.titleBar}>
             <div className={css.breadcrumbsMenu}>
               <div className={css.pipelineMetadataContainer}>
@@ -917,18 +917,20 @@ export function PipelineCanvas({
               </div>
             </div>
           </div>
-        </div>
-        {templateInputsErrorNodeSummary && (
-          <OutOfSyncErrorStrip
-            templateInputsErrorNodeSummary={templateInputsErrorNodeSummary}
-            entity={'Pipeline'}
-            isReadOnly={isReadonly}
-            onRefreshEntity={() => {
-              fetchPipeline({ forceFetch: true, forceUpdate: true })
-            }}
-          />
-        )}
-        {isYaml ? <PipelineYamlView /> : pipeline.template ? <TemplatePipelineBuilder /> : <StageBuilder />}
+          {templateInputsErrorNodeSummary && (
+            <OutOfSyncErrorStrip
+              templateInputsErrorNodeSummary={templateInputsErrorNodeSummary}
+              entity={'Pipeline'}
+              isReadOnly={isReadonly}
+              onRefreshEntity={() => {
+                fetchPipeline({ forceFetch: true, forceUpdate: true })
+              }}
+            />
+          )}
+          <Container style={{ flex: 1 }}>
+            {isYaml ? <PipelineYamlView /> : pipeline.template ? <TemplatePipelineBuilder /> : <StageBuilder />}
+          </Container>
+        </Layout.Vertical>
       </div>
       <RightBar />
     </PipelineVariablesContextProvider>

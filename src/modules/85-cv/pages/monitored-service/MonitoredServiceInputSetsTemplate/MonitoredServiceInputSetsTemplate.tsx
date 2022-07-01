@@ -109,8 +109,8 @@ export default function MonitoredServiceInputSetsTemplate({
   })
 
   const onSave = async (value: any) => {
-    monitoredServiceInputSet.serviceRef = value.serviceRef?.value
-    monitoredServiceInputSet.environmentRef = value.environmentRef?.value
+    monitoredServiceInputSet.serviceRef = value.serviceRef
+    monitoredServiceInputSet.environmentRef = value.environmentRef
     const populateSource = value.sources ? { sources: value.sources } : {}
     const populateVariables = value.variables ? { variables: value.variables } : {}
     const structure = {
