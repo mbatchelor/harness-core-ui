@@ -190,7 +190,7 @@ describe('AmazonS3 tests', () => {
     fireEvent.click(submitBtn)
     const bucketNameRequiredErr = await findByText(container, 'pipeline.manifestType.bucketNameRequired')
     expect(bucketNameRequiredErr).toBeDefined()
-    const filePathRegexRequiredErr = await findByText(container, 'pipeline.artifactsSelection.validation.filePath')
+    const filePathRegexRequiredErr = await findByText(container, 'pipeline.manifestType.pathRequired')
     expect(filePathRegexRequiredErr).toBeDefined()
 
     const portalDivs = document.getElementsByClassName('bp3-portal')

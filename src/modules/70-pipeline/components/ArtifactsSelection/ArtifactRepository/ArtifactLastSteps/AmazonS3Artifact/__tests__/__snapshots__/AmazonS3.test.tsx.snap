@@ -186,7 +186,7 @@ exports[`AmazonS3 tests renders fine for the NEW artifact 1`] = `
                   class="Tooltip--acenter"
                   data-tooltip-id="artifactoryArtifact_filePath"
                 >
-                  pipeline.artifactsSelection.filePathLabel
+                  common.git.filePath
                 </span>
                  
                 <span
@@ -206,7 +206,7 @@ exports[`AmazonS3 tests renders fine for the NEW artifact 1`] = `
                       autocomplete="off"
                       class="bp3-input"
                       name="filePath"
-                      placeholder="pipeline.artifactsSelection.filePathPlaceholder"
+                      placeholder="pipeline.manifestType.pathPlaceholder"
                       type="text"
                       value=""
                     />
@@ -509,7 +509,7 @@ exports[`AmazonS3 tests renders fine for the existing artifact when all values a
                   class="Tooltip--acenter"
                   data-tooltip-id="artifactoryArtifact_filePath"
                 >
-                  pipeline.artifactsSelection.filePathLabel
+                  common.git.filePath
                 </span>
                  
                 <span
@@ -864,7 +864,7 @@ exports[`AmazonS3 tests renders fine for the existing artifact when filePath is 
                   class="Tooltip--acenter"
                   data-tooltip-id="artifactoryArtifact_filePath"
                 >
-                  pipeline.artifactsSelection.filePathLabel
+                  common.git.filePath
                 </span>
                  
                 <span
@@ -884,7 +884,7 @@ exports[`AmazonS3 tests renders fine for the existing artifact when filePath is 
                       autocomplete="off"
                       class="bp3-input"
                       name="filePath"
-                      placeholder="pipeline.artifactsSelection.filePathPlaceholder"
+                      placeholder="pipeline.manifestType.pathPlaceholder"
                       type="text"
                       value="test_file_path"
                     />
