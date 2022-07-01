@@ -627,9 +627,9 @@ export interface AddUsersResponse {
 }
 
 export type AmazonS3ArtifactConfig = ArtifactConfig & {
-  artifactPath: string
   bucketName: string
   connectorRef: string
+  filePath?: string
   filePathRegex?: string
 }
 

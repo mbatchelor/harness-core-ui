@@ -91,8 +91,9 @@ export interface CustomArtifactSource extends ImagePathTypes {
 export interface AmazonS3InitialValuesType {
   identifier: string
   bucketName: string
-  artifactPath: string
-  filePathRegex: string
+  tagType: TagTypes
+  filePath?: string
+  filePathRegex?: string
 }
 
 export interface ImagePathProps<T> {

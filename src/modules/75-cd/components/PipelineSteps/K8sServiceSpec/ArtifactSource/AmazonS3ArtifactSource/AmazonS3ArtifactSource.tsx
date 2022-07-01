@@ -198,12 +198,12 @@ const Content = (props: AmazonS3ContentProps): JSX.Element => {
             />
           )}
 
-          {isFieldRuntime(`artifacts.${artifactPath}.spec.filePathRegex`, template) && (
+          {isFieldRuntime(`artifacts.${artifactPath}.spec.filePath`, template) && (
             <FormInput.MultiTextInput
-              label={getString('pipeline.artifactsSelection.filePathRegexLabel')}
-              name={`${path}.artifacts.${artifactPath}.spec.filePathRegex`}
-              placeholder={getString('pipeline.artifactsSelection.filePathRegexPlaceholder')}
-              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.filePathRegex`)}
+              label={getString('common.git.filePath')}
+              name={`${path}.artifacts.${artifactPath}.spec.filePath`}
+              placeholder={getString('pipeline.manifestType.pathPlaceholder')}
+              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.filePath`)}
               multiTextInputProps={{
                 expressions,
                 allowableTypes
@@ -211,12 +211,12 @@ const Content = (props: AmazonS3ContentProps): JSX.Element => {
             />
           )}
 
-          {isFieldRuntime(`artifacts.${artifactPath}.spec.artifactPath`, template) && (
+          {isFieldRuntime(`artifacts.${artifactPath}.spec.filePathRegex`, template) && (
             <FormInput.MultiTextInput
-              label={getString('pipeline.artifactPathLabel')}
-              name={`${path}.artifacts.${artifactPath}.spec.artifactPath`}
-              placeholder={getString('pipeline.artifactsSelection.artifactPathPlaceholder')}
-              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.artifactPath`)}
+              label={getString('pipeline.artifactsSelection.filePathRegexLabel')}
+              name={`${path}.artifacts.${artifactPath}.spec.filePathRegex`}
+              placeholder={getString('pipeline.artifactsSelection.filePathRegexPlaceholder')}
+              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.filePathRegex`)}
               multiTextInputProps={{
                 expressions,
                 allowableTypes

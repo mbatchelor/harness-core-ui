@@ -29,12 +29,17 @@ import { BucketResponse, ConnectorConfigDTO, useGetV2BucketListForS3 } from 'ser
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
-import type {
+import {
   AmazonS3ArtifactProps,
-  AmazonS3InitialValuesType
+  AmazonS3InitialValuesType,
+  TagTypes
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { isServerlessDeploymentType } from '@pipeline/utils/stageHelpers'
-import { ArtifactIdentifierValidation, ModalViewFor } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
+import {
+  ArtifactIdentifierValidation,
+  ModalViewFor,
+  tagOptions
+} from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import {
   defaultArtifactInitialValues,
   getConnectorIdValue
@@ -100,25 +105,27 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
 
   const schemaObject = {
     bucketName: Yup.mixed().required(getString('pipeline.manifestType.bucketNameRequired')),
-    artifactPath: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.artifactPath')),
-    filePathRegex: Yup.string()
-      .trim()
-      .required(
-        getString('common.validation.fieldIsRequired', {
-          name: getString('pipeline.artifactsSelection.filePathRegexPlaceholder')
-        })
-      )
+    tagType: Yup.string().required(),
+    filePath: Yup.string().when('tagType', {
+      is: 'value',
+      then: Yup.string().required(getString('pipeline.manifestType.pathRequired'))
+    }),
+    filePathRegex: Yup.string().when('tagType', {
+      is: 'regex',
+      then: Yup.string().required(getString('pipeline.artifactsSelection.validation.filePathRegex'))
+    })
   }
   const schemaObjectServerless = {
     bucketName: Yup.mixed().required(getString('pipeline.manifestType.bucketNameRequired')),
-    artifactPath: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.artifactPath')),
-    filePathRegex: Yup.string()
-      .trim()
-      .required(
-        getString('common.validation.fieldIsRequired', {
-          name: getString('pipeline.artifactsSelection.filePathRegexPlaceholder')
-        })
-      )
+    tagType: Yup.string().required(),
+    filePath: Yup.string().when('tagType', {
+      is: 'value',
+      then: Yup.string().required(getString('pipeline.manifestType.pathRequired'))
+    }),
+    filePathRegex: Yup.string().when('tagType', {
+      is: 'regex',
+      then: Yup.string().required(getString('pipeline.artifactsSelection.validation.filePathRegex'))
+    })
   }
   const sidecarSchema = Yup.object().shape({
     ...schemaObject,
@@ -154,10 +161,15 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
   }, [context, isServerlessDeploymentTypeSelected, primarySchema, primarySchemaServerless, sidecarSchema])
 
   const getInitialValues = (): AmazonS3InitialValuesType => {
+    // Initia specValues
     const specValues = get(initialValues, 'spec', null)
+    // if specValues is nil or selected type is not matching with initialValues.type then assume NEW
     if (selectedArtifact !== (initialValues as any)?.type || !specValues) {
       return defaultArtifactInitialValues(defaultTo(selectedArtifact, 'AmazonS3'))
     }
+    // Depending upon if filePath is present or not in specValues, decide typeType
+    merge(specValues, { tagType: specValues.filePath ? TagTypes.Value : TagTypes.Regex })
+    // If sidecar then merge identifier value to specValues
     if (context === ModalViewFor.SIDECAR && initialValues?.identifier) {
       merge(specValues, { identifier: initialValues?.identifier })
     }
@@ -165,18 +177,22 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
   }
 
   const submitFormData = (formData: AmazonS3InitialValuesType & { connectorId?: string }): void => {
+    // Initial data
     const artifactObj = {
       spec: {
         connectorRef: formData.connectorId,
-        bucketName: formData.bucketName,
-        artifactPath: formData.artifactPath,
-        filePathRegex: formData.filePathRegex
+        bucketName: formData.bucketName
       }
     }
+    // Merge filePath or filePathRegex field value with initial data depending upon tagType selection
+    const filePathData =
+      formData?.tagType === TagTypes.Value ? { filePath: formData.filePath } : { filePathRegex: formData.filePathRegex }
+    merge(artifactObj.spec, filePathData)
+    // If sidecar artifact then merge identifier value with initial value
     if (context === ModalViewFor.SIDECAR) {
       merge(artifactObj, { identifier: formData?.identifier })
     }
-
+    // Submit the final object
     handleSubmit(artifactObj)
   }
 
@@ -294,63 +310,74 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
 
               {renderS3BucketField(formik)}
 
-              <div className={css.imagePathContainer}>
-                <FormInput.MultiTextInput
-                  label={getString('pipeline.artifactsSelection.filePathRegexLabel')}
-                  name="filePathRegex"
-                  placeholder={getString('pipeline.artifactsSelection.filePathRegexPlaceholder')}
-                  multiTextInputProps={{
-                    expressions,
-                    allowableTypes
-                  }}
+              <div className={css.tagGroup}>
+                <FormInput.RadioGroup
+                  name="tagType"
+                  radioGroup={{ inline: true }}
+                  items={tagOptions}
+                  className={css.radioGroup}
                 />
-                {getMultiTypeFromValue(formik.values.filePathRegex) === MultiTypeInputType.RUNTIME && (
-                  <div className={css.configureOptions}>
-                    <ConfigureOptions
-                      style={{ alignSelf: 'center' }}
-                      value={formik.values?.filePathRegex as string}
-                      type={getString('string')}
-                      variableName="filePathRegex"
-                      showRequiredField={false}
-                      showDefaultField={false}
-                      showAdvanced={true}
-                      onChange={value => {
-                        formik.setFieldValue('filePathRegex', value)
-                      }}
-                      isReadonly={isReadonly}
-                    />
-                  </div>
-                )}
               </div>
 
-              <div className={css.imagePathContainer}>
-                <FormInput.MultiTextInput
-                  label={getString('pipeline.artifactPathLabel')}
-                  name="artifactPath"
-                  placeholder={getString('pipeline.artifactsSelection.artifactPathPlaceholder')}
-                  multiTextInputProps={{
-                    expressions,
-                    allowableTypes
-                  }}
-                />
-                {getMultiTypeFromValue(formik.values.artifactPath) === MultiTypeInputType.RUNTIME && (
-                  <div className={css.configureOptions}>
-                    <ConfigureOptions
-                      style={{ alignSelf: 'center' }}
-                      value={formik.values?.artifactPath as string}
-                      type={getString('string')}
-                      variableName="artifactPath"
-                      showRequiredField={false}
-                      showDefaultField={false}
-                      showAdvanced={true}
-                      onChange={value => {
-                        formik.setFieldValue('artifactPath', value)
-                      }}
-                      isReadonly={isReadonly}
-                    />
-                  </div>
-                )}
-              </div>
+              {formik.values?.tagType === 'value' ? (
+                <div className={css.imagePathContainer}>
+                  <FormInput.MultiTextInput
+                    label={getString('common.git.filePath')}
+                    name="filePath"
+                    placeholder={getString('pipeline.manifestType.pathPlaceholder')}
+                    multiTextInputProps={{
+                      expressions,
+                      allowableTypes
+                    }}
+                  />
+                  {getMultiTypeFromValue(formik.values.filePath) === MultiTypeInputType.RUNTIME && (
+                    <div className={css.configureOptions}>
+                      <ConfigureOptions
+                        style={{ alignSelf: 'center' }}
+                        value={formik.values?.filePathRegex as string}
+                        type={getString('string')}
+                        variableName="filePath"
+                        showRequiredField={false}
+                        showDefaultField={false}
+                        showAdvanced={true}
+                        onChange={value => {
+                          formik.setFieldValue('filePath', value)
+                        }}
+                        isReadonly={isReadonly}
+                      />
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className={css.imagePathContainer}>
+                  <FormInput.MultiTextInput
+                    label={getString('pipeline.artifactsSelection.filePathRegexLabel')}
+                    name="filePathRegex"
+                    placeholder={getString('pipeline.artifactsSelection.filePathRegexPlaceholder')}
+                    multiTextInputProps={{
+                      expressions,
+                      allowableTypes
+                    }}
+                  />
+                  {getMultiTypeFromValue(formik.values.filePathRegex) === MultiTypeInputType.RUNTIME && (
+                    <div className={css.configureOptions}>
+                      <ConfigureOptions
+                        style={{ alignSelf: 'center' }}
+                        value={formik.values?.filePathRegex as string}
+                        type={getString('string')}
+                        variableName="filePathRegex"
+                        showRequiredField={false}
+                        showDefaultField={false}
+                        showAdvanced={true}
+                        onChange={value => {
+                          formik.setFieldValue('filePathRegex', value)
+                        }}
+                        isReadonly={isReadonly}
+                      />
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
             <Layout.Horizontal spacing="medium">
               <Button

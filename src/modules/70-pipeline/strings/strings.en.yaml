@@ -766,8 +766,7 @@ artifactsSelection:
     repositoryUrl: Repository URL is required
     artifactDirectory: Artifact Directory is required
     artifactPathFilter: Artifact Path Filter is required
-    artifactPathAndArtifactPathFilter: Artifact Path and Artifact Path Filter, both can not be empty
-    manifestRequiredForStage: 'Please provide manifest for stage: {{ stageName }}'
+    filePathRegex: File Path Regex is required
   errors:
     noRepositories: No repositories found with given connector
 overrideSets:

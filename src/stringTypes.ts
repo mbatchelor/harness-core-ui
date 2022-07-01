@@ -2725,10 +2725,9 @@ export interface StringsMap {
   'pipeline.artifactsSelection.repositoryPortPlaceholder': string
   'pipeline.artifactsSelection.validation.artifactDirectory': string
   'pipeline.artifactsSelection.validation.artifactPath': string
-  'pipeline.artifactsSelection.validation.artifactPathAndArtifactPathFilter': string
   'pipeline.artifactsSelection.validation.artifactPathFilter': string
+  'pipeline.artifactsSelection.validation.filePathRegex': string
   'pipeline.artifactsSelection.validation.imagePath': string
-  'pipeline.artifactsSelection.validation.manifestRequiredForStage': string
   'pipeline.artifactsSelection.validation.region': string
   'pipeline.artifactsSelection.validation.repositoryPort': string
   'pipeline.artifactsSelection.validation.repositoryUrl': string

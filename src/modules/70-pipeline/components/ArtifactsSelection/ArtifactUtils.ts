@@ -248,9 +248,9 @@ export const defaultArtifactInitialValues = (selectedArtifact: ArtifactType): an
     case ENABLED_ARTIFACT_TYPES.AmazonS3:
       return {
         identifier: '',
-        bucketList: '',
-        artifactPath: '',
-        filePathRegex: ''
+        bucketName: '',
+        tagType: TagTypes.Value,
+        filePath: ''
       }
     case ENABLED_ARTIFACT_TYPES.Acr:
     case ENABLED_ARTIFACT_TYPES.DockerRegistry:
