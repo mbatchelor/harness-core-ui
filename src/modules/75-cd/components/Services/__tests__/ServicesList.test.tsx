@@ -59,6 +59,37 @@ describe('ServicesList', () => {
     expect(container).toMatchSnapshot()
   })
 
+  test('go to service details on row click', async () => {
+    const responseData = serviceDetails.data.serviceDeploymentDetailsList as unknown as ServiceDetailsDTO[]
+    const { container, getByTestId } = renderSetup(responseData)
+    const row = container.getElementsByClassName('TableV2--row TableV2--card TableV2--clickable')[0]
+    await fireEvent.click(row!)
+    await waitFor(() => getByTestId('location'))
+
+    expect(getByTestId('location')).toHaveTextContent(
+      '/account/dummy/undefined/orgs/dummy/projects/dummy/services/asdfasdf'
+    )
+  })
+
+  test('should go to latest execution after click', async () => {
+    const responseData = serviceDetails.data.serviceDeploymentDetailsList as unknown as ServiceDetailsDTO[]
+    const { container, getByTestId } = renderSetup(responseData)
+
+    const pipelineExecutionId =
+      serviceDetails.data.serviceDeploymentDetailsList[1].lastPipelineExecuted?.pipelineExecutionId
+    const planExecutionId = serviceDetails.data.serviceDeploymentDetailsList[1].lastPipelineExecuted?.planExecutionId
+    expect(container.querySelector(`[data-testid="${pipelineExecutionId}"]`)).toBeDefined()
+    fireEvent.click(container.querySelector(`[data-testid="${pipelineExecutionId}"]`) as HTMLElement)
+
+    //should take user to latest pipeline execution
+    await waitFor(() => getByTestId('location'))
+    expect(getByTestId('location')).toHaveTextContent(
+      `/account/dummy/undefined/orgs/dummy/projects/dummy/pipelines/Test/deployments/${planExecutionId}/pipeline`
+    )
+  })
+})
+
+describe('Menu render', () => {
   test('open option menu and "open in new tab"', async () => {
     const responseData = serviceDetails.data.serviceDeploymentDetailsList as unknown as ServiceDetailsDTO[]
     const { container } = renderSetup(responseData)
@@ -88,7 +119,7 @@ describe('ServicesList', () => {
     fireEvent.click(editBtn!)
 
     const form = findDialogContainer()
-    expect(form).toBeTruthy()
+    await waitFor(() => expect(form).toBeTruthy())
 
     expect(getByText('cancel')).toBeDefined()
     fireEvent.click(getByText('cancel') as HTMLButtonElement)
@@ -106,20 +137,21 @@ describe('ServicesList', () => {
     const { container, getByText } = renderSetup(responseData)
 
     fireEvent.click(container.querySelector('[data-icon="Options"]') as HTMLElement)
-    const menuDailog = findDialogMenu()
+    let menuDailog = findDialogMenu()
     expect(menuDailog).toBeTruthy()
 
     fireEvent.click(menuDailog!.querySelector('[icon="trash"]') as HTMLElement)
     let form = findDialogContainer()
-    expect(form).toBeTruthy()
+    expect(form).toMatchSnapshot()
     expect(getByText('confirm')).toBeDefined()
     fireEvent.click(getByText('confirm') as HTMLButtonElement)
     await waitFor(() => expect(mutate).toBeCalledTimes(1))
 
     fireEvent.click(container.querySelector('[data-icon="Options"]') as HTMLElement)
+    menuDailog = findDialogMenu()
     fireEvent.click(menuDailog!.querySelector('[icon="trash"]') as HTMLElement)
     form = findDialogContainer()
-    expect(form).toBeTruthy()
+    await waitFor(() => expect(getByText('common.deleteService')))
     expect(getByText('cancel')).toBeDefined()
     fireEvent.click(getByText('cancel') as HTMLButtonElement)
     expect(findDialogContainer()).toBeFalsy()
@@ -147,42 +179,13 @@ describe('ServicesList', () => {
 
     fireEvent.click(menuDailog!.querySelector('[icon="trash"]') as HTMLElement)
     const form = findDialogContainer()
-    expect(form).toBeTruthy()
+    await waitFor(() => expect(form).toBeTruthy())
     expect(getByText('confirm')).toBeDefined()
     fireEvent.click(getByText('confirm') as HTMLButtonElement)
     await waitFor(() => expect(mutate).toBeCalledTimes(1))
 
     expect(findDialogContainer()).toBeFalsy()
     await waitFor(() => expect(getByText('Deletion failed')).toBeDefined())
-  })
-
-  test('go to service details on row click', async () => {
-    const responseData = serviceDetails.data.serviceDeploymentDetailsList as unknown as ServiceDetailsDTO[]
-    const { container, getByTestId } = renderSetup(responseData)
-    const row = container.getElementsByClassName('TableV2--row TableV2--card TableV2--clickable')[0]
-    await fireEvent.click(row!)
-    await waitFor(() => getByTestId('location'))
-
-    expect(getByTestId('location')).toHaveTextContent(
-      '/account/dummy/undefined/orgs/dummy/projects/dummy/services/asdfasdf'
-    )
-  })
-
-  test('should go to latest execution after click', async () => {
-    const responseData = serviceDetails.data.serviceDeploymentDetailsList as unknown as ServiceDetailsDTO[]
-    const { container, getByTestId } = renderSetup(responseData)
-
-    const pipelineExecutionId =
-      serviceDetails.data.serviceDeploymentDetailsList[1].lastPipelineExecuted?.pipelineExecutionId
-    const planExecutionId = serviceDetails.data.serviceDeploymentDetailsList[1].lastPipelineExecuted?.planExecutionId
-    expect(container.querySelector(`[data-testid="${pipelineExecutionId}"]`)).toBeDefined()
-    fireEvent.click(container.querySelector(`[data-testid="${pipelineExecutionId}"]`) as HTMLElement)
-
-    //should take user to latest pipeline execution
-    await waitFor(() => getByTestId('location'))
-    expect(getByTestId('location')).toHaveTextContent(
-      `/account/dummy/undefined/orgs/dummy/projects/dummy/pipelines/Test/deployments/${planExecutionId}/pipeline`
-    )
   })
 })
 

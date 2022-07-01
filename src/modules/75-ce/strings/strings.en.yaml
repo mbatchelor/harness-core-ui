@@ -778,6 +778,7 @@ perspectives:
     recipientLabel: Send report to
     searchTimezonePlaceholder: Search Timezone
     reportDeletedTxt: 'Report {{ name }} deleted'
+    perspectiveReport: Perspective Report
   recommendations:
     viewText: '{{ $.common.viewText }}'
     recommendationCountTxt: '{{ count }} recommendation(s) saving upto'
@@ -801,6 +802,7 @@ perspectives:
     sendAlerts: Send alerts at
     actualSpend: Actual spend
     forecastedCost: Forecasted cost
+    perspectiveBudgets: Perspective Budget
     defineTarget:
       title: Define Target
       text: Budgets are created on Perspectives. If you do not have a Perspective of the resources you would like to budget, create a new Perspective and then proceed to set a budget.
@@ -1097,3 +1099,4 @@ businessMapping:
     createdBy: Created By
     lastEdit: Last Edit
     unallocated: Unallocated
+  costCategory: Cost Category

@@ -1254,7 +1254,7 @@ export type AzureWebAppSwapSlotStepInfo = StepSpecType & {
 
 export type AzureWebAppTrafficShiftStepInfo = StepSpecType & {
   delegateSelectors?: string[]
-  traffic?: string
+  traffic: ParameterFieldString
 }
 
 export interface BaseSSHSpecDTO {
@@ -2640,6 +2640,7 @@ export interface EntityDetail {
     | 'ApprovalStage'
     | 'FeatureFlagStage'
     | 'Template'
+    | 'TemplateStage'
     | 'Triggers'
     | 'MonitoredService'
     | 'GitRepositories'
@@ -3686,6 +3687,7 @@ export interface FeatureRestrictionDetailListRequestDTO {
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
     | 'JENKINS_ARTIFACT'
+    | 'STRATEGY_MAX_CONCURRENT'
   )[]
 }
 
@@ -3751,6 +3753,7 @@ export interface FeatureRestrictionDetailRequestDTO {
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
     | 'JENKINS_ARTIFACT'
+    | 'STRATEGY_MAX_CONCURRENT'
 }
 
 export interface FeatureRestrictionDetailsDTO {
@@ -3818,6 +3821,7 @@ export interface FeatureRestrictionDetailsDTO {
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
     | 'JENKINS_ARTIFACT'
+    | 'STRATEGY_MAX_CONCURRENT'
   restriction?: RestrictionDTO
   restrictionType?:
     | 'AVAILABILITY'
@@ -3893,6 +3897,7 @@ export interface FeatureRestrictionMetadataDTO {
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
     | 'JENKINS_ARTIFACT'
+    | 'STRATEGY_MAX_CONCURRENT'
   restrictionMetadata?: {
     [key: string]: RestrictionMetadataDTO
   }
@@ -4213,6 +4218,7 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'ApprovalStage'
     | 'FeatureFlagStage'
     | 'Template'
+    | 'TemplateStage'
     | 'Triggers'
     | 'MonitoredService'
     | 'GitRepositories'
@@ -4309,6 +4315,7 @@ export interface GitEntityFilterProperties {
     | 'ApprovalStage'
     | 'FeatureFlagStage'
     | 'Template'
+    | 'TemplateStage'
     | 'Triggers'
     | 'MonitoredService'
     | 'GitRepositories'
@@ -4438,6 +4445,7 @@ export interface GitFullSyncEntityInfoDTO {
     | 'ApprovalStage'
     | 'FeatureFlagStage'
     | 'Template'
+    | 'TemplateStage'
     | 'Triggers'
     | 'MonitoredService'
     | 'GitRepositories'
@@ -4542,6 +4550,7 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'ApprovalStage'
     | 'FeatureFlagStage'
     | 'Template'
+    | 'TemplateStage'
     | 'Triggers'
     | 'MonitoredService'
     | 'GitRepositories'
@@ -4724,6 +4733,7 @@ export interface GitSyncEntityDTO {
     | 'ApprovalStage'
     | 'FeatureFlagStage'
     | 'Template'
+    | 'TemplateStage'
     | 'Triggers'
     | 'MonitoredService'
     | 'GitRepositories'
@@ -4822,6 +4832,7 @@ export interface GitSyncEntityListDTO {
     | 'ApprovalStage'
     | 'FeatureFlagStage'
     | 'Template'
+    | 'TemplateStage'
     | 'Triggers'
     | 'MonitoredService'
     | 'GitRepositories'
@@ -4937,6 +4948,7 @@ export interface GitSyncErrorDTO {
     | 'ApprovalStage'
     | 'FeatureFlagStage'
     | 'Template'
+    | 'TemplateStage'
     | 'Triggers'
     | 'MonitoredService'
     | 'GitRepositories'
@@ -7468,6 +7480,7 @@ export interface ReferencedByDTO {
     | 'ApprovalStage'
     | 'FeatureFlagStage'
     | 'Template'
+    | 'TemplateStage'
     | 'Triggers'
     | 'MonitoredService'
     | 'GitRepositories'
@@ -8302,6 +8315,7 @@ export interface ResponseListEntityType {
     | 'ApprovalStage'
     | 'FeatureFlagStage'
     | 'Template'
+    | 'TemplateStage'
     | 'Triggers'
     | 'MonitoredService'
     | 'GitRepositories'
@@ -12389,6 +12403,7 @@ export interface ListActivitiesQueryParams {
     | 'ApprovalStage'
     | 'FeatureFlagStage'
     | 'Template'
+    | 'TemplateStage'
     | 'Triggers'
     | 'MonitoredService'
     | 'GitRepositories'
@@ -12479,6 +12494,7 @@ export interface ListActivitiesQueryParams {
     | 'ApprovalStage'
     | 'FeatureFlagStage'
     | 'Template'
+    | 'TemplateStage'
     | 'Triggers'
     | 'MonitoredService'
     | 'GitRepositories'
@@ -12673,6 +12689,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'ApprovalStage'
     | 'FeatureFlagStage'
     | 'Template'
+    | 'TemplateStage'
     | 'Triggers'
     | 'MonitoredService'
     | 'GitRepositories'
@@ -12763,6 +12780,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'ApprovalStage'
     | 'FeatureFlagStage'
     | 'Template'
+    | 'TemplateStage'
     | 'Triggers'
     | 'MonitoredService'
     | 'GitRepositories'
@@ -22384,6 +22402,7 @@ export interface FetchFeatureRestrictionMetadataPathParams {
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
     | 'JENKINS_ARTIFACT'
+    | 'STRATEGY_MAX_CONCURRENT'
 }
 
 export type FetchFeatureRestrictionMetadataProps = Omit<
@@ -22519,6 +22538,7 @@ export const fetchFeatureRestrictionMetadataPromise = (
       | 'DEVELOPERS'
       | 'MONTHLY_ACTIVE_USERS'
       | 'JENKINS_ARTIFACT'
+      | 'STRATEGY_MAX_CONCURRENT'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -22589,6 +22609,7 @@ export interface ListReferredByEntitiesQueryParams {
     | 'ApprovalStage'
     | 'FeatureFlagStage'
     | 'Template'
+    | 'TemplateStage'
     | 'Triggers'
     | 'MonitoredService'
     | 'GitRepositories'
@@ -22734,6 +22755,7 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'ApprovalStage'
     | 'FeatureFlagStage'
     | 'Template'
+    | 'TemplateStage'
     | 'Triggers'
     | 'MonitoredService'
     | 'GitRepositories'
@@ -25628,6 +25650,7 @@ export interface GetReferencedByQueryParams {
     | 'ApprovalStage'
     | 'FeatureFlagStage'
     | 'Template'
+    | 'TemplateStage'
     | 'Triggers'
     | 'MonitoredService'
     | 'GitRepositories'
@@ -26081,6 +26104,59 @@ export const getClusterNamesForGcpPromise = (
   getUsingFetch<ResponseGcpResponseDTO, Failure | Error, GetClusterNamesForGcpQueryParams, void>(
     getConfig('ng/api'),
     `/gcp/clusters`,
+    props,
+    signal
+  )
+
+export interface GetClusterNamesForGcpInfraQueryParams {
+  connectorRef?: string
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  envId?: string
+  infraDefinitionId?: string
+}
+
+export type GetClusterNamesForGcpInfraProps = Omit<
+  GetProps<ResponseGcpResponseDTO, Failure | Error, GetClusterNamesForGcpInfraQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets gcp cluster names for a gcp infrastructure definition
+ */
+export const GetClusterNamesForGcpInfra = (props: GetClusterNamesForGcpInfraProps) => (
+  <Get<ResponseGcpResponseDTO, Failure | Error, GetClusterNamesForGcpInfraQueryParams, void>
+    path={`/gcp/clustersV2`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetClusterNamesForGcpInfraProps = Omit<
+  UseGetProps<ResponseGcpResponseDTO, Failure | Error, GetClusterNamesForGcpInfraQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets gcp cluster names for a gcp infrastructure definition
+ */
+export const useGetClusterNamesForGcpInfra = (props: UseGetClusterNamesForGcpInfraProps) =>
+  useGet<ResponseGcpResponseDTO, Failure | Error, GetClusterNamesForGcpInfraQueryParams, void>(`/gcp/clustersV2`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
+
+/**
+ * Gets gcp cluster names for a gcp infrastructure definition
+ */
+export const getClusterNamesForGcpInfraPromise = (
+  props: GetUsingFetchProps<ResponseGcpResponseDTO, Failure | Error, GetClusterNamesForGcpInfraQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseGcpResponseDTO, Failure | Error, GetClusterNamesForGcpInfraQueryParams, void>(
+    getConfig('ng/api'),
+    `/gcp/clustersV2`,
     props,
     signal
   )
@@ -26928,6 +27004,7 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'ApprovalStage'
     | 'FeatureFlagStage'
     | 'Template'
+    | 'TemplateStage'
     | 'Triggers'
     | 'MonitoredService'
     | 'GitRepositories'
@@ -27086,6 +27163,7 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'ApprovalStage'
       | 'FeatureFlagStage'
       | 'Template'
+      | 'TemplateStage'
       | 'Triggers'
       | 'MonitoredService'
       | 'GitRepositories'
@@ -31733,6 +31811,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'ApprovalStage'
     | 'FeatureFlagStage'
     | 'Template'
+    | 'TemplateStage'
     | 'Triggers'
     | 'MonitoredService'
     | 'GitRepositories'
@@ -31951,6 +32030,7 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'ApprovalStage'
     | 'FeatureFlagStage'
     | 'Template'
+    | 'TemplateStage'
     | 'Triggers'
     | 'MonitoredService'
     | 'GitRepositories'
@@ -35760,6 +35840,7 @@ export interface GetServiceListQueryParams {
   serviceIdentifiers?: string[]
   sort?: string[]
   type?: 'Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda' | 'AzureWebApps'
+  gitOpsEnabled?: boolean
 }
 
 export type GetServiceListProps = Omit<
@@ -36100,6 +36181,8 @@ export interface GetServiceAccessListQueryParams {
   searchTerm?: string
   serviceIdentifiers?: string[]
   sort?: string[]
+  type?: 'Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda' | 'AzureWebApps'
+  gitOpsEnabled?: boolean
 }
 
 export type GetServiceAccessListProps = Omit<
@@ -43216,6 +43299,7 @@ export interface GetYamlSchemaQueryParams {
     | 'ApprovalStage'
     | 'FeatureFlagStage'
     | 'Template'
+    | 'TemplateStage'
     | 'Triggers'
     | 'MonitoredService'
     | 'GitRepositories'

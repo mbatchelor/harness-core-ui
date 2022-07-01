@@ -17,7 +17,7 @@ import { ModuleName } from 'framework/types/ModuleName'
 import { Step, StepProps, StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
-import type { DeployServiceData } from './DeployServiceInterface'
+import type { DeployServiceCustomStepPropType, DeployServiceData } from './DeployServiceInterface'
 import { ServiceRegex } from './DeployServiceUtils'
 import { DeployServiceInputStepFormik } from './DeployServiceInputStep'
 import DeployServiceWidget from './DeployServiceWidget'
@@ -96,7 +96,7 @@ export class DeployServiceStep extends Step<DeployServiceData> {
           stepViewType={stepViewType}
           inputSetData={inputSetData}
           allowableTypes={allowableTypes}
-          customStepProps={customStepProps as { stageIdentifier: string; isNewServiceEntity: boolean }}
+          customStepProps={customStepProps as DeployServiceCustomStepPropType}
         />
       )
     }

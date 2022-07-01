@@ -4,13 +4,16 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
-
-import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import _hasIn from 'lodash/hasIn'
+import _isEmpty from 'lodash/isEmpty'
+import _difference from 'lodash/difference'
+import { RUNTIME_INPUT_VALUE, SelectOption } from '@harness/uicore'
 import type { FormikErrors } from 'formik'
 import type { StringKeys } from 'framework/strings'
 import type { ContinousVerificationData, VerifyStepMonitoredService } from '../../types'
 import { isAnExpression } from './components/ContinousVerificationWidgetSections/components/MonitoredService/MonitoredService.utils'
 import { MONITORED_SERVICE_TYPE } from './components/ContinousVerificationWidgetSections/components/SelectMonitoredServiceType/SelectMonitoredServiceType.constants'
+import { getVerificationSensitivityOptions } from './components/ContinousVerificationWidgetSections/components/VerificationJobFields/VerificationJobFields'
 
 export function healthSourcesValidation(
   monitoredServiceRef: string | undefined,
@@ -60,6 +63,26 @@ export function configuredMonitoredServiceRefValidation(
         spec: {
           monitoredServiceRef: 'Monitored service is required'
         }
+      }
+    }
+    errors['spec'] = spec
+  }
+  return spec
+}
+
+export function configuredSpecRefValidation(
+  serviceSpec: string | SelectOption | undefined,
+  spec: any,
+  errors: FormikErrors<ContinousVerificationData>,
+  getString: any
+): any {
+  if (
+    _hasIn(serviceSpec, 'value') &&
+    !_isEmpty(_difference([serviceSpec], getVerificationSensitivityOptions(getString)))
+  ) {
+    spec = {
+      spec: {
+        sensitivity: getString('cv.sensitivityValidation')
       }
     }
     errors['spec'] = spec

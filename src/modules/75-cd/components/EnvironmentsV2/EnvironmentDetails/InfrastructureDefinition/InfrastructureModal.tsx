@@ -7,7 +7,7 @@
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { defaultTo, get, isBoolean, isEmpty, merge, set } from 'lodash-es'
+import { defaultTo, get, merge, set } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import { parse } from 'yaml'
 import produce from 'immer'
@@ -174,7 +174,7 @@ function BootstrapDeployInfraDefinition({
   const [selectedDeploymentType, setSelectedDeploymentType] = useState<ServiceDeploymentType | undefined>()
   const [isYamlEditable, setIsYamlEditable] = useState(false)
   const [invalidYaml, setInvalidYaml] = useState(false)
-  const formikRef = useRef<FormikProps<InfrastructureConfig>>()
+  const formikRef = useRef<FormikProps<InfrastructureDefinitionConfig>>()
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
 
   useEffect(() => {
@@ -193,16 +193,28 @@ function BootstrapDeployInfraDefinition({
     }
   })
 
+  const updateFormValues = (infrastructureDefinitionConfig: InfrastructureDefinitionConfig) => {
+    formikRef.current?.setValues({
+      ...infrastructureDefinitionConfig
+    })
+
+    const stageData = produce(stage, draft => {
+      const infraDefinition = get(draft, 'stage.spec.infrastructure.infrastructureDefinition', {})
+      infraDefinition.spec = infrastructureDefinitionConfig.spec
+      infraDefinition.allowSimultaneousDeployments = infrastructureDefinitionConfig.allowSimultaneousDeployments
+    })
+    updateStage(stageData?.stage as StageElementConfig)
+  }
+
   const handleYamlChange = useCallback((): void => {
     const errors = yamlHandler?.getYAMLValidationErrorMap()
     const hasError = errors?.size ? true : false
     setInvalidYaml(hasError)
     const yaml = defaultTo(yamlHandler?.getLatestYaml(), '{}')
-    const yamlVisual = parse(yaml).infrastructureDefinition as InfrastructureConfig
+    const yamlVisual = parse(yaml).infrastructureDefinition as InfrastructureDefinitionConfig
+
     if (yamlVisual) {
-      formikRef.current?.setValues({
-        ...yamlVisual
-      })
+      updateFormValues(yamlVisual)
     }
   }, [yamlHandler])
 
@@ -210,7 +222,7 @@ function BootstrapDeployInfraDefinition({
     /* istanbul ignore next */ (view: SelectedView) => {
       if (view === SelectedView.VISUAL) {
         const yaml = defaultTo(yamlHandler?.getLatestYaml(), '{}')
-        const yamlVisual = parse(yaml).infrastructureDefinition as InfrastructureConfig
+        const yamlVisual = parse(yaml).infrastructureDefinition as InfrastructureDefinitionConfig
 
         if (yamlHandler?.getYAMLValidationErrorMap()?.size) {
           showError(getString('common.validation.invalidYamlText'))
@@ -218,9 +230,7 @@ function BootstrapDeployInfraDefinition({
         }
 
         if (yamlVisual) {
-          formikRef.current?.setValues({
-            ...yamlVisual
-          })
+          updateFormValues(yamlVisual)
         }
       }
       setSelectedView(view)
@@ -235,7 +245,7 @@ function BootstrapDeployInfraDefinition({
     hideModal()
   }
 
-  const { name, identifier, description, tags } = defaultTo(
+  const { name, identifier, description, tags, type, spec, allowSimultaneousDeployments } = defaultTo(
     infrastructureDefinition,
     {}
   ) as InfrastructureDefinitionConfig
@@ -264,7 +274,7 @@ function BootstrapDeployInfraDefinition({
       tags: newTags,
       orgIdentifier,
       projectIdentifier,
-      type: values.type || (pipeline.stages?.[0].stage?.spec as any)?.infrastructure?.infrastructureDefinition?.type,
+      type: (pipeline.stages?.[0].stage?.spec as any)?.infrastructure?.infrastructureDefinition?.type,
       environmentRef: environmentIdentifier || envIdentifier
     }
 
@@ -273,13 +283,10 @@ function BootstrapDeployInfraDefinition({
       yaml: yamlStringify({
         infrastructureDefinition: {
           ...body,
-          spec: !isEmpty(values.spec)
-            ? values.spec
-            : (pipeline.stages?.[0].stage?.spec as DeploymentStageConfig)?.infrastructure?.infrastructureDefinition
-                ?.spec,
-          allowSimultaneousDeployments: isBoolean(values.allowSimultaneousDeployments)
-            ? values.allowSimultaneousDeployments
-            : (pipeline.stages?.[0].stage?.spec as DeploymentStageConfig)?.infrastructure?.allowSimultaneousDeployments
+          spec: (pipeline.stages?.[0].stage?.spec as DeploymentStageConfig)?.infrastructure?.infrastructureDefinition
+            ?.spec,
+          allowSimultaneousDeployments: (pipeline.stages?.[0].stage?.spec as DeploymentStageConfig)?.infrastructure
+            ?.allowSimultaneousDeployments
         }
       })
     })
@@ -332,8 +339,9 @@ function BootstrapDeployInfraDefinition({
         identifier: defaultTo(identifier, ''),
         description: defaultTo(description, ''),
         tags: defaultTo(tags, {}),
-        type: 'KubernetesDirect',
-        spec: {}
+        type,
+        spec,
+        allowSimultaneousDeployments: defaultTo(allowSimultaneousDeployments, false)
       }}
       formName={'Test'}
       onSubmit={onSubmit}
@@ -344,6 +352,7 @@ function BootstrapDeployInfraDefinition({
       })}
     >
       {formikProps => {
+        formikRef.current = formikProps
         return (
           <Layout.Vertical padding={'xxlarge'} background={Color.FORM_BG}>
             <Layout.Horizontal padding={{ bottom: 'medium' }} flex={{ justifyContent: 'center' }} width={'100%'}>

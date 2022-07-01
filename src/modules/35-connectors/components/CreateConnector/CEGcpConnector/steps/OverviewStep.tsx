@@ -19,8 +19,8 @@ import {
   StepProps,
   Icon
 } from '@wings-software/uicore'
-import { useParams } from 'react-router-dom'
 import { pick, omit, isEmpty, get } from 'lodash-es'
+import { Link, useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import {
   ConnectorInfoDTO,
@@ -31,6 +31,7 @@ import {
   Failure,
   GcpBillingExportSpec
 } from 'services/cd-ng'
+import routes from '@common/RouteDefinitions'
 import { Description, Tags } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import { CE_GCP_CONNECTOR_CREATION_EVENTS } from '@connectors/trackingConstants'
 import { useStepLoadTelemetry } from '@connectors/common/useTrackStepLoad/useStepLoadTelemetry'
@@ -69,6 +70,7 @@ const OverviewStep: React.FC<OverviewProps> = props => {
   const [isUniqueConnector, setIsUniqueConnector] = useState(true)
   const [featureText, setFeatureText] = useState<string>('')
   const [existingConnectorName, setExistingConnectorName] = useState<string>('')
+  const [existingConnectorId, setExistingConnectorId] = useState<string>('')
   const [projectId, setProjectId] = useState<string>('')
   const [modalErrorHandler, setModalErrorHandler] = useState<ModalErrorHandlerBinding | undefined>()
 
@@ -162,6 +164,7 @@ const OverviewStep: React.FC<OverviewProps> = props => {
           setIsLoading(false)
           setIsUniqueConnector(false)
           setExistingConnectorName(response?.data?.content?.[0]?.connector?.name || '')
+          setExistingConnectorId(response?.data?.content?.[0]?.connector?.identifier || '')
           setProjectId(formData.projectId)
           const featuresEnabled = response?.data?.content?.[0]?.connector?.spec?.featuresEnabled || []
           getFeatures(featuresEnabled)
@@ -248,14 +251,17 @@ const OverviewStep: React.FC<OverviewProps> = props => {
                           featureText
                         })}
                       </div>
-                      {/* <div>
+                      <div>
                         <Icon name="lightbulb" style={{ paddingRight: 5 }}></Icon>
                         {getString('connectors.ceAws.overview.trySuggestion')}
                         <div>
-                          {getString('connectors.ceAws.overview.editConnector')} <a>{existingConnectorName}</a>{' '}
+                          {getString('connectors.ceAws.overview.editConnector')}{' '}
+                          <Link to={routes.toConnectorDetails({ accountId, connectorId: existingConnectorId })}>
+                            {existingConnectorName}
+                          </Link>{' '}
                           {getString('connectors.ceAws.overview.ifReq')}
                         </div>
-                      </div> */}
+                      </div>
                     </Layout.Vertical>
                   </div>
                 )}

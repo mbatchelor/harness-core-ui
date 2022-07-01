@@ -24,6 +24,7 @@ import { ContinousVerificationWidgetSections } from './components/ContinousVerif
 import { MONITORED_SERVICE_TYPE } from './components/ContinousVerificationWidgetSections/components/SelectMonitoredServiceType/SelectMonitoredServiceType.constants'
 import {
   configuredMonitoredServiceRefValidation,
+  configuredSpecRefValidation,
   getMonitoredServiceRefFromType,
   healthSourcesValidation,
   monitoredServiceRefValidation
@@ -47,16 +48,19 @@ export function ContinousVerificationWidget(
     const {
       healthSources = [],
       monitoredService: { type },
-      monitoredService
+      monitoredService,
+      spec: serviceSpec
     } = formData?.spec || {}
     let spec = {}
     const monitoredServiceRef = getMonitoredServiceRefFromType(monitoredService, type, formData)
     // no validation for default monitored service when stepViewType is Template
     if (type === MONITORED_SERVICE_TYPE.DEFAULT && stepViewType !== 'Template') {
       spec = monitoredServiceRefValidation(monitoredServiceRef, spec, errors)
+      spec = configuredSpecRefValidation(serviceSpec?.sensitivity, spec, errors, getString)
       spec = healthSourcesValidation(monitoredServiceRef, healthSources, spec, getString, errors)
     } else if (type === MONITORED_SERVICE_TYPE.CONFIGURED) {
       spec = configuredMonitoredServiceRefValidation(monitoredServiceRef, spec, errors)
+      spec = configuredSpecRefValidation(serviceSpec?.sensitivity, spec, errors, getString)
       healthSourcesValidation(monitoredServiceRef, healthSources, spec, getString, errors)
     }
     return errors

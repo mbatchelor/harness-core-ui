@@ -215,8 +215,10 @@ export default function DeployServiceEntitySpecifications({
         } else {
           serviceObj.serviceRef = value.serviceRef
           delete serviceObj.service
-          if (getMultiTypeFromValue(value.serviceRef) !== MultiTypeInputType.FIXED) {
+          if (getMultiTypeFromValue(value.serviceRef) === MultiTypeInputType.EXPRESSION) {
             delete serviceObj.serviceInputs
+          } else if (getMultiTypeFromValue(value.serviceRef) === MultiTypeInputType.RUNTIME) {
+            serviceObj.serviceInputs = RUNTIME_INPUT_VALUE
           }
         }
       })

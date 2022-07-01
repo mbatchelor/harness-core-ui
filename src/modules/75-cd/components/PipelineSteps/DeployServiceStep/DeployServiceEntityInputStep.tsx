@@ -23,6 +23,7 @@ import type { IDialogProps } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import {
+  ServiceDefinition,
   ServiceResponseDTO,
   ServiceYaml,
   useGetRuntimeInputsServiceEntity,
@@ -48,7 +49,8 @@ function DeployServiceEntityInputStep({
   initialValues,
   inputSetData,
   formik,
-  allowableTypes
+  allowableTypes,
+  customStepProps
 }: DeployServiceProps & { formik?: FormikContextType<unknown> }): React.ReactElement | null {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
@@ -78,7 +80,10 @@ function DeployServiceEntityInputStep({
     loading: serviceListLoading,
     refetch: refetchServiceList
   } = useGetServiceAccessList({
-    queryParams
+    queryParams: {
+      ...queryParams,
+      type: customStepProps?.deploymentType as ServiceDefinition['type']
+    }
   })
 
   const { data: serviceInputsResponse, refetch: refetchServiceInputs } = useGetRuntimeInputsServiceEntity({
@@ -106,7 +111,10 @@ function DeployServiceEntityInputStep({
     if (initialValues.serviceRef) {
       const serviceInputsTemplate = get(template, `${inputSetData?.path}.serviceInputs`)
       const serviceInputsFormikValue = get(formik?.values, `${inputSetData?.path}.serviceInputs`)
-      if (isEmpty(serviceInputsTemplate) && !isEmpty(serviceInputsFormikValue)) {
+      if (
+        getMultiTypeFromValue(serviceInputsTemplate) === MultiTypeInputType.RUNTIME &&
+        !isEmpty(serviceInputsFormikValue)
+      ) {
         refetchServiceInputs({
           pathParams: {
             serviceIdentifier: initialValues.serviceRef

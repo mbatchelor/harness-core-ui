@@ -3432,6 +3432,7 @@ export interface StringsMap {
   'pipeline.stepCommonFields.validation.mustBeANumber': string
   'pipeline.stepConfigHasChanges': string
   'pipeline.stepDescription.AzureSlotDeployment': string
+  'pipeline.stepDescription.AzureTrafficShift': string
   'pipeline.stepDescription.Barrier': string
   'pipeline.stepDescription.CustomApproval': string
   'pipeline.stepDescription.DockerHub': string
@@ -3558,6 +3559,7 @@ export interface StringsMap {
   'pipeline.testsReports.willBeDisplayedIfAvailable': string
   'pipeline.timeRemainingSuffix': string
   'pipeline.totalCount': string
+  'pipeline.traffic': string
   'pipeline.uniqueIdentifier': string
   'pipeline.uniqueName': string
   'pipeline.unsupportedImagesWarning': string
@@ -4207,6 +4209,7 @@ export interface StringsMap {
   'ce.businessMapping.costBucket.inputName': string
   'ce.businessMapping.costBucket.newButtonText': string
   'ce.businessMapping.costBucket.title': string
+  'ce.businessMapping.costCategory': string
   'ce.businessMapping.created': string
   'ce.businessMapping.deleted': string
   'ce.businessMapping.emptySubtitles': string
@@ -4763,6 +4766,7 @@ export interface StringsMap {
   'ce.perspectives.budgets.desc': string
   'ce.perspectives.budgets.forecastedCost': string
   'ce.perspectives.budgets.monthToDateSpend': string
+  'ce.perspectives.budgets.perspectiveBudgets': string
   'ce.perspectives.budgets.perspectiveCreateBudgetTitle': string
   'ce.perspectives.budgets.sendAlerts': string
   'ce.perspectives.budgets.setBudgetAmount.budgetPeriod': string
@@ -4867,6 +4871,7 @@ export interface StringsMap {
   'ce.perspectives.reports.emailPlaceholder': string
   'ce.perspectives.reports.frequency': string
   'ce.perspectives.reports.msg': string
+  'ce.perspectives.reports.perspectiveReport': string
   'ce.perspectives.reports.recipientLabel': string
   'ce.perspectives.reports.recipients': string
   'ce.perspectives.reports.reportDeletedTxt': string
@@ -6035,6 +6040,7 @@ export interface StringsMap {
   'cv.monitoredServices.editMonitoredServices': string
   'cv.monitoredServices.editService': string
   'cv.monitoredServices.environmentValidation': string
+  'cv.monitoredServices.executedBy': string
   'cv.monitoredServices.failedToFetchHealthScore': string
   'cv.monitoredServices.failedToFetchSummaryData': string
   'cv.monitoredServices.filterlabel': string
@@ -6397,6 +6403,7 @@ export interface StringsMap {
   'cv.selectTimeRange': string
   'cv.selectWorkload': string
   'cv.selectedTimeInterval': string
+  'cv.sensitivityValidation': string
   'cv.serviceDashboardPage.fifteenMinutes': string
   'cv.serviceDashboardPage.fiveMinutes': string
   'cv.serviceDashboardPage.fourHours': string

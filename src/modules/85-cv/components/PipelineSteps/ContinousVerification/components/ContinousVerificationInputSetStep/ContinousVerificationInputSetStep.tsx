@@ -84,8 +84,9 @@ export function ContinousVerificationInputSetStep(
   }, [pipeline, formik])
 
   const renderRunTimeMonitoredService = (): JSX.Element => {
+    const type = monitoredService?.type ?? MONITORED_SERVICE_TYPE.DEFAULT
     if (
-      monitoredService?.type === MONITORED_SERVICE_TYPE.CONFIGURED &&
+      type === MONITORED_SERVICE_TYPE.CONFIGURED &&
       checkIfRunTimeInput(monitoredService?.spec?.monitoredServiceRef)
     ) {
       return (
@@ -98,7 +99,7 @@ export function ContinousVerificationInputSetStep(
       )
     } else if (
       (serviceIdentifierFromStage === RUNTIME_INPUT_VALUE || envIdentifierDataFromStage === RUNTIME_INPUT_VALUE) &&
-      monitoredService?.type === MONITORED_SERVICE_TYPE.DEFAULT
+      type === MONITORED_SERVICE_TYPE.DEFAULT
     ) {
       return (
         <RunTimeMonitoredService

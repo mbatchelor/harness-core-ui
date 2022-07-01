@@ -19,7 +19,6 @@ import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { useFFGitSyncContext } from '@cf/contexts/ff-git-sync-context/FFGitSyncContext'
 import { DetailPageTemplate, DetailPageTemplateProps } from '../DetailPageTemplate/DetailPageTemplate'
-import TargetManagementToolbar from '../TargetManagementToolbar/TargetManagementToolbar'
 
 import css from './TargetManagementDetailPageTemplate.module.scss'
 
@@ -113,8 +112,6 @@ const TargetManagementDetailPageTemplate: FC<TargetManagementDetailPageTemplateP
       {...detailPageTemplateProps}
     >
       <div className={cx(css.layout, ...modifiers)}>
-        {isGitSyncActionsEnabled ? <TargetManagementToolbar /> : <div />}
-
         <div className={css.contentLayout}>
           <div className={css.leftBar}>{leftBar}</div>
           <div className={css.mainContent}>{children}</div>

@@ -68,7 +68,9 @@ const DeployServiceInputStep: React.FC<DeployServiceProps & { formik?: any }> = 
   const [services, setService] = React.useState<SelectOption[]>([])
 
   React.useEffect(() => {
-    refetch()
+    if (!customStepProps?.isNewServiceEntity) {
+      refetch()
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

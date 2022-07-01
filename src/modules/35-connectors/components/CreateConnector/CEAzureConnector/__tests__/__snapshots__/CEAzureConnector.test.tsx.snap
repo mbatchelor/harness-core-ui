@@ -3528,7 +3528,7 @@ exports[`Create Azure connector Wizard should throw an error when connectors alr
                             connectors.ceAzure.overview.editConnector
                              
                             <a
-                              href="#"
+                              href="/account/dummy/settings/resources/connectors/undefined"
                             />
                              
                             connectors.ceAzure.overview.required

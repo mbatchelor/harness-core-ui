@@ -923,6 +923,7 @@ stepDescription:
   mergePR: Merge PR
   AzureSlotDeployment: Select the Web App and source and target deployment slots for the deployment.
   CustomApproval: Custom Approval
+  AzureTrafficShift: Shift network traffic to the new Web App version in the deployment slot.
 executionStrategy:
   executionStrategies: Execution Strategies
   useStrategy: Use Strategy
@@ -1155,3 +1156,4 @@ OverviewEmptyStates:
 importSuccessMessage: '{{resourceType}} has been imported successfully'
 MatrixNode:
   maxConcurrency: 'Max Concurrency:'
+traffic: Traffic
