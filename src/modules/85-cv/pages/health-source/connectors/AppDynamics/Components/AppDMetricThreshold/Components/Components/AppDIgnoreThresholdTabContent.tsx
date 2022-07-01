@@ -20,7 +20,7 @@ export default function AppDIgnoreThresholdTabContent(): JSX.Element {
         <FieldArray
           label=""
           name="ignoreThresholds"
-          isDeleteOfRowAllowed={() => false}
+          // isDeleteOfRowAllowed={() => false}
           addLabel="Add Threshold"
           labelProps={{ style: { textTransform: 'uppercase' } }}
           fields={[
