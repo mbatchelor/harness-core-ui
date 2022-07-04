@@ -325,15 +325,13 @@ describe('AmazonS3 tests', () => {
 
     const portalDivs = document.getElementsByClassName('bp3-portal')
     expect(portalDivs.length).toBe(0)
-
-    // Select bucketName from dropdown
     const bucketNameDropDownButton = container.querySelector('[data-icon="chevron-down"]')
     fireEvent.click(bucketNameDropDownButton!)
     expect(portalDivs.length).toBe(1)
     const dropdownPortalDiv = portalDivs[0]
     const selectListMenu = dropdownPortalDiv.querySelector('.bp3-menu')
-    const selectItem = await findByText(selectListMenu as HTMLElement, 'Loading Buckets...')
-    expect(selectItem).toBeDefined()
+    const loadingBucketsOption = await findByText(selectListMenu as HTMLElement, 'Loading Buckets...')
+    expect(loadingBucketsOption).toBeDefined()
     await waitFor(() => expect(fetchBuckets).toHaveBeenCalled())
   })
 
@@ -354,15 +352,13 @@ describe('AmazonS3 tests', () => {
 
     const portalDivs = document.getElementsByClassName('bp3-portal')
     expect(portalDivs.length).toBe(0)
-
-    // Select bucketName from dropdown
     const bucketNameDropDownButton = container.querySelector('[data-icon="chevron-down"]')
     fireEvent.click(bucketNameDropDownButton!)
     expect(portalDivs.length).toBe(1)
     const dropdownPortalDiv = portalDivs[0]
     const selectListMenu = dropdownPortalDiv.querySelector('.bp3-menu')
-    const selectItem = await findByText(selectListMenu as HTMLElement, 'pipeline.noBuckets')
-    expect(selectItem).toBeDefined()
+    const noBucketsOption = await findByText(selectListMenu as HTMLElement, 'pipeline.noBuckets')
+    expect(noBucketsOption).toBeDefined()
     await waitFor(() => expect(fetchBuckets).toHaveBeenCalled())
   })
 
