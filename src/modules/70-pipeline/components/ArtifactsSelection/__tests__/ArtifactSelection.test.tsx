@@ -480,6 +480,46 @@ describe('ArtifactsSelection tests', () => {
     expect(custom).toBeNull()
   })
 
+  test('clicking on Add Sidecar should show all types for ServerlessAwsLambda when NG_AZURE, NG_NEXUS_ARTIFACTORY and CUSTOM_ARTIFACT_NG are ON', async () => {
+    const context = {
+      ...pipelineContextWithoutArtifactsMock,
+      getStageFromPipeline: jest.fn(() => {
+        return { stage: pipelineContextWithoutArtifactsMock.state.pipeline.stages[0], parent: undefined }
+      })
+    } as any
+
+    const { container } = render(
+      <TestWrapper
+        defaultAppStoreValues={{
+          featureFlags: { NG_AZURE: true, NG_NEXUS_ARTIFACTORY: true, CUSTOM_ARTIFACT_NG: true }
+        }}
+      >
+        <PipelineContext.Provider value={context}>
+          <ArtifactsSelection isReadonlyServiceMode={false} readonly={false} deploymentType="ServerlessAwsLambda" />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+
+    const addSidecarButton = await findByText(container, 'pipelineSteps.serviceTab.artifactList.addSidecar')
+    expect(addSidecarButton).toBeDefined()
+    fireEvent.click(addSidecarButton)
+    const portal = document.getElementsByClassName('bp3-dialog')[0]
+    const artifactLabel = await waitFor(() => findByText(portal as HTMLElement, 'connectors.specifyArtifactRepoType'))
+    expect(artifactLabel).toBeDefined()
+    // Artifactory and ECR should be rendered
+    const artifactory = await container.querySelector('input[value="ArtifactoryRegistry"]')
+    expect(artifactory).toBeDefined()
+    const ecr = await container.querySelector('input[value="Ecr"]')
+    expect(ecr).toBeDefined()
+    // Nexus, ACR and Custom should not be rendered
+    const nexus = await container.querySelector('input[value="Nexus3Registry"]')
+    expect(nexus).toBeNull()
+    const acr = await container.querySelector('input[value="Acr"]')
+    expect(acr).toBeNull()
+    const custom = await container.querySelector('input[value="CustomArtifact"]')
+    expect(custom).toBeNull()
+  })
+
   test('clicking on Create Artifactory Connector should open create dialog properly', async () => {
     const context = {
       ...pipelineContextWithoutArtifactsMock,

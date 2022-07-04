@@ -96,7 +96,7 @@ export function StrategyFormInternal(
   const { readonly, path, formik } = props
   const { getString } = useStrings()
 
-  const value = yamlStringify(get(formik.values, path, ''))
+  const value = yamlStringify(get(formik.values, path, '')).replace(': null\n', ': \n')
 
   function handleChange(newValue: string): void {
     try {
@@ -132,7 +132,7 @@ export function StrategyFormInternal(
           height={300}
           options={getDefaultMonacoConfig(!!readonly)}
           language="yaml"
-          defaultValue={value}
+          value={value}
           onChange={handleChange}
         />
       </div>

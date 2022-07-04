@@ -11,7 +11,10 @@ import { Card, Color, FormInput, MultiTypeInputType, Text } from '@harness/uicor
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import { FormConnectorReferenceField } from '@connectors/components/ConnectorReferenceField/FormConnectorReferenceField'
-import { getLabelByName } from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate.utils'
+import {
+  getLabelByName,
+  healthSourceTypeMapping
+} from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate.utils'
 import { spacingMedium } from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate.constants'
 import NoResultsView from '@templates-library/pages/TemplatesPage/views/NoResultsView/NoResultsView'
 import MetricDefinitionInptsetForm from '../MetricDefinitionInptsetForm/MetricDefinitionInptsetForm'
@@ -38,7 +41,8 @@ export default function HealthSourceInputsetForm({
       .map(item => {
         return { name: item[0], path: `${path}.${item[0]}` }
       })
-    const metricDefinitions = healthSource?.spec?.metricDefinitions
+    const hasQueries = healthSource?.spec?.queries !== undefined
+    const metricDefinitions = hasQueries ? healthSource?.spec?.queries : healthSource?.spec?.metricDefinitions
     return (
       <Card key={`${healthSource?.name}.${index}`} className={css.healthSourceInputSet}>
         <Text font={'normal'} color={Color.BLACK} style={{ paddingBottom: spacingMedium }}>
@@ -50,7 +54,7 @@ export default function HealthSourceInputsetForm({
               return (
                 <FormConnectorReferenceField
                   width={400}
-                  type={healthSource?.type}
+                  type={healthSourceTypeMapping(healthSource?.type)}
                   name={input.path}
                   label={
                     <Text color={Color.BLACK} font={'small'} margin={{ bottom: 'small' }}>

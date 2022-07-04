@@ -6,6 +6,7 @@
  */
 
 import React from 'react'
+import { useFormikContext } from 'formik'
 import { Text, Color, FormInput, MultiTypeInputType } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import {
@@ -24,6 +25,7 @@ export default function MetricDefinitionInptsetForm({
   path
 }: MetricDefinitionInptsetFormInterface): JSX.Element {
   const { getString } = useStrings()
+  const { setFieldValue: onChange } = useFormikContext()
   return metricDefinitions?.map((item: any, idx: number) => {
     const runtimeItems = getNestedRuntimeInputs(item, [], `${path}.metricDefinitions.${idx}`)
     return (
@@ -32,6 +34,19 @@ export default function MetricDefinitionInptsetForm({
           {getString('cv.monitoringSources.metricLabel')}: {item?.metricName}
         </Text>
         {runtimeItems.map(input => {
+          if (input.name === 'indexes') {
+            return (
+              <FormInput.MultiTextInput
+                key={input.name}
+                name={input.path}
+                label={getLabelByName(input.name, getString)}
+                onChange={value => {
+                  onChange?.(input.path, value?.toString()?.split(','))
+                }}
+                multiTextInputProps={{ allowableTypes: [MultiTypeInputType.FIXED] }}
+              />
+            )
+          }
           return (
             <FormInput.MultiTextInput
               key={input.name}

@@ -20,7 +20,9 @@ import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProp
 import type { DeployServiceCustomStepPropType, DeployServiceData } from './DeployServiceInterface'
 import { ServiceRegex } from './DeployServiceUtils'
 import { DeployServiceInputStepFormik } from './DeployServiceInputStep'
+import { DeployServiceEntityInputStepFormik } from './DeployServiceEntityInputStep'
 import DeployServiceWidget from './DeployServiceWidget'
+import DeployServiceEntityWidget from './DeployServiceEntityWidget/DeployServiceEntityWidget'
 
 const logger = loggerFor(ModuleName.CD)
 
@@ -77,7 +79,7 @@ export class DeployServiceStep extends Step<DeployServiceData> {
       resolve([])
     })
   }
-  renderStep(props: StepProps<DeployServiceData>): JSX.Element {
+  renderStep(props: StepProps<DeployServiceData, DeployServiceCustomStepPropType>): JSX.Element {
     const {
       initialValues,
       onUpdate,
@@ -88,6 +90,17 @@ export class DeployServiceStep extends Step<DeployServiceData> {
       customStepProps
     } = props
     if (stepViewType === StepViewType.InputSet || stepViewType === StepViewType.DeploymentForm) {
+      if (customStepProps?.isNewServiceEntity) {
+        return (
+          <DeployServiceEntityInputStepFormik
+            initialValues={initialValues}
+            readonly={readonly}
+            inputSetData={inputSetData}
+            allowableTypes={allowableTypes}
+            customStepProps={customStepProps}
+          />
+        )
+      }
       return (
         <DeployServiceInputStepFormik
           initialValues={initialValues}
@@ -97,6 +110,17 @@ export class DeployServiceStep extends Step<DeployServiceData> {
           inputSetData={inputSetData}
           allowableTypes={allowableTypes}
           customStepProps={customStepProps as DeployServiceCustomStepPropType}
+        />
+      )
+    }
+    if (initialValues.isNewServiceEntity) {
+      return (
+        <DeployServiceEntityWidget
+          readonly={readonly}
+          initialValues={initialValues}
+          onUpdate={onUpdate}
+          stepViewType={stepViewType}
+          allowableTypes={allowableTypes}
         />
       )
     }

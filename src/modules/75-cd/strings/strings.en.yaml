@@ -152,6 +152,8 @@ serviceDashboard:
   6monthTrend: 6 month trend
   instanceCountHistory: Instance Count History
   instanceDetails: Instance Details
+  instancesDetails: Instances Details
+  moreDetails: More Details >
   pod: pod
   function: function
   deployedAt: Deployed At
@@ -277,6 +279,10 @@ infrastructure:
   delete: Delete Infrastructure
   deleteConfirmation: Are you sure you want to delete this Infrastructure?
   deleted: Successfully deleted Infrastructure {{ identifier }}
+  sshWinRmAzure:
+    cloudProvider: Cloud Provider
+    hostConnectionAttributes: Host Connection Attributes
+    usePublicDns: Use Public DNS connection
 cloudFormation:
   createDescription: Provision resources using a CloudFormation template.
   deleteDescription: Remove any CloudFormation stack you provisioned via Harness or other methods.

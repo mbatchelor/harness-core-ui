@@ -51,7 +51,6 @@ import { isContextTypeNotStageTemplate } from '@pipeline/components/PipelineStud
 import { hasStageData, ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
-import type { DeployStageConfig } from '@pipeline/utils/DeployStageInterface'
 import SelectDeploymentType from '../../DeployServiceSpecifications/SelectDeploymentType'
 import type { EditStageFormikType, EditStageViewProps } from '../EditStageViewInterface'
 import css from './EditStageView.module.scss'
@@ -237,8 +236,7 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
               tags: data?.stage?.tags || {},
               serviceType: newStageData[0].value,
               deploymentType: selectedDeploymentType,
-              //DeployStageConfig type is temporarily added until pipeline DTO for new entity gets merged
-              gitOpsEnabled: (data?.stage?.spec as unknown as DeployStageConfig)?.gitOpsEnabled
+              gitOpsEnabled: data?.stage?.spec?.gitOpsEnabled
             }}
             formName="cdEditStage"
             onSubmit={handleSubmit}
@@ -248,7 +246,7 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
                 errors.name = getString('validation.identifierDuplicate')
               }
               if (context && data) {
-                onChange?.(omit(values as unknown as DeploymentStageElementConfig, 'serviceType', 'deploymentType'))
+                onChange?.(omit(values, 'serviceType', 'deploymentType'))
               }
               return errors
             }}

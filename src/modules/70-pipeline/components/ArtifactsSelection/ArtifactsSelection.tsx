@@ -680,7 +680,6 @@ export default function ArtifactsSelection({
       accountId={accountId}
       refetchConnectors={refetchConnectorList}
       isReadonly={readonly}
-      allowSidecar={!isServerlessDeploymentType(deploymentType)}
     />
   )
 }

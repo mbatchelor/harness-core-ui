@@ -232,7 +232,7 @@ const AddCluster = (props: AddClusterProps): React.ReactElement => {
     // istanbul ignore else
     if (error) {
       /* istanbul ignore next */
-      showError((error as any)?.message)
+      showError(error)
     }
   }, [error])
 
@@ -264,7 +264,7 @@ const AddCluster = (props: AddClusterProps): React.ReactElement => {
         ///* istanbul ignore next */
         .catch(err => {
           /* istanbul ignore next */
-          showError(err?.message)
+          showError(err?.data?.message)
           /* istanbul ignore next */
           setSubmitting(false)
         })

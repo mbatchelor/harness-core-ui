@@ -126,6 +126,15 @@ function Artifactory({
     )
   })
 
+  const serverlessSidecarSchema = Yup.object().shape({
+    ...serverlessArtifactorySchema,
+    ...ArtifactIdentifierValidation(
+      artifactIdentifiers,
+      initialValues?.identifier,
+      getString('pipeline.uniqueIdentifier')
+    )
+  })
+
   const getConnectorRefQueryData = (): string => {
     return defaultTo(prevStepData?.connectorId?.value, prevStepData?.identifier)
   }
@@ -214,11 +223,14 @@ function Artifactory({
   }
 
   const getValidationSchema = useCallback(() => {
+    if (isServerlessDeploymentTypeSelected) {
+      if (context === ModalViewFor.SIDECAR) {
+        return serverlessSidecarSchema
+      }
+      return serverlessPrimarySchema
+    }
     if (context === ModalViewFor.SIDECAR) {
       return sidecarSchema
-    }
-    if (isServerlessDeploymentTypeSelected) {
-      return serverlessPrimarySchema
     }
     return primarySchema
   }, [context, isServerlessDeploymentTypeSelected, primarySchema, serverlessPrimarySchema, sidecarSchema])

@@ -15,6 +15,7 @@ export interface DeployServiceCustomStepPropType {
   stageIdentifier: string
   isNewServiceEntity: boolean
   deploymentType: ServiceDefinition['type']
+  gitOpsEnabled?: boolean
 }
 export interface DeployServiceProps {
   initialValues: DeployServiceData
@@ -42,6 +43,7 @@ export interface DeployServiceData extends Omit<ServiceConfig, 'serviceRef'> {
   serviceRef?: string
   isNewServiceEntity?: boolean
   deploymentType?: ServiceDeploymentType
+  gitOpsEnabled?: boolean
 }
 
 export interface NewEditServiceModalProps {

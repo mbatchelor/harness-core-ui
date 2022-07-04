@@ -8,6 +8,7 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import { Formik } from '@harness/uicore'
+import * as formik from 'formik'
 import { TestWrapper } from '@common/utils/testUtils'
 import MetricDefinitionInptsetForm from '../MetricDefinitionInptsetForm'
 
@@ -51,6 +52,13 @@ const metricDefinitions = [
 ]
 
 describe('Validate MetricDefinitionInptsetForm', () => {
+  const useFormikContextMock = jest.spyOn(formik, 'useFormikContext')
+
+  beforeEach(() => {
+    useFormikContextMock.mockReturnValue({
+      setFieldValue: jest.fn()
+    } as unknown as any)
+  })
   test('should render MetricDefinitionInptsetForm with no metricDefinitions', () => {
     const { container } = render(
       <TestWrapper>

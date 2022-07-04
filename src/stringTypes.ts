@@ -1693,12 +1693,17 @@ export interface StringsMap {
   'connectors.cdng.runTimeMonitoredService.toFetchMonitoredService': string
   'connectors.cdng.selectTheJobNameFirst': string
   'connectors.cdng.trafficsplit': string
+  'connectors.cdng.validations.applicationNameValidation': string
+  'connectors.cdng.validations.completeMetricPathValidation': string
   'connectors.cdng.validations.deploymentTagRequired': string
   'connectors.cdng.validations.durationRequired': string
   'connectors.cdng.validations.healthSourceRequired': string
   'connectors.cdng.validations.jobNameRequired': string
   'connectors.cdng.validations.monitoringServiceRequired': string
   'connectors.cdng.validations.sensitivityRequired': string
+  'connectors.cdng.validations.serviceInstanceFieldNameValidation': string
+  'connectors.cdng.validations.serviceInstanceMetricPathValidation': string
+  'connectors.cdng.validations.tierNameValidation': string
   'connectors.cdng.validations.timeoutValidation': string
   'connectors.cdng.validations.verificationTypeRequired': string
   'connectors.cdng.verificationSensitivityLabel.high': string
@@ -3940,6 +3945,9 @@ export interface StringsMap {
   'cd.infrastructure.edit': string
   'cd.infrastructure.infrastructureDefinitions': string
   'cd.infrastructure.noInfrastructureInEnvironment': string
+  'cd.infrastructure.sshWinRmAzure.cloudProvider': string
+  'cd.infrastructure.sshWinRmAzure.hostConnectionAttributes': string
+  'cd.infrastructure.sshWinRmAzure.usePublicDns': string
   'cd.infrastructure.updated': string
   'cd.installAdapterHelperText': string
   'cd.launchArgo': string
@@ -4026,9 +4034,11 @@ export interface StringsMap {
   'cd.serviceDashboard.in': string
   'cd.serviceDashboard.instanceCountHistory': string
   'cd.serviceDashboard.instanceDetails': string
+  'cd.serviceDashboard.instancesDetails': string
   'cd.serviceDashboard.lastDeployment': string
   'cd.serviceDashboard.lastPipelineExecution': string
   'cd.serviceDashboard.manageServiceLabel': string
+  'cd.serviceDashboard.moreDetails': string
   'cd.serviceDashboard.noActiveServiceInstances': string
   'cd.serviceDashboard.noActiveServices': string
   'cd.serviceDashboard.noDeployments': string

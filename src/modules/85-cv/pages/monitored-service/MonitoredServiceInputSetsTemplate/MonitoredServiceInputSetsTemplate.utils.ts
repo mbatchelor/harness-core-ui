@@ -8,6 +8,8 @@
 import { cloneDeep } from 'lodash-es'
 import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import type { UseStringsReturn } from 'framework/strings'
+import { HealthSourceTypes } from '@cv/pages/health-source/types'
+import type { ConnectorInfoDTO } from 'services/cv'
 
 export const getLabelByName = (name: string, getString: UseStringsReturn['getString']): string => {
   switch (name) {
@@ -50,4 +52,13 @@ export const getNestedRuntimeInputs = (spec: any, list: any[], basePath: string)
     }
   })
   return clonedList
+}
+
+export const healthSourceTypeMapping = (type: ConnectorInfoDTO['type']): ConnectorInfoDTO['type'] => {
+  switch (type) {
+    case HealthSourceTypes.DatadogLog as ConnectorInfoDTO['type']:
+      return HealthSourceTypes.Datadog
+    default:
+      return type
+  }
 }

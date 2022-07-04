@@ -32,6 +32,7 @@ export enum InfraDeploymentType {
   ServerlessAzureFunctions = 'ServerlessAzureFunctions',
   AmazonSAM = 'AwsSAM',
   AzureFunctions = 'AzureFunctions',
+  SshWinRmAzure = 'SshWinRmAzure',
   AzureWebApps = 'AzureWebApps'
 }
 
@@ -192,9 +193,11 @@ export const getInfrastructureDefinitionValidationSchema = (
       return Yup.object().shape({
         credentialsRef: getSshKeyRefSchema(getString)
       })
-    } else {
-      return getValidationSchema(getString)
     }
+    if (deploymentType === ServiceDeploymentType.winrm) {
+      return Yup.object().shape({})
+    }
+    return getValidationSchema(getString)
   } else {
     return Yup.object().shape({
       connectorRef: getConnectorSchema(getString),
