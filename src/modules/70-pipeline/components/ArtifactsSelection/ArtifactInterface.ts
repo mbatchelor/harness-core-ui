@@ -121,7 +121,6 @@ export interface AmazonS3ArtifactProps {
   isReadonly?: boolean
   selectedArtifact: ArtifactType | null
   allowableTypes: MultiTypeInputType[]
-  selectedDeploymentType: string
 }
 
 export interface ACRArtifactProps {

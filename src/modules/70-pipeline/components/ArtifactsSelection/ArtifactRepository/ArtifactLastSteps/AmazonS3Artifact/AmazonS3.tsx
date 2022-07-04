@@ -34,7 +34,6 @@ import {
   AmazonS3InitialValuesType,
   TagTypes
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
-import { isServerlessDeploymentType } from '@pipeline/utils/stageHelpers'
 import {
   ArtifactIdentifierValidation,
   ModalViewFor,
@@ -58,13 +57,11 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
     previousStep,
     artifactIdentifiers,
     isReadonly = false,
-    selectedArtifact,
-    selectedDeploymentType
+    selectedArtifact
   } = props
 
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
 
-  const isServerlessDeploymentTypeSelected = isServerlessDeploymentType(selectedDeploymentType)
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
 
@@ -115,18 +112,6 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
       then: Yup.string().required(getString('pipeline.artifactsSelection.validation.filePathRegex'))
     })
   }
-  const schemaObjectServerless = {
-    bucketName: Yup.mixed().required(getString('pipeline.manifestType.bucketNameRequired')),
-    tagType: Yup.string().required(),
-    filePath: Yup.string().when('tagType', {
-      is: 'value',
-      then: Yup.string().required(getString('pipeline.manifestType.pathRequired'))
-    }),
-    filePathRegex: Yup.string().when('tagType', {
-      is: 'regex',
-      then: Yup.string().required(getString('pipeline.artifactsSelection.validation.filePathRegex'))
-    })
-  }
   const sidecarSchema = Yup.object().shape({
     ...schemaObject,
     ...ArtifactIdentifierValidation(
@@ -137,28 +122,13 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
   })
 
   const primarySchema = Yup.object().shape(schemaObject)
-  const primarySchemaServerless = Yup.object().shape(schemaObjectServerless)
-  const sidecarSchemaServerless = Yup.object().shape({
-    ...schemaObjectServerless,
-    ...ArtifactIdentifierValidation(
-      artifactIdentifiers,
-      initialValues?.identifier,
-      getString('pipeline.uniqueIdentifier')
-    )
-  })
 
   const getValidationSchema = useCallback(() => {
-    if (isServerlessDeploymentTypeSelected) {
-      if (context === ModalViewFor.SIDECAR) {
-        return sidecarSchemaServerless
-      }
-      return primarySchemaServerless
-    }
     if (context === ModalViewFor.SIDECAR) {
       return sidecarSchema
     }
     return primarySchema
-  }, [context, isServerlessDeploymentTypeSelected, primarySchema, primarySchemaServerless, sidecarSchema])
+  }, [context, primarySchema, sidecarSchema])
 
   const getInitialValues = (): AmazonS3InitialValuesType => {
     // Initia specValues
@@ -211,10 +181,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
   ))
 
   const renderS3BucketField = (formik: FormikValues): JSX.Element => {
-    if (
-      getMultiTypeFromValue(formik.values?.region) !== MultiTypeInputType.FIXED ||
-      getMultiTypeFromValue(prevStepData?.connectorId) !== MultiTypeInputType.FIXED
-    ) {
+    if (getMultiTypeFromValue(prevStepData?.connectorId) !== MultiTypeInputType.FIXED) {
       return (
         <div className={css.imagePathContainer}>
           <FormInput.MultiTextInput
@@ -334,7 +301,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
                     <div className={css.configureOptions}>
                       <ConfigureOptions
                         style={{ alignSelf: 'center' }}
-                        value={formik.values?.filePathRegex as string}
+                        value={formik.values?.filePath as string}
                         type={getString('string')}
                         variableName="filePath"
                         showRequiredField={false}
