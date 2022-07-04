@@ -8,7 +8,7 @@
 import React, { useCallback, useMemo } from 'react'
 import { Form, FormikValues } from 'formik'
 import { useParams } from 'react-router-dom'
-import { defaultTo, get, memoize, merge } from 'lodash-es'
+import { defaultTo, get, isNil, memoize, merge } from 'lodash-es'
 import * as Yup from 'yup'
 import { Menu } from '@blueprintjs/core'
 
@@ -283,6 +283,21 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
                   radioGroup={{ inline: true }}
                   items={tagOptions}
                   className={css.radioGroup}
+                  onChange={() => {
+                    if (!isNil(formik.values?.filePath)) {
+                      if (getMultiTypeFromValue(formik.values?.filePath) !== MultiTypeInputType.FIXED) {
+                        formik.setFieldValue('filePathRegex', formik.values.filePath)
+                      } else {
+                        formik.setFieldValue('filePathRegex', '')
+                      }
+                    } else {
+                      if (getMultiTypeFromValue(formik.values?.filePathRegex) !== MultiTypeInputType.FIXED) {
+                        formik.setFieldValue('filePath', formik.values.filePathRegex)
+                      } else {
+                        formik.setFieldValue('filePath', '')
+                      }
+                    }
+                  }}
                 />
               </div>
 
