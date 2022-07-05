@@ -160,6 +160,19 @@ describe('AmazonS3ArtifactSource tests', () => {
     expect(container).toMatchSnapshot()
   })
 
+  test(`when readonly is true, all fields should be disabled`, () => {
+    const { container } = renderComponent({ ...props, readonly: true })
+
+    const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
+
+    const connnectorRefInput = queryByAttribute('data-testid', container, /connectorRef/)
+    const bucketNameInput = queryByNameAttribute(`${artifactCommonPath}.artifacts.primary.spec.bucketName`)
+    const filePathInput = queryByNameAttribute(`${artifactCommonPath}.artifacts.primary.spec.filePath`)
+    expect(connnectorRefInput).toBeDisabled()
+    expect(bucketNameInput).toBeDisabled()
+    expect(filePathInput).toBeDisabled()
+  })
+
   test(`clicking on Bucket Name field should display loading option when bucket data is being fetched`, async () => {
     jest.spyOn(cdng, 'useGetV2BucketListForS3').mockImplementation((): any => {
       return {
@@ -314,7 +327,7 @@ describe('AmazonS3ArtifactSource tests', () => {
     const dropdownIcons = container.querySelectorAll('[data-icon="chevron-down"]')
     const bucketNameDropDownIcon = dropdownIcons[1]
     fireEvent.click(bucketNameDropDownIcon!)
-    expect(fetchBuckets).not.toHaveBeenCalled()
+    expect(fetchBuckets).toHaveBeenCalledTimes(0)
     expect(portalDivs.length).toBe(1)
     const dropdownPortalDiv = portalDivs[0]
     const selectListMenu = dropdownPortalDiv.querySelector('.bp3-menu')
@@ -341,14 +354,15 @@ describe('AmazonS3ArtifactSource tests', () => {
         fireEvent.click(applySelected)
       })
     })
-
+    expect(fetchBuckets).toBeCalled()
+    expect(fetchBuckets).toHaveBeenCalledTimes(1)
     // Expect bucketName field values to be empty after switching connector
     expect(bucketNameInput.value).toBe('')
 
     // Choose second option for bucketName from dropdown
     expect(portalDivs.length).toBe(2)
     fireEvent.click(bucketNameDropDownIcon!)
-    expect(fetchBuckets).not.toHaveBeenCalled()
+    expect(fetchBuckets).toHaveBeenCalledTimes(1)
     expect(portalDivs.length).toBe(2)
     const bucketNameDropdownPortalDiv = portalDivs[0]
     const dropdownOptionList = bucketNameDropdownPortalDiv.querySelector('.bp3-menu')

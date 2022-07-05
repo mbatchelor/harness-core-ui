@@ -157,7 +157,17 @@ const Content = (props: AmazonS3ContentProps): JSX.Element => {
                 allowableTypes: [MultiTypeInputType.EXPRESSION, MultiTypeInputType.FIXED],
                 expressions
               }}
-              onChange={() => resetBuckets(formik, `${path}.artifacts.${artifactPath}.spec.bucketName`)}
+              onChange={selected => {
+                refetchBuckets({
+                  queryParams: {
+                    accountIdentifier: accountId,
+                    orgIdentifier,
+                    projectIdentifier,
+                    connectorRef: defaultTo((selected as any)?.record?.identifier, fixedConnectorValue)
+                  }
+                })
+                resetBuckets(formik, `${path}.artifacts.${artifactPath}.spec.bucketName`)
+              }}
               className={css.connectorMargin}
               type={ArtifactToConnectorMap[defaultTo(artifact?.type, '')]}
               gitScope={{
@@ -181,7 +191,7 @@ const Content = (props: AmazonS3ContentProps): JSX.Element => {
                 allowableTypes,
                 selectProps: {
                   noResults: (
-                    <Text lineClamp={1}>
+                    <Text lineClamp={1} width={500} height={100}>
                       {getRBACErrorMessage(error as RBACError) || getString('pipeline.noBuckets')}
                     </Text>
                   ),
