@@ -26,7 +26,7 @@ import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO, HarnessStoreFile, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
 import FileStoreSelectField from '@filestore/components/FileStoreSelectField/FileStoreSelectField'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
-import { ManifestIdentifierValidation, ManifestStoreMap } from '../../Manifesthelper'
+import { ManifestDataType, ManifestIdentifierValidation, ManifestStoreMap } from '../../Manifesthelper'
 import type { HarnessFileStoreDataType, HarnessFileStoreFormData, ManifestTypes } from '../../ManifestInterface'
 import css from '../K8sValuesManifest/ManifestDetails.module.scss'
 
@@ -38,6 +38,15 @@ interface HarnessFileStorePropType {
   handleSubmit: (data: ManifestConfigWrapper) => void
   manifestIdsList: Array<string>
   isReadonly?: boolean
+}
+
+const showValuesPaths = (selectedManifest: ManifestTypes): boolean => {
+  return [
+    ManifestDataType.K8sManifest,
+    ManifestDataType.HelmChart,
+    ManifestDataType.OpenshiftTemplate,
+    ManifestDataType.Kustomize
+  ].includes(selectedManifest)
 }
 
 function HarnessFileStore({
@@ -171,36 +180,40 @@ function HarnessFileStore({
                       />
                     </MultiTypeFieldSelector>
                   </div>
-                  <div className={css.halfWidth}>
-                    <MultiTypeFieldSelector
-                      defaultValueToReset={['']}
-                      allowedTypes={allowableTypes.filter(allowedType => allowedType !== MultiTypeInputType.EXPRESSION)}
-                      name="valuesPaths"
-                      label={getString('pipeline.manifestType.valuesYamlPath')}
-                    >
-                      <FieldArray
-                        name="valuesPaths"
-                        render={({ push, remove }) => (
-                          <Layout.Vertical>
-                            {formik.values?.valuesPaths?.map((paths: string, index: number) => (
-                              <Layout.Horizontal key={paths} margin={{ top: 'medium' }}>
-                                <FileStoreSelectField name={`valuesPaths[${index}]`} />
-                                {index !== 0 && <Button minimal icon="main-trash" onClick={() => remove(index)} />}
-                              </Layout.Horizontal>
-                            ))}
-                            <span>
-                              <Button
-                                minimal
-                                text={getString('add')}
-                                variation={ButtonVariation.PRIMARY}
-                                onClick={() => push('')}
-                              />
-                            </span>
-                          </Layout.Vertical>
+                  {showValuesPaths(selectedManifest as ManifestTypes) && (
+                    <div className={css.halfWidth}>
+                      <MultiTypeFieldSelector
+                        defaultValueToReset={['']}
+                        allowedTypes={allowableTypes.filter(
+                          allowedType => allowedType !== MultiTypeInputType.EXPRESSION
                         )}
-                      />
-                    </MultiTypeFieldSelector>
-                  </div>
+                        name="valuesPaths"
+                        label={getString('pipeline.manifestType.valuesYamlPath')}
+                      >
+                        <FieldArray
+                          name="valuesPaths"
+                          render={({ push, remove }) => (
+                            <Layout.Vertical>
+                              {formik.values?.valuesPaths?.map((paths: string, index: number) => (
+                                <Layout.Horizontal key={paths} margin={{ top: 'medium' }}>
+                                  <FileStoreSelectField name={`valuesPaths[${index}]`} />
+                                  {index !== 0 && <Button minimal icon="main-trash" onClick={() => remove(index)} />}
+                                </Layout.Horizontal>
+                              ))}
+                              <span>
+                                <Button
+                                  minimal
+                                  text={getString('add')}
+                                  variation={ButtonVariation.PRIMARY}
+                                  onClick={() => push('')}
+                                />
+                              </span>
+                            </Layout.Vertical>
+                          )}
+                        />
+                      </MultiTypeFieldSelector>
+                    </div>
+                  )}
                 </div>
 
                 <Layout.Horizontal spacing="medium" className={css.saveBtn}>

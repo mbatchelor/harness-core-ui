@@ -26,7 +26,6 @@ import * as Yup from 'yup'
 
 import { get, set, isEmpty } from 'lodash-es'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
-
 import { FormMultiTypeCheckboxField } from '@common/components'
 
 import { useStrings } from 'framework/strings'

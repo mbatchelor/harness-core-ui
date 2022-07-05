@@ -281,6 +281,7 @@ manifestType:
   gitConnectorLabel: 'Git'
   bitBucketLabel: 'Bitbucket'
   InheritFromManifest: 'Inherit From Manifest'
+  customRemote: 'Custom Remote'
   httpHelmRepoConnectorLabel: 'HTTP Helm'
   manifestIdentifier: Manifest Name
   manifestPlaceholder: Enter Manifest Name
@@ -331,6 +332,9 @@ manifestType:
   serverlessConfigFilePath: Serverless Config File Path
   serverlessConfigFilePathPlaceholder: Enter Serverless Config File Path
   valuesYamlPath: Values.yaml
+  customRemoteExtractionScript: Custom Remote Manifest Extraction Script
+  customRemoteExtractedFileLocation: Extracted Manifest File Location
+  customRemoteExtractedFileLocationPlaceholder: Enter Extracted Manifest File Location
   paramsYamlPath: Openshift Parameters
   http:
     chartName: 'Chart Name'

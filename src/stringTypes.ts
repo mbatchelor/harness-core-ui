@@ -3183,6 +3183,10 @@ export interface StringsMap {
   'pipeline.manifestType.commandFlagRequired': string
   'pipeline.manifestType.commitId': string
   'pipeline.manifestType.commitPlaceholder': string
+  'pipeline.manifestType.customRemote': string
+  'pipeline.manifestType.customRemoteExtractedFileLocation': string
+  'pipeline.manifestType.customRemoteExtractedFileLocationPlaceholder': string
+  'pipeline.manifestType.customRemoteExtractionScript': string
   'pipeline.manifestType.filePathPlaceholder': string
   'pipeline.manifestType.folderPathPlaceholder': string
   'pipeline.manifestType.folderPathRequired': string

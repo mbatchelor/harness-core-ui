@@ -87,6 +87,7 @@ import KustomizeWithGIT from '../ManifestWizardSteps/KustomizeWithGIT/KustomizeW
 import OpenShiftParamWithGit from '../ManifestWizardSteps/OpenShiftParam/OSWithGit'
 import KustomizePatchDetails from '../ManifestWizardSteps/KustomizePatchesDetails/KustomizePatchesDetails'
 import ServerlessAwsLambdaManifest from '../ManifestWizardSteps/ServerlessAwsLambdaManifest/ServerlessAwsLambdaManifest'
+import CustomRemoteManifest from '../ManifestWizardSteps/CustomRemoteManifest/CustomRemoteManifest'
 import AttachPathYamlFlow from './AttachPathYamlFlow'
 import InheritFromManifest from '../ManifestWizardSteps/InheritFromManifest/InheritFromManifest'
 import ConnectorField from './ConnectorField'
@@ -351,15 +352,11 @@ function ManifestListView({
       case selectedManifest === ManifestDataType.OpenshiftParam:
         manifestDetailStep = <OpenShiftParamWithGit {...lastStepProps()} />
         break
-
       case selectedManifest === ManifestDataType.KustomizePatches:
         manifestDetailStep = <KustomizePatchDetails {...lastStepProps()} />
         break
       case selectedManifest === ManifestDataType.ServerlessAwsLambda:
         manifestDetailStep = <ServerlessAwsLambdaManifest {...lastStepProps()} />
-        break
-      case selectedManifest === ManifestDataType.Values && manifestStore === ManifestStoreMap.InheritFromManifest:
-        manifestDetailStep = <InheritFromManifest {...lastStepProps()} />
         break
       case [ManifestDataType.Values, ManifestDataType.OpenshiftParam, ManifestDataType.KustomizePatches].includes(
         selectedManifest as ManifestTypes
@@ -368,6 +365,15 @@ function ManifestListView({
         break
       case manifestStore === ManifestStoreMap.Harness:
         manifestDetailStep = <HarnessFileStore {...lastStepProps()} />
+        break
+      case [
+        ManifestDataType.K8sManifest,
+        ManifestDataType.Values,
+        ManifestDataType.HelmChart,
+        ManifestDataType.OpenshiftTemplate,
+        ManifestDataType.OpenshiftParam
+      ].includes(selectedManifest as ManifestTypes) && manifestStore === ManifestStoreMap.CustomRemote:
+        manifestDetailStep = <CustomRemoteManifest {...lastStepProps()} />
         break
       case [ManifestDataType.K8sManifest, ManifestDataType.Values].includes(selectedManifest as ManifestTypes) &&
         [ManifestStoreMap.Git, ManifestStoreMap.Github, ManifestStoreMap.GitLab, ManifestStoreMap.Bitbucket].includes(
@@ -790,5 +796,4 @@ function ManifestListView({
     </Layout.Vertical>
   )
 }
-
 export default ManifestListView

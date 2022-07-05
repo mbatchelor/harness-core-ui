@@ -41,10 +41,13 @@ export type ManifestStores =
   | 'InheritFromManifest'
   | 'Inline'
   | 'Harness'
+  | 'CustomRemote'
+
+export type ManifestStoreTypeWithoutConnector = 'InheritFromManifest' | 'Harness' | 'Inline' | 'CustomRemote'
 
 export type HelmOCIVersionOptions = 'V380'
 export type HelmVersionOptions = 'V2' | 'V3'
-export type ManifestStoreWithoutConnector = Exclude<ManifestStores, 'InheritFromManifest' | 'Harness' | 'Inline'>
+export type ManifestStoreWithoutConnector = Exclude<ManifestStores, ManifestStoreTypeWithoutConnector>
 
 export interface ManifestSelectionProps {
   isPropagating?: boolean
@@ -188,7 +191,6 @@ export interface InheritFromManifestDataType {
   identifier: string
   paths: any
 }
-
 export interface InlineDataType {
   identifier: string
   content: string
@@ -198,9 +200,16 @@ export interface HarnessFileStoreDataType {
   files: string[]
   valuesPaths: any
 }
-
 export interface HarnessFileStoreFormData {
   identifier: string
   files: HarnessStoreFile[]
   valuesPaths: HarnessStoreFile[]
+}
+export interface CustomManifestManifestDataType {
+  identifier: string
+  extractionScript: string
+  valuesPaths: Array<any> | string
+  skipResourceVersioning: boolean
+  filePath: string
+  delegateSelectors: Array<string> | string
 }

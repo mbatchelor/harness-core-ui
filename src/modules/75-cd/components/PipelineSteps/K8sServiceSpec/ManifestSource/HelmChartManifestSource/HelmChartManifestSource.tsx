@@ -35,26 +35,28 @@ import {
 } from '../ManifestSourceUtils'
 import { isFieldFixedType, isFieldRuntime } from '../../K8sServiceSpecHelper'
 import ExperimentalInput from '../../K8sServiceSpecForms/ExperimentalInput'
+import CustomRemoteManifestRuntimeFields from '../ManifestSourceRuntimeFields/CustomRemoteManifestRuntimeFields'
 import css from '../../KubernetesManifests/KubernetesManifests.module.scss'
 
-const Content = ({
-  initialValues,
-  template,
-  path,
-  manifestPath,
-  manifest,
-  fromTrigger,
-  allowableTypes,
-  readonly,
-  formik,
-  accountId,
-  projectIdentifier,
-  orgIdentifier,
-  repoIdentifier,
-  branch,
-  stageIdentifier,
-  serviceIdentifier
-}: ManifestSourceRenderProps): React.ReactElement => {
+const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
+  const {
+    initialValues,
+    template,
+    path,
+    manifestPath,
+    manifest,
+    fromTrigger,
+    allowableTypes,
+    readonly,
+    formik,
+    accountId,
+    projectIdentifier,
+    orgIdentifier,
+    repoIdentifier,
+    branch,
+    stageIdentifier,
+    serviceIdentifier
+  } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const [showRepoName, setShowRepoName] = useState(true)
@@ -438,6 +440,7 @@ const Content = ({
           />
         </div>
       )}
+      <CustomRemoteManifestRuntimeFields {...props} />
 
       {isFieldRuntime(`${manifestPath}.spec.skipResourceVersioning`, template) && (
         <div className={css.verticalSpacingInput}>
