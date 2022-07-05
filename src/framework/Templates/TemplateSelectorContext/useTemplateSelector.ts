@@ -7,8 +7,19 @@
 
 import React from 'react'
 import type { TemplateSummaryResponse } from 'services/template-ng'
-import { TemplateSelectorContext } from '@templates-library/components/TemplateSelectorContext/TemplateSelectorContext'
-import type { GetTemplateProps, GetTemplateResponse } from '@pipeline/utils/templateUtils'
+import { TemplateSelectorContext } from 'framework/Templates/TemplateSelectorContext/TemplateSelectorContext'
+import type { TemplateType } from '@common/interfaces/RouteInterfaces'
+
+export interface GetTemplateResponse {
+  template: TemplateSummaryResponse
+  isCopied: boolean
+}
+
+export interface GetTemplateProps {
+  templateType: TemplateType
+  allChildTypes?: string[]
+  selectedTemplate?: TemplateSummaryResponse
+}
 
 interface TemplateActionsReturnType {
   getTemplate: (data: GetTemplateProps) => Promise<GetTemplateResponse>

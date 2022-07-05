@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { TemplatesSelectorContextInterface } from '@templates-library/components/TemplateSelectorContext/TemplateSelectorContext'
+import type { TemplatesSelectorContextInterface } from './TemplateSelectorContext'
 
 export const templateSelectorContextMock: TemplatesSelectorContextInterface = {
   state: {

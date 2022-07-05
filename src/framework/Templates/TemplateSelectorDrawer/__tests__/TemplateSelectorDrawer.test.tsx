@@ -10,10 +10,9 @@ import { act, fireEvent, render } from '@testing-library/react'
 import { waitFor } from '@testing-library/dom'
 import produce from 'immer'
 import { set } from 'lodash-es'
-import { TemplateSelectorDrawer } from '@templates-library/components/TemplateSelectorDrawer/TemplateSelectorDrawer'
 import { TestWrapper } from '@common/utils/testUtils'
-import { TemplateSelectorContext } from '@templates-library/components/TemplateSelectorContext/TemplateSelectorContext'
-import { templateSelectorContextMock } from '@templates-library/components/TemplateSelectorContext/stateMocks'
+import { templateSelectorContextMock } from 'framework/Templates/TemplateSelectorContext/stateMocks'
+import { TemplateSelectorDrawer } from '../TemplateSelectorDrawer'
 
 jest.mock('@blueprintjs/core', () => ({
   ...(jest.requireActual('@blueprintjs/core') as any),
@@ -44,22 +43,18 @@ describe('<TemplateSelectorDrawer /> tests', () => {
 
   test('should match snapshot', async () => {
     const { container } = render(
-      <TemplateSelectorContext.Provider value={contextMock}>
-        <TestWrapper>
-          <TemplateSelectorDrawer />
-        </TestWrapper>
-      </TemplateSelectorContext.Provider>
+      <TestWrapper defaultTemplateSelectorValues={contextMock}>
+        <TemplateSelectorDrawer />
+      </TestWrapper>
     )
     expect(container).toMatchSnapshot()
   })
 
   test('should close drawer on clicking close button', async () => {
     const { getByRole } = render(
-      <TemplateSelectorContext.Provider value={contextMock}>
-        <TestWrapper>
-          <TemplateSelectorDrawer />
-        </TestWrapper>
-      </TemplateSelectorContext.Provider>
+      <TestWrapper defaultTemplateSelectorValues={contextMock}>
+        <TemplateSelectorDrawer />
+      </TestWrapper>
     )
     const closeBtn = getByRole('button', { name: 'cross' })
     act(() => {

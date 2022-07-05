@@ -14,7 +14,7 @@ import { useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import Card from '@cv/components/Card/Card'
-import { useTemplateSelector } from '@templates-library/hooks/useTemplateSelector'
+import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import { TemplateSummaryResponse, useGetTemplateInputSetYaml } from 'services/template-ng'
 import type {
   ContinousVerificationData,

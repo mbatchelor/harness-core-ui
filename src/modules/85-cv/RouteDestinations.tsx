@@ -34,8 +34,6 @@ import { PubSubPipelineActions } from '@pipeline/factories/PubSubPipelineAction'
 import { PipelineActions } from '@pipeline/factories/PubSubPipelineAction/types'
 import TemplatesPage from '@templates-library/pages/TemplatesPage/TemplatesPage'
 import { TemplateStudioWrapper } from '@templates-library/components/TemplateStudio/TemplateStudioWrapper'
-import { TemplateSelectorDrawer } from '@templates-library/components/TemplateSelectorDrawer/TemplateSelectorDrawer'
-import { TemplateSelectorContextProvider } from '@templates-library/components/TemplateSelectorContext/TemplateSelectorContext'
 import { inputSetTemplatePromise } from 'services/cv'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { CVChanges } from '@cv/pages/changes/CVChanges'
@@ -173,10 +171,7 @@ export default (
       path={routes.toCVMonitoringServices({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
     >
       <MonitoredServiceProvider isTemplate={false}>
-        <TemplateSelectorContextProvider>
-          <CVMonitoredService />
-          <TemplateSelectorDrawer />
-        </TemplateSelectorContextProvider>
+        <CVMonitoredService />
       </MonitoredServiceProvider>
     </RouteWithLayout>
 

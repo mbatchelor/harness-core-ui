@@ -13,6 +13,7 @@ import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { createTemplate } from '@pipeline/utils/templateUtils'
 import type { TemplateSummaryResponse } from 'services/template-ng'
+import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 
 interface TemplateActionsReturnType {
   addOrUpdateTemplate: (selectedTemplate?: TemplateSummaryResponse) => Promise<void>
@@ -22,9 +23,9 @@ interface TemplateActionsReturnType {
 export function usePipelineTemplateActions(): TemplateActionsReturnType {
   const {
     state: { pipeline },
-    updatePipeline,
-    getTemplate
+    updatePipeline
   } = usePipelineContext()
+  const { getTemplate } = useTemplateSelector()
 
   const addOrUpdateTemplate = useCallback(
     async (selectedTemplate?: TemplateSummaryResponse) => {

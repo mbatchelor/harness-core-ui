@@ -69,6 +69,7 @@ import { useSaveTemplateListener } from '@pipeline/components/PipelineStudio/hoo
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
 import { OutOfSyncErrorStrip } from '@pipeline/components/TemplateLibraryErrorHandling/OutOfSyncErrorStrip/OutOfSyncErrorStrip'
+import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import CreatePipelines from '../CreateModal/PipelineCreate'
 import { DefaultNewPipelineId, DrawerTypes } from '../PipelineContext/PipelineActions'
@@ -140,9 +141,9 @@ export function PipelineCanvas({
     isReadonly,
     updatePipelineView,
     setSelectedStageId,
-    setSelectedSectionId,
-    getTemplate
+    setSelectedSectionId
   } = usePipelineContext()
+  const { getTemplate } = useTemplateSelector()
   const {
     repoIdentifier,
     branch,

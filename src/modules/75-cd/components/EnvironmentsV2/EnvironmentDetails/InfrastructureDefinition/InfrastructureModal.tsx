@@ -58,7 +58,6 @@ import { DefaultNewStageId, DefaultNewStageName } from '@cd/components/Services/
 import { getInfrastructureDefinitionValidationSchema } from '@cd/components/PipelineSteps/PipelineStepsUtil'
 import SelectDeploymentType from '@cd/components/PipelineStudio/DeployServiceSpecifications/SelectDeploymentType'
 import { InfrastructurePipelineProvider } from '@cd/context/InfrastructurePipelineContext'
-import { useTemplateSelector } from '@templates-library/hooks/useTemplateSelector'
 
 import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -87,7 +86,6 @@ export default function InfrastructureModal({
   envIdentifier
 }: any) {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
-  const { getTemplate } = useTemplateSelector()
 
   const infrastructureDefinition = useMemo(() => {
     return (parse(defaultTo(infrastructureToEdit, '{}')) as InfrastructureConfig).infrastructureDefinition
@@ -133,7 +131,6 @@ export default function InfrastructureModal({
       queryParams={{ accountIdentifier: accountId, orgIdentifier, projectIdentifier }}
       initialValue={pipeline as PipelineInfoConfig}
       isReadOnly={false}
-      getTemplate={getTemplate}
     >
       <BootstrapDeployInfraDefinition
         hideModal={hideModal}

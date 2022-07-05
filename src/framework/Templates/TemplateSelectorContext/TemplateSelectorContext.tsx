@@ -6,13 +6,9 @@
  */
 
 import React from 'react'
-import { TemplateSelectorContextActions } from '@templates-library/components/TemplateSelectorContext/TemplateSelectorActions'
-import {
-  initialState,
-  SelectorData,
-  TemplateSelectorReducer,
-  TemplatesReducerState
-} from '@templates-library/components/TemplateSelectorContext/TemplateSelectorReducer'
+import type { SelectorData, TemplatesReducerState } from './TemplateSelectorReducer'
+import { initialState, TemplateSelectorReducer } from './TemplateSelectorReducer'
+import { TemplateSelectorContextActions } from './TemplateSelectorActions'
 
 export interface TemplatesSelectorContextInterface {
   state: TemplatesReducerState

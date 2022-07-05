@@ -5,18 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import {
-  ActionReturnType,
-  TemplateSelectorActions
-} from '@templates-library/components/TemplateSelectorContext/TemplateSelectorActions'
-import type { TemplateType } from '@common/interfaces/RouteInterfaces'
 import type { TemplateSummaryResponse } from 'services/template-ng'
+import type { ActionReturnType } from './TemplateSelectorActions'
+import { TemplateSelectorActions } from './TemplateSelectorActions'
+import type { GetTemplateProps } from './useTemplateSelector'
 
-export interface SelectorData {
-  templateType: TemplateType
-  selectedChildType?: string
-  allChildTypes?: string[]
-  selectedTemplate?: TemplateSummaryResponse
+export interface SelectorData extends GetTemplateProps {
   onSubmit: (template: TemplateSummaryResponse, isCopied: boolean) => void
   onCancel: () => void
 }
