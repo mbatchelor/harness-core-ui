@@ -221,7 +221,9 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
             allowableTypes,
             selectProps: {
               noResults: (
-                <Text lineClamp={1}>{getRBACErrorMessage(error as RBACError) || getString('pipeline.noBuckets')}</Text>
+                <Text lineClamp={1} width={500} height={100}>
+                  {getRBACErrorMessage(error as RBACError) || getString('pipeline.noBuckets')}
+                </Text>
               ),
               itemRenderer: itemRenderer,
               items: getBuckets(),
