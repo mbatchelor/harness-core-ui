@@ -25,7 +25,7 @@ import css from '../../K8sServiceSpec.module.scss'
 export const resetBuckets = (formik: FormikValues, bucketPath: string): void => {
   const bucketValue = get(formik.values, bucketPath, '')
   if (getMultiTypeFromValue(bucketValue) === MultiTypeInputType.FIXED && bucketValue?.length) {
-    formik.setFieldValue(bucketValue, '')
+    formik.setFieldValue(bucketPath, '')
   }
 }
 
