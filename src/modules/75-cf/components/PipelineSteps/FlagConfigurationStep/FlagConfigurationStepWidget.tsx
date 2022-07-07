@@ -22,7 +22,7 @@ import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/compo
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { getErrorMessage } from '@cf/utils/CFUtils'
 import { GetEnvironmentListQueryParams, useGetEnvironmentList } from 'services/cd-ng'
-import { GetAllFeaturesQueryParams, useGetAllFeatures } from 'services/cf'
+import { GetAllFeaturesQueryParams, GetFeatureFlagQueryParams, useGetAllFeatures, useGetFeatureFlag } from 'services/cf'
 import { useStrings } from 'framework/strings'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import type { FlagConfigurationStepData } from './types'
@@ -37,6 +37,7 @@ export interface FlagConfigurationStepWidgetProps {
   stepViewType?: StepViewType
 }
 
+// eslint-disable-next-line react/display-name
 const FlagConfigurationStepWidget = forwardRef(
   (
     { initialValues, onUpdate, isNewStep, readonly, stepViewType }: FlagConfigurationStepWidgetProps,
@@ -110,13 +111,37 @@ const FlagConfigurationStepWidget = forwardRef(
       })) as SelectOption[]
     }, [environmentsData?.data?.content])
 
+    const queryParams = {
+      projectIdentifier,
+      environmentIdentifier: featureQueryParams.environmentIdentifier,
+      accountIdentifier,
+      orgIdentifier
+    } as GetFeatureFlagQueryParams
+
+    const { data: selectedFlagData } = useGetFeatureFlag({
+      identifier: initialValues.spec.feature,
+      queryParams,
+      debounce: 500
+    })
+
+    const selectedFlagId = useMemo<string>(() => initialValues.spec.feature, [initialValues.spec.feature])
+
     const featureItems = useMemo<SelectOption[]>(() => {
       if (!featuresData?.features?.length) {
         return []
       }
 
-      return featuresData.features.map(({ name, identifier }) => ({ label: name, value: identifier }))
-    }, [featuresData?.features])
+      const flags = featuresData.features.map(({ name, identifier }) => ({ label: name, value: identifier }))
+
+      // get flag data if not in first page of features then prepend to list
+      if (flags.length === 15 && !flags.find(flag => flag.value === selectedFlagId)) {
+        if (selectedFlagData) {
+          flags.unshift({ label: selectedFlagData.name, value: selectedFlagData.identifier })
+        }
+      }
+
+      return flags
+    }, [featuresData?.features, selectedFlagId, selectedFlagData])
 
     if (showLoading) {
       return (
