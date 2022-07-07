@@ -95,10 +95,12 @@ secretManagerRequired: 'Secret Manager is required.'
 pipelineSteps:
   environmentTab:
     specifyYourEnvironment: Specify Environment
+    specifyYourEnvironmentGroup: Specify Environment Group
     specifyYourInfrastructure: Specify Infrastructure
     specifyEnvironmentOrGroup: Specify environment or environment group
     specifyGitOpsClusters: Specify GitOps Clusters
     selectEnvironment: '- Select Environment -'
+    selectEnvironmentGroup: '- Select Environment Group -'
     selectInfrastructure: '- Select Infrastructure -'
     plusNewEnvironment: '+ {{$.newEnvironment}}'
     newEnvironment: '{{$.newEnvironment}}'
@@ -337,3 +339,4 @@ unLinkedCluster: 'Unlinked Successfully'
 overrideYaml: Override Yaml Values
 manifestId: Manifest Id
 azureWebAppRollbackDescription: Rollback to the last successfully deployed app.
+azureWebAppSwapSlotDescription: Azure Swap environment slot with new instance.

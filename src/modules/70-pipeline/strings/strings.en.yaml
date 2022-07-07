@@ -8,7 +8,9 @@ serviceDependenciesText: Service Dependencies
 stepLabel: '{{name}} (Id: {{identifier}})'
 numOfStage: 1 stage
 numOfStages: '{{n}} stages'
-enableVerificationOptions: Enable verification options
+enableVerificationTitle: Add Continuous Verification
+enableVerificationOptions: Enable Continuous Verification
+enableVerificationHelpText: Apply verification step to a deployment to detect regressions or anomalies, and to rollback failed deployments.
 openInPipelineStudio: Open in Pipeline Studio
 closeStepConfig: Step Config
 stepConfigHasChanges: Form has some unsaved changes, Do you want to apply the changes?
@@ -270,8 +272,8 @@ customApprovalStep:
       not_in: '{{ key }} is not in'
   validation:
     outputVariable: Output Variable(s) is required
-    retryIntervalIsRequired: Retry interval is required
-    scriptTimeoutIsRequired: Script timeout is required
+    minimumRetryIntervalIs10Secs: Minimum Retry interval is 10 seconds
+    minimumScriptTimeoutIs10Secs: Minimum Script timeout is 10 seconds
     atLeastOneOutputVariableIsRequired: At least one output field must be set
 manifestType:
   attachPath: + Attach {{manifestPath}}
@@ -279,6 +281,7 @@ manifestType:
   gitConnectorLabel: 'Git'
   bitBucketLabel: 'Bitbucket'
   InheritFromManifest: 'Inherit From Manifest'
+  customRemote: 'Custom Remote'
   httpHelmRepoConnectorLabel: 'HTTP Helm'
   manifestIdentifier: Manifest Name
   manifestPlaceholder: Enter Manifest Name
@@ -329,6 +332,9 @@ manifestType:
   serverlessConfigFilePath: Serverless Config File Path
   serverlessConfigFilePathPlaceholder: Enter Serverless Config File Path
   valuesYamlPath: Values.yaml
+  customRemoteExtractionScript: Custom Remote Manifest Extraction Script
+  customRemoteExtractedFileLocation: Extracted Manifest File Location
+  customRemoteExtractedFileLocationPlaceholder: Enter Extracted Manifest File Location
   paramsYamlPath: Openshift Parameters
   http:
     chartName: 'Chart Name'
@@ -1156,3 +1162,8 @@ importSuccessMessage: '{{resourceType}} has been imported successfully'
 MatrixNode:
   maxConcurrency: 'Max Concurrency:'
 traffic: Traffic
+viewPipeline: View Pipeline
+codeSource: 'Code Source'
+recentTenExecutions: 'Recent 10 Executions'
+lastExecution: 'Last Execution'
+lastModified: 'Last Modified'

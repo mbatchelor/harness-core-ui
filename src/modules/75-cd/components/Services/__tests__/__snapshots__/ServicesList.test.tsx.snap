@@ -225,7 +225,7 @@ exports[`ServicesList render 1`] = `
           class="TableV2--cell"
           colspan="1"
           role="columnheader"
-          style="width: 14%;"
+          style="width: 18%;"
         >
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -237,19 +237,7 @@ exports[`ServicesList render 1`] = `
           class="TableV2--cell"
           colspan="1"
           role="columnheader"
-          style="width: 5%;"
-        >
-          <p
-            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-          >
-            
-          </p>
-        </div>
-        <div
-          class="TableV2--cell"
-          colspan="1"
-          role="columnheader"
-          style="width: 3%;"
+          style="width: 4%;"
         >
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -480,17 +468,12 @@ exports[`ServicesList render 1`] = `
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 14%;"
+            style="width: 18%;"
           />
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 5%;"
-          />
-          <div
-            class="TableV2--cell"
-            role="cell"
-            style="width: 3%;"
+            style="width: 4%;"
           >
             <div
               class="Layout--horizontal StyledProps--main"
@@ -806,44 +789,43 @@ exports[`ServicesList render 1`] = `
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 14%;"
+            style="width: 18%;"
           >
             <div
-              class="Layout--vertical StyledProps--main StyledProps--margin-right-large StyledProps--flex StyledProps--flex-alignItems-flex-start"
+              class="Layout--horizontal StyledProps--main lastDeployment"
             >
               <div
-                class="Layout--horizontal StyledProps--main StyledProps--margin-bottom-xsmall StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
-                style="width: 100%;"
+                class="Layout--vertical StyledProps--main StyledProps--margin-right-large StyledProps--flex StyledProps--flex-alignItems-flex-start"
+              >
+                <div
+                  class="Layout--horizontal StyledProps--main StyledProps--margin-bottom-xsmall StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+                  style="width: 100%;"
+                >
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main lastDeploymentText StyledProps--font-variation-body2 StyledProps--color StyledProps--color-primary7 StyledProps--margin-right-xsmall"
+                    data-testid="60c99de2a6187a57e841993b"
+                    style="--text-line-clamp: 1;"
+                  >
+                    Test
+                  </p>
+                </div>
+                dummy date
+              </div>
+              <div
+                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start"
               >
                 <p
-                  class="StyledProps--font StyledProps--main lastDeploymentText StyledProps--font-variation-body2 StyledProps--color StyledProps--color-primary7 StyledProps--margin-right-xsmall"
-                  data-testid="60c99de2a6187a57e841993b"
+                  class="StyledProps--font StyledProps--main statusText StyledProps--background-green600 StyledProps--color StyledProps--color-white StyledProps--font-weight-semi-bold StyledProps--font-size-xsmall"
                 >
-                  Test
+                  SUCCESS
                 </p>
               </div>
-              dummy date
             </div>
           </div>
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 5%;"
-          >
-            <div
-              class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-end"
-            >
-              <p
-                class="StyledProps--font StyledProps--main statusText StyledProps--background-green600 StyledProps--color StyledProps--color-white StyledProps--font-weight-semi-bold StyledProps--font-size-xsmall"
-              >
-                SUCCESS
-              </p>
-            </div>
-          </div>
-          <div
-            class="TableV2--cell"
-            role="cell"
-            style="width: 3%;"
+            style="width: 4%;"
           >
             <div
               class="Layout--horizontal StyledProps--main"

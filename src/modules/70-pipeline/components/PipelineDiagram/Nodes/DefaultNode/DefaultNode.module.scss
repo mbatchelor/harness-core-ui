@@ -68,6 +68,16 @@
     cursor: move;
   }
 
+  :global(.bp3-icon) {
+    &[data-icon='custom-approval'] {
+      > svg {
+        path:nth-child(2) {
+          fill: var(--grey-900) !important;
+        }
+      }
+    }
+  }
+
   .defaultCard {
     cursor: pointer;
     margin: 0;

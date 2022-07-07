@@ -47,6 +47,7 @@ import { FeatureFlag } from '@common/featureFlags'
 import { SaveTemplateButton } from '@pipeline/components/PipelineStudio/SaveTemplateButton/SaveTemplateButton'
 import { useAddStepTemplate } from '@pipeline/hooks/useAddStepTemplate'
 import { isContextTypeNotStageTemplate } from '@pipeline/components/PipelineStudio/PipelineUtils'
+import { isCloneCodebaseEnabledAtLeastOneStage } from '@pipeline/utils/CIUtils'
 import BuildInfraSpecifications from '../BuildInfraSpecifications/BuildInfraSpecifications'
 import BuildStageSpecifications from '../BuildStageSpecifications/BuildStageSpecifications'
 import BuildAdvancedSpecifications from '../BuildAdvancedSpecifications/BuildAdvancedSpecifications'
@@ -101,7 +102,8 @@ const BuildStageSetupShell: React.FC<BuildStageSetupShellProps> = ({ moduleIcon 
     isReadonly,
     updateStage,
     setSelectedStepId,
-    getStagePathFromPipeline
+    getStagePathFromPipeline,
+    updatePipeline
   } = pipelineContext
 
   const stagePath = getStagePathFromPipeline(selectedStageId || '', 'pipeline.stages')
@@ -169,6 +171,15 @@ const BuildStageSetupShell: React.FC<BuildStageSetupShellProps> = ({ moduleIcon 
       }
     }
   }, [selectedStageId, pipeline, isSplitViewOpen])
+
+  React.useEffect(() => {
+    // if clone codebase is not enabled at least one stage, then remove properties from pipeline
+    if (!isCloneCodebaseEnabledAtLeastOneStage(pipeline)) {
+      const newPipeline = pipeline
+      delete newPipeline.properties
+      updatePipeline(newPipeline)
+    }
+  }, [stageData?.spec?.cloneCodebase])
 
   const { checkErrorsForTab } = React.useContext(StageErrorContext)
 

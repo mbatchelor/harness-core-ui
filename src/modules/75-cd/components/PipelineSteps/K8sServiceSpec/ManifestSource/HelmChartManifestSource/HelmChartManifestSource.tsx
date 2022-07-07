@@ -35,26 +35,28 @@ import {
 } from '../ManifestSourceUtils'
 import { isFieldFixedType, isFieldRuntime } from '../../K8sServiceSpecHelper'
 import ExperimentalInput from '../../K8sServiceSpecForms/ExperimentalInput'
+import CustomRemoteManifestRuntimeFields from '../ManifestSourceRuntimeFields/CustomRemoteManifestRuntimeFields'
 import css from '../../KubernetesManifests/KubernetesManifests.module.scss'
 
-const Content = ({
-  initialValues,
-  template,
-  path,
-  manifestPath,
-  manifest,
-  fromTrigger,
-  allowableTypes,
-  readonly,
-  formik,
-  accountId,
-  projectIdentifier,
-  orgIdentifier,
-  repoIdentifier,
-  branch,
-  stageIdentifier,
-  serviceIdentifier
-}: ManifestSourceRenderProps): React.ReactElement => {
+const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
+  const {
+    initialValues,
+    template,
+    path,
+    manifestPath,
+    manifest,
+    fromTrigger,
+    allowableTypes,
+    readonly,
+    formik,
+    accountId,
+    projectIdentifier,
+    orgIdentifier,
+    repoIdentifier,
+    branch,
+    stageIdentifier,
+    serviceIdentifier
+  } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const [showRepoName, setShowRepoName] = useState(true)
@@ -71,7 +73,7 @@ const Content = ({
     projectIdentifier,
     connectorRef: getFinalQueryParamData(
       getDefaultQueryParam(
-        manifest?.spec.store?.spec.connectorRef,
+        manifest?.spec?.store?.spec.connectorRef,
         get(initialValues, `${manifestPath}.spec.store.spec.connectorRef`, '')
       )
     ),
@@ -88,7 +90,7 @@ const Content = ({
       ...commonQueryParam,
       region: getFinalQueryParamData(
         getDefaultQueryParam(
-          manifest?.spec.store?.spec.region,
+          manifest?.spec?.store?.spec.region,
           get(initialValues, `${manifestPath}.spec.store.spec.region`, '')
         )
       )
@@ -151,11 +153,11 @@ const Content = ({
               if (
                 !s3BucketList?.data &&
                 getDefaultQueryParam(
-                  manifest?.spec.store.spec.connectorRef,
+                  manifest?.spec?.spec.connectorRef,
                   get(initialValues, `${manifestPath}.spec.store.spec.connectorRef`, '')
                 ) &&
                 getDefaultQueryParam(
-                  manifest?.spec.store?.spec.region,
+                  manifest?.spec?.store?.spec.region,
                   get(initialValues, `${manifestPath}.spec.store.spec.region`, '')
                 )
               ) {
@@ -191,7 +193,7 @@ const Content = ({
               if (
                 !gcsBucketData?.data &&
                 getDefaultQueryParam(
-                  manifest?.spec.store.spec.connectorRef,
+                  manifest?.spec?.store.spec.connectorRef,
                   get(initialValues, `${manifestPath}.spec.store.spec.connectorRef`, '')
                 )
               ) {
@@ -267,7 +269,7 @@ const Content = ({
             accountIdentifier={accountId}
             projectIdentifier={projectIdentifier}
             orgIdentifier={orgIdentifier}
-            type={ManifestToConnectorMap[defaultTo(manifest?.spec.store?.type, '')]}
+            type={ManifestToConnectorMap[defaultTo(manifest?.spec?.store?.type, '')]}
             onChange={(selected, _itemType, multiType) => {
               const item = selected as unknown as { record?: GitConfigDTO; scope: Scope }
               if (multiType === MultiTypeInputType.FIXED) {
@@ -438,6 +440,7 @@ const Content = ({
           />
         </div>
       )}
+      <CustomRemoteManifestRuntimeFields {...props} />
 
       {isFieldRuntime(`${manifestPath}.spec.skipResourceVersioning`, template) && (
         <div className={css.verticalSpacingInput}>

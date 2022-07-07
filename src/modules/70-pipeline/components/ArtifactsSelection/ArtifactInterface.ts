@@ -34,6 +34,7 @@ export interface ArtifactListViewProps {
   accountId: string
   refetchConnectors: () => void
   isReadonly: boolean
+  isAdditionAllowed: boolean
 }
 export interface ArtifactsSelectionProps {
   isPropagating?: boolean

@@ -142,7 +142,7 @@ export enum PermissionIdentifier {
   VIEW_STO_SCAN = 'sto_scan_view',
   VIEW_STO_TESTTARGET = 'sto_testtarget_view',
   EDIT_STO_TESTTARGET = 'sto_testtarget_edit',
-  VIEW_STO_EXCEPTION = 'sto_exception_view',
-  CREATE_STO_EXCEPTION = 'sto_exception_create',
-  APPROVE_STO_EXCEPTION = 'sto_exception_approve'
+  VIEW_STO_EXEMPTION = 'sto_exemption_view',
+  CREATE_STO_EXEMPTION = 'sto_exemption_create',
+  APPROVE_STO_EXEMPTION = 'sto_exemption_approve'
 }

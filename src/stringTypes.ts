@@ -1140,33 +1140,6 @@ export interface StringsMap {
   'rbac.youAreNotAuthorizedTo': string
   'governance.permissions.governancePolicies': string
   'governance.permissions.governancePolicySets': string
-  'filestore.cantDeleteFile': string
-  'filestore.confirmDeleteFile': string
-  'filestore.deletedSuccessMessage': string
-  'filestore.editFileDetails': string
-  'filestore.editFolderDetails': string
-  'filestore.errors.cannotRender': string
-  'filestore.errors.deleted': string
-  'filestore.errors.fileUsage': string
-  'filestore.fileReferenceText': string
-  'filestore.fileSuccessCreated': string
-  'filestore.fileSuccessSaved': string
-  'filestore.filter.fileUsagePlaceholder': string
-  'filestore.folderSuccessCreated': string
-  'filestore.folderSuccessSaved': string
-  'filestore.newFile': string
-  'filestore.newFolder': string
-  'filestore.noFilesDescription': string
-  'filestore.noFilesInFolderTitle': string
-  'filestore.noFilesInStore': string
-  'filestore.noFilesTitle': string
-  'filestore.referenceButtonText': string
-  'filestore.uploadFileFolder': string
-  'filestore.view.fileName': string
-  'filestore.view.fileUsage': string
-  'filestore.view.lastModifiedBy': string
-  'filestore.view.noPreview': string
-  'filestore.view.replaceFile': string
   'delegates.GBRam': string
   'delegates.configNameRequired': string
   'delegates.createDelegate': string
@@ -1190,6 +1163,8 @@ export interface StringsMap {
   'delegates.delegateCreation.dockerPrerequisites.sysReq': string
   'delegates.delegateCreation.dockerPrerequisites.title': string
   'delegates.delegateCreation.downloadScript': string
+  'delegates.delegateCreation.installerSelectionRequired': string
+  'delegates.delegateCreation.installerText': string
   'delegates.delegateDeleted': string
   'delegates.delegateIdentifier': string
   'delegates.delegateInstances': string
@@ -1373,6 +1348,34 @@ export interface StringsMap {
   'secrets.titleCreate': string
   'secrets.titleSelect': string
   'secrets.typeSSH': string
+  'filestore.cantDeleteFile': string
+  'filestore.confirmDeleteFile': string
+  'filestore.deletedSuccessMessage': string
+  'filestore.editFileDetails': string
+  'filestore.editFolderDetails': string
+  'filestore.errors.cannotRender': string
+  'filestore.errors.deleted': string
+  'filestore.errors.fileUsage': string
+  'filestore.fileReferenceText': string
+  'filestore.fileSuccessCreated': string
+  'filestore.fileSuccessSaved': string
+  'filestore.filter.fileUsagePlaceholder': string
+  'filestore.folderSuccessCreated': string
+  'filestore.folderSuccessSaved': string
+  'filestore.newFile': string
+  'filestore.newFolder': string
+  'filestore.noFilesDescription': string
+  'filestore.noFilesInFolderTitle': string
+  'filestore.noFilesInStore': string
+  'filestore.noFilesTitle': string
+  'filestore.referenceButtonText': string
+  'filestore.searchResult': string
+  'filestore.uploadFileFolder': string
+  'filestore.view.fileName': string
+  'filestore.view.fileUsage': string
+  'filestore.view.lastModifiedBy': string
+  'filestore.view.noPreview': string
+  'filestore.view.replaceFile': string
   'variables.allowedValues': string
   'variables.confirmDelete': string
   'variables.confirmDeleteTitle': string
@@ -2796,6 +2799,7 @@ export interface StringsMap {
   'pipeline.clone': string
   'pipeline.cloneSuccess': string
   'pipeline.closeStepConfig': string
+  'pipeline.codeSource': string
   'pipeline.collapseIsDisabledWhileStageIsRunning': string
   'pipeline.commonApprovalStep.execution.allConditionsMsg': string
   'pipeline.commonApprovalStep.execution.anyConditionsMsg': string
@@ -2827,9 +2831,9 @@ export interface StringsMap {
   'pipeline.customApprovalStep.retryInterval': string
   'pipeline.customApprovalStep.scriptTimeout': string
   'pipeline.customApprovalStep.validation.atLeastOneOutputVariableIsRequired': string
+  'pipeline.customApprovalStep.validation.minimumRetryIntervalIs10Secs': string
+  'pipeline.customApprovalStep.validation.minimumScriptTimeoutIs10Secs': string
   'pipeline.customApprovalStep.validation.outputVariable': string
-  'pipeline.customApprovalStep.validation.retryIntervalIsRequired': string
-  'pipeline.customApprovalStep.validation.scriptTimeoutIsRequired': string
   'pipeline.dashboardDeploymentsWidget.failed24Hrs.plural': string
   'pipeline.dashboardDeploymentsWidget.failed24Hrs.singular': string
   'pipeline.dashboardDeploymentsWidget.pendingApproval.plural': string
@@ -2868,7 +2872,9 @@ export interface StringsMap {
   'pipeline.depth': string
   'pipeline.discard': string
   'pipeline.duration': string
+  'pipeline.enableVerificationHelpText': string
   'pipeline.enableVerificationOptions': string
+  'pipeline.enableVerificationTitle': string
   'pipeline.errorFramework.fixErrors': string
   'pipeline.errorFramework.fixStage': string
   'pipeline.errorFramework.fixStep': string
@@ -3143,6 +3149,8 @@ export interface StringsMap {
   'pipeline.jiraUpdateStep.validations.status': string
   'pipeline.keyPlaceholder': string
   'pipeline.kubernetesStep.workload': string
+  'pipeline.lastExecution': string
+  'pipeline.lastModified': string
   'pipeline.lastSevenDays': string
   'pipeline.linuxOnly': string
   'pipeline.logs.errorText': string
@@ -3175,6 +3183,10 @@ export interface StringsMap {
   'pipeline.manifestType.commandFlagRequired': string
   'pipeline.manifestType.commitId': string
   'pipeline.manifestType.commitPlaceholder': string
+  'pipeline.manifestType.customRemote': string
+  'pipeline.manifestType.customRemoteExtractedFileLocation': string
+  'pipeline.manifestType.customRemoteExtractedFileLocationPlaceholder': string
+  'pipeline.manifestType.customRemoteExtractionScript': string
   'pipeline.manifestType.filePathPlaceholder': string
   'pipeline.manifestType.folderPathPlaceholder': string
   'pipeline.manifestType.folderPathRequired': string
@@ -3312,6 +3324,7 @@ export interface StringsMap {
   'pipeline.queueStep.scopePlaceholder': string
   'pipeline.queueStep.scopeRequired': string
   'pipeline.recentExecutionText': string
+  'pipeline.recentTenExecutions': string
   'pipeline.reconcileDialog.originalYamlLabel': string
   'pipeline.reconcileDialog.refreshedYamlLabel': string
   'pipeline.reconcileDialog.subtitle': string
@@ -3629,6 +3642,7 @@ export interface StringsMap {
   'pipeline.verification.waitForAnalysis': string
   'pipeline.verificationResult': string
   'pipeline.viewLatestExecution': string
+  'pipeline.viewPipeline': string
   'templatesLibrary.addNewTemplate': string
   'templatesLibrary.alwaysUseStableVersion': string
   'templatesLibrary.changeTemplate': string
@@ -3829,6 +3843,7 @@ export interface StringsMap {
   'cd.artifactRepoTooltip': string
   'cd.artifactVersion': string
   'cd.azureWebAppRollbackDescription': string
+  'cd.azureWebAppSwapSlotDescription': string
   'cd.backEndConfig': string
   'cd.cdLaunchText': string
   'cd.cdSwitchToFirstGen.description1': string
@@ -3983,10 +3998,12 @@ export interface StringsMap {
   'cd.pipelineSteps.environmentTab.newEnvironment': string
   'cd.pipelineSteps.environmentTab.plusNewEnvironment': string
   'cd.pipelineSteps.environmentTab.selectEnvironment': string
+  'cd.pipelineSteps.environmentTab.selectEnvironmentGroup': string
   'cd.pipelineSteps.environmentTab.selectInfrastructure': string
   'cd.pipelineSteps.environmentTab.specifyEnvironmentOrGroup': string
   'cd.pipelineSteps.environmentTab.specifyGitOpsClusters': string
   'cd.pipelineSteps.environmentTab.specifyYourEnvironment': string
+  'cd.pipelineSteps.environmentTab.specifyYourEnvironmentGroup': string
   'cd.pipelineSteps.environmentTab.specifyYourInfrastructure': string
   'cd.pipelineSteps.executionTab.stepsCount': string
   'cd.pipelineSteps.infraTab.clusterError': string
@@ -5157,6 +5174,7 @@ export interface StringsMap {
   'cf.environments.apiKeys.deleteMessage': string
   'cf.environments.apiKeys.deleteSuccess': string
   'cf.environments.apiKeys.deleteTitle': string
+  'cf.environments.apiKeys.duplicateKey': string
   'cf.environments.apiKeys.emptyName': string
   'cf.environments.apiKeys.keyType': string
   'cf.environments.apiKeys.lastUsed': string
@@ -6571,7 +6589,7 @@ export interface StringsMap {
   'stoSteps.Info': string
   'stoSteps.Unassigned': string
   'stoSteps.continuous': string
-  'stoSteps.exceptions': string
+  'stoSteps.exemptions': string
   'stoSteps.failedToGetIssueCounts': string
   'stoSteps.issues': string
   'stoSteps.noScansRunPipelineText': string

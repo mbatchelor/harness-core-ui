@@ -64,14 +64,14 @@ RbacFactory.registerResourceTypeHandler(ResourceType.STO_TESTTARGET, {
     [PermissionIdentifier.EDIT_STO_TESTTARGET]: <LocaleString stringID="rbac.permissionLabels.createEdit" />
   }
 })
-RbacFactory.registerResourceTypeHandler(ResourceType.STO_EXCEPTION, {
+RbacFactory.registerResourceTypeHandler(ResourceType.STO_EXEMPTION, {
   icon: 'sto-color-filled',
-  label: 'stoSteps.exceptions',
+  label: 'stoSteps.exemptions',
   category: ResourceCategory.STO,
   permissionLabels: {
-    [PermissionIdentifier.VIEW_STO_EXCEPTION]: <LocaleString stringID="rbac.permissionLabels.view" />,
-    [PermissionIdentifier.CREATE_STO_EXCEPTION]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
-    [PermissionIdentifier.APPROVE_STO_EXCEPTION]: <LocaleString stringID="common.approve" />
+    [PermissionIdentifier.VIEW_STO_EXEMPTION]: <LocaleString stringID="rbac.permissionLabels.view" />,
+    [PermissionIdentifier.CREATE_STO_EXEMPTION]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
+    [PermissionIdentifier.APPROVE_STO_EXEMPTION]: <LocaleString stringID="common.approve" />
   }
 })
 RbacFactory.registerResourceTypeHandler(ResourceType.STO_SCAN, {

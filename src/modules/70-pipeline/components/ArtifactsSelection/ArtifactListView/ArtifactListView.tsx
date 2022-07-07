@@ -80,7 +80,8 @@ function ArtifactListView({
   editArtifact,
   removePrimary,
   removeSidecar,
-  addNewArtifact
+  addNewArtifact,
+  isAdditionAllowed
 }: ArtifactListViewProps): React.ReactElement {
   const { getString } = useStrings()
   const { color: primaryConnectorColor } = getStatus(
@@ -149,8 +150,8 @@ function ArtifactListView({
                   )}
                 </div>
                 <div>
-                  <Text width={340} lineClamp={1} color={Color.GREY_500}>
-                    <span className={css.noWrap}>{getArtifactLocation(primaryArtifact)}</span>
+                  <Text lineClamp={1} color={Color.GREY_500}>
+                    {getArtifactLocation(primaryArtifact)}
                   </Text>
                 </div>
                 {!isReadonly && (
@@ -224,9 +225,9 @@ function ArtifactListView({
                         <Icon name="full-circle" size={8} color={sideCarConnectionColor} />
                       )}
                     </div>
-                    <div className={css.locationField}>
-                      <Text width={340} lineClamp={1} style={{ color: Color.GREY_500 }}>
-                        <span className={css.noWrap}>{getArtifactLocation(sidecar as SidecarArtifact)}</span>
+                    <div>
+                      <Text lineClamp={1} style={{ color: Color.GREY_500 }}>
+                        {getArtifactLocation(sidecar as SidecarArtifact)}
                       </Text>
                     </div>
                     {!isReadonly && (
@@ -258,7 +259,7 @@ function ArtifactListView({
       </Layout.Vertical>
 
       <Layout.Vertical spacing={'medium'} flex={{ alignItems: 'flex-start' }}>
-        {!primaryArtifact && !isReadonly && (
+        {!primaryArtifact && isAdditionAllowed && (
           <Button
             className={css.addArtifact}
             id="add-artifact"
@@ -268,7 +269,7 @@ function ArtifactListView({
             text={getString('pipelineSteps.serviceTab.artifactList.addPrimary')}
           />
         )}
-        {!isReadonly && (
+        {isAdditionAllowed && (
           <Button
             className={css.addArtifact}
             id="add-artifact"

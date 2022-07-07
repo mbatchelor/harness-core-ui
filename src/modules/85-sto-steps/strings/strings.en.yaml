@@ -7,7 +7,7 @@ targets:
   testTargets: Test Targets
 issues: Issues
 scans: Scans
-exceptions: Exceptions
+exemptions: Exemptions
 noScansText: There are no Security Test runs in your project
 noScansRunPipelineText: No Security Test pipelines have run yet. Click the button below to run a pipeline.
 noSecurityTests: No Security Tests executed

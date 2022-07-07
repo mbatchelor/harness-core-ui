@@ -12,13 +12,14 @@ import {
   Formik,
   FormikForm,
   FormInput,
-  Heading,
   Layout,
   ModalErrorHandler,
   ModalErrorHandlerBinding,
   StepProps,
-  Icon
+  Icon,
+  Text
 } from '@wings-software/uicore'
+import { FontVariation } from '@harness/design-system'
 import { pick, omit, isEmpty, get } from 'lodash-es'
 import { Link, useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
@@ -196,9 +197,14 @@ const OverviewStep: React.FC<OverviewProps> = props => {
 
   return (
     <Layout.Vertical className={css.stepContainer}>
-      <Heading level={2} className={css.header}>
+      <Text
+        font={{ variation: FontVariation.H4 }}
+        tooltipProps={{ dataTooltipId: 'gcpConnectorOverview' }}
+        margin={{ bottom: 'xxlarge' }}
+        data-cy="gcp-overview"
+      >
         {getString('connectors.ceGcp.overview.heading')}
-      </Heading>
+      </Text>
       <div style={{ flex: 1 }}>
         <Formik<OverviewDetails>
           initialValues={getInitialValues() as OverviewDetails}

@@ -222,7 +222,7 @@ function DeployServiceEntityInputStep({
                 items: services
               },
               onChange: (value: any) => {
-                if (isEmpty(value.value)) {
+                if (isEmpty(value?.value)) {
                   formik?.setFieldValue(
                     `${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}serviceInputs`,
                     {}

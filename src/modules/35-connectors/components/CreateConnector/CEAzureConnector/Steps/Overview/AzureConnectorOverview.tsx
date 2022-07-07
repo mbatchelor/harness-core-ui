@@ -216,6 +216,7 @@ const Overview: React.FC<StepProps<CEAzureDTO> & OverviewProps> = props => {
         font={{ variation: FontVariation.H3 }}
         tooltipProps={{ dataTooltipId: 'azureConnectorOverview' }}
         margin={{ bottom: 'large' }}
+        data-cy="azure-overview"
       >
         {getString('connectors.ceAzure.overview.heading')}
       </Text>

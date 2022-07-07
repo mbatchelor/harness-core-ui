@@ -72,8 +72,9 @@ describe('ServicesList', () => {
   })
 
   test('should go to latest execution after click', async () => {
+    window.open = jest.fn()
     const responseData = serviceDetails.data.serviceDeploymentDetailsList as unknown as ServiceDetailsDTO[]
-    const { container, getByTestId } = renderSetup(responseData)
+    const { container } = renderSetup(responseData)
 
     const pipelineExecutionId =
       serviceDetails.data.serviceDeploymentDetailsList[1].lastPipelineExecuted?.pipelineExecutionId
@@ -81,10 +82,12 @@ describe('ServicesList', () => {
     expect(container.querySelector(`[data-testid="${pipelineExecutionId}"]`)).toBeDefined()
     fireEvent.click(container.querySelector(`[data-testid="${pipelineExecutionId}"]`) as HTMLElement)
 
-    //should take user to latest pipeline execution
-    await waitFor(() => getByTestId('location'))
-    expect(getByTestId('location')).toHaveTextContent(
-      `/account/dummy/undefined/orgs/dummy/projects/dummy/pipelines/Test/deployments/${planExecutionId}/pipeline`
+    //should take user to latest pipeline execution in new tab
+    expect(window.open).toHaveBeenCalledTimes(1)
+    expect(window.open).toBeCalledWith(
+      expect.stringContaining(
+        `/account/dummy/undefined/orgs/dummy/projects/dummy/pipelines/Test/deployments/${planExecutionId}/pipeline`
+      )
     )
   })
 })

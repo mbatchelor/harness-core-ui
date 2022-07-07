@@ -49,6 +49,7 @@ import { MergePR } from './MergePrStep/MergePrStep'
 import { AzureWebAppRollback } from './AzureWebAppRollback/AzureWebAppRollback'
 import { AzureSlotDeployment } from './AzureSlotDeployment/AzureSlotDeployment'
 import { AzureTrafficShift } from './AzureTrafficShift/AzureTrafficShift'
+import { AzureSwapSlot } from './AzureWebAppSwapSlot/AzureWebAppSwapSlot'
 
 factory.registerStep(new HttpStep())
 factory.registerStep(new K8RolloutDeployStep())
@@ -92,3 +93,4 @@ factory.registerStep(new MergePR())
 factory.registerStep(new AzureWebAppRollback())
 factory.registerStep(new AzureSlotDeployment())
 factory.registerStep(new AzureTrafficShift())
+factory.registerStep(new AzureSwapSlot())

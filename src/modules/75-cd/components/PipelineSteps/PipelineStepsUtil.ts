@@ -161,7 +161,7 @@ export function getEnvironmentTabSchema(getString: UseStringsReturn['getString']
             })
           }
 
-          if (valueObj.clusterRef?.length === 0) {
+          if (valueObj.clusterRef?.length === 0 && valueObj.environmentOrEnvGroupRef !== RUNTIME_INPUT_VALUE) {
             return this.createError({
               path: 'clusterRef',
               message: getString('cd.pipelineSteps.environmentTab.clusterIsRequired')

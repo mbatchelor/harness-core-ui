@@ -195,6 +195,7 @@ const OverviewStep: React.FC<OverviewProps> = props => {
         font={{ variation: FontVariation.H3 }}
         tooltipProps={{ dataTooltipId: 'awsConnectorOverview' }}
         margin={{ bottom: 'large' }}
+        data-cy="aws-overview"
       >
         {getString('connectors.ceAws.overview.heading')}
       </Text>

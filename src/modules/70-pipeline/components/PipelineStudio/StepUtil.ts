@@ -6,7 +6,7 @@
  */
 
 import { FormikErrors, yupToFormErrors } from 'formik'
-import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { isEmpty, has, set, isBoolean, get } from 'lodash-es'
 import * as Yup from 'yup'
 import type { K8sDirectInfraYaml } from 'services/ci'
@@ -245,8 +245,13 @@ export const validateStage = ({
         set(errors, 'spec.environment', errorsResponse)
       }
 
-      ;(stageConfig as DeployStageConfig).environment?.infrastructureDefinitions?.forEach(
-        (infrastructureDefinition: InfraStructureDefinitionYaml, index: number) => {
+      const infrastructureDefinitions = (stageConfig as DeployStageConfig).environment?.infrastructureDefinitions
+      if (
+        infrastructureDefinitions &&
+        ((templateStageConfig as DeployStageConfig).environment?.infrastructureDefinitions as unknown as string) !==
+          RUNTIME_INPUT_VALUE
+      ) {
+        infrastructureDefinitions.forEach((infrastructureDefinition: InfraStructureDefinitionYaml, index: number) => {
           const infrastructureStep = factory.getStep(infrastructureDefinition.inputs?.type as unknown as string)
           const infrastructureErrorsResponse = infrastructureStep?.validateInputSet({
             data: infrastructureDefinition.inputs?.spec,
@@ -263,8 +268,8 @@ export const validateStage = ({
               infrastructureErrorsResponse
             )
           }
-        }
-      )
+        })
+      }
     }
 
     if (stage.type === 'Deployment' && templateStageConfig?.infrastructure?.environmentRef) {

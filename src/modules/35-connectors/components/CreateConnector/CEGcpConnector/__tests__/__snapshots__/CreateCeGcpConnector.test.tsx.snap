@@ -186,12 +186,17 @@ exports[`Create Secret Manager Wizard should render form 1`] = `
           <div
             class="Layout--vertical StyledProps--main stepContainer"
           >
-            <h2
-              class="StyledProps--font StyledProps--font-h2 StyledProps--main header"
-              level="2"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="gcpConnectorOverview"
             >
-              connectors.ceGcp.overview.heading
-            </h2>
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-h4 StyledProps--margin-bottom-xxlarge"
+                data-cy="gcp-overview"
+              >
+                connectors.ceGcp.overview.heading
+              </p>
+            </div>
             <div
               style="flex: 1;"
             >
@@ -2981,12 +2986,17 @@ exports[`Create Secret Manager Wizard should throw an error when connectors alre
           <div
             class="Layout--vertical StyledProps--main stepContainer"
           >
-            <h2
-              class="StyledProps--font StyledProps--font-h2 StyledProps--main header"
-              level="2"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="gcpConnectorOverview"
             >
-              connectors.ceGcp.overview.heading
-            </h2>
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-h4 StyledProps--margin-bottom-xxlarge"
+                data-cy="gcp-overview"
+              >
+                connectors.ceGcp.overview.heading
+              </p>
+            </div>
             <div
               style="flex: 1;"
             >

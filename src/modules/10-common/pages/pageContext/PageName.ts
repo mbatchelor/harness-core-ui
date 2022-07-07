@@ -41,6 +41,7 @@ export enum PAGE_NAME {
   CIPipelineStudio = 'CIPipelineStudio',
   FullPageLogView = 'FullPageLogView',
   PipelinesPage = 'PipelinesPage',
+  PipelineListPage = 'PipelineListPage',
   InputSetList = 'InputSetList',
   DeploymentsList = 'DeploymentsList',
   EnhancedInputSetForm = 'EnhancedInputSetForm',

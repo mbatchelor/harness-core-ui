@@ -56,7 +56,6 @@ import type { Scope } from '@common/interfaces/SecretsInterface'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { ArtifactActions } from '@common/constants/TrackingConstants'
 import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
-import { isServerlessDeploymentType } from '@pipeline/utils/stageHelpers'
 import StepNexusAuthentication from '@connectors/components/CreateConnector/NexusConnector/StepAuth/StepNexusAuthentication'
 import StepArtifactoryAuthentication from '@connectors/components/CreateConnector/ArtifactoryConnector/StepAuth/StepArtifactoryAuthentication'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
@@ -82,7 +81,9 @@ import {
   ArtifactIconByType,
   ArtifactTitleIdByType,
   allowedArtifactTypes,
-  ModalViewFor
+  ModalViewFor,
+  isAllowedArtifactDeploymentTypes,
+  isAdditionAllowed
 } from './ArtifactHelper'
 import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariablesExpression'
 import NexusArtifact from './ArtifactRepository/ArtifactLastSteps/NexusArtifact/NexusArtifact'
@@ -123,27 +124,16 @@ export default function ArtifactsSelection({
   const { expressions } = useVariablesExpression()
 
   const stepWizardTitle = getString('connectors.createNewConnector')
-  const { NG_NEXUS_ARTIFACTORY, CUSTOM_ARTIFACT_NG, NG_AZURE } = useFeatureFlags()
+  const { CUSTOM_ARTIFACT_NG, NG_AZURE } = useFeatureFlags()
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
   const getServiceCacheId = `${pipeline.identifier}-${selectedStageId}-service`
   const { getCache } = useCache([getServiceCacheId])
 
   useEffect(() => {
     if (
-      NG_NEXUS_ARTIFACTORY &&
-      !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.Nexus3Registry) &&
-      !isServerlessDeploymentType(deploymentType)
-    ) {
-      allowedArtifactTypes[deploymentType].push(
-        ENABLED_ARTIFACT_TYPES.Nexus3Registry,
-        ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry
-      )
-    }
-
-    if (
       CUSTOM_ARTIFACT_NG &&
       !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.CustomArtifact) &&
-      !isServerlessDeploymentType(deploymentType)
+      isAllowedArtifactDeploymentTypes(deploymentType)
     ) {
       allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.CustomArtifact)
     }
@@ -151,7 +141,7 @@ export default function ArtifactsSelection({
     if (
       NG_AZURE &&
       !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.Acr) &&
-      !isServerlessDeploymentType(deploymentType)
+      isAllowedArtifactDeploymentTypes(deploymentType)
     ) {
       allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.Acr)
     }
@@ -680,6 +670,7 @@ export default function ArtifactsSelection({
       accountId={accountId}
       refetchConnectors={refetchConnectorList}
       isReadonly={readonly}
+      isAdditionAllowed={isAdditionAllowed(deploymentType, readonly)}
     />
   )
 }

@@ -193,7 +193,7 @@ export default function SelectDeploymentType({
       baseTypes.push({
         label: 'Azure Web App',
         icon: 'microsoft-azure',
-        value: ServiceDeploymentType.AzureWebApp
+        value: ServiceDeploymentType.AzureWebApps
       })
     }
     return [...baseTypes, ...getServerlessDeploymentTypes(getString, SERVERLESS_SUPPORT)] as DeploymentTypeItem[]
