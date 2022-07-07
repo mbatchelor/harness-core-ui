@@ -26,7 +26,6 @@ export default function AppDFailFastThresholdTabContent(): JSX.Element {
         <FieldArray
           label=""
           name="failFastThreshold"
-          isDeleteOfRowAllowed={() => false}
           addLabel="Add Threshold"
           labelProps={{ style: { textTransform: 'uppercase' } }}
           fields={[

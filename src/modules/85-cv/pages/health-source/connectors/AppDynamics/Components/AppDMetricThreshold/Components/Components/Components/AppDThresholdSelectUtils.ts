@@ -1,5 +1,6 @@
 import type { UseStringsReturn } from 'framework/strings'
 import type { SelectItem } from '../../../AppDMetricThreshold.types'
+import { CriteriaValues, MetricTypeValues } from '../../../AppDMetricThresholdConstants'
 
 export function getItembyValue(items: SelectItem[], value: string): SelectItem {
   return items.filter(x => x.value == value)[0]
@@ -9,11 +10,11 @@ export const getCriterialItems = (getString: UseStringsReturn['getString']): Sel
   return [
     {
       label: getString('cv.monitoringSources.appD.absoluteValue'),
-      value: 'absolute'
+      value: CriteriaValues.Absolute
     },
     {
       label: getString('cv.monitoringSources.appD.percentageDeviation'),
-      value: 'percentage'
+      value: CriteriaValues.Percentage
     }
   ]
 }
@@ -22,11 +23,15 @@ export function getMetricTypeItems(getString: UseStringsReturn['getString']): Se
   return [
     {
       label: getString('performance'),
-      value: 'performance'
+      value: MetricTypeValues.Performance
     },
     {
       label: getString('cv.monitoringSources.appD.customMetric'),
-      value: 'customMetric'
+      value: MetricTypeValues.CustomMetric
+    },
+    {
+      label: getString('error'),
+      value: MetricTypeValues.Error
     }
   ]
 }

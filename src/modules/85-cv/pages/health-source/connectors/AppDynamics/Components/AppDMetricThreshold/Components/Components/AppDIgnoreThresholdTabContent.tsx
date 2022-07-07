@@ -20,26 +20,25 @@ export default function AppDIgnoreThresholdTabContent(): JSX.Element {
         <FieldArray
           label=""
           name="ignoreThresholds"
-          // isDeleteOfRowAllowed={() => false}
           addLabel="Add Threshold"
           labelProps={{ style: { textTransform: 'uppercase' } }}
           fields={[
             {
               name: 'metricType',
               label: <Text>{getString('cv.monitoringSources.appD.metricType')}</Text>,
-              defaultValue: 'test1',
+              // defaultValue: 'test1',
               renderer: (...args) => appDThresholdSelect('metricType', getMetricTypeItems(getString), ...args)
             },
             {
               name: 'transaction',
               label: <Text>{getString('cv.monitoringSources.appD.groupTransaction')}</Text>,
-              defaultValue: 'test1',
+              // defaultValue: 'test1',
               renderer: (...args) => appDThresholdSelect('transaction', getTransactionItems(getString), ...args)
             },
             {
               name: 'metric',
               label: <Text>{getString('cv.monitoringSources.metricLabel')}</Text>,
-              defaultValue: 'test1',
+              // defaultValue: 'test1',
               renderer: (...args) => appDThresholdSelect('metric', getMetricItems(getString), ...args)
             },
             {
