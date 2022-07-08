@@ -325,14 +325,12 @@ export interface StringsMap {
   'common.git.noUserLabel': string
   'common.git.onlyDefaultBranchFound': string
   'common.git.privateKey': string
-  'common.git.projectNamePlaceholder': string
   'common.git.remoteStoreLabel': string
   'common.git.saveResourceLabel': string
   'common.git.selectBranchPlaceholder': string
   'common.git.selectRepoLabel': string
   'common.git.selectRepositoryPlaceholder': string
   'common.git.startPRLabel': string
-  'common.git.testProjectAndRepositoryDescription': string
   'common.git.testRepository': string
   'common.git.testRepositoryDescription': string
   'common.git.urlType': string

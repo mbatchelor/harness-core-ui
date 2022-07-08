@@ -42,6 +42,8 @@ import HelpPanelProvider from 'framework/utils/HelpPanelProvider'
 
 const RouteDestinations = React.lazy(() => import('modules/RouteDestinations'))
 
+const TOO_MANY_REQUESTS_MESSAGE = 'Too many requests received, please try again later'
+
 FocusStyleManager.onlyShowFocusOnTabs()
 
 // set up Immer
@@ -174,6 +176,15 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
                   })
                 }
               )
+            })
+          return
+        }
+        case 429: {
+          response
+            .clone()
+            .json()
+            .then(res => {
+              showError(res.message || TOO_MANY_REQUESTS_MESSAGE)
             })
         }
       }
