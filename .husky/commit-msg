@@ -12,5 +12,10 @@ if [[ "$branch" =~ ^release\/.* ]]; then
     exit 1
 fi
 
+if [[ "$branch" == "develop" ]]; then
+  echo "\033[0;31;1mYou can't commit directly to develop branch\033[0m"
+  exit 1
+fi
+
 
 node ./scripts/lint-commit-message.js "$(cat "$1")"
