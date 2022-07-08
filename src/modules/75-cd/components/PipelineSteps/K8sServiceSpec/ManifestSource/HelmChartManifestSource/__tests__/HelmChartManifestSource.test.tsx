@@ -20,12 +20,22 @@ const mockBukcets = {
   resource: { bucket1: 'bucket1', testbucket: 'testbucket' }
 }
 
+const mockRegions = {
+  resource: [{ name: 'region1', value: 'region1' }]
+}
+
 jest.mock('services/cd-ng', () => ({
   useGetGCSBucketList: jest.fn().mockImplementation(() => {
     return { data: mockBukcets, refetch: jest.fn(), error: null, loading: false }
   }),
   useGetBucketListForS3: () =>
     jest.fn().mockImplementation(() => ({ data: mockBukcets, refetch: jest.fn(), loading: false }))
+}))
+
+jest.mock('services/portal', () => ({
+  useListAwsRegions: jest.fn().mockImplementation(() => {
+    return { data: mockRegions, refetch: jest.fn(), error: null, loading: false }
+  })
 }))
 
 jest.mock('@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField', () => ({
@@ -59,13 +69,14 @@ describe('K8sManifestSource tests', () => {
           stageIdentifier={stageIdentifier}
           path={path}
           initialValues={{ manifests: manifests as ManifestConfigWrapper[] }}
-          readonly={false}
+          readonly={true}
           allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]}
         />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
   })
+
   test('Should match snapshot with fromTrigger', () => {
     const { container } = render(
       <TestWrapper>
