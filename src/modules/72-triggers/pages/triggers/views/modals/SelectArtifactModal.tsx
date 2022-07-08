@@ -191,6 +191,7 @@ const SelectArtifactModal: React.FC<SelectArtifactModalPropsInterface> = ({
     !isEmpty(values?.selectedArtifact) ? ModalState.RUNTIME_INPUT : ModalState.SELECT
   )
 
+  console.log('artifactTableData', artifactTableData)
   const { getString } = useStrings()
 
   const closeAndReset = () => {

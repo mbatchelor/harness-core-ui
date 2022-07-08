@@ -65,6 +65,8 @@ export const getTriggerIcon = ({
         return ArtifactIconByType.DockerRegistry
       case ENABLED_ARTIFACT_TYPES.Acr:
         return ArtifactIconByType.Acr
+      case ENABLED_ARTIFACT_TYPES.AmazonS3:
+        return ArtifactIconByType.AmazonS3
     }
   }
   return 'yaml-builder-trigger'
@@ -103,6 +105,11 @@ const triggerDrawerMap = (getString: (key: StringKeys) => string): AddDrawerMapI
           value: GitSourceProviders.CUSTOM.value,
           iconName: GitSourceProviders.CUSTOM.iconName
         }
+        // {
+        //   itemLabel: getString('pipeline.artifactsSelection.amazonS3Title'),
+        //   value: GitSourceProviders.AmazonS3.value,
+        //   iconName: GitSourceProviders.AmazonS3.iconName
+        // }
       ]
     },
     {
@@ -133,6 +140,11 @@ const triggerDrawerMap = (getString: (key: StringKeys) => string): AddDrawerMapI
           itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Acr]),
           value: ENABLED_ARTIFACT_TYPES.Acr,
           iconName: ArtifactIconByType.Acr
+        },
+        {
+          itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.AmazonS3]),
+          value: ENABLED_ARTIFACT_TYPES.AmazonS3,
+          iconName: ArtifactIconByType.AmazonS3
         }
       ]
     },

@@ -1294,6 +1294,12 @@ const getManifestTableItem = ({
           getString?.('pipeline.artifactTriggerConfigPanel.runtimeInput')
       )
     } else {
+      if (manifest.type === 'AmazonS3') {
+        return (
+          getRuntimeInputLabel({ str: manifest?.spec?.filePathRegex, getString }) !==
+          getString?.('pipeline.artifactTriggerConfigPanel.runtimeInput')
+        )
+      }
       if (isServerlessDeploymentTypeSelected) {
         return (
           !manifest?.spec?.artifactPath ||
