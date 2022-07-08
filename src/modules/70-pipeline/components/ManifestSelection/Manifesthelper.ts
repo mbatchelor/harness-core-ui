@@ -117,22 +117,23 @@ export const manifestStoreTypes: Array<ManifestStores> = [
   ManifestStoreMap.Git,
   ManifestStoreMap.Github,
   ManifestStoreMap.GitLab,
-  ManifestStoreMap.Bitbucket
-  // ManifestStoreMap.Harness
+  ManifestStoreMap.Bitbucket,
+  ManifestStoreMap.Harness
 ]
 export const ManifestTypetoStoreMap: Record<ManifestTypes, ManifestStores[]> = {
-  K8sManifest: [...manifestStoreTypes],
-  Values: [...manifestStoreTypes, ManifestStoreMap.InheritFromManifest],
+  K8sManifest: [...manifestStoreTypes, ManifestStoreMap.CustomRemote],
+  Values: [...manifestStoreTypes, ManifestStoreMap.InheritFromManifest, ManifestStoreMap.CustomRemote],
   HelmChart: [
     ...manifestStoreTypes,
     ManifestStoreMap.Http,
     ManifestStoreMap.OciHelmChart,
     ManifestStoreMap.S3,
-    ManifestStoreMap.Gcs
+    ManifestStoreMap.Gcs,
+    ManifestStoreMap.CustomRemote
   ],
   Kustomize: manifestStoreTypes,
-  OpenshiftTemplate: [...manifestStoreTypes],
-  OpenshiftParam: [...manifestStoreTypes, ManifestStoreMap.InheritFromManifest],
+  OpenshiftTemplate: [...manifestStoreTypes, ManifestStoreMap.CustomRemote],
+  OpenshiftParam: [...manifestStoreTypes, ManifestStoreMap.InheritFromManifest, ManifestStoreMap.CustomRemote],
   KustomizePatches: [...manifestStoreTypes, ManifestStoreMap.InheritFromManifest],
   ServerlessAwsLambda: manifestStoreTypes
 }
