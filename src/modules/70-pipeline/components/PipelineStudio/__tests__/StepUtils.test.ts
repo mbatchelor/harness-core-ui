@@ -40,7 +40,12 @@ describe('Test StepUtils', () => {
       // eslint-disable-next-line
       // @ts-ignore
       template: pipelineTemplateWithRuntimeInput as PipelineInfoConfig,
-      viewType: StepViewType.InputSet
+      viewType: StepViewType.InputSet,
+      selectedStageData: {
+        selectedStages: [{ stageIdentifier: 'S1', stageName: 'S1', message: 'test', stagesRequired: [] }],
+        selectedStageItems: [{ label: 'S1', value: 'S1' }],
+        allStagesSelected: false
+      }
     })
     expect(isMatch(errors, { properties: { ci: { codebase: { build: {} } } } })).toBeTruthy()
   })
@@ -56,7 +61,12 @@ describe('Test StepUtils', () => {
       // eslint-disable-next-line
       // @ts-ignore
       template: pipelineTemplateWithRuntimeInput as PipelineInfoConfig,
-      viewType: StepViewType.InputSet
+      viewType: StepViewType.InputSet,
+      selectedStageData: {
+        selectedStages: [{ stageIdentifier: 'S1', stageName: 'S1', message: 'test', stagesRequired: [] }],
+        selectedStageItems: [{ label: 'S1', value: 'S1' }],
+        allStagesSelected: false
+      }
     })
     expect(isMatch(errors, { properties: { ci: { codebase: { build: {} } } } })).toBeTruthy()
     expect(has(errors, 'properties.ci.codebase.build.type')).toBeTruthy()
@@ -69,7 +79,12 @@ describe('Test StepUtils', () => {
       // eslint-disable-next-line
       // @ts-ignore
       template: pipelineTemplateWithRuntimeInput as PipelineInfoConfig,
-      viewType: StepViewType.InputSet
+      viewType: StepViewType.InputSet,
+      selectedStageData: {
+        selectedStages: [{ stageIdentifier: 'S1', stageName: 'S1', message: 'test', stagesRequired: [] }],
+        selectedStageItems: [{ label: 'S1', value: 'S1' }],
+        allStagesSelected: false
+      }
     })
     expect(isMatch(errors, { properties: { ci: { codebase: { build: { spec: {} } } } } })).toBeTruthy()
     expect(has(errors, 'properties.ci.codebase.build.spec.branch')).toBeTruthy()
@@ -82,7 +97,12 @@ describe('Test StepUtils', () => {
       // eslint-disable-next-line
       // @ts-ignore
       template: pipelineTemplateWithRuntimeInput as PipelineInfoConfig,
-      viewType: StepViewType.InputSet
+      viewType: StepViewType.InputSet,
+      selectedStageData: {
+        selectedStages: [{ stageIdentifier: 'S1', stageName: 'S1', message: 'test', stagesRequired: [] }],
+        selectedStageItems: [{ label: 'S1', value: 'S1' }],
+        allStagesSelected: false
+      }
     })
     expect(isMatch(errors, { properties: { ci: { codebase: { build: { spec: {} } } } } })).toBeTruthy()
     expect(has(errors, 'properties.ci.codebase.build.spec.tag')).toBeTruthy()

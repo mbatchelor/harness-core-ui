@@ -224,10 +224,10 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
       : 'template.templateInputs'
     : path
 
-  const filteredStages: StageElementWrapperConfig[] =
-    (selectedStageData?.allStagesSelected
-      ? originalPipeline?.stages
-      : getSelectedStagesFromPipeline(originalPipeline, selectedStageData)) || []
+  let filteredStages: StageElementWrapperConfig[] | undefined = originalPipeline?.stages
+  if (selectedStageData && !selectedStageData.allStagesSelected) {
+    filteredStages = getSelectedStagesFromPipeline(originalPipeline, selectedStageData)
+  }
 
   const isCloneCodebaseEnabledAtLeastAtOneStage = filteredStages?.some(
     stage =>
