@@ -21,6 +21,7 @@ import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/Artif
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import { getDefaultQueryParam, isArtifactSourceRuntime, isFieldfromTriggerTabDisabled } from '../artifactSourceUtils'
 import css from '../../K8sServiceSpec.module.scss'
+import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
 
 export const resetBuckets = (formik: FormikValues, bucketPath: string): void => {
   const bucketValue = get(formik.values, bucketPath, '')
@@ -55,6 +56,7 @@ const Content = (props: AmazonS3ContentProps): JSX.Element => {
     artifactPath,
     isBucketSelectionDisabled
   } = props
+  console.log('props', props)
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const { getRBACErrorMessage } = useRBACError()
@@ -221,7 +223,7 @@ const Content = (props: AmazonS3ContentProps): JSX.Element => {
             />
           )}
 
-          {isFieldRuntime(`artifacts.${artifactPath}.spec.filePathRegex`, template) && (
+          {!fromTrigger && isFieldRuntime(`artifacts.${artifactPath}.spec.filePathRegex`, template) && (
             <FormInput.MultiTextInput
               label={getString('pipeline.artifactsSelection.filePathRegexLabel')}
               name={`${path}.artifacts.${artifactPath}.spec.filePathRegex`}
@@ -231,6 +233,19 @@ const Content = (props: AmazonS3ContentProps): JSX.Element => {
                 expressions,
                 allowableTypes
               }}
+            />
+          )}
+
+          {!!fromTrigger && isFieldRuntime(`artifacts.${artifactPath}.spec.filePathRegex`, template) && (
+            <FormInput.MultiTextInput
+              label={getString('pipeline.artifactsSelection.filePathRegexLabel')}
+              multiTextInputProps={{
+                expressions,
+                value: TriggerDefaultFieldList.build,
+                allowableTypes
+              }}
+              disabled={true}
+              name={`${path}.artifacts.${artifactPath}.spec.filePathRegex`}
             />
           )}
         </Layout.Vertical>
@@ -251,11 +266,11 @@ export class AmazonS3ArtifactSource extends ArtifactSourceBase<AmazonS3ContentPr
   }
 
   isBucketSelectionDisabled(props: ArtifactSourceRenderProps): boolean {
-    const { initialValues, artifactPath, artifact } = props
+    const { initialValues, artifactPath, artifact, path } = props
 
     const isConnectorPresent = getDefaultQueryParam(
       artifact?.spec?.connectorRef,
-      get(initialValues, `artifacts.${artifactPath}.spec.connectorRef`, '')
+      get({ stages: initialValues }, `${path}.artifacts.${artifactPath}.spec.connectorRef`, '')
     )
     return !isConnectorPresent
   }
