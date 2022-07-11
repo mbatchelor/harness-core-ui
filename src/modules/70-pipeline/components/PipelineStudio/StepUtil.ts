@@ -35,7 +35,8 @@ import '@ci/components/PipelineSteps'
 // eslint-disable-next-line no-restricted-imports
 import '@sto-steps/components/PipelineSteps'
 import { StepViewType } from '../AbstractSteps/Step'
-import type { SelectedStageData, StageSelectionData } from '../../utils/runPipelineUtils'
+import type { StageSelectionData } from '../../utils/runPipelineUtils'
+import { getSelectedStagesFromPipeline } from './CommonUtils/CommonUtils'
 
 export function getStepFromStage(stepId: string, steps?: ExecutionWrapperConfig[]): ExecutionWrapperConfig | undefined {
   let responseStep: ExecutionWrapperConfig | undefined = undefined
@@ -430,15 +431,7 @@ export const validateCICodebase = ({
 
   const pipelineHasCloneCodebase = selectedStageData?.allStagesSelected
     ? isCloneCodebaseEnabledAtLeastOneStage(resolvedPipeline || originalPipeline)
-    : (
-        selectedStageData?.selectedStages?.map((selectedStage: SelectedStageData) =>
-          (resolvedPipeline || originalPipeline)?.stages?.find(
-            stage =>
-              stage.stage?.identifier === selectedStage.stageIdentifier ||
-              stage.parallel?.some(parallelStage => parallelStage.stage?.identifier === selectedStage.stageIdentifier)
-          )
-        ) as StageElementWrapperConfig[]
-      ).some(
+    : getSelectedStagesFromPipeline(resolvedPipeline || originalPipeline, selectedStageData).some(
         stage =>
           get(stage, 'stage.spec.cloneCodebase') ||
           stage.parallel?.some(parallelStage => get(parallelStage, 'stage.spec.cloneCodebase'))

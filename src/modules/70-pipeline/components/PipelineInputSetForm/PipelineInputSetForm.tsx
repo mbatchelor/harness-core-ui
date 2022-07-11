@@ -40,7 +40,8 @@ import type { AbstractStepFactory } from '../AbstractSteps/AbstractStepFactory'
 import { StepType } from '../PipelineSteps/PipelineStepInterface'
 import { getStageFromPipeline, getTemplatePath } from '../PipelineStudio/StepUtil'
 import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariablesExpression'
-import type { StageSelectionData, SelectedStageData } from '../../utils/runPipelineUtils'
+import type { StageSelectionData } from '../../utils/runPipelineUtils'
+import { getSelectedStagesFromPipeline } from '../PipelineStudio/CommonUtils/CommonUtils'
 import css from './PipelineInputSetForm.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -225,13 +226,7 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
 
   const filteredStages: StageElementWrapperConfig[] = selectedStageData?.allStagesSelected
     ? originalPipeline?.stages || []
-    : (selectedStageData?.selectedStages?.map((selectedStage: SelectedStageData) =>
-        originalPipeline?.stages?.find(
-          stage =>
-            stage.stage?.identifier === selectedStage.stageIdentifier ||
-            stage.parallel?.some(parallelStage => parallelStage.stage?.identifier === selectedStage.stageIdentifier)
-        )
-      ) as StageElementWrapperConfig[])
+    : getSelectedStagesFromPipeline(originalPipeline, selectedStageData)
 
   const isCloneCodebaseEnabledAtLeastAtOneStage = filteredStages.some(
     stage =>
