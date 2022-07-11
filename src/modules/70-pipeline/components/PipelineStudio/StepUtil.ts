@@ -429,13 +429,17 @@ export const validateCICodebase = ({
   const requiresConnectorRuntimeInputValue =
     template?.properties?.ci?.codebase?.connectorRef && !pipeline?.properties?.ci?.codebase?.connectorRef
 
-  const pipelineHasCloneCodebase = selectedStageData?.allStagesSelected
-    ? isCloneCodebaseEnabledAtLeastOneStage(resolvedPipeline || originalPipeline)
-    : getSelectedStagesFromPipeline(resolvedPipeline || originalPipeline, selectedStageData)?.some(
-        stage =>
-          get(stage, 'stage.spec.cloneCodebase') ||
-          stage?.parallel?.some(parallelStage => get(parallelStage, 'stage.spec.cloneCodebase'))
-      )
+  let pipelineHasCloneCodebase = isCloneCodebaseEnabledAtLeastOneStage(resolvedPipeline || originalPipeline)
+  if (selectedStageData?.allStagesSelected) {
+    pipelineHasCloneCodebase = getSelectedStagesFromPipeline(
+      resolvedPipeline || originalPipeline,
+      selectedStageData
+    )?.some(
+      stage =>
+        get(stage, 'stage.spec.cloneCodebase') ||
+        stage?.parallel?.some(parallelStage => get(parallelStage, 'stage.spec.cloneCodebase'))
+    )
+  }
   const shouldValidateCICodebase =
     pipelineHasCloneCodebase &&
     (!requiresConnectorRuntimeInputValue ||
