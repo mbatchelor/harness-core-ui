@@ -471,7 +471,7 @@ execution:
     abortStage: Abort Stage
     downloadLogs: Download logs
     viewCompiledYaml: View Compiled YAML
-    compareYaml: Compare YAML
+    compareExecutions: Compare Executions
   layouts:
     bottom: Align to bottom
     right: Align to right
