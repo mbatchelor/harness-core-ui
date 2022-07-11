@@ -430,7 +430,7 @@ export const validateCICodebase = ({
     template?.properties?.ci?.codebase?.connectorRef && !pipeline?.properties?.ci?.codebase?.connectorRef
 
   let pipelineHasCloneCodebase = isCloneCodebaseEnabledAtLeastOneStage(resolvedPipeline || originalPipeline)
-  if (selectedStageData?.allStagesSelected) {
+  if (selectedStageData && !selectedStageData.allStagesSelected) {
     pipelineHasCloneCodebase = getSelectedStagesFromPipeline(
       resolvedPipeline || originalPipeline,
       selectedStageData
