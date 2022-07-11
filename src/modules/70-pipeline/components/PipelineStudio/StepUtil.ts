@@ -35,6 +35,7 @@ import '@ci/components/PipelineSteps'
 // eslint-disable-next-line no-restricted-imports
 import '@sto-steps/components/PipelineSteps'
 import { StepViewType } from '../AbstractSteps/Step'
+import type { SelectedStageData, StageSelectionData } from '../../utils/runPipelineUtils'
 
 export function getStepFromStage(stepId: string, steps?: ExecutionWrapperConfig[]): ExecutionWrapperConfig | undefined {
   let responseStep: ExecutionWrapperConfig | undefined = undefined
@@ -408,6 +409,7 @@ interface ValidatePipelineProps {
   getString?: UseStringsReturn['getString']
   path?: string
   viewTypeMetadata?: { [key: string]: boolean }
+  selectedStageData?: StageSelectionData
 }
 
 /**
@@ -419,13 +421,28 @@ export const validateCICodebase = ({
   originalPipeline,
   resolvedPipeline, // used when originalPipeline is a template and we need to check clone codebase
   getString,
-  viewTypeMetadata
+  viewTypeMetadata,
+  selectedStageData
 }: ValidatePipelineProps): FormikErrors<PipelineInfoConfig> => {
   const errors = {}
   const requiresConnectorRuntimeInputValue =
     template?.properties?.ci?.codebase?.connectorRef && !pipeline?.properties?.ci?.codebase?.connectorRef
 
-  const pipelineHasCloneCodebase = isCloneCodebaseEnabledAtLeastOneStage(resolvedPipeline || originalPipeline)
+  const pipelineHasCloneCodebase = selectedStageData?.allStagesSelected
+    ? isCloneCodebaseEnabledAtLeastOneStage(resolvedPipeline || originalPipeline)
+    : (
+        selectedStageData?.selectedStages?.map((selectedStage: SelectedStageData) =>
+          (resolvedPipeline || originalPipeline)?.stages?.find(
+            stage =>
+              stage.stage?.identifier === selectedStage.stageIdentifier ||
+              stage.parallel?.some(parallelStage => parallelStage.stage?.identifier === selectedStage.stageIdentifier)
+          )
+        ) as StageElementWrapperConfig[]
+      ).some(
+        stage =>
+          get(stage, 'stage.spec.cloneCodebase') ||
+          stage.parallel?.some(parallelStage => get(parallelStage, 'stage.spec.cloneCodebase'))
+      )
   const shouldValidateCICodebase =
     pipelineHasCloneCodebase &&
     (!requiresConnectorRuntimeInputValue ||
@@ -595,7 +612,8 @@ export const validatePipeline = ({
   viewType,
   getString,
   path,
-  viewTypeMetadata
+  viewTypeMetadata,
+  selectedStageData
 }: ValidatePipelineProps): FormikErrors<PipelineInfoConfig> => {
   if (template?.template) {
     const errors = validatePipeline({
@@ -621,7 +639,8 @@ export const validatePipeline = ({
       viewType,
       getString,
       path,
-      viewTypeMetadata
+      viewTypeMetadata,
+      selectedStageData
     })
 
     if (getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME) {

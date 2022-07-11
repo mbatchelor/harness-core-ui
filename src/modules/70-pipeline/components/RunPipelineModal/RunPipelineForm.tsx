@@ -610,7 +610,8 @@ function RunPipelineFormBasic({
   const getFormErrors = async (
     latestPipeline: { pipeline: PipelineInfoConfig },
     latestYamlTemplate: PipelineInfoConfig,
-    orgPipeline: PipelineInfoConfig | undefined
+    orgPipeline: PipelineInfoConfig | undefined,
+    selectedStages: StageSelectionData | undefined
   ): Promise<FormikErrors<InputSetDTO>> => {
     let errors = formErrors
     function validateErrors(): Promise<FormikErrors<InputSetDTO>> {
@@ -623,7 +624,8 @@ function RunPipelineFormBasic({
               originalPipeline: orgPipeline,
               resolvedPipeline,
               getString,
-              viewType: StepViewType.DeploymentForm
+              viewType: StepViewType.DeploymentForm,
+              selectedStageData: selectedStages
             }) as any) || formErrors
           resolve(validatedErrors)
         }, 300)
@@ -670,7 +672,8 @@ function RunPipelineFormBasic({
     const runPipelineFormErrors = await getFormErrors(
       { pipeline: pl } as Required<Pipeline>,
       defaultTo(inputSetTemplate?.pipeline, {} as PipelineInfoConfig),
-      pipeline
+      pipeline,
+      selectedStageData
     )
     // https://github.com/formium/formik/issues/1392
     return runPipelineFormErrors
