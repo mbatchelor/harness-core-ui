@@ -57,8 +57,8 @@ export function getSelectedStagesFromPipeline(
   return selectedStageData?.selectedStages?.map((selectedStage: SelectedStageData) =>
     pipeline?.stages?.find(
       stage =>
-        stage.stage?.identifier === selectedStage.stageIdentifier ||
-        stage.parallel?.some(parallelStage => parallelStage.stage?.identifier === selectedStage.stageIdentifier)
+        stage?.stage?.identifier === selectedStage.stageIdentifier ||
+        stage?.parallel?.some(parallelStage => parallelStage.stage?.identifier === selectedStage.stageIdentifier)
     )
   ) as StageElementWrapperConfig[]
 }

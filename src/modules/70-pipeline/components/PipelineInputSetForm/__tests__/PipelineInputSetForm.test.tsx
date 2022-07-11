@@ -111,6 +111,8 @@ const getPropsForCIStage = ({
     stages: [
       {
         stage: {
+          name: 'Build',
+          identifier: 'Build',
           type: 'CI',
           spec: {
             // eslint-disable-next-line
@@ -141,6 +143,11 @@ const getPropsForCIStage = ({
     },
     stages: [],
     delegateSelectors: ['random']
+  },
+  selectedStageData: {
+    selectedStages: [{ stageIdentifier: 'Build', stageName: 'Build', message: 'test', stagesRequired: [] }],
+    selectedStageItems: [{ label: 'Build', value: 'Build' }],
+    allStagesSelected: false
   },
   ...getCommonProps({ path })
 })

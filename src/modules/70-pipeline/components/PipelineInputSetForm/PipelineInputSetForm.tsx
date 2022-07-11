@@ -232,7 +232,7 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
   const isCloneCodebaseEnabledAtLeastAtOneStage = filteredStages?.some(
     stage =>
       Object.is(get(stage, 'stage.spec.cloneCodebase'), true) ||
-      stage.parallel?.some(parallelStage => Object.is(get(parallelStage, 'stage.spec.cloneCodebase'), true))
+      stage?.parallel?.some(parallelStage => Object.is(get(parallelStage, 'stage.spec.cloneCodebase'), true))
   )
 
   const codebaseHasRuntimeInputs = isCodebaseFieldsRuntimeInputs(template)
