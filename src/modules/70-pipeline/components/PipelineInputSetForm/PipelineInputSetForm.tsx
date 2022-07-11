@@ -224,11 +224,12 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
       : 'template.templateInputs'
     : path
 
-  const filteredStages: StageElementWrapperConfig[] = selectedStageData?.allStagesSelected
-    ? originalPipeline?.stages || []
-    : getSelectedStagesFromPipeline(originalPipeline, selectedStageData)
+  const filteredStages: StageElementWrapperConfig[] =
+    (selectedStageData?.allStagesSelected
+      ? originalPipeline?.stages
+      : getSelectedStagesFromPipeline(originalPipeline, selectedStageData)) || []
 
-  const isCloneCodebaseEnabledAtLeastAtOneStage = filteredStages.some(
+  const isCloneCodebaseEnabledAtLeastAtOneStage = filteredStages?.some(
     stage =>
       Object.is(get(stage, 'stage.spec.cloneCodebase'), true) ||
       stage.parallel?.some(parallelStage => Object.is(get(parallelStage, 'stage.spec.cloneCodebase'), true))

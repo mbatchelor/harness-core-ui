@@ -7,7 +7,7 @@
 
 import type { StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
-import { getSelectStageOptionsFromPipeline } from '../CommonUtils'
+import { getSelectedStagesFromPipeline, getSelectStageOptionsFromPipeline } from '../CommonUtils'
 
 function generateStage(idx: number, type: string): StageElementWrapper {
   return {
@@ -65,5 +65,135 @@ describe('getSelectOptionsFromPipeline', () => {
       node: stage4,
       type: stage4.stage?.type
     })
+  })
+
+  test('Test getSelectedStagesFromPipeline method', () => {
+    const testPipeline = {
+      name: 'CI-4894',
+      identifier: 'CI4894',
+      projectIdentifier: 'CI_Sanity',
+      orgIdentifier: 'default',
+      tags: {},
+      properties: { ci: { codebase: { connectorRef: 'paymentsservice', build: '<+input>' } } },
+      stages: [
+        {
+          stage: {
+            name: 'Build',
+            identifier: 'Build',
+            type: 'CI',
+            spec: {
+              cloneCodebase: true,
+              infrastructure: {
+                type: 'KubernetesDirect',
+                spec: {
+                  connectorRef: 'cidelegateplay',
+                  namespace: 'default',
+                  automountServiceAccountToken: true,
+                  nodeSelector: {},
+                  os: 'Linux'
+                }
+              },
+              execution: {
+                steps: [
+                  {
+                    step: {
+                      type: 'Run',
+                      name: 'Run',
+                      identifier: 'Run',
+                      spec: { connectorRef: 'dockerfinalrepro', image: 'node', shell: 'Sh', command: 'echo Run' }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        {
+          stage: {
+            name: 'Deploy',
+            identifier: 'Deploy',
+            description: '',
+            type: 'Deployment',
+            spec: {
+              serviceConfig: {
+                serviceRef: 'sample',
+                serviceDefinition: { spec: { variables: [] }, type: 'Kubernetes' }
+              },
+              infrastructure: {
+                environmentRef: 'env',
+                infrastructureDefinition: {
+                  type: 'KubernetesDirect',
+                  spec: { connectorRef: 'cidelegateplay', namespace: 'default', releaseName: 'release-<+INFRA_KEY>' }
+                },
+                allowSimultaneousDeployments: false
+              },
+              execution: {
+                steps: [
+                  {
+                    step: {
+                      name: 'Rollout Deployment',
+                      identifier: 'rolloutDeployment',
+                      type: 'K8sRollingDeploy',
+                      timeout: '10m',
+                      spec: { skipDryRun: false }
+                    }
+                  },
+                  {
+                    step: {
+                      type: 'ShellScript',
+                      name: 'shell',
+                      identifier: 'shell',
+                      spec: {
+                        shell: 'Bash',
+                        onDelegate: true,
+                        source: { type: 'Inline', spec: { script: 'echo Test' } },
+                        environmentVariables: [],
+                        outputVariables: [],
+                        executionTarget: {}
+                      },
+                      timeout: '10m'
+                    }
+                  }
+                ],
+                rollbackSteps: [
+                  {
+                    step: {
+                      name: 'Rollback Rollout Deployment',
+                      identifier: 'rollbackRolloutDeployment',
+                      type: 'K8sRollingRollback',
+                      timeout: '10m',
+                      spec: {}
+                    }
+                  }
+                ]
+              }
+            },
+            tags: {},
+            failureStrategies: [{ onFailure: { errors: ['AllErrors'], action: { type: 'StageRollback' } } }]
+          }
+        }
+      ],
+      allowStageExecutions: true
+    }
+    expect(
+      getSelectedStagesFromPipeline(testPipeline as any, {
+        selectedStages: [{ stageIdentifier: 'Deploy', stageName: 'Deploy', message: 'test', stagesRequired: [] }],
+        selectedStageItems: [{ label: 'Deploy', value: 'Deploy' }],
+        allStagesSelected: false
+      }).length
+    ).toBe(1)
+    expect(
+      getSelectedStagesFromPipeline(testPipeline as any, {
+        selectedStages: [
+          { stageIdentifier: 'Build', stageName: 'Build', message: 'test', stagesRequired: [] },
+          { stageIdentifier: 'Deploy', stageName: 'Deploy', message: 'test', stagesRequired: [] }
+        ],
+        selectedStageItems: [
+          { label: 'Build', value: 'Build' },
+          { label: 'Deploy', value: 'Deploy' }
+        ],
+        allStagesSelected: true
+      }).length
+    ).toBe(2)
   })
 })

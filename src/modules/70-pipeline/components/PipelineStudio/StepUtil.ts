@@ -431,7 +431,7 @@ export const validateCICodebase = ({
 
   const pipelineHasCloneCodebase = selectedStageData?.allStagesSelected
     ? isCloneCodebaseEnabledAtLeastOneStage(resolvedPipeline || originalPipeline)
-    : getSelectedStagesFromPipeline(resolvedPipeline || originalPipeline, selectedStageData).some(
+    : getSelectedStagesFromPipeline(resolvedPipeline || originalPipeline, selectedStageData)?.some(
         stage =>
           get(stage, 'stage.spec.cloneCodebase') ||
           stage.parallel?.some(parallelStage => get(parallelStage, 'stage.spec.cloneCodebase'))
