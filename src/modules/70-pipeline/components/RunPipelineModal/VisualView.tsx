@@ -18,6 +18,7 @@ import { InputSetSelector } from '../InputSetSelector/InputSetSelector'
 import type { InputSetValue } from '../InputSetSelector/utils'
 import { PipelineInputSetForm } from '../PipelineInputSetForm/PipelineInputSetForm'
 import { StepViewType } from '../AbstractSteps/Step'
+import type { StageSelectionData } from '../../utils/runPipelineUtils'
 
 import css from './RunPipelineForm.module.scss'
 
@@ -44,6 +45,7 @@ export interface VisualViewProps {
   setSelectedInputSets: Dispatch<SetStateAction<InputSetValue[] | undefined>>
   loading?: boolean
   loadingMergeInputSetUpdate: boolean
+  selectedStageData: StageSelectionData
 }
 
 export default function VisualView(props: VisualViewProps): React.ReactElement {
@@ -65,7 +67,8 @@ export default function VisualView(props: VisualViewProps): React.ReactElement {
     hasInputSets,
     setSelectedInputSets,
     loading,
-    loadingMergeInputSetUpdate
+    loadingMergeInputSetUpdate,
+    selectedStageData
   } = props
   const { getString } = useStrings()
 
@@ -165,6 +168,7 @@ export default function VisualView(props: VisualViewProps): React.ReactElement {
                 template={template}
                 resolvedPipeline={resolvedPipeline}
                 loadingMergeInputSetUpdate={loadingMergeInputSetUpdate}
+                selectedStageData={selectedStageData}
               />
             ) : null}
             {showVoidPipelineInputSetForm() ? <div className={css.noPipelineInputSetForm} /> : null}
@@ -187,6 +191,7 @@ export interface PipelineInputSetFormWrapperProps {
   template: PipelineInfoConfig
   resolvedPipeline?: PipelineInfoConfig
   loadingMergeInputSetUpdate: boolean
+  selectedStageData: StageSelectionData
 }
 
 function PipelineInputSetFormWrapper(props: PipelineInputSetFormWrapperProps): React.ReactElement | null {
@@ -199,7 +204,8 @@ function PipelineInputSetFormWrapper(props: PipelineInputSetFormWrapperProps): R
     template,
     executionIdentifier,
     resolvedPipeline,
-    loadingMergeInputSetUpdate
+    loadingMergeInputSetUpdate,
+    selectedStageData
   } = props
   const { getString } = useStrings()
 
@@ -228,6 +234,7 @@ function PipelineInputSetFormWrapper(props: PipelineInputSetFormWrapperProps): R
           isRunPipelineForm
           executionIdentifier={executionIdentifier}
           maybeContainerClass={existingProvide === 'provide' ? css.inputSetFormRunPipeline : ''}
+          selectedStageData={selectedStageData}
         />
       </>
     )

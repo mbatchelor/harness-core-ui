@@ -40,6 +40,7 @@ import type { AbstractStepFactory } from '../AbstractSteps/AbstractStepFactory'
 import { StepType } from '../PipelineSteps/PipelineStepInterface'
 import { getStageFromPipeline, getTemplatePath } from '../PipelineStudio/StepUtil'
 import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariablesExpression'
+import type { StageSelectionData, SelectedStageData } from '../../utils/runPipelineUtils'
 import css from './PipelineInputSetForm.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -57,6 +58,7 @@ export interface PipelineInputSetFormProps {
   allowableTypes: MultiTypeInputType[]
   viewTypeMetadata?: Record<string, boolean>
   gitAwareForTriggerEnabled?: boolean
+  selectedStageData?: StageSelectionData
 }
 
 export const stageTypeToIconMap: Record<string, IconName> = {
@@ -208,7 +210,8 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
     maybeContainerClass = '',
     executionIdentifier,
     viewTypeMetadata,
-    allowableTypes
+    allowableTypes,
+    selectedStageData
   } = props
   const { module } = useParams<Partial<PipelineType<PipelinePathProps>>>()
   const { getString } = useStrings()
@@ -220,11 +223,22 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
       : 'template.templateInputs'
     : path
 
-  const isCloneCodebaseEnabledAtLeastAtOneStage = originalPipeline?.stages?.some(
+  const filteredStages: StageElementWrapperConfig[] = selectedStageData?.allStagesSelected
+    ? originalPipeline?.stages || []
+    : (selectedStageData?.selectedStages?.map((selectedStage: SelectedStageData) =>
+        originalPipeline?.stages?.find(
+          stage =>
+            stage.stage?.identifier === selectedStage.stageIdentifier ||
+            stage.parallel?.some(parallelStage => parallelStage.stage?.identifier === selectedStage.stageIdentifier)
+        )
+      ) as StageElementWrapperConfig[])
+
+  const isCloneCodebaseEnabledAtLeastAtOneStage = filteredStages.some(
     stage =>
       Object.is(get(stage, 'stage.spec.cloneCodebase'), true) ||
       stage.parallel?.some(parallelStage => Object.is(get(parallelStage, 'stage.spec.cloneCodebase'), true))
   )
+
   const codebaseHasRuntimeInputs = isCodebaseFieldsRuntimeInputs(template)
   const { expressions } = useVariablesExpression()
 

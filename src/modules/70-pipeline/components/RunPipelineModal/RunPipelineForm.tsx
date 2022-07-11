@@ -775,6 +775,7 @@ function RunPipelineFormBasic({
                     setSelectedInputSets={setSelectedInputSets}
                     loading={false}
                     loadingMergeInputSetUpdate={false}
+                    selectedStageData={selectedStageData}
                   />
                 ) : (
                   <div className={css.editor}>

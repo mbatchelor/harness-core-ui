@@ -112,7 +112,7 @@ export const getConnectorRefWidth = (viewType: StepViewType | string): number =>
 
 export const isRuntimeInput = (str: unknown): boolean => typeof str === 'string' && str?.includes(RUNTIME_INPUT_VALUE)
 
-// need to check if this is enabled at least one stage in regular or in paralle
+// need to check if cloneCodebase is enabled in at least one sequential or parallel stage
 export const isCloneCodebaseEnabledAtLeastOneStage = (pipeline?: PipelineInfoConfig): boolean =>
   !!pipeline?.stages?.some(
     stage =>
