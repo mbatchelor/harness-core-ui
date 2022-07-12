@@ -272,7 +272,7 @@ function CICodebaseInputSetFormInternal({
     prCloneStrategy: prCloneStrategyOptions?.[0]?.value,
     memoryLimit: '500Mi',
     cpuLimit: '400m',
-    build: { spec: {} }
+    build: RUNTIME_INPUT_VALUE
   }
 
   const {
