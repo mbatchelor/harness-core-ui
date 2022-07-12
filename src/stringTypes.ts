@@ -402,6 +402,7 @@ export interface StringsMap {
   'common.instanceValidation.minimumCountPercentage': string
   'common.instanceValidation.required': string
   'common.invalid': string
+  'common.invalidIdentifiers': string
   'common.jexlCondition': string
   'common.jexlExpression': string
   'common.labelTestConnection': string

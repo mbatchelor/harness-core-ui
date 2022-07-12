@@ -45,7 +45,10 @@ export function IdentifierSchemaWithOutName(
     .trim()
     .matches(regexIdentifier, config?.regexErrorMsg ? config?.regexErrorMsg : getString('validation.validIdRegex'))
     .required(config?.requiredErrorMsg ? config?.requiredErrorMsg : getString('validation.identifierRequired'))
-    .notOneOf(illegalIdentifiers)
+    .notOneOf(
+      illegalIdentifiers,
+      getString('common.invalidIdentifiers', { identifiers: illegalIdentifiers.join(', ') })
+    )
 }
 
 export function IdentifierSchemaWithoutHook(
