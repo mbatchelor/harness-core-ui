@@ -87,7 +87,7 @@ const NotificationMethod: React.FC<StepProps<StepData> & NotificationChannelProp
                       name={`alertList.${index}.channelName`}
                       className={css.channelSelection}
                       placeholder={getString('ce.anomalyDetection.notificationAlerts.selectChannelPlaceholder')}
-                      data-testid={`notification-channel-${index}`}
+                      data-testid={`notification-channel`}
                     />
                     <FormInput.Text
                       name={`alertList.${index}.channelUrl`}
