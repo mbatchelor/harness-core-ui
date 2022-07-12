@@ -44,6 +44,7 @@ import type {
 import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { usePermission } from '@rbac/hooks/usePermission'
 import routes from '@common/RouteDefinitions'
 import {
   EntityGitDetails,
@@ -235,6 +236,22 @@ export function PipelineCanvas({
       openPipelineErrorsModal(yamlSchemaErrorWrapper?.schemaErrors)
     }
   }, [yamlSchemaErrorWrapper, isGitSyncEnabled, isPipelineRemote])
+
+  const [canExecute] = usePermission(
+    {
+      resourceScope: {
+        accountIdentifier: accountId,
+        orgIdentifier,
+        projectIdentifier
+      },
+      resource: {
+        resourceType: ResourceType.PIPELINE,
+        resourceIdentifier: pipeline?.identifier as string
+      },
+      permissions: [PermissionIdentifier.EXECUTE_PIPELINE]
+    },
+    [orgIdentifier, projectIdentifier, accountId, pipeline?.identifier]
+  )
 
   const { openDialog: openUnsavedChangesDialog } = useConfirmationDialog({
     cancelButtonText: getString('cancel'),
@@ -863,7 +880,11 @@ export function PipelineCanvas({
                 {isReadonly && (
                   <div className={css.readonlyAccessTag}>
                     <Icon name="eye-open" size={16} />
-                    <div className={css.readonlyAccessText}>{getString('common.viewAndExecutePermissions')}</div>
+                    {canExecute ? (
+                      <div className={css.readonlyAccessText}>{getString('common.viewAndExecutePermissions')}</div>
+                    ) : (
+                      <div className={css.readonlyAccessText}>{getString('common.readonlyPermissions')}</div>
+                    )}
                   </div>
                 )}
                 {isUpdated && !isReadonly && <div className={css.tagRender}>{getString('unsavedChanges')}</div>}
