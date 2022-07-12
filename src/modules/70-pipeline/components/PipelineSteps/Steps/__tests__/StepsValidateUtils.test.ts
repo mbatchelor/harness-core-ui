@@ -25,8 +25,7 @@ const strings = {
     validStepNameRegex: 'Step Name can only contain alphanumerics, spaces, _ and -',
     validKeyRegex: 'Keys can only contain alphanumerics and _ with an optional dot(.) in the middle',
     validOutputVariableRegex: 'Output variables can only contain alphanumerics and _',
-    illegalIdentifier:
-      'Identifier must not be one of the following values: or, and, eq, ne, lt, gt, le, ge, div, mod, not, null, true, false, new, var, return',
+    illegalIdentifier: 'common.invalidIdentifiers',
     uniqueStepAndServiceDependenciesId: 'Identifier should be unique across the steps and service dependencies',
     uniqueKeys: 'Keys should be unique',
     uniqueValues: 'Values should be unique',
@@ -38,7 +37,8 @@ const strings = {
       nameIsRequired: 'common.validation.nameIsRequired',
       namePatternIsNotValid: 'common.validation.namePatternIsNotValid',
       fieldIsRequired: 'common.validation.fieldIsRequired'
-    }
+    },
+    invalidIdentifiers: 'common.invalidIdentifiers'
   },
   pipeline: {
     stepCommonFields: {
