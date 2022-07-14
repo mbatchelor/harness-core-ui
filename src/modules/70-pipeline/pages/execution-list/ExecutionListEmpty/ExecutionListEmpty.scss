@@ -1,0 +1,44 @@
+.noDeploymentSection {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  .image {
+    width: 320px;
+    margin-bottom: 40px;
+  }
+  .noDeploymentText {
+    font-size: 20px !important;
+    font-weight: bold !important;
+    line-height: 28px !important;
+    color: var(--grey-600) !important;
+  }
+  .aboutDeployment {
+    font-size: 16px !important;
+    font-weight: normal !important;
+    line-height: 24px !important;
+    color: var(--grey-600) !important;
+  }
+}
+
+.createModalCss {
+  :global {
+    .bp3-overlay-backdrop,
+    .bp3-overlay {
+      left: 270px;
+    }
+  }
+  z-index: 2 !important;
+
+  div[data-testid='modaldialog-body'] {
+    padding-right: var(--spacing);
+    padding-top: var(--spacing-8);
+    overflow: hidden;
+  }
+
+  .noPipelineText {
+    line-height: 28px !important;
+    padding-bottom: var(--spacing-4);
+  }
+}

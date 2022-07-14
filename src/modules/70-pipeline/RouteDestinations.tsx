@@ -39,6 +39,7 @@ import PipelineDetails from '@pipeline/pages/pipeline-details/PipelineDetails'
 import PipelinesPage from '@pipeline/pages/pipelines/PipelinesPage'
 import { PipelineListPage } from '@pipeline/pages/pipeline-list/PipelineListPage'
 import DeploymentsList from '@pipeline/pages/deployments-list/DeploymentsList'
+import { ExecutionList } from '@pipeline/pages/execution-list/ExecutionListPage'
 import type { LicenseRedirectProps } from 'framework/LicenseStore/LicenseStoreContext'
 import '@pipeline/components/CommonPipelineStages/ApprovalStage'
 import '@pipeline/components/CommonPipelineStages/CustomStage'
@@ -316,6 +317,14 @@ export function PipelineRouteDestinations({
         path={routes.toDeployments({ ...accountPathProps, ...projectPathProps, ...moduleParams })}
       >
         <DeploymentsList />
+      </RouteWithLayout>
+      <RouteWithLayout
+        exact
+        licenseRedirectData={licenseRedirectData}
+        sidebarProps={sidebarProps}
+        path={routes.toExecutions({ ...accountPathProps, ...projectPathProps, ...moduleParams })}
+      >
+        <ExecutionList />
       </RouteWithLayout>
       <RouteWithLayout
         exact
