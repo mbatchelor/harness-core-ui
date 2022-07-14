@@ -27,6 +27,7 @@ export function createSplunkHealthSourcePayload(setupSource: SplunkHealthSourceI
     const { metricName, query, serviceInstance }: MapSplunkQueryToService = entry[1]
     splunkHealthSourcePayload.spec.queries.push({
       name: metricName,
+      identifier: metricName.split(' ').join('_'),
       query,
       serviceInstanceIdentifier: serviceInstance
     })

@@ -13,6 +13,8 @@ export interface SplunkQueryBuilderProps {
   onSubmit: (data: SplunkHealthSourceInfo) => Promise<void>
   onPrevious: () => void
   data: SplunkHealthSourceInfo
+  isTemplate?: boolean
+  expressions?: string[]
 }
 
 export type MapSplunkQueryToService = {
@@ -26,6 +28,7 @@ export interface SplunkQueryDefinition {
   name: string
   query: string
   serviceInstanceIdentifier?: string
+  identifier?: string
 }
 
 export type SplunkHealthSourceSpec = HealthSourceSpec & {

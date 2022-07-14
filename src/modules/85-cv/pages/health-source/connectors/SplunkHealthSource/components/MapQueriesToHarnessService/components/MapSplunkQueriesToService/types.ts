@@ -13,4 +13,7 @@ export interface MapSplunkQueriesToServiceProps {
   isQueryExecuted: boolean
   loading: boolean
   serviceInstance: string
+  isTemplate?: boolean
+  expressions?: string[]
+  isConnectorRuntimeOrExpression?: boolean
 }

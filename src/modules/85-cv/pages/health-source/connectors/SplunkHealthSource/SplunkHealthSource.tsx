@@ -18,10 +18,12 @@ import type { SplunkHealthSourceInfo } from './SplunkHealthSource.types'
 interface SplunkMonitoringSourceProps {
   data: any
   onSubmit: (formdata: SplunkHealthSourceInfo, UpdatedHealthSource: UpdatedHealthSource) => Promise<void>
+  isTemplate?: boolean
+  expressions?: string[]
 }
 
 export default function SplunkHealthSource(props: SplunkMonitoringSourceProps): JSX.Element {
-  const { data: sourceData, onSubmit } = props
+  const { data: sourceData, onSubmit, isTemplate, expressions } = props
   const allParams = useParams<ProjectPathProps & { identifier: string }>()
   const { onPrevious } = useContext(SetupSourceTabsContext)
   const requiredParams = omit(allParams, 'identifier')
@@ -40,6 +42,8 @@ export default function SplunkHealthSource(props: SplunkMonitoringSourceProps): 
       data={buildSplunkHealthSourceInfo(requiredParams, sourceData)}
       onSubmit={handleOnSubmit}
       onPrevious={() => onPrevious(sourceData)}
+      isTemplate={isTemplate}
+      expressions={expressions}
     />
   )
 }

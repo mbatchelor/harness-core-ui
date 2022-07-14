@@ -98,7 +98,7 @@ export const LoadSourceByType = ({
         }
         return <SplunkMetricsHealthSource data={data} onSubmit={onSubmit} />
       } else {
-        return <SplunkHealthSource data={data} onSubmit={onSubmit} />
+        return <SplunkHealthSource data={data} isTemplate={isTemplate} expressions={expressions} onSubmit={onSubmit} />
       }
     case HealthSourceTypes.SplunkMetric:
       if (!isSplunkMetricEnabled) {

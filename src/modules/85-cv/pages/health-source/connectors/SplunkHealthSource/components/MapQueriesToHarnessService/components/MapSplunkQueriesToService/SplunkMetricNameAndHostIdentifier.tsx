@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Container, FormInput } from '@wings-software/uicore'
+import { Container, FormInput, MultiTypeInputType } from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
 import { InputWithDynamicModalForJson } from '@cv/components/InputWithDynamicModalForJson/InputWithDynamicModalForJson'
 
@@ -15,7 +15,16 @@ import type { MapSplunkQueriesToServiceProps } from './types'
 import css from './SplunkMetricNameAndHostIdentifier.module.scss'
 
 export function SplunkMetricNameAndHostIdentifier(props: MapSplunkQueriesToServiceProps): JSX.Element {
-  const { onChange, sampleRecord, isQueryExecuted, loading, serviceInstance } = props
+  const {
+    onChange,
+    sampleRecord,
+    isQueryExecuted,
+    loading,
+    serviceInstance,
+    isConnectorRuntimeOrExpression,
+    isTemplate,
+    expressions
+  } = props
   const { getString } = useStrings()
   const isAddingIdentifiersDisabled = !isQueryExecuted || loading
 
@@ -25,18 +34,34 @@ export function SplunkMetricNameAndHostIdentifier(props: MapSplunkQueriesToServi
         label={getString('cv.monitoringSources.queryNameLabel')}
         name={MapSplunkToServiceFieldNames.METRIC_NAME}
       />
-      <InputWithDynamicModalForJson
-        onChange={onChange}
-        fieldValue={serviceInstance}
-        isQueryExecuted={isQueryExecuted}
-        isDisabled={isAddingIdentifiersDisabled}
-        sampleRecord={sampleRecord}
-        inputName={MapSplunkToServiceFieldNames.SERVICE_INSTANCE}
-        inputLabel={getString('cv.monitoringSources.gcoLogs.serviceInstance')}
-        noRecordModalHeader={getString('cv.monitoringSources.gcoLogs.newGCOLogsServiceInstance')}
-        noRecordInputLabel={getString('cv.monitoringSources.gcoLogs.gcoLogsServiceInstance')}
-        recordsModalHeader={getString('cv.monitoringSources.gcoLogs.selectPathForServiceInstance')}
-      />
+      {isTemplate && isConnectorRuntimeOrExpression ? (
+        <FormInput.MultiTextInput
+          name={MapSplunkToServiceFieldNames.SERVICE_INSTANCE}
+          label={getString('cv.monitoringSources.gcoLogs.serviceInstance')}
+          multiTextInputProps={{
+            expressions,
+            allowableTypes: isConnectorRuntimeOrExpression
+              ? [MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+              : [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+            onChange(value) {
+              onChange(MapSplunkToServiceFieldNames.SERVICE_INSTANCE, value as string)
+            }
+          }}
+        />
+      ) : (
+        <InputWithDynamicModalForJson
+          onChange={onChange}
+          fieldValue={serviceInstance}
+          isQueryExecuted={isQueryExecuted}
+          isDisabled={isAddingIdentifiersDisabled}
+          sampleRecord={sampleRecord}
+          inputName={MapSplunkToServiceFieldNames.SERVICE_INSTANCE}
+          inputLabel={getString('cv.monitoringSources.gcoLogs.serviceInstance')}
+          noRecordModalHeader={getString('cv.monitoringSources.gcoLogs.newGCOLogsServiceInstance')}
+          noRecordInputLabel={getString('cv.monitoringSources.gcoLogs.gcoLogsServiceInstance')}
+          recordsModalHeader={getString('cv.monitoringSources.gcoLogs.selectPathForServiceInstance')}
+        />
+      )}
     </Container>
   )
 }

@@ -11,4 +11,7 @@ export interface MapQueriesToHarnessServiceLayoutProps {
   formikProps: any
   connectorIdentifier: any
   onChange: (name: string, value: string | SelectOption | boolean) => void
+  isTemplate?: boolean
+  expressions?: string[]
+  isConnectorRuntimeOrExpression?: boolean
 }

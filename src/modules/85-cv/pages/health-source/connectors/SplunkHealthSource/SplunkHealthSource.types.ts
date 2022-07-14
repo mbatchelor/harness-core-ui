@@ -10,7 +10,7 @@ import type { MapSplunkQueryToService } from './components/MapQueriesToHarnessSe
 export interface SplunkHealthSourceInfo {
   name?: string
   identifier?: string
-  connectorRef?: string
+  connectorRef?: string | { value: string }
   isEdit?: boolean
   product: string
   type: string
