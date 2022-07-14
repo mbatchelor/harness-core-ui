@@ -291,7 +291,7 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
 
   const validationSchema = Yup.object().shape({
     artifactType: Yup.string().required(getString('validation.nameRequired')),
-    identifier: Yup.string().required('Required'),
+    identifier: Yup.string().required(getString('validation.nameRequired')),
 
     branch: Yup.string().when('gitFetchType', {
       is: 'Branch',

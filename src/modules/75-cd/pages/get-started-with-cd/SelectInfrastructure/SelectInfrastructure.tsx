@@ -17,15 +17,15 @@ import {
   FormikForm as Form,
   Accordion,
   FormInput,
-  FormError,
   useToaster,
   PageSpinner,
   getErrorInfoFromErrorObject
 } from '@harness/uicore'
 import type { FormikContextType, FormikProps } from 'formik'
-import { defaultTo, get, set } from 'lodash-es'
+import { defaultTo, get, isEmpty, set } from 'lodash-es'
 import produce from 'immer'
 import { useParams } from 'react-router-dom'
+import * as Yup from 'yup'
 import { useStrings } from 'framework/strings'
 
 import {
@@ -132,12 +132,11 @@ const SelectInfrastructureRef = (
 
   const openSetUpDelegateAccordion = (): boolean | undefined => {
     const validate = selectAuthenticationMethodRef?.current?.validate()
-    if (validate) {
+    if (validate && isEmpty(formikRef?.current?.errors)) {
       props.enableNextBtn()
       return true
     } else {
       props.disableNextBtn()
-
       return false
     }
   }
@@ -318,6 +317,30 @@ const SelectInfrastructureRef = (
     return <PageSpinner />
   }
 
+  const validationSchema = Yup.object().shape({
+    infraType: Yup.string().required(
+      getString('common.getStarted.plsChoose', {
+        field: `${getString('infrastructureText')}`
+      })
+    ),
+    envId: Yup.string().required(
+      getString('common.validation.fieldIsRequired', { name: getString('cd.getStartedWithCD.envName') })
+    ),
+
+    infraId: Yup.string().required(
+      getString('common.validation.fieldIsRequired', { name: getString('infrastructureText') })
+    ),
+    namespace: Yup.string().required(
+      getString('common.validation.fieldIsRequired', { name: getString('common.namespace') })
+    ),
+    connectorName: Yup.string().required(getString('validation.nameRequired')),
+    delegateType: Yup.string().required(
+      getString('connectors.chooseMethodForConnection', {
+        name: getString('connectors.k8sConnection')
+      })
+    )
+  })
+
   return (
     <Layout.Vertical width="80%">
       <Text font={{ variation: FontVariation.H4 }}>{getString('cd.getStartedWithCD.workloadDeploy')}</Text>
@@ -331,6 +354,7 @@ const SelectInfrastructureRef = (
         }}
         formName="cdInfrastructure"
         onSubmit={handleSubmit}
+        validationSchema={validationSchema}
       >
         {formikProps => {
           formikRef.current = formikProps
@@ -359,15 +383,6 @@ const SelectInfrastructureRef = (
                     setInfrastructureType(item)
                   }}
                 />
-                {formikProps.touched.infraType && !formikProps.values.infraType ? (
-                  <FormError
-                    className={defaultCss.marginTop}
-                    name={'infraType'}
-                    errorMessage={getString('common.getStarted.plsChoose', {
-                      field: `${getString('infrastructureText')}`
-                    })}
-                  />
-                ) : null}
               </Container>
               <Layout.Horizontal className={css.infraInputs}>
                 <FormInput.Text

@@ -11,7 +11,6 @@ import {
   Color,
   Container,
   FontVariation,
-  FormError,
   FormInput,
   Icon,
   Layout,
@@ -448,16 +447,7 @@ const SelectAuthenticationMethodRef = (
               intent={DelegateTypes.DELEGATE_IN_CLUSTER === formikProps.values.delegateType ? 'primary' : 'none'}
             />
           </Layout.Horizontal>
-          {formikProps.touched.delegateType && !formikProps.values.delegateType ? (
-            <Container padding={{ top: 'xsmall' }}>
-              <FormError
-                name={'delegateType'}
-                errorMessage={getString('connectors.chooseMethodForConnection', {
-                  name: getString('connectors.k8sConnection')
-                })}
-              />
-            </Container>
-          ) : null}
+
           {DelegateTypes.DELEGATE_OUT_CLUSTER === formikProps.values.delegateType ? (
             <Layout.Vertical margin={{ bottom: 'small' }}>
               <FormInput.Text
