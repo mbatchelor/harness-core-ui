@@ -42,6 +42,7 @@ export const splunkPayload = {
     queries: [
       {
         name: 'SPLUNK Logs Query',
+        identifier: 'SPLUNK_Logs_Query',
         query: 'error OR failed OR severe OR ( sourcetype=access_* ( 404 OR 500 OR 503 ) )',
         serviceInstanceIdentifier: '_sourcetype'
       }
