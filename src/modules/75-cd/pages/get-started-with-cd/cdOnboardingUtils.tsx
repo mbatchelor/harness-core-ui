@@ -18,6 +18,7 @@ export const newServiceState = {
     identifier: 'sample_service',
     description: '',
     tags: {},
+    gitOpsEnabled: false,
     serviceDefinition: {
       type: '' as ServiceDefinition['type'],
       spec: {}
@@ -44,8 +45,8 @@ export const newEnvironmentState = {
     infrastructureDefinition: {
       spec: {
         connectorRef: '',
-        namespace: ''
-        // releaseName: releasename-68140
+        namespace: '',
+        releaseName: 'release-<+INFRA_KEY>'
       }
     },
     data: {}

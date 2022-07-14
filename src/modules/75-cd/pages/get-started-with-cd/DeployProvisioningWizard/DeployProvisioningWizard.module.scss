@@ -159,7 +159,7 @@
 
 .accordion {
   :global(.Accordion--chevron) {
-    margin-left: 700px;
+    margin-left: auto;
     color: var(--grey-700);
   }
   :global(.Accordion--panel) {

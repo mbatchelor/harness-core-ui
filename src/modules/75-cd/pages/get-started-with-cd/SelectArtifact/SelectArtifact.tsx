@@ -35,7 +35,7 @@ import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import type { ManifestTypes } from '@pipeline/components/ManifestSelection/ManifestInterface'
 import { TestStatus } from '@common/components/TestConnectionWidget/TestConnectionWidget'
 import type { SelectGitProviderRef } from './SelectGitProvider'
-import { ArtifactProviders, ArtifactType, Hosting } from '../DeployProvisioningWizard/Constants'
+import { ACCOUNT_SCOPE_PREFIX, ArtifactProviders, ArtifactType, Hosting } from '../DeployProvisioningWizard/Constants'
 
 import { SelectGitProvider } from './SelectGitProvider'
 import { SelectRepository, SelectRepositoryRef } from './SelectRepository'
@@ -212,7 +212,11 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
         }
 
         set(manifestObj, 'manifest.spec.store.type', gitValues?.gitProvider?.type)
-        set(manifestObj, 'manifest.spec.store.spec.connectorRef', gitValues?.gitProvider?.type)
+        set(
+          manifestObj,
+          'manifest.spec.store.spec.connectorRef',
+          `${ACCOUNT_SCOPE_PREFIX}${gitValues?.gitProvider?.type}`
+        )
         return manifestObj
       }
 
@@ -388,7 +392,7 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
                   <Accordion.Panel
                     id="codeRepo"
                     summary={
-                      <Layout.Horizontal flex={{ alignItems: 'center' }}>
+                      <Layout.Horizontal flex={{ justifyContent: 'space-around' }}>
                         <Text font={{ variation: FontVariation.H5 }}>{getString('cd.getStartedWithCD.codeRepos')}</Text>
                         {openSelectRepoAccordion() ? (
                           <Icon name="success-tick" size={20} className={css.accordionStatus} />
@@ -411,7 +415,7 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
                   <Accordion.Panel
                     id="selectYourRepo"
                     summary={
-                      <Layout.Horizontal flex={{ alignItems: 'center' }}>
+                      <Layout.Horizontal flex={{ justifyContent: 'space-around' }}>
                         <Text font={{ variation: FontVariation.H5 }}>{getString('common.selectYourRepo')}</Text>
                         {openProvideManifestAccordion() ? (
                           <Icon name="success-tick" size={20} className={css.accordionStatus} />
@@ -436,7 +440,7 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
                   <Accordion.Panel
                     id="provideManifest"
                     summary={
-                      <Layout.Horizontal flex={{ alignItems: 'center' }}>
+                      <Layout.Horizontal flex={{ justifyContent: 'space-around' }}>
                         <Text font={{ variation: FontVariation.H5 }}>
                           {getString('cd.getStartedWithCD.provideManifest')}
                         </Text>

@@ -120,8 +120,9 @@ const SelectInfrastructureRef = (
     clientKeyPassphrase: undefined,
     clientKeyAlgo: get(infrastructureData, 'data.clientKeyAlgo') || '',
     clientKeyCACertificate: undefined,
-    connectorName: get(infrastructureData, 'infrastructureDefinition.spec.connectorRef') || '',
-    connectorIdentifier: '',
+    connectorName: get(infrastructureData, 'infrastructure.infrastructureDefinition.spec.connectorRef') || '',
+    connectorIdentifier:
+      get(infrastructureData, 'infrastructure.infrastructureDefinition.spec.connectorIdentifier') || '',
     delegateSelectors: []
   }
   const { loading: createEnvLoading, mutate: createEnvironment } = useCreateEnvironmentV2({
@@ -195,7 +196,8 @@ const SelectInfrastructureRef = (
       oidcCleintSecret,
       clientKey,
       clientKeyCertificate,
-      clientKeyAlgo
+      clientKeyAlgo,
+      connectorIdentifier
     } = values || {}
     if (!infraType) {
       showError(getString('common.validation.fieldIsRequired', { name: 'Infrastructure Type' }))
@@ -218,7 +220,6 @@ const SelectInfrastructureRef = (
       )
     })
     try {
-      // selectAuthenticationMethodRef?.current?.submitForm?.()?.then(async (authValues: any) => {
       const cleanEnvironmentData = cleanEnvironmentDataUtil(updatedContextEnvironment as ServiceRequestDTO)
 
       const response = await createEnvironment({ ...cleanEnvironmentData, orgIdentifier, projectIdentifier })
@@ -237,7 +238,9 @@ const SelectInfrastructureRef = (
           set(draft, 'type', infraType)
           set(draft, 'environmentRef', envId)
           set(draft, 'infrastructureDefinition.spec.namespace', namespace)
-          set(draft, 'infrastructureDefinition.spec.connectorRef', connectorName)
+          set(draft, 'infrastructureDefinition.spec.connectorRef', connectorIdentifier)
+          set(draft, 'data.connectorName', connectorName)
+          set(draft, 'data.connectorIdentifier', connectorIdentifier)
           set(draft, 'data.delegateType', delegateType)
           set(draft, 'data.masterUrl', masterUrl)
           set(draft, 'data.username', username)
@@ -290,10 +293,10 @@ const SelectInfrastructureRef = (
                   identifier: infraResponse.data?.infrastructure?.identifier
                 })
               )
+              return Promise.resolve(values)
             } else {
               throw infraResponse
             }
-            props?.onSuccess?.(refsData)
           })
           .catch(e => {
             showError(getErrorInfoFromErrorObject(e))
@@ -303,12 +306,10 @@ const SelectInfrastructureRef = (
       } else {
         throw response
       }
-      // })
     } catch (error: any) {
       showError(getRBACErrorMessage(error))
       return Promise.resolve({} as SelectInfrastructureInterface)
     }
-    return Promise.resolve({} as SelectInfrastructureInterface)
   }
 
   const borderBottom = <div className={defaultCss.repoborderBottom} />
