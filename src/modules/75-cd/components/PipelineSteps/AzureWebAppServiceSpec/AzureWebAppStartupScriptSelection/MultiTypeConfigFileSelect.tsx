@@ -125,7 +125,9 @@ export function MultiTypeConfigFileSelect(props: ConnectedMultiTypeFieldSelector
     type === MultiTypeInputType.RUNTIME &&
     getMultiTypeFromValue(value, allowedTypes, supportListOfExpressions) !== MultiTypeInputType.RUNTIME
   ) {
-    setType(getMultiTypeFromValue(value, allowedTypes, supportListOfExpressions))
+    value
+      ? setType(getMultiTypeFromValue(value, allowedTypes, supportListOfExpressions))
+      : ('FIXED' as MultiTypeInputType)
   }
 
   return isFieldInput ? (

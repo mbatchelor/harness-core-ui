@@ -96,38 +96,38 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
       >
         <div className={css.multiSelectField}>
           <div className={cx(css.group, css.withoutAligning)}>
-            {fileType === fileTypes.ENCRYPTED ? (
-              <MultiTypeConfigFileSelect
-                name={name}
-                label={''}
-                defaultValueToReset={''}
-                hideError={true}
-                style={{ flexGrow: 1, marginBottom: 0, marginTop: 0 }}
-                disableTypeSelection={false}
-                supportListOfExpressions={true}
-                defaultType={getMultiTypeFromValue(
-                  get(formik?.values, name),
-                  [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
-                  true
-                )}
-                allowedTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]}
-                expressionRender={() => {
-                  return (
-                    <ExpressionInput
-                      name={name}
-                      value={get(formik?.values, name)}
-                      disabled={false}
-                      inputProps={{ placeholder: EXPRESSION_INPUT_PLACEHOLDER }}
-                      items={expressions}
-                      onChange={val =>
-                        /* istanbul ignore next */
-                        formik?.setFieldValue(name, val)
-                      }
-                    />
-                  )
-                }}
-              >
-                <div className={css.fieldWrapper}>
+            <MultiTypeConfigFileSelect
+              name={name}
+              label={''}
+              defaultValueToReset={''}
+              hideError={true}
+              style={{ flexGrow: 1, marginBottom: 0, marginTop: 0 }}
+              disableTypeSelection={false}
+              supportListOfExpressions={true}
+              defaultType={getMultiTypeFromValue(
+                get(formik?.values, name),
+                [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
+                true
+              )}
+              allowedTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]}
+              expressionRender={() => {
+                return (
+                  <ExpressionInput
+                    name={name}
+                    value={get(formik?.values, name)}
+                    disabled={false}
+                    inputProps={{ placeholder: EXPRESSION_INPUT_PLACEHOLDER }}
+                    items={expressions}
+                    onChange={val =>
+                      /* istanbul ignore next */
+                      formik?.setFieldValue(name, val)
+                    }
+                  />
+                )
+              }}
+            >
+              <div className={css.fieldWrapper}>
+                {fileType === fileTypes.ENCRYPTED ? (
                   <FileSelectField
                     value={get(formik?.values, name)}
                     name={name}
@@ -135,49 +135,16 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
                       formik?.setFieldValue(name, newValue)
                     }}
                   />
-                </div>
-              </MultiTypeConfigFileSelect>
-            ) : (
-              <MultiTypeConfigFileSelect
-                name={name}
-                label={''}
-                defaultValueToReset={''}
-                hideError={true}
-                style={{ flexGrow: 1, marginBottom: 0, marginTop: 0 }}
-                disableTypeSelection={false}
-                supportListOfExpressions={true}
-                defaultType={getMultiTypeFromValue(
-                  get(formik?.values, name),
-                  [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
-                  true
-                )}
-                allowedTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]}
-                expressionRender={() => {
-                  return (
-                    <ExpressionInput
-                      name={name}
-                      value={get(formik?.values, name)}
-                      disabled={false}
-                      inputProps={{ placeholder: EXPRESSION_INPUT_PLACEHOLDER }}
-                      items={expressions}
-                      onChange={val =>
-                        /* istanbul ignore next */
-                        formik?.setFieldValue(name, val)
-                      }
-                    />
-                  )
-                }}
-              >
-                <div className={css.fieldWrapper}>
+                ) : (
                   <FileStoreSelectField
                     name={name}
                     onChange={newValue => {
                       formik?.setFieldValue(name, newValue)
                     }}
                   />
-                </div>
-              </MultiTypeConfigFileSelect>
-            )}
+                )}
+              </div>
+            </MultiTypeConfigFileSelect>
           </div>
         </div>
       </MultiTypeConfigFileSelect>
