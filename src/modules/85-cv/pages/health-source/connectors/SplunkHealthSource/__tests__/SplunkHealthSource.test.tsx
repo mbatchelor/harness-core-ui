@@ -29,7 +29,8 @@ jest.mock('@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs', (
 
 jest.mock('services/cv', () => ({
   useGetSplunkSavedSearches: jest.fn().mockImplementation(() => ({
-    data: []
+    data: [],
+    refetch: jest.fn()
   })),
   useGetSplunkSampleData: jest.fn().mockImplementation(() => ({
     data: mockedSplunkSampleData,

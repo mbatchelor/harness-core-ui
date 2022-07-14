@@ -35,7 +35,8 @@ const WrapperComponent = (props: MapQueriesToHarnessServiceLayoutProps): JSX.Ele
 
 jest.mock('services/cv', () => ({
   useGetSplunkSavedSearches: jest.fn().mockImplementation(() => ({
-    data: []
+    data: [],
+    refetch: jest.fn()
   })),
   useGetSplunkSampleData: jest.fn().mockImplementation(() => ({
     data: mockedSplunkSampleData,
