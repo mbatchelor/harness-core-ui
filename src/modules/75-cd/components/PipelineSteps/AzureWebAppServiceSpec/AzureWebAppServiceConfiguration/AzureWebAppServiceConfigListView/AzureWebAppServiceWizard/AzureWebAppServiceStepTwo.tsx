@@ -30,14 +30,13 @@ import type { ConnectorConfigDTO } from 'services/cd-ng'
 import { GitRepoName } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import { Connectors } from '@connectors/constants'
 import MultiConfigSelectField from '../../../AzureWebAppStartupScriptSelection/MultiConfigSelectField'
+import { fileTypes, HarnessFileStore } from '../../../AzureWebAppStartupScriptSelection/StartupScriptInterface.types'
 import {
   AppServiceConfigDataType,
   AzureWebAppServiceStepTwoProps,
   ConnectorTypes,
   gitFetchTypeList,
-  GitFetchTypes,
-  HarnessFileStore,
-  FILE_TYPE_VALUES
+  GitFetchTypes
 } from '../../AzureWebAppServiceConfig.types'
 
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -96,12 +95,12 @@ function AzureWebAppServiceStepTwo({
           MultiTypeInputType.RUNTIME
         ) {
           return {
-            fileType: FILE_TYPE_VALUES.FILE_STORE,
+            fileType: fileTypes.FILE_STORE,
             file: specValues?.files
           }
         }
         return {
-          fileType: FILE_TYPE_VALUES.FILE_STORE,
+          fileType: fileTypes.FILE_STORE,
           file: specValues?.files[0]
         }
       } else {
@@ -110,18 +109,18 @@ function AzureWebAppServiceStepTwo({
           MultiTypeInputType.RUNTIME
         ) {
           return {
-            fileType: FILE_TYPE_VALUES.ENCRYPTED,
+            fileType: fileTypes.ENCRYPTED,
             file: specValues?.secretFiles
           }
         }
         return {
-          fileType: FILE_TYPE_VALUES.ENCRYPTED,
+          fileType: fileTypes.ENCRYPTED,
           file: specValues.secretFiles[0]
         }
       }
     }
     return {
-      fileType: FILE_TYPE_VALUES.FILE_STORE,
+      fileType: fileTypes.FILE_STORE,
       file: ''
     }
   }
@@ -214,9 +213,9 @@ function AzureWebAppServiceStepTwo({
                       items={[
                         {
                           label: 'Plain Text',
-                          value: FILE_TYPE_VALUES.FILE_STORE
+                          value: fileTypes.FILE_STORE
                         },
-                        { label: getString('encrypted'), value: FILE_TYPE_VALUES.ENCRYPTED }
+                        { label: getString('encrypted'), value: fileTypes.ENCRYPTED }
                       ]}
                     />
                     <MultiConfigSelectField
@@ -229,7 +228,7 @@ function AzureWebAppServiceStepTwo({
                         disableTypeSelection: false,
                         label: (
                           <Text style={{ display: 'flex', alignItems: 'center', color: 'rgb(11, 11, 13)' }}>
-                            {formikProps.values.fileType === FILE_TYPE_VALUES.FILE_STORE
+                            {formikProps.values.fileType === fileTypes.FILE_STORE
                               ? getString('fileFolderPathText')
                               : getString('encrypted')}
                           </Text>

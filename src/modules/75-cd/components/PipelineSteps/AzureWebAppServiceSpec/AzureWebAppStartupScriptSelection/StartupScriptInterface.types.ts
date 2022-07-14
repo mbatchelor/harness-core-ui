@@ -64,7 +64,7 @@ export interface StartupScriptDataType {
 }
 
 export interface HarnessFileStore {
-  fileType: string | undefined
+  fileType: fileTypes
   file: string | undefined
 }
 
@@ -151,7 +151,7 @@ export interface StartupScriptPropType {
   handleStoreChange: (store: ConnectorTypes) => void
 }
 
-export enum FILE_TYPE_VALUES {
+export enum fileTypes {
   ENCRYPTED = 'encrypted',
   FILE_STORE = 'fileStore'
 }

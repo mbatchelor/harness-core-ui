@@ -24,7 +24,7 @@ import type { MultiTypeFieldSelectorProps } from '@common/components/MultiTypeFi
 
 import FileStoreSelectField from '@filestore/components/MultiTypeFileSelect/FileStoreSelect/FileStoreSelectField'
 import FileSelectField from '@filestore/components/MultiTypeFileSelect/EncryptedSelect/EncryptedFileSelectField'
-import { FILE_TYPE_VALUES } from './StartupScriptInterface.types'
+import { fileTypes } from './StartupScriptInterface.types'
 import MultiTypeConfigFileSelect from './MultiTypeConfigFileSelect'
 
 import css from './MultiConfigSelectField.module.scss'
@@ -96,7 +96,7 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
       >
         <div className={css.multiSelectField}>
           <div className={cx(css.group, css.withoutAligning)}>
-            {fileType === FILE_TYPE_VALUES.ENCRYPTED ? (
+            {fileType === fileTypes.ENCRYPTED ? (
               <MultiTypeConfigFileSelect
                 name={name}
                 label={''}

@@ -37,7 +37,7 @@ import {
   HarnessFileStore,
   StartupScriptDataType,
   StartupScriptWizardStepTwoProps,
-  FILE_TYPE_VALUES
+  fileTypes
 } from './StartupScriptInterface.types'
 import css from './StartupScriptSelection.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -94,12 +94,12 @@ function StartupScriptWizardStepTwo({
           MultiTypeInputType.RUNTIME
         ) {
           return {
-            fileType: FILE_TYPE_VALUES.FILE_STORE,
+            fileType: fileTypes.FILE_STORE,
             file: specValues?.files
           }
         }
         return {
-          fileType: FILE_TYPE_VALUES.FILE_STORE,
+          fileType: fileTypes.FILE_STORE,
           file: specValues?.files[0]
         }
       } else {
@@ -108,18 +108,18 @@ function StartupScriptWizardStepTwo({
           MultiTypeInputType.RUNTIME
         ) {
           return {
-            fileType: FILE_TYPE_VALUES.ENCRYPTED,
+            fileType: fileTypes.ENCRYPTED,
             file: specValues?.secretFiles
           }
         }
         return {
-          fileType: FILE_TYPE_VALUES.ENCRYPTED,
+          fileType: fileTypes.ENCRYPTED,
           file: specValues.secretFiles[0]
         }
       }
     }
     return {
-      fileType: FILE_TYPE_VALUES.FILE_STORE,
+      fileType: fileTypes.FILE_STORE,
       file: ''
     }
   }
@@ -214,9 +214,9 @@ function StartupScriptWizardStepTwo({
                       items={[
                         {
                           label: 'Plain Text',
-                          value: FILE_TYPE_VALUES.FILE_STORE
+                          value: fileTypes.FILE_STORE
                         },
-                        { label: getString('encrypted'), value: FILE_TYPE_VALUES.ENCRYPTED }
+                        { label: getString('encrypted'), value: fileTypes.ENCRYPTED }
                       ]}
                     />
                     <MultiConfigSelectField
@@ -229,7 +229,7 @@ function StartupScriptWizardStepTwo({
                         disableTypeSelection: false,
                         label: (
                           <Text style={{ display: 'flex', alignItems: 'center', color: 'rgb(11, 11, 13)' }}>
-                            {formikProps.values.fileType === FILE_TYPE_VALUES.FILE_STORE
+                            {formikProps.values.fileType === fileTypes.FILE_STORE
                               ? getString('fileFolderPathText')
                               : getString('encrypted')}
                           </Text>

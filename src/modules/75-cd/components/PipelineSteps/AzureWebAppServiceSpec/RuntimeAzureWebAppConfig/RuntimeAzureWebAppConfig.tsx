@@ -18,6 +18,7 @@ import { Connectors } from '@connectors/constants'
 import FileStoreList from '@filestore/components/FileStoreList/FileStoreList'
 import { isRuntimeMode } from '../../K8sServiceSpec/K8sServiceSpecHelper'
 import { AzureWebAppConfigProps, AzureWebAppConfigType } from '../AzureWebAppServiceSpecInterface.types'
+import { fileTypes } from '../AzureWebAppStartupScriptSelection/StartupScriptInterface.types'
 import css from './RuntimeAzureWebAppConfig.module.scss'
 
 const AzureWebAppConfigInputField = (props: AzureWebAppConfigProps): React.ReactElement | null => {
@@ -45,7 +46,7 @@ const AzureWebAppConfigInputField = (props: AzureWebAppConfigProps): React.React
       return (
         <FileStoreList
           name={`${props.path}.${props.type}.spec.secretFiles`}
-          type="encrypted"
+          type={fileTypes.ENCRYPTED}
           allowOnlyOne={true}
           formik={props.formik}
         />
@@ -54,7 +55,7 @@ const AzureWebAppConfigInputField = (props: AzureWebAppConfigProps): React.React
     return (
       <FileStoreList
         name={`${props.path}.${props.type}.spec.files`}
-        type="fileStore"
+        type={fileTypes.FILE_STORE}
         allowOnlyOne={true}
         formik={props.formik}
       />

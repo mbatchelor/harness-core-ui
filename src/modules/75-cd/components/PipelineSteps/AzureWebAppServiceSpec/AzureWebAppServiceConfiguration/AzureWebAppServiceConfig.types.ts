@@ -189,13 +189,3 @@ export interface AzureWebAppSelectionProps {
   isReadonlyServiceMode: boolean
   readonly: boolean
 }
-
-export interface HarnessFileStore {
-  fileType: string | undefined
-  file: string | undefined
-}
-
-export enum FILE_TYPE_VALUES {
-  ENCRYPTED = 'encrypted',
-  FILE_STORE = 'fileStore'
-}
