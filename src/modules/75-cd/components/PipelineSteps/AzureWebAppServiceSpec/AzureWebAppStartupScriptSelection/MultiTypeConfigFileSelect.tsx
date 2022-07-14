@@ -109,6 +109,16 @@ export function MultiTypeConfigFileSelect(props: ConnectedMultiTypeFieldSelector
     )
   }, [setType])
 
+  if (!allowedTypes.includes(type)) {
+    setType(MultiTypeInputType.FIXED)
+  }
+
+  React.useEffect(() => {
+    if (!value && type != MultiTypeInputType.EXPRESSION) {
+      setType(MultiTypeInputType.FIXED)
+    }
+  }, [value])
+
   function handleChange(newType: MultiTypeInputType): void {
     setType(newType)
     onTypeChange?.(newType)
