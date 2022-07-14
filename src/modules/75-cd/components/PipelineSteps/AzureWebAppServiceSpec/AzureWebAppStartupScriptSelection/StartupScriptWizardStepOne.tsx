@@ -129,6 +129,12 @@ function StartupScriptWizardStepOne({
       })),
     [connectorTypes]
   )
+  const validationSchema = () => {
+    if (selectedStore === 'Harness') return
+    return Yup.object().shape({
+      connectorRef: Yup.mixed().required(getString('pipelineSteps.build.create.connectorRequiredError'))
+    })
+  }
 
   return (
     <Layout.Vertical height={'inherit'} spacing="medium" className={css.optionsViewContainer}>
@@ -143,9 +149,7 @@ function StartupScriptWizardStepOne({
       <Formik
         initialValues={getInitialValues()}
         formName="startupScriptStore"
-        validationSchema={Yup.object().shape({
-          connectorRef: Yup.mixed().required(getString('pipelineSteps.build.create.connectorRequiredError'))
-        })}
+        validationSchema={validationSchema()}
         onSubmit={formData => {
           submitFirstStep({ ...formData })
         }}
@@ -170,7 +174,7 @@ function StartupScriptWizardStepOne({
                   />
                 </Layout.Horizontal>
 
-                {!isEmpty(formik.values.store) ? (
+                {!isEmpty(formik.values.store) && formik.values.store !== 'Harness' ? (
                   <Layout.Horizontal
                     spacing={'medium'}
                     flex={{ alignItems: 'flex-start', justifyContent: 'flex-start' }}
@@ -246,7 +250,11 @@ function StartupScriptWizardStepOne({
                   type="submit"
                   text={getString('continue')}
                   rightIcon="chevron-right"
-                  disabled={!shouldGotoNextStep(formik.values.connectorRef as ConnectorSelectedValue | string)}
+                  disabled={
+                    selectedStore !== 'Harness'
+                      ? !shouldGotoNextStep(formik.values.connectorRef as ConnectorSelectedValue | string)
+                      : false
+                  }
                 />
               </Layout.Horizontal>
             </Layout.Vertical>

@@ -29,12 +29,15 @@ import { Connectors } from '@connectors/constants'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
 import { GitRepoName } from '@pipeline/components/ManifestSelection/Manifesthelper'
+import MultiConfigSelectField from './MultiConfigSelectField'
 import {
   ConnectorTypes,
   gitFetchTypeList,
   GitFetchTypes,
+  HarnessFileStore,
   StartupScriptDataType,
-  StartupScriptWizardStepTwoProps
+  StartupScriptWizardStepTwoProps,
+  FILE_TYPE_VALUES
 } from './StartupScriptInterface.types'
 import css from './StartupScriptSelection.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -81,6 +84,46 @@ function StartupScriptWizardStepTwo({
     }
   }, [])
 
+  const getHarnessStoreInitialValues = (): HarnessFileStore => {
+    const specValues = get(initialValues, 'spec', null)
+
+    if (specValues) {
+      if (specValues?.files?.length) {
+        if (
+          getMultiTypeFromValue(specValues.files, [MultiTypeInputType.RUNTIME, MultiTypeInputType.FIXED], true) ===
+          MultiTypeInputType.RUNTIME
+        ) {
+          return {
+            fileType: FILE_TYPE_VALUES.FILE_STORE,
+            file: specValues?.files
+          }
+        }
+        return {
+          fileType: FILE_TYPE_VALUES.FILE_STORE,
+          file: specValues?.files[0]
+        }
+      } else {
+        if (
+          getMultiTypeFromValue(specValues.files, [MultiTypeInputType.RUNTIME, MultiTypeInputType.FIXED], true) ===
+          MultiTypeInputType.RUNTIME
+        ) {
+          return {
+            fileType: FILE_TYPE_VALUES.ENCRYPTED,
+            file: specValues?.secretFiles
+          }
+        }
+        return {
+          fileType: FILE_TYPE_VALUES.ENCRYPTED,
+          file: specValues.secretFiles[0]
+        }
+      }
+    }
+    return {
+      fileType: FILE_TYPE_VALUES.FILE_STORE,
+      file: ''
+    }
+  }
+
   const submitFormData = (formData: StartupScriptDataType & { store?: string; connectorRef?: string }): void => {
     const startupScript = {
       type: formData?.store as ConnectorTypes,
@@ -105,8 +148,117 @@ function StartupScriptWizardStepTwo({
         set(startupScript, 'spec.commitId', formData?.commitId)
       }
     }
-
     handleSubmit(startupScript)
+  }
+  const submitHarnessFormData = (formData: HarnessFileStore & { store?: string }): void => {
+    if (formData.fileType === 'fileStore') {
+      const startupScript = {
+        type: formData?.store as ConnectorTypes,
+        spec: {
+          files: [formData?.file]
+        }
+      }
+      if (formData.file === '<+input>') {
+        set(startupScript, 'spec.files', formData.file)
+      }
+      handleSubmit(startupScript)
+    } else {
+      const startupScript = {
+        type: formData?.store as ConnectorTypes,
+        spec: {
+          secretFiles: [formData?.file]
+        }
+      }
+      if (formData.file === '<+input>') {
+        set(startupScript, 'spec.secretFiles', formData.file)
+      }
+      handleSubmit(startupScript)
+    }
+  }
+
+  if (prevStepData?.store === 'Harness') {
+    return (
+      <Layout.Vertical height={'inherit'} spacing="medium" className={css.optionsViewContainer}>
+        <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
+          {stepName}
+        </Text>
+        <Formik
+          initialValues={getHarnessStoreInitialValues()}
+          formName="startupScriptDetails"
+          validationSchema={Yup.object().shape({
+            file: Yup.lazy(() => Yup.string().required())
+          })}
+          onSubmit={formData => {
+            submitHarnessFormData({
+              ...prevStepData,
+              ...formData
+            })
+          }}
+        >
+          {formikProps => {
+            return (
+              <Form>
+                <Layout.Vertical
+                  flex={{ justifyContent: 'space-between', alignItems: 'flex-start' }}
+                  className={cx(css.startupScriptForm, css.startupScriptWizard)}
+                >
+                  <div className={css.startupScriptWizard}>
+                    <FormInput.RadioGroup
+                      name="fileType"
+                      className={css.selectFileType}
+                      radioGroup={{ inline: true }}
+                      label={getString('pipeline.startupScript.selectFileType')}
+                      onChange={() => {
+                        formikProps.setFieldValue('file', '')
+                      }}
+                      items={[
+                        {
+                          label: 'Plain Text',
+                          value: FILE_TYPE_VALUES.FILE_STORE
+                        },
+                        { label: getString('encrypted'), value: FILE_TYPE_VALUES.ENCRYPTED }
+                      ]}
+                    />
+                    <MultiConfigSelectField
+                      name="file"
+                      fileType={formikProps.values.fileType as string}
+                      formik={formikProps}
+                      expressions={expressions}
+                      values={formikProps.values.file as string}
+                      multiTypeFieldSelectorProps={{
+                        disableTypeSelection: false,
+                        label: (
+                          <Text style={{ display: 'flex', alignItems: 'center', color: 'rgb(11, 11, 13)' }}>
+                            {formikProps.values.fileType === FILE_TYPE_VALUES.FILE_STORE
+                              ? getString('fileFolderPathText')
+                              : getString('encrypted')}
+                          </Text>
+                        )
+                      }}
+                    />
+                  </div>
+
+                  <Layout.Horizontal spacing="medium" className={css.saveBtn}>
+                    <Button
+                      variation={ButtonVariation.SECONDARY}
+                      text={getString('back')}
+                      icon="chevron-left"
+                      onClick={() => previousStep?.(prevStepData)}
+                    />
+                    <Button
+                      variation={ButtonVariation.PRIMARY}
+                      type="submit"
+                      text={getString('submit')}
+                      rightIcon="chevron-right"
+                    />
+                  </Layout.Horizontal>
+                </Layout.Vertical>
+              </Form>
+            )
+          }}
+        </Formik>
+      </Layout.Vertical>
+    )
   }
 
   return (

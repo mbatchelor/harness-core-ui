@@ -303,7 +303,9 @@ function StartupScriptListView({
           <section className={css.startupScriptList}>
             <div className={css.columnId}>
               <Icon inline name={ConnectorIcons[get(script, 'type') as ConnectorTypes]} size={20} />
-              {renderConnectorField(get(script, 'spec.connectorRef'), connectorName, color)}
+              {get(script, 'type') === 'Harness'
+                ? getString('harness')
+                : renderConnectorField(get(script, 'spec.connectorRef'), connectorName, color)}
             </div>
             {!!get(script, 'spec.paths')?.length && (
               <div className={css.columnId}>
@@ -316,6 +318,21 @@ function StartupScriptListView({
                 </Text>
               </div>
             )}
+            {get(script, 'spec.files')?.length && (
+              <div className={css.columnId}>
+                <Text lineClamp={1} width={300}>
+                  <span className={css.noWrap}>{get(script, 'spec.files')}</span>
+                </Text>
+              </div>
+            )}
+            {get(script, 'spec.secretFiles')?.length && (
+              <div className={css.columnId}>
+                <Text lineClamp={1} width={300}>
+                  <span className={css.noWrap}>{get(script, 'spec.secretFiles')}</span>
+                </Text>
+              </div>
+            )}
+
             {!isReadonly && (
               <span>
                 <Layout.Horizontal className={css.startupScriptListButton}>

@@ -22,6 +22,7 @@ declare const styles: {
   readonly optionsViewContainer: string
   readonly rowItem: string
   readonly saveBtn: string
+  readonly selectFileType: string
   readonly serviceConfigForm: string
   readonly serviceConfigList: string
   readonly serviceConfigListButton: string

@@ -21,28 +21,31 @@ import type {
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import type { StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 
-export const AllowedTypes: Array<ConnectorTypes> = ['Git', 'Github', 'GitLab', 'Bitbucket']
-export type ConnectorTypes = 'Git' | 'Github' | 'GitLab' | 'Bitbucket'
+export const AllowedTypes: Array<ConnectorTypes> = ['Git', 'Github', 'GitLab', 'Bitbucket', 'Harness']
+export type ConnectorTypes = 'Git' | 'Github' | 'GitLab' | 'Bitbucket' | 'Harness'
 
 export const ConnectorIcons: Record<string, IconName> = {
   Git: 'service-github',
   Github: 'github',
   GitLab: 'service-gotlab',
-  Bitbucket: 'bitbucket'
+  Bitbucket: 'bitbucket',
+  Harness: 'harness'
 }
 
 export const ConnectorMap: Record<string, ConnectorInfoDTO['type']> = {
   Git: Connectors.GIT,
   Github: Connectors.GITHUB,
   GitLab: Connectors.GITLAB,
-  Bitbucket: Connectors.BITBUCKET
+  Bitbucket: Connectors.BITBUCKET,
+  Harness: Connectors.HARNESS
 }
 
 export const ConnectorLabelMap: Record<ConnectorTypes, StringKeys> = {
   Git: 'pipeline.manifestType.gitConnectorLabel',
   Github: 'common.repo_provider.githubLabel',
   GitLab: 'common.repo_provider.gitlabLabel',
-  Bitbucket: 'pipeline.manifestType.bitBucketLabel'
+  Bitbucket: 'pipeline.manifestType.bitBucketLabel',
+  Harness: 'pipeline.manifestType.gitConnectorLabel'
 }
 
 export interface StartupScriptSelectionProps {
@@ -58,6 +61,11 @@ export interface StartupScriptDataType {
   gitFetchType: 'Branch' | 'Commit'
   paths: string | string[] | undefined
   repoName?: string | undefined
+}
+
+export interface HarnessFileStore {
+  fileType: string | undefined
+  file: string | undefined
 }
 
 export interface StepChangeData<SharedObject> {
@@ -141,4 +149,9 @@ export interface StartupScriptPropType {
   initialValues: StartupScriptWizardInitData
   handleConnectorViewChange: () => void
   handleStoreChange: (store: ConnectorTypes) => void
+}
+
+export enum FILE_TYPE_VALUES {
+  ENCRYPTED = 'encrypted',
+  FILE_STORE = 'fileStore'
 }

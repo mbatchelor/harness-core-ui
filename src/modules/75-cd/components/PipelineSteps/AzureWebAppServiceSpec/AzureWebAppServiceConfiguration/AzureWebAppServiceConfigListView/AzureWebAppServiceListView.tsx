@@ -409,7 +409,9 @@ function AzureWebAppListView({
             </div>
             <div className={css.columnId}>
               <Icon inline name={ConnectorIcons[currentOption?.type as ConnectorTypes]} size={20} />
-              {renderConnectorField(selectedConnectorRef, connectorName, color)}
+              {get(currentOption, 'type') === 'Harness'
+                ? getString('harness')
+                : renderConnectorField(get(currentOption, 'spec.connectorRef'), connectorName, color)}
             </div>
             {!!get(currentOption, 'spec.paths')?.length && (
               <div>
@@ -422,6 +424,21 @@ function AzureWebAppListView({
                 </Text>
               </div>
             )}
+            {get(currentOption, 'spec.files')?.length && (
+              <div className={css.columnId}>
+                <Text lineClamp={1} width={300}>
+                  <span className={css.noWrap}>{get(currentOption, 'spec.files')}</span>
+                </Text>
+              </div>
+            )}
+            {get(currentOption, 'spec.secretFiles')?.length && (
+              <div className={css.columnId}>
+                <Text lineClamp={1} width={300}>
+                  <span className={css.noWrap}>{get(currentOption, 'spec.secretFiles')}</span>
+                </Text>
+              </div>
+            )}
+
             {!isReadonly && (
               <span>
                 <Layout.Horizontal className={css.serviceConfigListButton}>

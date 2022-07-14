@@ -1211,3 +1211,5 @@ startupScript:
   fileDetails: '{{$.pipeline.startupScript.name}} File Details'
   fileSource: '{{$.pipeline.startupScript.name}} File Source'
   scriptFilePath: 'Script File Path'
+  selectFileType: 'Select file type'
+  fileValidation: 'file is required'
