@@ -266,11 +266,11 @@ export class AmazonS3ArtifactSource extends ArtifactSourceBase<AmazonS3ContentPr
   }
 
   isBucketSelectionDisabled(props: ArtifactSourceRenderProps): boolean {
-    const { initialValues, artifactPath, artifact, path } = props
+    const { initialValues, artifactPath, artifact } = props
 
     const isConnectorPresent = getDefaultQueryParam(
       artifact?.spec?.connectorRef,
-      get({ stages: initialValues }, `${path}.artifacts.${artifactPath}.spec.connectorRef`, '')
+      get(initialValues, `artifacts.${artifactPath}.spec.connectorRef`, '')
     )
     return !isConnectorPresent
   }
