@@ -213,7 +213,7 @@ function StartupScriptWizardStepTwo({
                       }}
                       items={[
                         {
-                          label: 'Plain Text',
+                          label: getString('pipeline.startupScript.plainText'),
                           value: fileTypes.FILE_STORE
                         },
                         { label: getString('encrypted'), value: fileTypes.ENCRYPTED }
@@ -249,6 +249,7 @@ function StartupScriptWizardStepTwo({
                       variation={ButtonVariation.PRIMARY}
                       type="submit"
                       text={getString('submit')}
+                      disabled={formikProps.values.file ? false : true}
                       rightIcon="chevron-right"
                     />
                   </Layout.Horizontal>

@@ -3490,6 +3490,7 @@ export interface StringsMap {
   'pipeline.startupScript.fileSource': string
   'pipeline.startupScript.fileValidation': string
   'pipeline.startupScript.name': string
+  'pipeline.startupScript.plainText': string
   'pipeline.startupScript.scriptFilePath': string
   'pipeline.startupScript.selectFileType': string
   'pipeline.startupScript.subtitle': string

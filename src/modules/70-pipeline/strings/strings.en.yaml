@@ -1213,3 +1213,4 @@ startupScript:
   scriptFilePath: 'Script File Path'
   selectFileType: 'Select file type'
   fileValidation: 'file is required'
+  plainText: 'Plain Text'
