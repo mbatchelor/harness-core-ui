@@ -14,7 +14,10 @@ import {
   VisualYamlSelectedView as SelectedView,
   Container,
   GridListToggle,
-  useToaster
+  useToaster,
+  DropDown,
+  Color,
+  SelectOption
 } from '@harness/uicore'
 import { useHistory, useParams } from 'react-router-dom'
 import { useModalHook } from '@harness/use-modal'
@@ -33,6 +36,8 @@ import { useGetCommunity } from '@common/utils/utils'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { NewEditServiceModal } from '@cd/components/PipelineSteps/DeployServiceStep/NewEditServiceModal'
 import { FeatureFlag } from '@common/featureFlags'
+import { Sort, SortFields } from '@pipeline/pages/pipelines/PipelinesPage'
+import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import ServicesGridView from '../ServicesGridView/ServicesGridView'
 import ServicesListView from '../ServicesListView/ServicesListView'
 import { ServiceTabs } from '../utils/ServiceUtils'
@@ -46,6 +51,41 @@ export const ServicesListPage: React.FC = () => {
   const { showError } = useToaster()
   const { fetchDeploymentList } = useServiceStore()
   const history = useHistory()
+
+  const sortOptions = React.useMemo(() => {
+    return [
+      {
+        label: getString('lastUpdatedSort'),
+        value: SortFields.LastUpdatedAt
+      },
+      {
+        label: getString('AZ09'),
+        value: SortFields.AZ09
+      },
+
+      {
+        label: getString('ZA90'),
+        value: SortFields.ZA90
+      }
+    ]
+  }, [])
+
+  const { preference: savedSortOption, setPreference: setSavedSortOption } = usePreferenceStore<string[] | undefined>(
+    PreferenceScope.USER,
+    'sortOption'
+  )
+  const opt = (sortOption: string[]) => {
+    if (sortOption[0] === SortFields.Name && sortOption[1] === Sort.ASC) {
+      return 1
+    } else if (sortOption[0] === SortFields.Name) {
+      return 2
+    }
+    return 0
+  }
+  // const defaultSortIndex = sortOptions.findIndex(i => savedSortOption && i.value === savedSortOption[0])
+  const [sort, setSort] = useState<string[]>(savedSortOption || [SortFields.LastUpdatedAt, Sort.DESC])
+
+  const [selectedSort, setSelectedSort] = useState<SelectOption>(sortOptions[opt(sort)])
 
   const [view, setView] = useState(Views.LIST)
   const [page, setPage] = useState(0)
@@ -66,6 +106,23 @@ export const ServicesListPage: React.FC = () => {
     }
   }, [isEdit])
 
+  const onDropDownChange = React.useCallback(
+    item => {
+      if (item.value === SortFields.AZ09) {
+        setSort([SortFields.Name, Sort.ASC])
+        setSavedSortOption([SortFields.Name, Sort.ASC])
+      } else if (item.value === SortFields.ZA90) {
+        setSort([SortFields.Name, Sort.DESC])
+        setSavedSortOption([SortFields.Name, Sort.DESC])
+      } else {
+        setSort([SortFields.LastUpdatedAt, Sort.DESC])
+        setSavedSortOption([SortFields.LastUpdatedAt, Sort.DESC])
+      }
+      setPage(0)
+      setSelectedSort(item)
+    },
+    [setSort, setPage]
+  )
   const goToServiceDetails = useCallback(
     (selectedService: ServiceResponseDTO): void => {
       if (isCommunity) {
@@ -147,13 +204,13 @@ export const ServicesListPage: React.FC = () => {
     ),
     [fetchDeploymentList, orgIdentifier, projectIdentifier, mode, isEdit, serviceDetails]
   )
-
   const queryParams: GetServiceListQueryParams = {
     accountIdentifier: accountId,
     orgIdentifier,
     projectIdentifier,
     size: 10,
-    page: page
+    page: page,
+    sort
   }
 
   const {
@@ -161,7 +218,8 @@ export const ServicesListPage: React.FC = () => {
     data: serviceList,
     refetch
   } = useGetServiceList({
-    queryParams
+    queryParams,
+    queryParamStringifyOptions: { arrayFormat: 'comma' }
   })
 
   useEffect(() => {
@@ -192,8 +250,19 @@ export const ServicesListPage: React.FC = () => {
               setMode(SelectedView.VISUAL)
             }}
           />
-
-          <GridListToggle initialSelectedView={Views.LIST} onViewToggle={setView} />
+          <Layout.Horizontal className={css.sortClass}>
+            <DropDown
+              items={sortOptions}
+              value={selectedSort.value.toString()}
+              filterable={false}
+              width={180}
+              icon={'main-sort'}
+              iconProps={{ size: 16, color: Color.GREY_400 }}
+              onChange={onDropDownChange}
+              usePortal
+            />
+            <GridListToggle initialSelectedView={Views.LIST} onViewToggle={setView} />
+          </Layout.Horizontal>
         </Layout.Horizontal>
 
         <Layout.Vertical

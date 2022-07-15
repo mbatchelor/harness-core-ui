@@ -30,19 +30,16 @@ const ServicesListView = (props: ServicesListViewProps): React.ReactElement => {
       <Container className={css.masonry} style={{ height: 'calc(100% - 66px)', width: '100%' }}>
         <TableV2<any>
           className={css.table}
-          sortable
           columns={[
             {
               Header: 'SERVICE',
               id: 'name',
-              accessor: 'name',
               width: '60%',
               Cell: ServiceName
             },
             {
               Header: 'DESCRIPTION',
               id: 'destination',
-              accessor: 'description',
               width: '35%',
               Cell: ServiceDescription
             },

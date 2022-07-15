@@ -63,3 +63,9 @@
   --layout-spacing: var(--spacing-small) !important;
   padding-top: var(--spacing-7) !important;
 }
+
+.sortClass {
+  :nth-child(2) {
+    padding-left: var(--spacing-4);
+  }
+}

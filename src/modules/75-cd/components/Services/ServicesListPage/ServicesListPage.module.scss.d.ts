@@ -15,6 +15,7 @@ declare const styles: {
   readonly header: string
   readonly pageBody: string
   readonly separator: string
+  readonly sortClass: string
   readonly yamlToggle: string
 }
 export default styles
