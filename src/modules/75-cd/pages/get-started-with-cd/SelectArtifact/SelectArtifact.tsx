@@ -106,7 +106,6 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
     const gitTestConnectionStatus = isEqual(get(serviceData, 'data.gitValues'), gitValues)
       ? get(serviceData, 'data.gitConnectionStatus')
       : selectGitProviderRef.current?.testConnectionStatus
-    selectGitProviderRef.current?.testConnectionStatus
     const updatedContextService = produce(serviceData as NGServiceConfig, draft => {
       set(draft, 'data.gitValues', gitValues)
       set(draft, 'data.manifestValues', manifestValues)

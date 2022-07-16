@@ -197,7 +197,8 @@ const SelectInfrastructureRef = (
       clientKey,
       clientKeyCertificate,
       clientKeyAlgo,
-      connectorIdentifier
+      connectorIdentifier,
+      authType
     } = values || {}
     if (!infraType) {
       showError(getString('common.validation.fieldIsRequired', { name: 'Infrastructure Type' }))
@@ -241,6 +242,7 @@ const SelectInfrastructureRef = (
           set(draft, 'infrastructureDefinition.spec.connectorRef', connectorIdentifier)
           set(draft, 'data.connectorName', connectorName)
           set(draft, 'data.connectorIdentifier', connectorIdentifier)
+          set(draft, 'data.authType', authType)
           set(draft, 'data.delegateType', delegateType)
           set(draft, 'data.masterUrl', masterUrl)
           set(draft, 'data.username', username)
@@ -327,7 +329,6 @@ const SelectInfrastructureRef = (
     envId: Yup.string().required(
       getString('common.validation.fieldIsRequired', { name: getString('cd.getStartedWithCD.envName') })
     ),
-
     infraId: Yup.string().required(
       getString('common.validation.fieldIsRequired', { name: getString('infrastructureText') })
     ),
@@ -362,6 +363,7 @@ const SelectInfrastructureRef = (
           return (
             <Form>
               <Container className={css.workloadType}>
+                {props.disableNextBtn()}
                 <CardSelect
                   data={InfrastructureTypes}
                   cornerSelected={true}

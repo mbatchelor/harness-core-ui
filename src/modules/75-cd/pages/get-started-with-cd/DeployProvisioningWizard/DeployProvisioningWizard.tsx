@@ -19,6 +19,7 @@ import { createPipelineV2Promise, ResponsePipelineSaveResponse } from 'services/
 import { Status } from '@common/utils/Constants'
 import routes from '@common/RouteDefinitions'
 import type { UserRepoResponse } from 'services/cd-ng'
+import { StringUtils } from '@common/exports'
 import {
   WizardStep,
   StepStatus,
@@ -33,7 +34,6 @@ import { SelectArtifact, SelectArtifactRef } from '../SelectArtifact/SelectArtif
 import { useCDOnboardingContext } from '../CDOnboardingStore'
 import { DEFAULT_PIPELINE_PAYLOAD, getUniqueEntityIdentifier } from '../cdOnboardingUtils'
 import css from './DeployProvisioningWizard.module.scss'
-import { StringUtils } from '@common/exports'
 
 export interface PipelineRefPayload {
   serviceRef: string

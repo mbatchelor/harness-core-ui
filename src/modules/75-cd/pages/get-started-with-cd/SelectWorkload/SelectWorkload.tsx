@@ -17,7 +17,6 @@ import {
   Container,
   Formik,
   FormikForm as Form,
-  FormError,
   FormInput,
   PageSpinner,
   useToaster
@@ -26,8 +25,8 @@ import type { FormikContextType, FormikProps } from 'formik'
 import { get, isEmpty, set } from 'lodash-es'
 import produce from 'immer'
 import { useParams } from 'react-router-dom'
+import * as Yup from 'yup'
 import { useStrings } from 'framework/strings'
-
 import { NGServiceConfig, ServiceRequestDTO, useCreateServiceV2 } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
@@ -44,6 +43,7 @@ import css from '../DeployProvisioningWizard/DeployProvisioningWizard.module.scs
 
 export interface SelectWorkloadRef {
   submitForm?: FormikProps<SelectWorkloadInterface>['submitForm']
+  getErrors?: () => FormikProps<SelectWorkloadInterface>['errors']
 }
 export interface SelectWorkloadInterface {
   workloadType?: WorkloadType
@@ -157,6 +157,20 @@ const SelectWorkloadRef = (props: SelectWorkloadProps, forwardRef: SelectWorkloa
     return Promise.resolve({} as SelectWorkloadInterface)
   }
 
+  const validationSchema = Yup.object().shape({
+    workloadType: Yup.string().required(getString('cd.workloadRequired')),
+    serviceDeploymentType: Yup.string().required(
+      getString('fieldRequired', {
+        field: getString('deploymentTypeText')
+      })
+    ),
+    serviceRef: Yup.string().required(
+      getString('fieldRequired', {
+        field: getString('cd.serviceName')
+      })
+    )
+  })
+
   return (
     <Layout.Vertical width="70%">
       <Text font={{ variation: FontVariation.H4 }}>{getString('cd.getStartedWithCD.workloadDeploy')}</Text>
@@ -168,6 +182,7 @@ const SelectWorkloadRef = (props: SelectWorkloadProps, forwardRef: SelectWorkloa
         }}
         formName="cdWorkload-provider"
         onSubmit={handleSubmit}
+        validationSchema={validationSchema}
       >
         {formikProps => {
           formikRef.current = formikProps
@@ -195,13 +210,6 @@ const SelectWorkloadRef = (props: SelectWorkloadProps, forwardRef: SelectWorkloa
                     setWorkloadType(item)
                   }}
                 />
-                {formikProps.touched.workloadType && !formikProps.values.workloadType ? (
-                  <FormError
-                    name={'workloadType'}
-                    errorMessage={getString('cd.workloadRequired')}
-                    className={css.marginTop}
-                  />
-                ) : null}
 
                 <Container className={cx({ [css.borderBottom]: workloadType })} />
               </Container>
@@ -234,17 +242,6 @@ const SelectWorkloadRef = (props: SelectWorkloadProps, forwardRef: SelectWorkloa
                       }}
                     />
 
-                    {formikProps.touched.serviceDeploymentType &&
-                    formikProps.values.serviceDeploymentType === undefined ? (
-                      <FormError
-                        name={'serviceDeploymentType'}
-                        className={css.marginTop}
-                        errorMessage={getString('fieldRequired', {
-                          field: getString('deploymentTypeText')
-                        })}
-                      />
-                    ) : null}
-
                     {serviceDeploymentType ? (
                       <>
                         <Container className={css.borderBottom} />
@@ -259,14 +256,6 @@ const SelectWorkloadRef = (props: SelectWorkloadProps, forwardRef: SelectWorkloa
                             name="serviceRef"
                             className={css.formInput}
                           />
-                          {formikProps.values.serviceRef === '' ? (
-                            <FormError
-                              name={'serviceRef'}
-                              errorMessage={getString('fieldRequired', {
-                                field: getString('cd.serviceName')
-                              })}
-                            />
-                          ) : null}
                         </Container>
                       </>
                     ) : null}

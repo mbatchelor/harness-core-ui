@@ -89,7 +89,6 @@ interface SelectAuthenticationMethodProps {
   disableNextBtn: () => void
   enableNextBtn: () => void
   authValues?: SelectAuthenticationMethodInterface
-
   onSuccess?: (value: any) => void
   formikProps: FormikProps<any>
 }
@@ -320,99 +319,105 @@ const SelectAuthenticationMethodRef = (
     }
   ]
 
-  const renderK8AuthForm = useCallback((): JSX.Element => {
-    switch (formikProps.values.authType) {
-      case AuthTypes.USER_PASSWORD:
-        return (
-          <Container width={'42%'}>
-            <TextReference
-              name="username"
-              stringId="username"
-              type={formikProps.values.username ? formikProps.values.username?.type : ValueType.TEXT}
-            />
-            <SecretInput name={'password'} label={getString('password')} />
-          </Container>
-        )
-      case AuthTypes.SERVICE_ACCOUNT:
-        return (
-          <Container className={css.authFormField}>
-            <SecretInput name={'serviceAccountToken'} label={getString('connectors.k8.serviceAccountToken')} />
-            <SecretInput name={'clientKeyCACertificate'} label={getString('connectors.k8.clientKeyCACertificate')} />
-          </Container>
-        )
-      case AuthTypes.OIDC:
-        return (
-          <>
-            <FormInput.Text
-              name="oidcIssuerUrl"
-              label={getString('connectors.k8.OIDCIssuerUrl')}
-              className={css.authFormField}
-            />
-            <Container flex={{ justifyContent: 'flex-start' }}>
-              <Container width={'42%'}>
-                <TextReference
-                  name="oidcUsername"
-                  stringId="connectors.k8.OIDCUsername"
-                  type={formikProps.values.oidcUsername ? formikProps.values.oidcUsername.type : ValueType.TEXT}
-                />
-
-                <SecretInput name={'oidcPassword'} label={getString('connectors.k8.OIDCPassword')} />
-              </Container>
-
-              <Container width={'42%'} margin={{ top: 'medium', left: 'xxlarge' }}>
-                <SecretInput name={'oidcCleintId'} label={getString('connectors.k8.OIDCClientId')} />
-                <SecretInput name={'oidcCleintSecret'} label={getString('connectors.k8.clientSecretOptional')} />
-              </Container>
+  const renderK8AuthForm = useCallback(
+    (_formikProps: FormikProps<SelectAuthenticationMethodInterface>): JSX.Element => {
+      switch (_formikProps.values.authType) {
+        case AuthTypes.USER_PASSWORD:
+          return (
+            <Container width={'42%'}>
+              <TextReference
+                name="username"
+                stringId="username"
+                type={_formikProps.values.username ? _formikProps.values.username?.type : ValueType.TEXT}
+              />
+              <SecretInput name={'password'} label={getString('password')} />
             </Container>
-
-            <FormInput.Text
-              name="oidcScopes"
-              label={getString('connectors.k8.OIDCScopes')}
-              className={css.authFormField}
-            />
-          </>
-        )
-
-      case AuthTypes.CLIENT_KEY_CERT:
-        return (
-          <>
-            <Container flex={{ justifyContent: 'flex-start' }}>
-              <Container className={css.authFormField}>
-                <SecretInput name={'clientKey'} label={getString('connectors.k8.clientKey')} />
-                <SecretInput name={'clientKeyCertificate'} label={getString('connectors.k8.clientCertificate')} />
-              </Container>
-
-              <Container className={css.authFormField} margin={{ left: 'xxlarge' }}>
-                <SecretInput name={'clientKeyPassphrase'} label={getString('connectors.k8.clientKeyPassphrase')} />
-                <FormInput.Select
-                  items={CLIENT_KEY_ALGO_OPTIONS}
-                  name="clientKeyAlgo"
-                  label={getString('connectors.k8.clientKeyAlgorithm')}
-                  value={
-                    // If we pass the value as undefined, formik will kick in and value will be updated as per uicore logic
-                    // If we've added a custom value, then just add it as a label value pair
-                    CLIENT_KEY_ALGO_OPTIONS.find(opt => opt.value === formikProps.values.clientKeyAlgo)
-                      ? undefined
-                      : { label: formikProps.values.clientKeyAlgo, value: formikProps.values.clientKeyAlgo }
-                  }
-                  selectProps={{
-                    allowCreatingNewItems: true,
-                    inputProps: {
-                      placeholder: getString('connectors.k8.clientKeyAlgorithmPlaceholder')
-                    }
-                  }}
-                />
-              </Container>
-            </Container>
-            <Container>
+          )
+        case AuthTypes.SERVICE_ACCOUNT:
+          return (
+            <Container className={css.authFormField}>
+              <SecretInput name={'serviceAccountToken'} label={getString('connectors.k8.serviceAccountToken')} />
               <SecretInput name={'clientKeyCACertificate'} label={getString('connectors.k8.clientKeyCACertificate')} />
             </Container>
-          </>
-        )
-      default:
-        return <></>
-    }
-  }, [])
+          )
+        case AuthTypes.OIDC:
+          return (
+            <>
+              <FormInput.Text
+                name="oidcIssuerUrl"
+                label={getString('connectors.k8.OIDCIssuerUrl')}
+                className={css.authFormField}
+              />
+              <Container flex={{ justifyContent: 'flex-start' }}>
+                <Container width={'42%'}>
+                  <TextReference
+                    name="oidcUsername"
+                    stringId="connectors.k8.OIDCUsername"
+                    type={_formikProps.values.oidcUsername ? _formikProps.values.oidcUsername.type : ValueType.TEXT}
+                  />
+
+                  <SecretInput name={'oidcPassword'} label={getString('connectors.k8.OIDCPassword')} />
+                </Container>
+
+                <Container width={'42%'} margin={{ top: 'medium', left: 'xxlarge' }}>
+                  <SecretInput name={'oidcCleintId'} label={getString('connectors.k8.OIDCClientId')} />
+                  <SecretInput name={'oidcCleintSecret'} label={getString('connectors.k8.clientSecretOptional')} />
+                </Container>
+              </Container>
+
+              <FormInput.Text
+                name="oidcScopes"
+                label={getString('connectors.k8.OIDCScopes')}
+                className={css.authFormField}
+              />
+            </>
+          )
+
+        case AuthTypes.CLIENT_KEY_CERT:
+          return (
+            <>
+              <Container flex={{ justifyContent: 'flex-start' }}>
+                <Container className={css.authFormField}>
+                  <SecretInput name={'clientKey'} label={getString('connectors.k8.clientKey')} />
+                  <SecretInput name={'clientKeyCertificate'} label={getString('connectors.k8.clientCertificate')} />
+                </Container>
+
+                <Container className={css.authFormField} margin={{ left: 'xxlarge' }}>
+                  <SecretInput name={'clientKeyPassphrase'} label={getString('connectors.k8.clientKeyPassphrase')} />
+                  <FormInput.Select
+                    items={CLIENT_KEY_ALGO_OPTIONS}
+                    name="clientKeyAlgo"
+                    label={getString('connectors.k8.clientKeyAlgorithm')}
+                    value={
+                      // If we pass the value as undefined, formik will kick in and value will be updated as per uicore logic
+                      // If we've added a custom value, then just add it as a label value pair
+                      CLIENT_KEY_ALGO_OPTIONS.find(opt => opt.value === _formikProps.values.clientKeyAlgo)
+                        ? undefined
+                        : { label: _formikProps.values.clientKeyAlgo, value: _formikProps.values.clientKeyAlgo }
+                    }
+                    selectProps={{
+                      allowCreatingNewItems: true,
+                      inputProps: {
+                        placeholder: getString('connectors.k8.clientKeyAlgorithmPlaceholder')
+                      }
+                    }}
+                  />
+                </Container>
+              </Container>
+              <Container>
+                <SecretInput
+                  name={'clientKeyCACertificate'}
+                  label={getString('connectors.k8.clientKeyCACertificate')}
+                />
+              </Container>
+            </>
+          )
+        default:
+          return <></>
+      }
+    },
+    []
+  )
 
   return (
     <Layout.Vertical width="70%">
@@ -471,7 +476,7 @@ const SelectAuthenticationMethodRef = (
                   className={commonStyles.authTypeSelect}
                 />
               </Container>
-              {renderK8AuthForm()}
+              {renderK8AuthForm(formikProps)}
             </Layout.Vertical>
           ) : (
             <></>
