@@ -253,6 +253,10 @@ export function PipelineCanvas({
     [orgIdentifier, projectIdentifier, accountId, pipeline?.identifier]
   )
 
+  const permissionText = canExecute
+    ? getString('common.viewAndExecutePermissions')
+    : getString('common.readonlyPermissions')
+
   const { openDialog: openUnsavedChangesDialog } = useConfirmationDialog({
     cancelButtonText: getString('cancel'),
     contentText: isYamlError ? getString('navigationYamlError') : getString('navigationCheckText'),
@@ -880,11 +884,7 @@ export function PipelineCanvas({
                 {isReadonly && (
                   <div className={css.readonlyAccessTag}>
                     <Icon name="eye-open" size={16} />
-                    {canExecute ? (
-                      <div className={css.readonlyAccessText}>{getString('common.viewAndExecutePermissions')}</div>
-                    ) : (
-                      <div className={css.readonlyAccessText}>{getString('common.readonlyPermissions')}</div>
-                    )}
+                    <div className={css.readonlyAccessText}>{permissionText}</div>
                   </div>
                 )}
                 {isUpdated && !isReadonly && <div className={css.tagRender}>{getString('unsavedChanges')}</div>}
