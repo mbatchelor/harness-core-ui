@@ -239,6 +239,7 @@ function CICodebaseInputSetFormInternal({
   const [codeBaseType, setCodeBaseType] = useState<CodeBaseType | undefined>(get(formik?.values, codeBaseTypePath))
   const [gitAuthProtocol, setGitAuthProtocol] = useState<GitAuthenticationProtocol>(GitAuthenticationProtocol.HTTPS)
   const [codebaseConnector, setCodebaseConnector] = useState<ConnectorInfoDTO>()
+  const [fetchingDefaultBranch, isFetchingDefaultBranch] = useState<boolean>()
 
   const radioLabels = {
     branch: getString('gitBranch'),
@@ -283,6 +284,8 @@ function CICodebaseInputSetFormInternal({
   useEffect(() => {
     if (get(formik?.values, buildPath) === RUNTIME_INPUT_VALUE) {
       setCodeBaseType(undefined)
+    } else if (!get(formik?.values, buildPath)) {
+      setCodeBaseType(CodebaseTypes.branch)
     }
   }, [get(formik?.values, buildPath)])
 
@@ -343,28 +346,38 @@ function CICodebaseInputSetFormInternal({
   }, [loadingConnectorDetails, connectorDetails])
 
   useEffect(() => {
-    if (codebaseConnector) {
+    if (codeBaseType === CodebaseTypes.branch && codebaseConnector) {
+      isFetchingDefaultBranch(true)
       const connectorRef = get(originalPipeline, 'properties.ci.codebase.connectorRef', '')
       let repoName = get(originalPipeline, 'properties.ci.codebase.repoName', '')
       if (!repoName) {
-        repoName = getCodebaseRepoNameFromConnector(codebaseConnector)
+        repoName = getCodebaseRepoNameFromConnector(codebaseConnector, getString)
       }
       if (connectorRef && repoName) {
-        getListOfBranchesByRefConnectorV2Promise({
-          queryParams: {
-            connectorRef,
-            accountIdentifier: accountId,
-            orgIdentifier,
-            projectIdentifier,
-            repoName: encodeURI(repoName),
-            size: 1
-          }
-        }).then((result: ResponseGitBranchesResponseDTO) => {
-          console.log(result)
-        })
+        try {
+          getListOfBranchesByRefConnectorV2Promise({
+            queryParams: {
+              connectorRef,
+              accountIdentifier: accountId,
+              orgIdentifier,
+              projectIdentifier,
+              repoName: encodeURI(repoName),
+              size: 1
+            }
+          })
+            .then((result: ResponseGitBranchesResponseDTO) => {
+              isFetchingDefaultBranch(false)
+              formik.setFieldValue(codeBaseInputFieldFormName.branch, result.data?.defaultBranch?.name || '')
+            })
+            .catch(_e => {
+              isFetchingDefaultBranch(true)
+            })
+        } catch (e) {
+          isFetchingDefaultBranch(true)
+        }
       }
     }
-  }, [originalPipeline, codebaseConnector])
+  }, [codeBaseType, originalPipeline, codebaseConnector])
 
   useEffect(() => {
     const type = get(formik?.values, codeBaseTypePath) as CodeBaseType
@@ -469,7 +482,7 @@ function CICodebaseInputSetFormInternal({
 
   return (
     <Layout.Vertical spacing="small">
-      {loadingConnectorDetails ? (
+      {loadingConnectorDetails || fetchingDefaultBranch ? (
         <Container flex={{ justifyContent: 'center' }}>
           <Icon name="steps-spinner" size={25} />
         </Container>

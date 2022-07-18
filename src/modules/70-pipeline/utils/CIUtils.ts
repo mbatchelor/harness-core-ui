@@ -8,6 +8,7 @@
 import { get, isEmpty } from 'lodash-es'
 import moment from 'moment'
 import { RUNTIME_INPUT_VALUE, SelectOption } from '@harness/uicore'
+import type { UseStringsReturn } from 'framework/strings'
 import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { RegExAllowedInputExpression } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariableInputSet'
@@ -15,7 +16,7 @@ import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
-import { connectorUrlType } from '@connectors/constants'
+import { Connectors, connectorUrlType } from '@connectors/constants'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { ConnectorRefWidth } from './constants'
 
@@ -144,13 +145,37 @@ export const getPipelineWithoutCodebaseInputs = (values: { [key: string]: any })
   }
 }
 
-export const getCodebaseRepoNameFromConnector = (codebaseConnector: ConnectorInfoDTO): string => {
+export const getCodebaseRepoNameFromConnector = (
+  codebaseConnector: ConnectorInfoDTO,
+  getString: UseStringsReturn['getString']
+): string => {
   let repoName
   const connectorGitScope = get(codebaseConnector, 'spec.type', '')
   if (connectorGitScope === connectorUrlType.REPO) {
-    repoName = get(codebaseConnector, 'spec.url')
+    const repoURL: string = get(codebaseConnector, 'spec.url')
+    const gitProviderURL = getGitUrl(getString, get(codebaseConnector, 'type'))
+    repoName = gitProviderURL ? repoURL.split(gitProviderURL)?.[1]?.split('/')?.[1] : ''
   } else if (connectorGitScope === connectorUrlType.ACCOUNT || connectorGitScope === connectorUrlType.PROJECT) {
     repoName = get(codebaseConnector, 'spec.validationRepo', '')
   }
   return repoName
+}
+
+export const getGitUrl = (
+  getString: UseStringsReturn['getString'],
+  connectorType?: ConnectorInfoDTO['type']
+): string => {
+  if (!connectorType) {
+    return ''
+  }
+  switch (connectorType) {
+    case Connectors.GITHUB:
+      return getString('connectors.gitProviderURLs.github')
+    case Connectors.BITBUCKET:
+      return getString('connectors.gitProviderURLs.bitbucket')
+    case Connectors.GITLAB:
+      return getString('connectors.gitProviderURLs.gitlab')
+    default:
+      return ''
+  }
 }

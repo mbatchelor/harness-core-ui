@@ -178,10 +178,6 @@ getStartedWithCI:
   authMethodLabel: Authentication method
   selectYourRepo: Select your Repository
   createPipeline: Create Pipeline
-  gitProviderURLs:
-    github: 'https://github.com/account/'
-    gitlab: 'https://gitlab.com/account/'
-    bitbucket: 'https://bitbucket.org/'
   codebaseHelptext: Harness will clone your codebase to your build infrastructure at Pipeline runtime.
   searchRepo: Search Repository
   learnMoreAboutPermissions: Learn more about the required permissions

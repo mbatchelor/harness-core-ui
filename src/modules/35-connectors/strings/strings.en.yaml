@@ -894,3 +894,7 @@ oAuth:
   configured: OAuth configured successfully
   reConfigured: OAuth re-configured successfully
   accessRevoked: Access revoked. Please reconfigure the connection.
+gitProviderURLs:
+  github: 'https://github.com'
+  gitlab: 'https://gitlab.com'
+  bitbucket: 'https://bitbucket.org'

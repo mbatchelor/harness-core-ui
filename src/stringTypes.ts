@@ -2111,6 +2111,9 @@ export interface StringsMap {
   'connectors.gcpKms.keyRing': string
   'connectors.gcpKms.keyRingRequired': string
   'connectors.gcrConnectorDetails': string
+  'connectors.gitProviderURLs.bitbucket': string
+  'connectors.gitProviderURLs.github': string
+  'connectors.gitProviderURLs.gitlab': string
   'connectors.hashiCorpVault.appRole': string
   'connectors.hashiCorpVault.appRoleId': string
   'connectors.hashiCorpVault.awsAuth': string
@@ -5814,9 +5817,6 @@ export interface StringsMap {
   'ci.getStartedWithCI.flexibleInfra': string
   'ci.getStartedWithCI.flexibleInfraHelpText': string
   'ci.getStartedWithCI.genericGit': string
-  'ci.getStartedWithCI.gitProviderURLs.bitbucket': string
-  'ci.getStartedWithCI.gitProviderURLs.github': string
-  'ci.getStartedWithCI.gitProviderURLs.gitlab': string
   'ci.getStartedWithCI.hostedByHarness': string
   'ci.getStartedWithCI.hostedByHarnessBuildLocation': string
   'ci.getStartedWithCI.hosting': string

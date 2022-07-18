@@ -55,6 +55,7 @@ import {
   OAUTH_PLACEHOLDER_VALUE,
   MAX_TIMEOUT_OAUTH
 } from '@connectors/components/CreateConnector/CreateConnectorUtils'
+import { getGitUrl } from '@pipeline/utils/CIUtils'
 import {
   AllSaaSGitProviders,
   AllOnPremGitProviders,
@@ -151,7 +152,7 @@ const SelectGitProviderRef = (
                 gitProviderType: gitProvider.type
               }),
               'connector.spec.url',
-              getGitUrl()
+              getGitUrl(getString, gitProvider?.type)
             )
           )
             .then((createOAuthCtrResponse: ResponseConnectorResponse) => {
@@ -323,22 +324,6 @@ const SelectGitProviderRef = (
     }
   }, [gitProvider?.type, formikRef.current?.values])
 
-  const getGitUrl = React.useCallback((): string => {
-    let url = ''
-    switch (gitProvider?.type) {
-      case Connectors.GITHUB:
-        url = getString('ci.getStartedWithCI.gitProviderURLs.github')
-        break
-      case Connectors.BITBUCKET:
-        url = getString('ci.getStartedWithCI.gitProviderURLs.bitbucket')
-        break
-      case Connectors.GITLAB:
-        url = getString('ci.getStartedWithCI.gitProviderURLs.gitlab')
-        break
-    }
-    return url ? url.replace('/account/', '') : ''
-  }, [gitProvider?.type])
-
   const getSCMConnectorPayload = React.useCallback(
     (secretId: string, type: GitProvider['type']): ConnectorInfoDTO => {
       const commonConnectorPayload = {
@@ -348,7 +333,7 @@ const SelectGitProviderRef = (
         spec: {
           executeOnDelegate: true,
           type: 'Account',
-          url: getGitUrl(),
+          url: getGitUrl(getString, gitProvider?.type),
           authentication: {
             type: 'Http',
             spec: {}
