@@ -443,7 +443,7 @@ exports[`Test Access Point List Renders without errors 1`] = `
                 >
                   <p
                     class="StyledProps--font Text--lineclamp StyledProps--main"
-                    style="--text-line-clamp: 2;"
+                    style="--text-line-clamp: 1;"
                   >
                     ap-south-1
                   </p>
@@ -459,7 +459,7 @@ exports[`Test Access Point List Renders without errors 1`] = `
                 >
                   <p
                     class="StyledProps--font Text--lineclamp StyledProps--main"
-                    style="--text-line-clamp: 2;"
+                    style="--text-line-clamp: 1;"
                   >
                     mockVPC
                   </p>

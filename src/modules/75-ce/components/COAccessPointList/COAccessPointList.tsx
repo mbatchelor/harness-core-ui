@@ -111,7 +111,7 @@ function CloudAccountCell(tableProps: CellProps<AccessPoint>): JSX.Element {
 const TableCell: React.FC<CellProps<AccessPoint>> = tableProps => {
   return (
     <div style={{ overflowWrap: 'anywhere', paddingRight: 10 }}>
-      <Text lineClamp={2}>{tableProps.value}</Text>
+      <Text lineClamp={1}>{tableProps.value}</Text>
     </div>
   )
 }

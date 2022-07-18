@@ -316,7 +316,7 @@ export const getSupportedResourcesQueryParams = ({
     params.resource_group_name = gatewayDetails.selectedInstances[0]?.metadata?.resourceGroup
   }
   if (Utils.isProviderGcp(gatewayDetails.provider)) {
-    const subnet = get(gatewayDetails, 'selectedInstances.0.metadata.network_interfaces.0.subnetwork', null)
+    const subnet = get(gatewayDetails, 'selectedInstances[0].metadata.network_interfaces[0].subnetwork', null)
     if (subnet) {
       params.subnet = subnet
     }
