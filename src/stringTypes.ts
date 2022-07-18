@@ -1314,6 +1314,9 @@ export interface StringsMap {
   'secrets.createSSHCredWizard.verifyStepOne': string
   'secrets.createSSHCredWizard.verifyStepTwo': string
   'secrets.createSecret': string
+  'secrets.createWinRmCredWizard.titleDetails': string
+  'secrets.createWinRmCredWizard.validateDomain': string
+  'secrets.createWinRmCredWizard.validatePassword': string
   'secrets.incompleteSecret': string
   'secrets.labelPath': string
   'secrets.labelSecretName': string
@@ -1351,6 +1354,7 @@ export interface StringsMap {
   'secrets.secret.validationIdentifier': string
   'secrets.secret.validationKms': string
   'secrets.secret.validationNameChars': string
+  'secrets.secret.winrmCredential': string
   'secrets.secretsTitle': string
   'secrets.selectSecret': string
   'secrets.sshAuthFormFields.labelFile': string
@@ -1371,6 +1375,13 @@ export interface StringsMap {
   'secrets.titleCreate': string
   'secrets.titleSelect': string
   'secrets.typeSSH': string
+  'secrets.typeWinRM': string
+  'secrets.winRmAuthFormFields.domain': string
+  'secrets.winRmAuthFormFields.labelWinRmPort': string
+  'secrets.winRmAuthFormFields.ntlm': string
+  'secrets.winRmAuthFormFields.skipCertCheck': string
+  'secrets.winRmAuthFormFields.useNoProfile': string
+  'secrets.winRmAuthFormFields.useSSL': string
   'filestore.cantDeleteFile': string
   'filestore.confirmDeleteFile': string
   'filestore.deletedSuccessMessage': string

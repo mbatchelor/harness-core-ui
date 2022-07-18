@@ -1,0 +1,23 @@
+/*
+ * Copyright 2020 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.customSelect {
+  :global {
+    .bp3-popover-target {
+      width: 100%;
+
+      .bp3-button {
+        width: 100%;
+        border: 1px solid var(--form-input-shadow) !important;
+
+        .bp3-button-text {
+          flex: 1 1 auto;
+        }
+      }
+    }
+  }
+}

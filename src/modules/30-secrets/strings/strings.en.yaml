@@ -9,6 +9,7 @@ confirmDelete: Are you sure you want to delete the secret '{{name}}'
 confirmDeleteTitle: 'Delete Secret'
 incompleteSecret: 'Incomplete Secret'
 typeSSH: 'Execution Credential'
+typeWinRM: 'WinRM Credential'
 stepTitleVerify: 'Verify Connection'
 blank: '{{$.common.blank}}'
 labelSecretName: 'Secret Name'
@@ -30,6 +31,14 @@ sshAuthFormFields:
   labelTGT: 'TGT Generation'
   labelKeyTab: 'Key Tab File Path'
 
+winRmAuthFormFields:
+  ntlm: 'NTLM'
+  domain: 'Domain'
+  labelWinRmPort: 'WinRM Port'
+  useSSL: 'Use SSL'
+  skipCertCheck: 'Skip Cert Check'
+  useNoProfile: 'Use No Profile'
+
 createSSHCredWizard:
   btnSaving: 'Saving...'
   titleDetails: 'SSH Details'
@@ -48,6 +57,10 @@ createSSHCredWizard:
   verifyStepOne: 'Checking for Delegates'
   verifyStepTwo: 'Verifying Connection'
   verifyRetest: 'RETEST CONNECTION'
+createWinRmCredWizard:
+  titleDetails: 'WinRm Details'
+  validateDomain: 'Domain is required'
+  validatePassword: '{{$.validation.password}}'
 secret:
   titleCreateText: 'Add new Encrypted Text'
   titleCreateFile: 'Add new Encrypted File'
@@ -77,6 +90,7 @@ secret:
   newSecretFile: New Secret File
   secretNotFound: 'Secret not found'
   successMessage: Secret '{{name}}' {{action}} successfully
+  winrmCredential: WinRm Credential
 secretsTitle: 'Resources: Secrets'
 createSecret: Create a Secret
 policyEvaluations:

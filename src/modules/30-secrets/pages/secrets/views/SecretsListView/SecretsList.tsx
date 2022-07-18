@@ -52,6 +52,9 @@ const RenderColumnSecret: Renderer<CellProps<SecretResponseWrapper>> = ({ row })
         <Icon name="key" size={28} margin={{ top: 'xsmall', right: 'small' }} />
       ) : null}
       {data.type === 'SSHKey' ? <Icon name="secret-ssh" size={28} margin={{ top: 'xsmall', right: 'small' }} /> : null}
+      {data.type === 'WinRmCredentials' ? (
+        <Icon name="command-winrm" size={28} margin={{ top: 'xsmall', right: 'small' }} />
+      ) : null}
       <Layout.Vertical>
         <Layout.Horizontal spacing="small" width={230}>
           <Text color={Color.BLACK} lineClamp={1} className={css.secretName}>
@@ -104,7 +107,7 @@ const RenderColumnStatus: Renderer<CellProps<SecretResponseWrapper>> = ({ row })
       </Text>
     ) : null
   }
-  if (data.type === 'SSHKey')
+  if (data.type === 'SSHKey' || data.type === 'WinRmCredentials')
     return (
       <Button
         font="small"

@@ -39,6 +39,7 @@ import { getLinkForAccountResources } from '@common/utils/BreadcrumbUtils'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, SecretActions } from '@common/constants/TrackingConstants'
 import { getPrincipalScopeFromDTO } from '@common/components/EntityReference/EntityReference'
+import useCreateWinRmCredModal from '@secrets/modals/CreateWinRmCredModal/useCreateWinRmCredModal'
 import SecretsList from './views/SecretsListView/SecretsList'
 
 import SecretEmptyState from './secrets-empty-state.png'
@@ -96,6 +97,11 @@ const SecretsPage: React.FC<SecretsPageProps> = ({ mock }) => {
       refetch()
     }
   })
+  const { openCreateWinRmCredModal } = useCreateWinRmCredModal({
+    onSuccess: /* istanbul ignore next */ () => {
+      refetch()
+    }
+  })
   const CreateSecretBtn: React.FC<CreateSecretBtnProp> = ({ setOpenPopOverProp, size }) => {
     return (
       <RbacButton
@@ -128,19 +134,28 @@ const SecretsPage: React.FC<SecretsPageProps> = ({ mock }) => {
     return (
       <Menu large>
         <Menu.Item
+          labelClassName="menu-item-label"
           text={getString('secrets.secret.labelText')}
           labelElement={<Icon name="text" />}
           onClick={/* istanbul ignore next */ () => openCreateSecretModal('SecretText')}
         />
         <Menu.Item
+          labelClassName="menu-item-label"
           text={getString('secrets.secret.labelFile')}
           labelElement={<Icon name="document" color={Color.BLUE_600} />}
           onClick={/* istanbul ignore next */ () => openCreateSecretModal('SecretFile')}
         />
         <Menu.Item
+          labelClassName="menu-item-label"
           text={getString('ssh.sshCredential')}
           labelElement={<Icon name="secret-ssh" />}
           onClick={/* istanbul ignore next */ () => openCreateSSHCredModal()}
+        />
+        <Menu.Item
+          labelClassName="menu-item-label"
+          text={getString('secrets.secret.winrmCredential')}
+          labelElement={<Icon name="command-winrm" />}
+          onClick={/* istanbul ignore next */ () => openCreateWinRmCredModal()}
         />
       </Menu>
     )
