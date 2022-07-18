@@ -29,8 +29,10 @@ declare const styles: {
   readonly modal: string
   readonly newConnectorButton: string
   readonly optionalDetails: string
+  readonly overrideParam: string
   readonly overrideSelect: string
   readonly overridesInputHeader: string
+  readonly paddingRight: string
   readonly selectInputs: string
   readonly squareCardContainer: string
   readonly templateDropdown: string

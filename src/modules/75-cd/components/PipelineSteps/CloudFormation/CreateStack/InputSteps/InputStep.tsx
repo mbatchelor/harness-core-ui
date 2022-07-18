@@ -33,6 +33,7 @@ import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/Mu
 import { TFMonaco } from '../../../Common/Terraform/Editview/TFMonacoEditor'
 import TemplateFileInputs from './TemplateFile'
 import ParameterFileInputs from './ParameterInputs'
+import OverrideParameterFileInputs from './OverrideParameters'
 import TagsInputs from './TagsInputs'
 import type { CreateStackData, CreateStackProps, Tags } from '../../CloudFormationInterfaces.types'
 import { isRuntime } from '../../CloudFormationHelper'
@@ -246,6 +247,7 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
       )}
       {inputSetData?.template?.spec?.configuration?.templateFile && <TemplateFileInputs {...props} />}
       {inputSetData?.template?.spec?.configuration?.parameters && <ParameterFileInputs {...props} />}
+      {inputSetData?.template?.spec?.configuration?.parameterOverrides && <OverrideParameterFileInputs {...props} />}
       {isRuntime(inputSetData?.template?.spec?.configuration?.stackName as string) && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <FormInput.MultiTextInput

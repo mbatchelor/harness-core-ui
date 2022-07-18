@@ -1,0 +1,51 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test cloudformation create stack parameters input set should render override parameters 1`] = `
+<div>
+  <div
+    class="OverlaySpinner--overlaySpinner"
+  >
+    <form
+      action="#"
+      class="FormikForm--main"
+    >
+      <div>
+        <div
+          class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--padding-bottom-small"
+          style="width: 250px;"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-weight-bold"
+          >
+            cd.cloudFormation.overrideParameterFileDetails
+          </p>
+        </div>
+        <div
+          class="Layout--horizontal StyledProps--main overridesInputHeader StyledProps--flex StyledProps--flex-alignItems-flex-start StyledProps--flex-justifyContent-flex-start"
+        >
+          <div
+            class="Layout--vertical StyledProps--main overrideParam"
+          >
+            <p
+              class="StyledProps--font StyledProps--main"
+              style="color: rgb(11, 11, 13);"
+            >
+              name
+            </p>
+          </div>
+          <div
+            class="Layout--vertical StyledProps--main"
+          >
+            <p
+              class="StyledProps--font StyledProps--main"
+              style="color: rgb(11, 11, 13);"
+            >
+              valueLabel
+            </p>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+`;

@@ -332,6 +332,7 @@ cloudFormation:
   specifyCapabilities: Specify Capabilities
   parameterFiles: Cloud Formation Parameter Files
   parameterFileDetails: Parameter File Details
+  overrideParameterFileDetails: Override Parameter File Details
   specifyParameterFiles: Specify Parameter Files...
   inlineParameterFiles: CloudFormation Parameters Overrides
   specifyInlineParameterFiles: Specify Inline Parameters...

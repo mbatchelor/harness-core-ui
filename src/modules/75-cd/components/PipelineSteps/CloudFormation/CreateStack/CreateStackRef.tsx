@@ -760,6 +760,8 @@ export const CreateStack = (
                 /* istanbul ignore next */
                 setInlineParams(false)
               }}
+              readonly={readonly}
+              allowableTypes={allowableTypes}
               awsConnectorRef={awsConnector}
               type={templateFileType}
               region={awsRegion}
