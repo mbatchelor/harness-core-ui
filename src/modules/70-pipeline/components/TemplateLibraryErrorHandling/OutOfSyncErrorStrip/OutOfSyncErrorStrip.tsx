@@ -58,7 +58,7 @@ export function OutOfSyncErrorStrip({
         />
       </Dialog>
     )
-  }, [resolvedTemplateResponses, originalEntityYaml])
+  }, [resolvedTemplateResponses, entity, onRefreshEntity, originalEntityYaml, storeMetadata])
 
   return (
     <Container className={css.mainContainer}>
