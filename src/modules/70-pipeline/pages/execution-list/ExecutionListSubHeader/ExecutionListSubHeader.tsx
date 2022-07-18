@@ -26,7 +26,7 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 
 import { ExecutionCompareYaml } from '@pipeline/components/ExecutionCompareYaml/ExecutionCompareYaml'
 import { useExecutionCompareContext } from '@pipeline/components/ExecutionCompareYaml/ExecutionCompareContext'
-import { useFiltersContext } from '../ExecutionListFilterContext/FiltersContext'
+import { useExecutionListFilterContext } from '../ExecutionListFilterContext/ExecutionListFilterContext'
 import { ExecutionFilters } from '../ExecutionListFilter/ExecutionListFilter'
 import type { QuickStatusParam } from '../types'
 import css from './ExecutionListSubHeader.module.scss'
@@ -36,16 +36,16 @@ export interface FilterQueryParams {
   pipeline?: string
   status?: ExecutionStatus | null
 }
-export interface PipelineDeploymentListHeaderProps {
+export interface ExecutionListSubHeaderProps {
   onRunPipeline(): void
   isPipelineInvalid?: boolean
 }
 
 const defaultPageNumber = 1
 
-export function PipelineDeploymentListHeader(props: PipelineDeploymentListHeaderProps): React.ReactElement {
+export function ExecutionListSubHeader(props: ExecutionListSubHeaderProps): React.ReactElement {
   const { module, pipelineIdentifier } = useParams<Partial<PipelineType<PipelinePathProps>>>()
-  const { queryParams } = useFiltersContext()
+  const { queryParams } = useExecutionListFilterContext()
   const { updateQueryParams } = useUpdateQueryParams<Partial<GetListOfExecutionsQueryParams>>()
   const rbacButtonModules = getRbacButtonModules(module)
   const { getString } = useStrings()

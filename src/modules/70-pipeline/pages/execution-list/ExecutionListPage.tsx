@@ -14,9 +14,10 @@ import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { Page } from '@common/exports'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import type { StringsMap } from 'stringTypes'
-import css from './ExecutionListPage.module.scss'
-import { ExecutionListTable } from './ExecutionListTable/ExecutionListTable'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
+import { ExecutionListTable } from './ExecutionListTable/ExecutionListTable'
+import css from './ExecutionListPage.module.scss'
+import { ExecutionListSubHeader } from './ExecutionListSubHeader/ExecutionListSubHeader'
 
 export function ExecutionList(): React.ReactElement {
   const { module } = useParams<PipelineType<ProjectPathProps>>()
@@ -46,10 +47,7 @@ export function ExecutionList(): React.ReactElement {
         }
         breadcrumbs={<NGBreadcrumbs links={[]} />}
       />
-      <Page.SubHeader>
-        <ExecutionListSubHeader />
-      </Page.SubHeader>
-
+      <ExecutionListSubHeader />
       <ExecutionListTable />
     </GitSyncStoreProvider>
   )
