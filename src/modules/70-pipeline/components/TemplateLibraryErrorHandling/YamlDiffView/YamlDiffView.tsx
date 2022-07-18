@@ -37,14 +37,12 @@ import css from './YamlDiffView.module.scss'
 export interface YamlDiffViewProps {
   errorNodeSummary?: ErrorNodeSummary
   resolvedTemplateResponses?: TemplateResponse[]
-  rootErrorNodeSummary?: ErrorNodeSummary
   onUpdate: (refreshedYaml: string) => Promise<void>
   originalEntityYaml: string
 }
 
 export function YamlDiffView({
   errorNodeSummary,
-  rootErrorNodeSummary,
   resolvedTemplateResponses = [],
   onUpdate,
   originalEntityYaml
@@ -71,86 +69,95 @@ export function YamlDiffView({
     })
   }
 
-  const refetch = async () => {
-    if (isEqual(errorNodeSummary, rootErrorNodeSummary) && errorNodeSummary) {
-      setLoading(true)
-      setError(undefined)
-      try {
-        const response = await getRefreshedYamlPromise({
-          queryParams: {
-            accountIdentifier: accountId,
-            orgIdentifier,
-            projectIdentifier,
-            branch,
-            repoIdentifier,
-            getDefaultFromOtherRepo: true
-          },
-          body: { yaml: originalEntityYaml }
-        })
-        if (response && response.status === 'SUCCESS') {
-          setOriginalYaml(yamlStringify(yamlParse(originalEntityYaml)))
-          setRefreshedYaml(yamlStringify(yamlParse(defaultTo(response.data?.refreshedYaml, ''))))
-        } else {
-          throw response
-        }
-      } catch (err) {
-        setError(err)
-      } finally {
-        setLoading(false)
-      }
-    } else if (errorNodeSummary) {
-      setLoading(true)
-      setError(undefined)
-      const templateResponse = errorNodeSummary.templateResponse
-      if (templateResponse) {
-        const templateRef = defaultTo(templateResponse.identifier, '')
-        const scope = getScopeFromDTO(templateResponse)
-        const defaultQueryParams = getScopeBasedProjectPathParams(params, scope)
-        try {
-          const response = await getYamlDiffPromiseForTemplate({
-            queryParams: {
-              ...defaultQueryParams,
-              templateIdentifier: getIdentifierFromValue(templateRef),
-              versionLabel: defaultTo(templateResponse.versionLabel, ''),
-              branch,
-              repoIdentifier,
-              getDefaultFromOtherRepo: true
-            }
-          })
-          if (response && response.status === 'SUCCESS') {
-            setOriginalYaml(yamlStringify(yamlParse(defaultTo(response.data?.originalYaml, ''))))
-            setRefreshedYaml(yamlStringify(yamlParse(defaultTo(response.data?.refreshedYaml, ''))))
-          } else {
-            throw response
-          }
-        } catch (err) {
-          setError(err)
-        } finally {
-          setLoading(false)
-        }
+  const getYamlDiffFromYaml = async () => {
+    try {
+      const response = await getRefreshedYamlPromise({
+        queryParams: {
+          accountIdentifier: accountId,
+          orgIdentifier,
+          projectIdentifier,
+          branch,
+          repoIdentifier,
+          getDefaultFromOtherRepo: true
+        },
+        body: { yaml: originalEntityYaml }
+      })
+      if (response && response.status === 'SUCCESS') {
+        setOriginalYaml(yamlStringify(yamlParse(originalEntityYaml)))
+        setRefreshedYaml(yamlStringify(yamlParse(defaultTo(response.data?.refreshedYaml, ''))))
       } else {
-        try {
-          const response = await getYamlDiffPromiseForPipeline({
-            queryParams: {
-              ...getScopeBasedProjectPathParams(params, Scope.PROJECT),
-              identifier: defaultTo(errorNodeSummary?.nodeInfo?.identifier, ''),
-              branch,
-              repoIdentifier,
-              getDefaultFromOtherRepo: true
-            }
-          })
-          if (response && response.status === 'SUCCESS') {
-            setOriginalYaml(yamlStringify(yamlParse(defaultTo(response.data?.originalYaml, ''))))
-            setRefreshedYaml(yamlStringify(yamlParse(defaultTo(response.data?.refreshedYaml, ''))))
-          } else {
-            throw response
-          }
-        } catch (err) {
-          setError(err)
-        } finally {
-          setLoading(false)
-        }
+        throw response
       }
+    } catch (err) {
+      setError(err)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const getYamlDiffForTemplate = async () => {
+    try {
+      const templateResponse = errorNodeSummary?.templateResponse
+      const templateRef = defaultTo(templateResponse?.identifier, '')
+      const scope = getScopeFromDTO(templateResponse || {})
+      const response = await getYamlDiffPromiseForTemplate({
+        queryParams: {
+          ...getScopeBasedProjectPathParams(params, scope),
+          templateIdentifier: getIdentifierFromValue(templateRef),
+          versionLabel: defaultTo(templateResponse?.versionLabel, ''),
+          branch,
+          repoIdentifier,
+          getDefaultFromOtherRepo: true
+        }
+      })
+      if (response && response.status === 'SUCCESS') {
+        setOriginalYaml(yamlStringify(yamlParse(defaultTo(response.data?.originalYaml, ''))))
+        setRefreshedYaml(yamlStringify(yamlParse(defaultTo(response.data?.refreshedYaml, ''))))
+      } else {
+        throw response
+      }
+    } catch (err) {
+      setError(err)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const getYamlDiffForPipeline = async () => {
+    try {
+      const response = await getYamlDiffPromiseForPipeline({
+        queryParams: {
+          ...getScopeBasedProjectPathParams(params, Scope.PROJECT),
+          identifier: defaultTo(errorNodeSummary?.nodeInfo?.identifier, ''),
+          branch,
+          repoIdentifier,
+          getDefaultFromOtherRepo: true
+        }
+      })
+      if (response && response.status === 'SUCCESS') {
+        setOriginalYaml(yamlStringify(yamlParse(defaultTo(response.data?.originalYaml, ''))))
+        setRefreshedYaml(yamlStringify(yamlParse(defaultTo(response.data?.refreshedYaml, ''))))
+      } else {
+        throw response
+      }
+    } catch (err) {
+      setError(err)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const refetch = async () => {
+    setLoading(true)
+    setError(undefined)
+    if (errorNodeSummary?.nodeInfo) {
+      if (errorNodeSummary?.templateResponse) {
+        await getYamlDiffForTemplate()
+      } else {
+        await getYamlDiffForPipeline()
+      }
+    } else {
+      await getYamlDiffFromYaml()
     }
   }
 

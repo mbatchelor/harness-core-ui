@@ -66,7 +66,6 @@ export function TemplateStudio(): React.ReactElement {
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const {
     template,
-    originalTemplate,
     templateView,
     isLoading,
     isUpdated,
@@ -307,7 +306,7 @@ export function TemplateStudio(): React.ReactElement {
                   onRefreshEntity={() => {
                     fetchTemplate({ forceFetch: true, forceUpdate: true })
                   }}
-                  originalEntityYaml={yamlStringify(originalTemplate)}
+                  originalEntityYaml={yamlStringify(template)}
                 />
               )}
               <Container className={css.canvasContainer}>

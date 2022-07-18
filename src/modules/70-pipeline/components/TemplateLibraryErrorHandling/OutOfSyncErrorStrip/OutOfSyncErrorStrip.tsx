@@ -14,6 +14,7 @@ import { isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { ErrorNodeSummary, TemplateResponse } from 'services/template-ng'
 import { ReconcileDialog } from '@pipeline/components/TemplateLibraryErrorHandling/ReconcileDialog/ReconcileDialog'
+import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 import css from './OutOfSyncErrorStrip.module.scss'
 
 export interface OutOfSyncErrorStripProps {
@@ -22,6 +23,7 @@ export interface OutOfSyncErrorStripProps {
   isReadOnly: boolean
   onRefreshEntity: () => void
   originalEntityYaml: string
+  storeMetadata?: StoreMetadata
 }
 
 export function OutOfSyncErrorStrip({
@@ -29,7 +31,8 @@ export function OutOfSyncErrorStrip({
   entity,
   isReadOnly,
   onRefreshEntity,
-  originalEntityYaml
+  originalEntityYaml,
+  storeMetadata
 }: OutOfSyncErrorStripProps) {
   const { getString } = useStrings()
   const [resolvedTemplateResponses, setResolvedTemplateResponses] = React.useState<TemplateResponse[]>([])
@@ -51,6 +54,7 @@ export function OutOfSyncErrorStrip({
           setResolvedTemplateResponses={setResolvedTemplateResponses}
           reload={onRefreshEntity}
           originalEntityYaml={originalEntityYaml}
+          storeMetadata={storeMetadata}
         />
       </Dialog>
     )

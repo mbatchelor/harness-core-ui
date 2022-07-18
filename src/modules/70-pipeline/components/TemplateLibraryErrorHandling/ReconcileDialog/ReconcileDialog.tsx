@@ -10,14 +10,15 @@ import { Button, ButtonVariation, Container, Layout, Text, useToaster } from '@w
 import { FontVariation } from '@harness/design-system'
 import { Color } from '@wings-software/design-system'
 import { clone, defaultTo, isEmpty, isEqual } from 'lodash-es'
-import { useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import { PageSpinner } from '@harness/uicore'
+import { parse } from 'yaml'
 import {
-  refreshAndUpdateTemplateInputsPromise as refreshAndUpdateTemplate,
   refreshAllPromise as refreshAllTemplatePromise,
   ErrorNodeSummary,
   TemplateResponse,
-  updateExistingTemplateLabelPromise
+  updateExistingTemplateLabelPromise,
+  createTemplatePromise
 } from 'services/template-ng'
 import { YamlDiffView } from '@pipeline/components/TemplateLibraryErrorHandling/YamlDiffView/YamlDiffView'
 import { ErrorNode } from '@pipeline/components/TemplateLibraryErrorHandling/ErrorDirectory/ErrorNode'
@@ -25,17 +26,19 @@ import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { String, useStrings } from 'framework/strings'
-import {
-  refreshAndUpdateTemplateInputsPromise as refreshAndUpdatePipeline,
-  refreshAllPromise as refreshAllPipelinePromise
-} from 'services/pipeline-ng'
+import { refreshAllPromise as refreshAllPipelinePromise } from 'services/pipeline-ng'
 import { getScopeBasedProjectPathParams, getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
-import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { GitQueryParams, ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { useQueryParams } from '@common/hooks'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { getFirstLeafNode } from '@pipeline/components/TemplateLibraryErrorHandling/TemplateLibraryErrorHandlingUtils'
+import { savePipeline } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import type { SaveToGitFormInterface } from '@common/components/SaveToGitForm/SaveToGitForm'
+import routes from '@common/RouteDefinitions'
 import css from './ReconcileDialog.module.scss'
 
 export interface ReconcileDialogProps {
@@ -44,6 +47,7 @@ export interface ReconcileDialogProps {
   setResolvedTemplateResponses: (resolvedTemplateInfos: TemplateResponse[]) => void
   reload: () => void
   originalEntityYaml: string
+  storeMetadata?: StoreMetadata
 }
 
 export function ReconcileDialog({
@@ -51,18 +55,22 @@ export function ReconcileDialog({
   entity,
   setResolvedTemplateResponses: setResolvedTemplates,
   reload,
-  originalEntityYaml
+  originalEntityYaml,
+  storeMetadata
 }: ReconcileDialogProps) {
   const hasChildren = !isEmpty(templateInputsErrorNodeSummary.childrenErrorNodes)
   const [selectedErrorNodeSummary, setSelectedErrorNodeSummary] = React.useState<ErrorNodeSummary>()
   const [resolvedTemplateResponses, setResolvedTemplateResponses] = React.useState<TemplateResponse[]>([])
-  const params = useParams<ProjectPathProps>()
+  const params = useParams<ProjectPathProps & ModulePathParams>()
+  const { accountId, orgIdentifier, projectIdentifier, module } = params
   const { branch, repoIdentifier } = useQueryParams<GitQueryParams>()
   const [loading, setLoading] = React.useState<boolean>(false)
   const { showError } = useToaster()
   const { isGitSyncEnabled } = useAppStore()
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
+  const { OPA_PIPELINE_GOVERNANCE } = useFeatureFlags()
+  const history = useHistory()
 
   const [canEditTemplate] = usePermission({
     resource: {
@@ -88,6 +96,39 @@ export function ReconcileDialog({
   React.useEffect(() => {
     setSelectedErrorNodeSummary(getFirstLeafNode(templateInputsErrorNodeSummary))
   }, [])
+
+  const navigateToPipelineStudio = (newPipelineId: string, updatedGitDetails?: SaveToGitFormInterface): void => {
+    history.replace(
+      routes.toPipelineStudio({
+        projectIdentifier,
+        orgIdentifier,
+        pipelineIdentifier: newPipelineId,
+        accountId,
+        module,
+        repoIdentifier: defaultTo(updatedGitDetails?.repoIdentifier, repoIdentifier),
+        branch: updatedGitDetails?.branch
+      })
+    )
+  }
+
+  const navigateToTemplateStudio = (
+    newTemplate: TemplateResponse,
+    updatedGitDetails?: SaveToGitFormInterface
+  ): void => {
+    history.replace(
+      routes.toTemplateStudio({
+        projectIdentifier: newTemplate.projectIdentifier,
+        orgIdentifier: newTemplate.orgIdentifier,
+        accountId,
+        ...(!isEmpty(newTemplate.projectIdentifier) && { module }),
+        templateType: newTemplate.templateEntityType,
+        templateIdentifier: newTemplate.identifier,
+        versionLabel: newTemplate.versionLabel,
+        repoIdentifier: updatedGitDetails?.repoIdentifier,
+        branch: updatedGitDetails?.branch
+      })
+    )
+  }
 
   const onUpdateAll = async (): Promise<void> => {
     setLoading(true)
@@ -140,91 +181,109 @@ export function ReconcileDialog({
     }
   }
 
-  const onUpdateNode = async (refreshedYaml: string): Promise<void> => {
-    setLoading(true)
-    if (isEqual(selectedErrorNodeSummary?.nodeInfo, templateInputsErrorNodeSummary.nodeInfo)) {
-      if (selectedErrorNodeSummary?.templateResponse) {
-        const scope = getScopeFromDTO(selectedErrorNodeSummary.templateResponse)
-        try {
-          const response = await refreshAndUpdateTemplate({
-            queryParams: {
-              ...getScopeBasedProjectPathParams(params, scope),
-              templateIdentifier: defaultTo(selectedErrorNodeSummary.templateResponse.identifier, ''),
-              versionLabel: defaultTo(selectedErrorNodeSummary.templateResponse.versionLabel, ''),
-              branch,
-              repoIdentifier,
-              getDefaultFromOtherRepo: true
-            },
-            body: undefined
-          })
-          if (response && response.status === 'SUCCESS') {
-            if (isEqual(selectedErrorNodeSummary.nodeInfo, templateInputsErrorNodeSummary.nodeInfo)) {
-              reload()
-            } else if (selectedErrorNodeSummary.templateResponse) {
-              setResolvedTemplateResponses([
-                ...resolvedTemplateResponses,
-                clone(selectedErrorNodeSummary.templateResponse)
-              ])
-            }
-          } else {
-            throw response
-          }
-        } catch (error) {
-          showError(getRBACErrorMessage(error), undefined, 'template.refresh.error')
-        } finally {
-          setLoading(false)
+  const updatePipeline = async (refreshedYaml: string, isEdit: boolean) => {
+    try {
+      const response = await savePipeline(
+        {
+          accountIdentifier: accountId,
+          projectIdentifier,
+          orgIdentifier,
+          ...(storeMetadata?.storeType ? { storeType: storeMetadata?.storeType } : {}),
+          ...(storeMetadata?.storeType === StoreType.REMOTE ? { connectorRef: storeMetadata?.connectorRef } : {})
+        },
+        parse(refreshedYaml).pipeline,
+        isEdit,
+        !!OPA_PIPELINE_GOVERNANCE
+      )
+      if (response && response.status === 'SUCCESS') {
+        if (isEdit) {
+          reload()
+        } else {
+          navigateToPipelineStudio(parse(refreshedYaml).pipeline.identifier)
         }
       } else {
-        try {
-          const response = await refreshAndUpdatePipeline({
-            queryParams: {
-              ...getScopeBasedProjectPathParams(params, Scope.PROJECT),
-              identifier: defaultTo(selectedErrorNodeSummary?.nodeInfo?.identifier, ''),
-              branch,
-              repoIdentifier,
-              getDefaultFromOtherRepo: true
-            },
-            body: undefined
-          })
-          if (response && response.status === 'SUCCESS') {
-            reload()
-          } else {
-            throw response
-          }
-        } catch (error) {
-          showError(getRBACErrorMessage(error), undefined, 'pipeline.refresh.error')
-        } finally {
-          setLoading(false)
-        }
+        throw response
       }
-    } else if (selectedErrorNodeSummary) {
-      try {
-        const response = await updateExistingTemplateLabelPromise({
-          templateIdentifier: defaultTo(selectedErrorNodeSummary.templateResponse?.identifier, ''),
-          versionLabel: defaultTo(selectedErrorNodeSummary.templateResponse?.versionLabel, ''),
-          body: refreshedYaml,
-          queryParams: {
-            accountIdentifier: defaultTo(selectedErrorNodeSummary.templateResponse?.accountId, ''),
-            projectIdentifier: defaultTo(selectedErrorNodeSummary.templateResponse?.projectIdentifier, ''),
-            orgIdentifier: defaultTo(selectedErrorNodeSummary.templateResponse?.orgIdentifier, ''),
-            comments: 'Reconciling template'
-          },
-          requestOptions: { headers: { 'Content-Type': 'application/yaml' } }
-        })
-        if (response && response.status === 'SUCCESS') {
-          if (selectedErrorNodeSummary.templateResponse) {
-            setResolvedTemplateResponses([
-              ...resolvedTemplateResponses,
-              clone(selectedErrorNodeSummary.templateResponse)
-            ])
-          }
-        } else {
-          throw response
+    } catch (error) {
+      showError(getRBACErrorMessage(error), undefined, 'pipeline.update.error')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const saveTemplate = async (refreshedYaml: string) => {
+    try {
+      const response = await createTemplatePromise({
+        body: refreshedYaml,
+        queryParams: {
+          accountIdentifier: accountId,
+          projectIdentifier,
+          orgIdentifier,
+          comments: 'Reconciling template'
+        },
+        requestOptions: { headers: { 'Content-Type': 'application/yaml' } }
+      })
+      if (response && response.status === 'SUCCESS') {
+        if (response?.data?.templateResponseDTO) {
+          navigateToTemplateStudio(response?.data?.templateResponseDTO)
         }
-      } catch (error) {
-        showError(getRBACErrorMessage(error), undefined, 'pipeline.refresh.error')
-      } finally {
-        setLoading(false)
+        //navigate to location
+      } else {
+        throw response
+      }
+    } catch (error) {
+      showError(getRBACErrorMessage(error), undefined, 'template.update.error')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const updateTemplate = async (refreshedYaml: string) => {
+    try {
+      const response = await updateExistingTemplateLabelPromise({
+        templateIdentifier: defaultTo(selectedErrorNodeSummary?.templateResponse?.identifier, ''),
+        versionLabel: defaultTo(selectedErrorNodeSummary?.templateResponse?.versionLabel, ''),
+        body: refreshedYaml,
+        queryParams: {
+          accountIdentifier: defaultTo(selectedErrorNodeSummary?.templateResponse?.accountId, ''),
+          projectIdentifier: defaultTo(selectedErrorNodeSummary?.templateResponse?.projectIdentifier, ''),
+          orgIdentifier: defaultTo(selectedErrorNodeSummary?.templateResponse?.orgIdentifier, ''),
+          comments: 'Reconciling template'
+        },
+        requestOptions: { headers: { 'Content-Type': 'application/yaml' } }
+      })
+      if (response && response.status === 'SUCCESS') {
+        if (isEqual(selectedErrorNodeSummary?.nodeInfo, templateInputsErrorNodeSummary.nodeInfo)) {
+          reload()
+        } else if (selectedErrorNodeSummary?.templateResponse) {
+          setResolvedTemplateResponses([
+            ...resolvedTemplateResponses,
+            clone(selectedErrorNodeSummary?.templateResponse)
+          ])
+        }
+      } else {
+        throw response
+      }
+    } catch (error) {
+      showError(getRBACErrorMessage(error), undefined, 'template.update.error')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const onUpdateNode = async (refreshedYaml: string): Promise<void> => {
+    setLoading(true)
+    if (selectedErrorNodeSummary?.nodeInfo) {
+      if (selectedErrorNodeSummary?.templateResponse) {
+        await updateTemplate(refreshedYaml)
+      } else {
+        await updatePipeline(refreshedYaml, true)
+      }
+    } else {
+      if (entity === 'Template') {
+        await saveTemplate(refreshedYaml)
+      } else {
+        await updatePipeline(refreshedYaml, false)
       }
     }
   }
@@ -289,7 +348,6 @@ export function ReconcileDialog({
             <Container style={{ flex: 1 }}>
               <YamlDiffView
                 errorNodeSummary={selectedErrorNodeSummary}
-                rootErrorNodeSummary={templateInputsErrorNodeSummary}
                 resolvedTemplateResponses={resolvedTemplateResponses}
                 onUpdate={onUpdateNode}
                 originalEntityYaml={originalEntityYaml}
