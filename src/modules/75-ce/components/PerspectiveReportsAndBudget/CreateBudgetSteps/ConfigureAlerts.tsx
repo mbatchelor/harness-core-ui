@@ -29,6 +29,7 @@ import { TagInput } from '@blueprintjs/core'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import formatCost from '@ce/utils/formatCost'
+import { EmailSchemaWithoutRequired, URLValidationSchemaWithoutRequired } from '@common/utils/Validation'
 import { useCreateBudget, Budget, AlertThreshold, useUpdateBudget } from 'services/ce'
 import { USER_JOURNEY_EVENTS } from '@ce/TrackingEventsConstants'
 import { useTelemetry } from '@common/hooks/useTelemetry'
@@ -173,13 +174,13 @@ const ConfigureAlerts: React.FC<StepProps<BudgetStepData> & Props> = props => {
               emailAddresses: Yup.array().when('notificationChannel', {
                 is: BudgetAlertChannels.EMAIL,
                 then: Yup.array()
-                  .of(Yup.string().email(getString('common.validation.email.format')))
+                  .of(EmailSchemaWithoutRequired())
                   .required(getString('common.validation.email.required'))
               }),
               slackWebhooks: Yup.array().when('notificationChannel', {
                 is: BudgetAlertChannels.SLACK,
                 then: Yup.array()
-                  .of(Yup.string().url(getString('validation.urlIsNotValid')))
+                  .of(URLValidationSchemaWithoutRequired())
                   .required(getString('common.validation.urlIsRequired'))
                   .nullable()
               })
