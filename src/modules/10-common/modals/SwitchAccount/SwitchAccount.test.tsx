@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect } from 'react'
-import { findByTestId, findByText, fireEvent, render, waitFor } from '@testing-library/react'
+import { findByTestId, findByText, fireEvent, render, waitFor, findAllByText } from '@testing-library/react'
 import { act } from 'react-dom/test-utils'
 import { TestWrapper, findDialogContainer } from '@common/utils/testUtils'
 
@@ -18,9 +18,9 @@ const switchAccountMock = jest.fn(() => mocks.switchAccount)
 
 jest.mock('services/portal', () => ({
   ...(jest.requireActual('services/portal') as any),
-  useGetUser: () => {
+  useGetUserAccounts: () => {
     return {
-      ...mocks.user,
+      data: mocks,
       refetch: jest.fn()
     }
   },
@@ -66,7 +66,7 @@ describe('Switch Account', () => {
 
     await waitFor(() => expect(getByText('common.switchAccount')).toBeDefined())
     const container = findDialogContainer()
-    const setAsDefaultBtn = await findByTestId(container!, 'set-default-account-AutomationOne')
+    const setAsDefaultBtn = await findByTestId(container!, 'set-default-account-PROD_WhitelistIP')
     expect(setAsDefaultBtn).toBeDefined()
 
     act(() => {
@@ -80,7 +80,7 @@ describe('Switch Account', () => {
       fireEvent.click(continueBtn)
     })
     expect(setDefaultAccountMock).toHaveBeenCalledWith(undefined, {
-      pathParams: { accountId: 'XICOBc_qRa2PJmVaWOx-cQ' }
+      pathParams: { accountId: 'jme9EUgeT3uIk0cDZZMS4Q' }
     })
   })
 
@@ -93,13 +93,13 @@ describe('Switch Account', () => {
 
     await waitFor(() => expect(getByText('common.switchAccount')).toBeDefined())
     const container = findDialogContainer()
-    const switchAccountBtn = await findByText(container!, 'AutomationOne')
+    const switchAccountBtn = await findAllByText(container!, 'PROD_WhitelistIP')
     expect(switchAccountBtn).toBeDefined()
 
     act(() => {
-      fireEvent.click(switchAccountBtn)
+      fireEvent.click(switchAccountBtn[0])
     })
 
-    expect(switchAccountMock).toHaveBeenCalledWith({ accountId: 'XICOBc_qRa2PJmVaWOx-cQ' })
+    expect(switchAccountMock).toHaveBeenCalledWith({ accountId: 'jme9EUgeT3uIk0cDZZMS4Q' })
   })
 })
