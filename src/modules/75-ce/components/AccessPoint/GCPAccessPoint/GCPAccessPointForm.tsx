@@ -200,7 +200,7 @@ const GCPAccessPointForm: React.FC<GCPAccessPointFormProps> = ({
       vpcs?.response?.map(v => {
         return {
           label: v.name as string,
-          value: v.name as string
+          value: v.id as string
         }
       }),
       []
@@ -239,7 +239,7 @@ const GCPAccessPointForm: React.FC<GCPAccessPointFormProps> = ({
       subnets?.response?.map(s => {
         return {
           label: s.name as string,
-          value: s.name as string
+          value: s.id as string
         }
       }),
       []

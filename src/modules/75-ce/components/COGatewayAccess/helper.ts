@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { isEmpty as _isEmpty, defaultTo as _defaultTo } from 'lodash-es'
+import { isEmpty as _isEmpty, defaultTo as _defaultTo, get } from 'lodash-es'
 import type { SelectOption } from '@wings-software/uicore'
 import { Utils } from '@ce/common/Utils'
 import type {
@@ -300,7 +300,7 @@ export const getSupportedResourcesQueryParams = ({
   gatewayDetails,
   accountId
 }: BaseFetchDetails): AccessPointResourcesQueryParams => {
-  const params: AccessPointResourcesQueryParams = {
+  const params: AccessPointResourcesQueryParams & { subnet?: string } = {
     cloud_account_id: gatewayDetails.cloudAccount.id,
     accountIdentifier: accountId,
     region: ''
@@ -314,6 +314,12 @@ export const getSupportedResourcesQueryParams = ({
       ? gatewayDetails.selectedInstances[0].region
       : _defaultTo(gatewayDetails.routing.instance.scale_group?.region, '')
     params.resource_group_name = gatewayDetails.selectedInstances[0]?.metadata?.resourceGroup
+  }
+  if (Utils.isProviderGcp(gatewayDetails.provider)) {
+    const subnet = get(gatewayDetails, 'selectedInstances.0.metadata.network_interfaces.0.subnetwork', null)
+    if (subnet) {
+      params.subnet = subnet
+    }
   }
   return params
 }
