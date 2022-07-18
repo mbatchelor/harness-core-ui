@@ -103,7 +103,8 @@ const ConfigureAlerts: React.FC<StepProps<BudgetStepData> & Props> = props => {
     return {
       alertThresholds: budget?.alertThresholds?.map(alert => ({
         ...alert,
-        notificationChannel: alert.slackWebhooks?.length ? BudgetAlertChannels.SLACK : BudgetAlertChannels.EMAIL
+        notificationChannel: alert.slackWebhooks?.length ? BudgetAlertChannels.SLACK : BudgetAlertChannels.EMAIL,
+        slackWebhooks: alert.slackWebhooks || []
       })) || [makeNewThresold()]
     }
   }
@@ -166,35 +167,29 @@ const ConfigureAlerts: React.FC<StepProps<BudgetStepData> & Props> = props => {
       <Formik<ThresholdForm>
         formName="alertThresholds"
         initialValues={getInitialValues()}
-        validationSchema={Yup.object().shape(
-          {
-            alertThresholds: Yup.array(
-              Yup.object({
-                emailAddresses: Yup.lazy(() =>
-                  Yup.array(
-                    Yup.string().when('slackWebhooks', {
-                      is: slackWebhooks => !slackWebhooks || slackWebhooks.length === 0,
-                      then: Yup.string()
-                        .required(getString('common.validation.email.required'))
-                        .email(getString('common.validation.email.format'))
-                    })
-                  )
-                ),
-                slackWebhooks: Yup.lazy(() =>
-                  Yup.array(
-                    Yup.string().when('emailAddresses', {
-                      is: emailAddresses => !emailAddresses || emailAddresses.length === 0,
-                      then: Yup.string()
-                        .required(getString('common.validation.urlIsRequired'))
-                        .url(getString('validation.urlIsNotValid'))
-                    })
-                  )
-                )
-              })
-            )
-          },
-          [['emailAddresses', 'slackWebhooks']]
-        )}
+        validationSchema={Yup.object().shape({
+          alertThresholds: Yup.array(
+            Yup.object({
+              emailAddresses: Yup.array()
+                .of(Yup.string().email(getString('common.validation.email.format')))
+                .when('notificationChannel', {
+                  is: 1,
+                  then: Yup.array()
+                    .of(Yup.string().email(getString('common.validation.email.format')))
+                    .required(getString('common.validation.email.required'))
+                }),
+              slackWebhooks: Yup.array()
+                .of(Yup.string().url(getString('validation.urlIsNotValid')))
+                .when('notificationChannel', {
+                  is: 0,
+                  then: Yup.array()
+                    .of(Yup.string().url(getString('validation.urlIsNotValid')))
+                    .required(getString('common.validation.urlIsRequired'))
+                    .nullable()
+                })
+            })
+          )
+        })}
         onSubmit={data => {
           handleSubmit(data)
         }}

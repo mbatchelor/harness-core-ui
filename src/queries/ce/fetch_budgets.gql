@@ -26,6 +26,7 @@ query FetchBudget {
       percentage
       emailAddresses
       userGroupIds
+      slackWebhooks
     }
   }
 }

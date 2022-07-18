@@ -179,6 +179,7 @@ export const FetchBudgetDocument = gql`
         percentage
         emailAddresses
         userGroupIds
+        slackWebhooks
       }
     }
   }
@@ -1363,6 +1364,7 @@ export type FetchBudgetQuery = {
       percentage: number
       emailAddresses: Array<string | null> | null
       userGroupIds: Array<string | null> | null
+      slackWebhooks: Array<string | null> | null
     } | null> | null
   } | null> | null
 }
