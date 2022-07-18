@@ -28,7 +28,12 @@ import { Scope } from '@common/interfaces/SecretsInterface'
 import { Connectors } from '@connectors/constants'
 import { getCompleteConnectorUrl, GitAuthenticationProtocol } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { ConnectorInfoDTO, useGetConnector } from 'services/cd-ng'
+import {
+  ConnectorInfoDTO,
+  getListOfBranchesByRefConnectorV2Promise,
+  ResponseGitBranchesResponseDTO,
+  useGetConnector
+} from 'services/cd-ng'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { ConnectorRefWidthKeys, getPrCloneStrategyOptions, sslVerifyOptions } from '@pipeline/utils/constants'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
@@ -36,7 +41,12 @@ import { MultiTypeTextField } from '@common/components/MultiTypeText/MultiTypeTe
 import { MultiTypeSelectField } from '@common/components/MultiTypeSelect/MultiTypeSelect'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
-import { CodebaseTypes, getConnectorRefWidth, isRuntimeInput } from '@pipeline/utils/CIUtils'
+import {
+  CodebaseTypes,
+  getCodebaseRepoNameFromConnector,
+  getConnectorRefWidth,
+  isRuntimeInput
+} from '@pipeline/utils/CIUtils'
 import { StepViewType } from '../AbstractSteps/Step'
 import css from './CICodebaseInputSetForm.module.scss'
 export interface CICodebaseInputSetFormProps {
@@ -228,6 +238,7 @@ function CICodebaseInputSetFormInternal({
   const prCloneStrategyOptions = getPrCloneStrategyOptions(getString)
   const [codeBaseType, setCodeBaseType] = useState<CodeBaseType | undefined>(get(formik?.values, codeBaseTypePath))
   const [gitAuthProtocol, setGitAuthProtocol] = useState<GitAuthenticationProtocol>(GitAuthenticationProtocol.HTTPS)
+  const [codebaseConnector, setCodebaseConnector] = useState<ConnectorInfoDTO>()
 
   const radioLabels = {
     branch: getString('gitBranch'),
@@ -311,6 +322,7 @@ function CICodebaseInputSetFormInternal({
 
   useEffect(() => {
     if (!loadingConnectorDetails && !isUndefined(connectorDetails)) {
+      setCodebaseConnector(connectorDetails?.data?.connector)
       setConnectorType(get(connectorDetails, 'data.connector.type', '') as ConnectorInfoDTO['type'])
     }
 
@@ -329,6 +341,30 @@ function CICodebaseInputSetFormInternal({
       }
     }
   }, [loadingConnectorDetails, connectorDetails])
+
+  useEffect(() => {
+    if (codebaseConnector) {
+      const connectorRef = get(originalPipeline, 'properties.ci.codebase.connectorRef', '')
+      let repoName = get(originalPipeline, 'properties.ci.codebase.repoName', '')
+      if (!repoName) {
+        repoName = getCodebaseRepoNameFromConnector(codebaseConnector)
+      }
+      if (connectorRef && repoName) {
+        getListOfBranchesByRefConnectorV2Promise({
+          queryParams: {
+            connectorRef,
+            accountIdentifier: accountId,
+            orgIdentifier,
+            projectIdentifier,
+            repoName: encodeURI(repoName),
+            size: 1
+          }
+        }).then((result: ResponseGitBranchesResponseDTO) => {
+          console.log(result)
+        })
+      }
+    }
+  }, [originalPipeline, codebaseConnector])
 
   useEffect(() => {
     const type = get(formik?.values, codeBaseTypePath) as CodeBaseType

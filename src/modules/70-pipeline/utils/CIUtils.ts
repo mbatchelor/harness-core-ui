@@ -14,6 +14,8 @@ import { RegExAllowedInputExpression } from '@pipeline/components/PipelineSteps/
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
+import type { ConnectorInfoDTO } from 'services/cd-ng'
+import { connectorUrlType } from '@connectors/constants'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { ConnectorRefWidth } from './constants'
 
@@ -140,4 +142,15 @@ export const getPipelineWithoutCodebaseInputs = (values: { [key: string]: any })
     }
     return newValues
   }
+}
+
+export const getCodebaseRepoNameFromConnector = (codebaseConnector: ConnectorInfoDTO): string => {
+  let repoName
+  const connectorGitScope = get(codebaseConnector, 'spec.type', '')
+  if (connectorGitScope === connectorUrlType.REPO) {
+    repoName = get(codebaseConnector, 'spec.url')
+  } else if (connectorGitScope === connectorUrlType.ACCOUNT || connectorGitScope === connectorUrlType.PROJECT) {
+    repoName = get(codebaseConnector, 'spec.validationRepo', '')
+  }
+  return repoName
 }
