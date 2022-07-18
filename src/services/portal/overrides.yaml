@@ -54,6 +54,7 @@ allowpaths:
   - '/delegates-verification/initialized'
   - '/delegates-verification/initializedV2'
   - '/awshelper/aws-regions'
+  - '/users/accounts'
 operationIdOverrides:
   /setup/delegates.get: getDelegates
   /setup/delegates/status.get: getDelegatesStatus
@@ -103,3 +104,4 @@ operationIdOverrides:
   /delegates-verification/initialized: verifyDelegateInitialization
   /delegates-verification/initializedV2: verifyDelegateInitializationV2
   /awshelper/aws-regions: getAwsRegions
+  /users/accounts: getUserAccounts
