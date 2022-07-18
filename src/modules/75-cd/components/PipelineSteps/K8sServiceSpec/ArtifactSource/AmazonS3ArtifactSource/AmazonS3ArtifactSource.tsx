@@ -18,10 +18,10 @@ import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import { ArtifactToConnectorMap, ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
+import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import { getDefaultQueryParam, isArtifactSourceRuntime, isFieldfromTriggerTabDisabled } from '../artifactSourceUtils'
 import css from '../../K8sServiceSpec.module.scss'
-import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
 
 export const resetBuckets = (formik: FormikValues, bucketPath: string): void => {
   const bucketValue = get(formik.values, bucketPath, '')
@@ -56,7 +56,6 @@ const Content = (props: AmazonS3ContentProps): JSX.Element => {
     artifactPath,
     isBucketSelectionDisabled
   } = props
-  console.log('props', props)
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const { getRBACErrorMessage } = useRBACError()
@@ -64,6 +63,11 @@ const Content = (props: AmazonS3ContentProps): JSX.Element => {
   const fixedConnectorValue = getDefaultQueryParam(
     artifact?.spec?.connectorRef,
     get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, '')
+  )
+
+  const fixedFilePathRegexValue = getDefaultQueryParam(
+    artifact?.spec?.filePathRegex,
+    get(initialValues?.artifacts, `${artifactPath}.spec.filePathRegex`, '')
   )
 
   const {
@@ -186,7 +190,11 @@ const Content = (props: AmazonS3ContentProps): JSX.Element => {
               label={getString('pipeline.manifestType.bucketName')}
               placeholder={getString('pipeline.manifestType.bucketPlaceHolder')}
               name={`${path}.artifacts.${artifactPath}.spec.bucketName`}
-              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.bucketName`, true)}
+              disabled={
+                fromTrigger
+                  ? isFieldDisabled(`artifacts.${artifactPath}.spec.bucketName`)
+                  : isFieldDisabled(`artifacts.${artifactPath}.spec.bucketName`, true)
+              }
               useValue
               multiTypeInputProps={{
                 expressions,
@@ -236,12 +244,14 @@ const Content = (props: AmazonS3ContentProps): JSX.Element => {
             />
           )}
 
-          {!!fromTrigger  && (
+          {!!fromTrigger && (
             <FormInput.MultiTextInput
               label={getString('pipeline.artifactsSelection.filePathRegexLabel')}
               multiTextInputProps={{
                 expressions,
-                value: isFieldRuntime(`artifacts.${artifactPath}.spec.filePathRegex`, template)? TriggerDefaultFieldList.build : get(formik,`values.${path}.artifacts.${artifactPath}.spec.filePathRegex`),
+                value: isFieldRuntime(`artifacts.${artifactPath}.spec.filePathRegex`, template)
+                  ? TriggerDefaultFieldList.build
+                  : fixedFilePathRegexValue,
                 allowableTypes
               }}
               disabled={true}
