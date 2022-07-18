@@ -11,7 +11,6 @@ import {
   ButtonSize,
   ButtonVariation,
   Container,
-  DropDown,
   Icon,
   Layout,
   SelectOption,
@@ -53,6 +52,7 @@ import { AppStoreContext } from 'framework/AppStore/AppStoreContext'
 import { DefaultNewTemplateId, DefaultNewVersionLabel } from 'framework/Templates/templates'
 import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import StudioGitPopover from '@pipeline/components/PipelineStudio/StudioGitPopover'
+import { VersionsDropDown } from '@templates-library/components/VersionsDropDown/VersionsDropDown'
 import css from './TemplateStudioSubHeaderLeftView.module.scss'
 
 export interface TemplateStudioSubHeaderLeftViewProps {
@@ -273,12 +273,12 @@ export const TemplateStudioSubHeaderLeftView: (props: TemplateStudioSubHeaderLef
           </Layout.Horizontal>
         </Container>
         {templateIdentifier !== DefaultNewTemplateId && (
-          <DropDown
+          <VersionsDropDown
             onChange={item => goToTemplateVersion(item.value.toString())}
             items={versionOptions}
             value={template.versionLabel}
-            filterable={false}
             className={css.versionDropDown}
+            stableVersion={stableVersion}
           />
         )}
         {template.versionLabel !== stableVersion && !isUpdated && !isReadonly && (

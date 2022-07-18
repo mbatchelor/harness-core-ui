@@ -5,12 +5,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useContext, useMemo } from 'react'
+import React, { useMemo } from 'react'
 import {
   ButtonSize,
   ButtonVariation,
   Container,
-  DropDown,
   Icon,
   Layout,
   PageError,
@@ -46,7 +45,7 @@ import { getVersionLabelText } from '@templates-library/utils/templatesUtils'
 import { TemplateInputs } from '@templates-library/components/TemplateInputs/TemplateInputs'
 import EntitySetupUsage from '@common/pages/entityUsage/EntityUsage'
 import { EntityType } from '@common/pages/entityUsage/EntityConstants'
-import { TemplateContext } from '../TemplateStudio/TemplateContext/TemplateContext'
+import { VersionsDropDown } from '@templates-library/components/VersionsDropDown/VersionsDropDown'
 import { TemplateActivityLog } from '../TemplateActivityLog/TemplateActivityLog'
 import css from './TemplateDetails.module.scss'
 
@@ -88,7 +87,6 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
   const { getString } = useStrings()
   const history = useHistory()
   const [versionOptions, setVersionOptions] = React.useState<SelectOption[]>([])
-  const { isReadonly } = useContext(TemplateContext)
   const { isGitSyncEnabled } = useAppStore()
   const [templates, setTemplates] = React.useState<TemplateSummaryResponse[]>([])
   const [selectedTemplate, setSelectedTemplate] = React.useState<TemplateSummaryResponse>()
@@ -176,6 +174,10 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
       )
     }
   }
+
+  const stableVersion = React.useMemo(() => {
+    return templates?.find(item => item.stableTemplate && !isEmpty(item.versionLabel))?.versionLabel
+  }, [templates])
 
   const handleTabChange = React.useCallback((tab: TemplateTabs) => {
     setSelectedTab(tab)
@@ -303,14 +305,13 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
                                 <Text font={{ weight: 'semi-bold' }} color={Color.BLACK}>
                                   {getString('common.versionLabel')}
                                 </Text>
-                                <DropDown
-                                  filterable={false}
+                                <VersionsDropDown
                                   items={versionOptions}
                                   value={defaultTo(selectedTemplate.versionLabel, DefaultStableVersionValue)}
                                   onChange={onChange}
-                                  disabled={isReadonly}
                                   width={300}
                                   popoverClassName={css.dropdown}
+                                  stableVersion={stableVersion}
                                 />
                               </Layout.Vertical>
                             </Container>

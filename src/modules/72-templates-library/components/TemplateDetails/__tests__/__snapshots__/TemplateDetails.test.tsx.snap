@@ -298,7 +298,33 @@ exports[`<TemplateDetails /> tests should match snapshot 1`] = `
                                       data-testid="dropdown-value"
                                       style="--text-line-clamp: 1;"
                                     >
-                                      templatesLibrary.stableVersion
+                                      <div
+                                        class="StyledProps--font StyledProps--main container"
+                                      >
+                                        <div
+                                          class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-space-between"
+                                        >
+                                          <p
+                                            class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-body"
+                                            style="--text-line-clamp: 1;"
+                                          >
+                                            v4
+                                          </p>
+                                          <span
+                                            class="Tag--main"
+                                          >
+                                            <span
+                                              class="bp3-tag tag"
+                                            >
+                                              <span
+                                                class="bp3-text-overflow-ellipsis bp3-fill"
+                                              >
+                                                COMMON.STABLE
+                                              </span>
+                                            </span>
+                                          </span>
+                                        </div>
+                                      </div>
                                     </p>
                                   </div>
                                   <div

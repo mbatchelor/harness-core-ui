@@ -56,7 +56,7 @@ describe('<TemplateDetails /> tests', () => {
       </TestWrapper>
     )
     const dropValue = getByTestId('dropdown-value')
-    expect(dropValue).toHaveTextContent('templatesLibrary.stableVersion')
+    expect(dropValue).toHaveTextContent('v4COMMON.STABLE')
   })
 
   test('should show always use stable version of the template ', async () => {
@@ -69,7 +69,7 @@ describe('<TemplateDetails /> tests', () => {
       </TestWrapper>
     )
     const dropValue = getByTestId('dropdown-value')
-    expect(dropValue).toHaveTextContent('templatesLibrary.alwaysUseStableVersion')
+    expect(dropValue).toHaveTextContent('-1')
   })
 
   test('should open template studio on clicking open in template studio', async () => {

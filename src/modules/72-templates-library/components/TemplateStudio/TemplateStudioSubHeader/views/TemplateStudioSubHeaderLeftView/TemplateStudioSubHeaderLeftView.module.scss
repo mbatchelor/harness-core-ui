@@ -26,12 +26,11 @@
       border-color: var(--primary-6) !important;
       height: 30px;
       min-width: var(--spacing-11) !important;
-      max-width: 120px;
+      max-width: 140px;
       column-gap: var(--spacing-4) !important;
     }
-    :global(.DropDown--label) {
+    :global(.DropDown--label) p {
       color: var(--primary-7) !important;
-      font-size: 13px !important;
     }
     :global(.DropDown--btnWrapper) {
       svg {
