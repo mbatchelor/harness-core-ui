@@ -154,7 +154,7 @@ export const getCodebaseRepoNameFromConnector = (
   if (connectorGitScope === connectorUrlType.REPO) {
     const repoURL: string = get(codebaseConnector, 'spec.url')
     const gitProviderURL = getGitUrl(getString, get(codebaseConnector, 'type'))
-    repoName = gitProviderURL ? repoURL.split(gitProviderURL)?.[1]?.split('/')?.[1] : ''
+    repoName = gitProviderURL ? repoURL.split(gitProviderURL)?.[1]?.split('/')?.[2] : ''
   } else if (connectorGitScope === connectorUrlType.ACCOUNT || connectorGitScope === connectorUrlType.PROJECT) {
     repoName = get(codebaseConnector, 'spec.validationRepo', '')
   }
