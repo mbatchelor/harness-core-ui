@@ -1557,7 +1557,8 @@ exports[`test cases for Perspective Reports and Budget page should be able to re
                         class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
                       >
                         <p
-                          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey700 StyledProps--font-small"
+                          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey700 StyledProps--font-small"
+                          style="--text-line-clamp: 1;"
                         >
                           yo@lo.com
                         </p>
@@ -1655,7 +1656,8 @@ exports[`test cases for Perspective Reports and Budget page should be able to re
                         class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
                       >
                         <p
-                          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey700 StyledProps--font-small"
+                          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey700 StyledProps--font-small"
+                          style="--text-line-clamp: 1;"
                         >
                           yo@lo.com
                         </p>
@@ -1753,7 +1755,8 @@ exports[`test cases for Perspective Reports and Budget page should be able to re
                         class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
                       >
                         <p
-                          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey700 StyledProps--font-small"
+                          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey700 StyledProps--font-small"
+                          style="--text-line-clamp: 1;"
                         >
                           yo@lo.com
                         </p>
@@ -1851,7 +1854,8 @@ exports[`test cases for Perspective Reports and Budget page should be able to re
                         class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
                       >
                         <p
-                          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey700 StyledProps--font-small"
+                          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey700 StyledProps--font-small"
+                          style="--text-line-clamp: 1;"
                         >
                           yo@lo.com
                         </p>
@@ -1949,7 +1953,8 @@ exports[`test cases for Perspective Reports and Budget page should be able to re
                         class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
                       >
                         <p
-                          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey700 StyledProps--font-small"
+                          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey700 StyledProps--font-small"
+                          style="--text-line-clamp: 1;"
                         >
                           shubhanshu.verma@nomailplz.com
                         </p>
@@ -2033,7 +2038,8 @@ exports[`test cases for Perspective Reports and Budget page should be able to re
                         class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
                       >
                         <p
-                          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey700 StyledProps--font-small"
+                          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey700 StyledProps--font-small"
+                          style="--text-line-clamp: 1;"
                         >
                           shubhanshu.verma@nomailplz.com
                         </p>
@@ -2117,7 +2123,8 @@ exports[`test cases for Perspective Reports and Budget page should be able to re
                         class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
                       >
                         <p
-                          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey700 StyledProps--font-small"
+                          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey700 StyledProps--font-small"
+                          style="--text-line-clamp: 1;"
                         >
                           shubhanshu.verma@nomailplz.com
                         </p>
@@ -2371,7 +2378,8 @@ exports[`test cases for Perspective Reports and Budget page should be able to re
                           class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
                         >
                           <p
-                            class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey700 StyledProps--font-small"
+                            class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey700 StyledProps--font-small"
+                            style="--text-line-clamp: 1;"
                           >
                             shubhanshu.verma@harness.io
                           </p>
@@ -2532,7 +2540,8 @@ exports[`test cases for Perspective Reports and Budget page should be able to re
                           class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
                         >
                           <p
-                            class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey700 StyledProps--font-small"
+                            class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey700 StyledProps--font-small"
+                            style="--text-line-clamp: 1;"
                           >
                             webhook-url-here
                           </p>
@@ -2554,7 +2563,8 @@ exports[`test cases for Perspective Reports and Budget page should be able to re
                           class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
                         >
                           <p
-                            class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey700 StyledProps--font-small"
+                            class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey700 StyledProps--font-small"
+                            style="--text-line-clamp: 1;"
                           >
                             email1
                           </p>
@@ -2590,7 +2600,8 @@ exports[`test cases for Perspective Reports and Budget page should be able to re
                           class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
                         >
                           <p
-                            class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey700 StyledProps--font-small"
+                            class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey700 StyledProps--font-small"
+                            style="--text-line-clamp: 1;"
                           >
                             teams-url-here
                           </p>
