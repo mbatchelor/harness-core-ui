@@ -236,12 +236,12 @@ const Content = (props: AmazonS3ContentProps): JSX.Element => {
             />
           )}
 
-          {!!fromTrigger && isFieldRuntime(`artifacts.${artifactPath}.spec.filePathRegex`, template) && (
+          {!!fromTrigger  && (
             <FormInput.MultiTextInput
               label={getString('pipeline.artifactsSelection.filePathRegexLabel')}
               multiTextInputProps={{
                 expressions,
-                value: TriggerDefaultFieldList.build,
+                value: isFieldRuntime(`artifacts.${artifactPath}.spec.filePathRegex`, template)? TriggerDefaultFieldList.build : get(formik,`values.${path}.artifacts.${artifactPath}.spec.filePathRegex`),
                 allowableTypes
               }}
               disabled={true}
