@@ -669,7 +669,7 @@ const RenderEmailAddresses = ({ emailAddresses = [] }: { emailAddresses: string[
 
   return (
     <Layout.Horizontal spacing="xsmall">
-      <Text color={Color.GREY_700} font="small">
+      <Text color={Color.GREY_700} font="small" lineClamp={1}>
         {email}
       </Text>
       {emailAddresses.length ? (

@@ -170,23 +170,19 @@ const ConfigureAlerts: React.FC<StepProps<BudgetStepData> & Props> = props => {
         validationSchema={Yup.object().shape({
           alertThresholds: Yup.array(
             Yup.object({
-              emailAddresses: Yup.array()
-                .of(Yup.string().email(getString('common.validation.email.format')))
-                .when('notificationChannel', {
-                  is: BudgetAlertChannels.EMAIL,
-                  then: Yup.array()
-                    .of(Yup.string().email(getString('common.validation.email.format')))
-                    .required(getString('common.validation.email.required'))
-                }),
-              slackWebhooks: Yup.array()
-                .of(Yup.string().url(getString('validation.urlIsNotValid')))
-                .when('notificationChannel', {
-                  is: BudgetAlertChannels.SLACK,
-                  then: Yup.array()
-                    .of(Yup.string().url(getString('validation.urlIsNotValid')))
-                    .required(getString('common.validation.urlIsRequired'))
-                    .nullable()
-                })
+              emailAddresses: Yup.array().when('notificationChannel', {
+                is: BudgetAlertChannels.EMAIL,
+                then: Yup.array()
+                  .of(Yup.string().email(getString('common.validation.email.format')))
+                  .required(getString('common.validation.email.required'))
+              }),
+              slackWebhooks: Yup.array().when('notificationChannel', {
+                is: BudgetAlertChannels.SLACK,
+                then: Yup.array()
+                  .of(Yup.string().url(getString('validation.urlIsNotValid')))
+                  .required(getString('common.validation.urlIsRequired'))
+                  .nullable()
+              })
             })
           )
         })}
