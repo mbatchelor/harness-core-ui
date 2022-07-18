@@ -12,7 +12,7 @@ import type { DropDownProps } from '@wings-software/uicore/dist/components/DropD
 import { useStrings } from 'framework/strings'
 import css from './VersionsDropDown.module.scss'
 
-interface VersionsDropDownProps extends DropDownProps {
+export interface VersionsDropDownProps extends DropDownProps {
   stableVersion?: string
 }
 
