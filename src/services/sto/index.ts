@@ -33,13 +33,13 @@ export function useIssueCounts(pipelineId: string, executionId: string): GetStat
   const { STO_API_V2 } = useFeatureFlags()
 
   return useGet<IssueCounts, ErrorResponse>({
-    path: `/sto/api/${STO_API_V2 ? 'v2' : 'v1'}/issue-counts`,
+    path: `/sto/api/${STO_API_V2 ? 'v2/frontend' : 'v1'}/issue-counts`,
     queryParams: {
       accountId,
       orgId,
       projectId,
       pipelineId,
-      executionId
+      ...(STO_API_V2 ? { executionIds: executionId } : { executionId })
     }
   })
 }
