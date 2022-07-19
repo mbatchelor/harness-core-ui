@@ -64,6 +64,7 @@ import { GovernanceRouteDestinations } from '@governance/RouteDestinations'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import type { ModuleListCardProps } from '@projects-orgs/components/ModuleListCard/ModuleListCard'
 import { FeatureFlag } from '@common/featureFlags'
+import { CDTemplateStudioWrapper } from '@cd/components/TemplateStudio/CDTemplateStudioWrapper/CDTemplateStudioWrapper'
 import { Environments } from './components/Environments/Environments'
 import { Environments as EnvironmentsV2 } from './components/EnvironmentsV2/Environments'
 import EnvironmentDetails from './components/EnvironmentsV2/EnvironmentDetails/EnvironmentDetails'
@@ -427,6 +428,8 @@ export default (
 
     {
       TemplateRouteDestinations({
+        templateStudioComponent: CDTemplateStudioWrapper,
+        templateStudioPageName: PAGE_NAME.CDTemplateStudioWrapper,
         moduleParams,
         licenseRedirectData,
         sidebarProps: CDSideNavProps

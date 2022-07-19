@@ -66,14 +66,14 @@ const CIPipelineStudio: React.FC = (): JSX.Element => {
       queryParams={{ accountIdentifier, orgIdentifier, projectIdentifier, repoIdentifier, branch }}
       pipelineIdentifier={pipelineIdentifier}
       renderPipelineStage={args =>
-        getCFPipelineStages(
+        getCFPipelineStages({
           args,
           getString,
-          licenseInformation['CI'] && isCIEnabled,
-          licenseInformation['CD'] && isCDEnabled,
-          licenseInformation['CF'] && isCFEnabled,
-          true
-        )
+          isCIEnabled: licenseInformation['CI'] && isCIEnabled,
+          isCDEnabled: licenseInformation['CD'] && isCDEnabled,
+          isCFEnabled: licenseInformation['CF'] && isCFEnabled,
+          isApprovalStageEnabled: true
+        })
       }
       stepsFactory={factory}
       runPipeline={handleRunPipeline}
@@ -89,21 +89,22 @@ const CIPipelineStudio: React.FC = (): JSX.Element => {
   )
 }
 
-export const getCFPipelineStages: (
-  args: Omit<PipelineStagesProps, 'children'>,
-  getString: UseStringsReturn['getString'],
-  isCIEnabled?: boolean,
-  isCDEnabled?: boolean,
-  isCFEnabled?: boolean,
+interface GetCFPipelineStagesArgs {
+  args: Omit<PipelineStagesProps, 'children'>
+  getString: UseStringsReturn['getString']
+  isCIEnabled?: boolean
+  isCDEnabled?: boolean
+  isCFEnabled?: boolean
+  isSTOEnabled?: boolean
   isApprovalStageEnabled?: boolean
-) => React.ReactElement<PipelineStagesProps> = (
+}
+
+export const getCFPipelineStages: (args: GetCFPipelineStagesArgs) => React.ReactElement<PipelineStagesProps> = ({
   args,
   getString,
-  _isCIEnabled = false,
-  _isCDEnabled = false,
   isCFEnabled = false,
-  isApprovalStageEnabled = true
-) => {
+  isApprovalStageEnabled = false
+}) => {
   return (
     <PipelineStages {...args}>
       {stagesCollection.getStage(StageType.FEATURE, isCFEnabled, getString)}

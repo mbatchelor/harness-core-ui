@@ -109,10 +109,18 @@ export default (
 )
 
 export const TemplateRouteDestinations: React.FC<{
+  templateStudioComponent?: React.FC
+  templateStudioPageName?: PAGE_NAME
   moduleParams: ModulePathParams
   licenseRedirectData?: LicenseRedirectProps
   sidebarProps?: SidebarContext
-}> = ({ moduleParams, licenseRedirectData, sidebarProps }) => (
+}> = ({
+  templateStudioComponent: TemplateStudio = TemplateStudioWrapper,
+  templateStudioPageName,
+  moduleParams,
+  licenseRedirectData,
+  sidebarProps
+}) => (
   <>
     <RouteWithLayout
       exact
@@ -128,9 +136,9 @@ export const TemplateRouteDestinations: React.FC<{
       licenseRedirectData={licenseRedirectData}
       sidebarProps={sidebarProps}
       path={routes.toTemplateStudio({ ...accountPathProps, ...templatePathProps, ...moduleParams })}
-      pageName={PAGE_NAME.TemplateStudioWrapper}
+      pageName={templateStudioPageName}
     >
-      <TemplateStudioWrapper />
+      <TemplateStudio />
     </RouteWithLayout>
   </>
 )

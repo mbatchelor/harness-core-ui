@@ -34,7 +34,8 @@ const PipelineTemplateCanvasWrapper = (): JSX.Element => {
     state: { template, templateView, isLoading, isUpdated },
     updateTemplate,
     updateTemplateView,
-    isReadonly
+    isReadonly,
+    renderPipelineStage
   } = React.useContext(TemplateContext)
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { branch, repoIdentifier } = useQueryParams<GitQueryParams>()
@@ -78,6 +79,7 @@ const PipelineTemplateCanvasWrapper = (): JSX.Element => {
       onUpdatePipeline={onUpdatePipeline}
       contextType={PipelineContextType.PipelineTemplate}
       isReadOnly={isReadonly}
+      renderPipelineStage={renderPipelineStage}
     >
       <PipelineTemplateCanvasWithRef />
     </TemplatePipelineProvider>

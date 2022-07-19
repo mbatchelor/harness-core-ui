@@ -28,7 +28,8 @@ const StageTemplateCanvasWrapper = (_props: unknown, formikRef: TemplateFormRef)
   const {
     state: { template, isLoading, isUpdated },
     updateTemplate,
-    isReadonly
+    isReadonly,
+    renderPipelineStage
   } = React.useContext(TemplateContext)
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { branch, repoIdentifier } = useQueryParams<GitQueryParams>()
@@ -68,6 +69,7 @@ const StageTemplateCanvasWrapper = (_props: unknown, formikRef: TemplateFormRef)
       onUpdatePipeline={onUpdatePipeline}
       contextType={PipelineContextType.StageTemplate}
       isReadOnly={isReadonly}
+      renderPipelineStage={renderPipelineStage}
     >
       <StageTemplateCanvasWithRef ref={formikRef} />
     </TemplatePipelineProvider>

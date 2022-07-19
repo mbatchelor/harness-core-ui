@@ -36,6 +36,7 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { usePermission } from '@rbac/hooks/usePermission'
 import type { PermissionCheck } from 'services/rbac'
 import { DefaultNewTemplateId, DefaultNewVersionLabel, DefaultTemplate } from 'framework/Templates/templates'
+import type { PipelineContextInterface } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { ActionReturnType, TemplateContextActions } from './TemplateActions'
 import { initialState, TemplateReducer, TemplateReducerState, TemplateViewData } from './TemplateReducer'
 
@@ -494,6 +495,7 @@ export interface TemplateContextInterface {
   deleteTemplateCache: (gitDetails?: EntityGitDetails) => Promise<void>
   setLoading: (loading: boolean) => void
   updateGitDetails: (gitDetails: EntityGitDetails) => Promise<void>
+  renderPipelineStage?: PipelineContextInterface['renderPipelineStage']
 }
 
 const _deleteTemplateCache = async (
@@ -579,7 +581,8 @@ export const TemplateContext = React.createContext<TemplateContextInterface>({
   updateTemplate: /* istanbul ignore next */ () => new Promise<void>(() => undefined),
   deleteTemplateCache: /* istanbul ignore next */ () => new Promise<void>(() => undefined),
   setLoading: /* istanbul ignore next */ () => void 0,
-  updateGitDetails: /* istanbul ignore next */ () => new Promise<void>(() => undefined)
+  updateGitDetails: /* istanbul ignore next */ () => new Promise<void>(() => undefined),
+  renderPipelineStage: () => <div />
 })
 
 export const TemplateProvider: React.FC<{
@@ -587,7 +590,8 @@ export const TemplateProvider: React.FC<{
   templateIdentifier: string
   versionLabel?: string
   templateType: string
-}> = ({ queryParams, templateIdentifier, versionLabel, templateType, children }) => {
+  renderPipelineStage?: PipelineContextInterface['renderPipelineStage']
+}> = ({ queryParams, templateIdentifier, versionLabel, templateType, renderPipelineStage, children }) => {
   const { repoIdentifier, branch } = queryParams
   const abortControllerRef = React.useRef<AbortController | null>(null)
   const isMounted = React.useRef(false)
@@ -740,7 +744,8 @@ export const TemplateProvider: React.FC<{
         deleteTemplateCache,
         setYamlHandler,
         setLoading,
-        updateGitDetails
+        updateGitDetails,
+        renderPipelineStage
       }}
     >
       {children}

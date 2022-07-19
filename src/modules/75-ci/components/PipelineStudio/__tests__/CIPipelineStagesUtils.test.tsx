@@ -9,6 +9,6 @@ import { getCIPipelineStages } from '../CIPipelineStagesUtils'
 
 describe('CIPipelineStagesUtils', () => {
   test('getCIPipelineStages works', () => {
-    expect(getCIPipelineStages({}, () => '')).toMatchSnapshot()
+    expect(getCIPipelineStages({ args: {}, getString: () => '' })).toMatchSnapshot()
   })
 })
