@@ -64,6 +64,11 @@ const Content = (props: AmazonS3ContentProps): JSX.Element => {
     get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, '')
   )
 
+  const fixedFilePathRegexValue = getDefaultQueryParam(
+    artifact?.spec?.filePathRegex,
+    get(initialValues?.artifacts, `${artifactPath}.spec.filePathRegex`, '')
+  )
+
   const {
     data: bucketData,
     error,
@@ -184,7 +189,11 @@ const Content = (props: AmazonS3ContentProps): JSX.Element => {
               label={getString('pipeline.manifestType.bucketName')}
               placeholder={getString('pipeline.manifestType.bucketPlaceHolder')}
               name={`${path}.artifacts.${artifactPath}.spec.bucketName`}
-              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.bucketName`, true)}
+              disabled={
+                fromTrigger
+                  ? isFieldDisabled(`artifacts.${artifactPath}.spec.bucketName`)
+                  : isFieldDisabled(`artifacts.${artifactPath}.spec.bucketName`, true)
+              }
               useValue
               multiTypeInputProps={{
                 expressions,
@@ -221,7 +230,7 @@ const Content = (props: AmazonS3ContentProps): JSX.Element => {
             />
           )}
 
-          {isFieldRuntime(`artifacts.${artifactPath}.spec.filePathRegex`, template) && (
+          {!fromTrigger && isFieldRuntime(`artifacts.${artifactPath}.spec.filePathRegex`, template) && (
             <FormInput.MultiTextInput
               label={getString('pipeline.artifactsSelection.filePathRegexLabel')}
               name={`${path}.artifacts.${artifactPath}.spec.filePathRegex`}
@@ -231,6 +240,30 @@ const Content = (props: AmazonS3ContentProps): JSX.Element => {
                 expressions,
                 allowableTypes
               }}
+            />
+          )}
+
+          {!!fromTrigger && !isFieldRuntime(`artifacts.${artifactPath}.spec.filePathRegex`, template) && (
+            <FormInput.MultiTextInput
+              label={getString('pipeline.artifactsSelection.filePathRegexLabel')}
+              multiTextInputProps={{
+                expressions,
+                value: fixedFilePathRegexValue,
+                allowableTypes
+              }}
+              disabled={true}
+              name={`${path}.artifacts.${artifactPath}.spec.filePathRegex`}
+            />
+          )}
+
+          {!!fromTrigger && isFieldRuntime(`artifacts.${artifactPath}.spec.filePathRegex`, template) && (
+            <FormInput.MultiTextInput
+              label={getString('pipeline.artifactsSelection.filePathRegexLabel')}
+              multiTextInputProps={{
+                expressions,
+                allowableTypes
+              }}
+              name={`${path}.artifacts.${artifactPath}.spec.filePathRegex`}
             />
           )}
         </Layout.Vertical>

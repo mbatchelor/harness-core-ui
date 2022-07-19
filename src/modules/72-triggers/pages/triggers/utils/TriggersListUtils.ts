@@ -70,6 +70,8 @@ export const getTriggerIcon = ({
         return ArtifactIconByType.DockerRegistry
       case ENABLED_ARTIFACT_TYPES.Acr:
         return ArtifactIconByType.Acr
+      case ENABLED_ARTIFACT_TYPES.AmazonS3:
+        return ArtifactIconByType.AmazonS3
       case ENABLED_ARTIFACT_TYPES.Jenkins:
         return ArtifactIconByType.Jenkins
     }
@@ -152,6 +154,11 @@ const triggerDrawerMap = (
           itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Acr]),
           value: ENABLED_ARTIFACT_TYPES.Acr,
           iconName: ArtifactIconByType.Acr
+        },
+        {
+          itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.AmazonS3]),
+          value: ENABLED_ARTIFACT_TYPES.AmazonS3,
+          iconName: ArtifactIconByType.AmazonS3
         },
         {
           itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Jenkins]),
