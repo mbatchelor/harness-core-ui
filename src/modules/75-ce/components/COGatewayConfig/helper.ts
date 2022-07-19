@@ -100,7 +100,10 @@ export const fromResourceToInstanceDetails = (item: Resource, resourceType: { is
     instanceDetails.setMetadata({ resourceGroup: item.metadata?.resourceGroup })
   }
   if (resourceType.isGcp) {
-    instanceDetails.setMetadata({ availabilityZone: item.availability_zone })
+    instanceDetails.setMetadata({
+      availabilityZone: item.availability_zone,
+      network_interfaces: item.metadata?.network_interfaces
+    })
   }
   return instanceDetails
 }
