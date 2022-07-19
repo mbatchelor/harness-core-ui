@@ -13,7 +13,7 @@ import { TestWrapper } from '@common/utils/testUtils'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 
-import OverrideParameterFileInputs from '../OverrideParameters'
+import OverrideParameterFileInputs from '../OverrideParameterFileInputs'
 
 const initialValues = {
   type: StepType.CloudFormationCreateStack,

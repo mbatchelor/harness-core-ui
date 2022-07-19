@@ -33,7 +33,7 @@ import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/Mu
 import { TFMonaco } from '../../../Common/Terraform/Editview/TFMonacoEditor'
 import TemplateFileInputs from './TemplateFile'
 import ParameterFileInputs from './ParameterInputs'
-import OverrideParameterFileInputs from './OverrideParameters'
+import OverrideParameterFileInputs from './OverrideParameterFileInputs'
 import TagsInputs from './TagsInputs'
 import type { CreateStackData, CreateStackProps, Tags } from '../../CloudFormationInterfaces.types'
 import { isRuntime } from '../../CloudFormationHelper'
