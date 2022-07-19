@@ -36,14 +36,18 @@ describe('Pipeline Execution', () => {
     }).as('pipelineList')
     cy.visitPageAssertion(pageHeaderClassName)
     cy.wait('@pipelineList', {
-      timeout: 10000
+      timeout: 30000
     })
-    cy.wait(2000)
 
     cy.contains('span', 'Run').click()
     cy.wait(1000)
-    cy.get('input[type="checkbox"]').eq(0).check({ force: true }).should('be.checked')
-    cy.contains('span', 'Run Pipeline').click()
+    cy.get('*[class^="RunPipelineForm-module_run-form"')
+      .should('be.visible')
+      .within(() => {
+        cy.get('input[type="checkbox"]').eq(0).check({ force: true }).should('be.checked')
+        cy.contains('span', 'Run Pipeline').click()
+      })
+
     cy.wait(1000)
     cy.wait('@serviceStep', { timeout: 30000 })
     cy.contains('span', 'Pipeline started successfully').should('be.visible')
@@ -154,13 +158,18 @@ describe('Pipeline Execution', () => {
     cy.wait(1000)
     cy.visitPageAssertion(pageHeaderClassName)
     cy.wait('@pipelineList', {
-      timeout: 10000
+      timeout: 30000
     })
 
     cy.contains('span', 'Run').click()
     cy.wait(1000)
-    cy.get('input[type="checkbox"]').eq(0).check({ force: true }).should('be.checked')
-    cy.contains('span', 'Run Pipeline').click()
+    cy.get('*[class^="RunPipelineForm-module_run-form"')
+      .should('be.visible')
+      .within(() => {
+        cy.get('input[type="checkbox"]').eq(0).check({ force: true }).should('be.checked')
+        cy.contains('span', 'Run Pipeline').click()
+      })
+
     cy.wait(1000)
     cy.wait('@serviceStep', { timeout: 30000 })
     cy.contains('span', 'Pipeline started successfully').should('be.visible')
@@ -245,17 +254,21 @@ describe('Pipeline Execution', () => {
     cy.wait(1000)
     cy.visitPageAssertion(pageHeaderClassName)
     cy.wait('@pipelineList', {
-      timeout: 10000
+      timeout: 30000
     })
-    cy.wait(2000)
 
     // Click on Run button in pipeline card
     cy.contains('span', 'Run').click()
     cy.wait(1000)
-    // Click on checkbox 'Skip preflight check'
-    cy.get('input[type="checkbox"]').eq(0).check({ force: true }).should('be.checked')
-    // Click Run Pipeline button inside Run Pipeline Form
-    cy.contains('span', 'Run Pipeline').click()
+    cy.get('*[class^="RunPipelineForm-module_run-form"')
+      .should('be.visible')
+      .within(() => {
+        // Click on checkbox 'Skip preflight check'
+        cy.get('input[type="checkbox"]').eq(0).check({ force: true }).should('be.checked')
+        // Click Run Pipeline button inside Run Pipeline Form
+        cy.contains('span', 'Run Pipeline').click()
+      })
+
     // Wait for API calls to be executed
     cy.wait(1000)
     cy.wait('@executePipeline', { timeout: 30000 })
@@ -376,15 +389,20 @@ describe('Pipeline Execution', () => {
     cy.wait(1000)
     cy.visitPageAssertion(pageHeaderClassName)
     cy.wait('@pipelineList', {
-      timeout: 10000
+      timeout: 30000
     })
 
     cy.intercept('PUT', abortPipelineCall, { fixture: 'pipeline/api/pipeline/execute/statusAbort' }).as('statusAbort')
 
     cy.contains('span', 'Run').click()
     cy.wait(1000)
-    cy.get('input[type="checkbox"]').eq(0).check({ force: true }).should('be.checked')
-    cy.contains('span', 'Run Pipeline').click()
+    cy.get('*[class^="RunPipelineForm-module_run-form"')
+      .should('be.visible')
+      .within(() => {
+        cy.get('input[type="checkbox"]').eq(0).check({ force: true }).should('be.checked')
+        cy.contains('span', 'Run Pipeline').click()
+      })
+
     cy.wait(1000)
     cy.wait('@serviceStep')
     cy.contains('span', 'Pipeline started successfully').should('be.visible')
