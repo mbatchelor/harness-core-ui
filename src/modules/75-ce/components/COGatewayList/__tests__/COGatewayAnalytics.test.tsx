@@ -9,7 +9,7 @@ import React from 'react'
 import { act } from 'react-dom/test-utils'
 import { fireEvent, render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
-import { GatewayKindType } from '@ce/constants'
+import { GatewayKindType, RulesMode } from '@ce/constants'
 import COGatewayAnalytics from '../COGatewayAnalytics'
 import { mockedEcsClusterServiceData } from './data'
 
@@ -101,6 +101,7 @@ describe('Autostopping rule analytics drawer', () => {
           handleServiceToggle={jest.fn()}
           handleServiceDeletion={jest.fn()}
           handleServiceEdit={jest.fn()}
+          mode={RulesMode.ACTIVE}
         />
       </TestWrapper>
     )
@@ -127,6 +128,7 @@ describe('Autostopping rule analytics drawer', () => {
           handleServiceToggle={jest.fn()}
           handleServiceDeletion={jest.fn()}
           handleServiceEdit={jest.fn()}
+          mode={RulesMode.ACTIVE}
         />
       </TestWrapper>
     )

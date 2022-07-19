@@ -206,13 +206,14 @@ function NameCell(tableProps: CellProps<Service>): JSX.Element {
   )
 }
 
-function SavingsCell(tableProps: CellProps<Service>): JSX.Element {
+function SavingsCell(tableProps: CellProps<Service>, mode: RulesMode): JSX.Element {
   const { accountId } = useParams<AccountPathProps>()
   const { data, loading: savingsLoading } = useSavingsOfService({
     account_id: accountId,
     rule_id: tableProps.row.original.id as number,
     queryParams: {
-      accountIdentifier: accountId
+      accountIdentifier: accountId,
+      dry_run: mode === RulesMode.DRY
     }
   })
   return (
@@ -793,7 +794,7 @@ const RulesTableContainer: React.FC<RulesTableContainerProps> = ({
           </Text>
         ),
         width: '20%',
-        Cell: SavingsCell,
+        Cell: tableData => SavingsCell(tableData, mode),
         serverSortProps: getServerSortProps({
           enableServerSort: true,
           accessor: 'savings',
@@ -1194,6 +1195,7 @@ const COGatewayList: React.FC = () => {
           handleServiceToggle={onServiceStateToggle}
           handleServiceDeletion={onServiceDeletion}
           handleServiceEdit={handleServiceEdit}
+          mode={mode.value}
         />
       </Drawer>
       <>

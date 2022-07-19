@@ -334,6 +334,11 @@
             "name": "group_by",
             "in": "query",
             "type": "string"
+          },
+          {
+            "name": "dry_run",
+            "in": "query",
+            "type": "boolean"
           }
         ],
         "tags": ["Savings"],

@@ -31,7 +31,7 @@ import useDeleteServiceHook from '@ce/common/useDeleteService'
 import { Utils } from '@ce/common/Utils'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useGetConnector } from 'services/cd-ng'
-import { allProviders, ceConnectorTypes } from '@ce/constants'
+import { allProviders, ceConnectorTypes, RulesMode } from '@ce/constants'
 import COGatewayLogs from './COGatewayLogs'
 import COGatewayUsageTime from './COGatewayUsageTime'
 import {
@@ -54,6 +54,7 @@ interface COGatewayAnalyticsProps {
   handleServiceToggle: (type: 'SUCCESS' | 'FAILURE', data: Service | any, index?: number) => void
   handleServiceDeletion: (type: 'SUCCESS' | 'FAILURE', data: Service | any) => void
   handleServiceEdit: (_service: Service) => void
+  mode: RulesMode
 }
 
 function getBarChartOptions(
@@ -392,18 +393,18 @@ const COGatewayAnalytics: React.FC<COGatewayAnalyticsProps> = props => {
             </Layout.Vertical>
           </Container>
         )}
-        <CumulativeSavingsSection service={props.service?.data} />
+        <CumulativeSavingsSection service={props.service?.data} mode={props.mode} />
         <Layout.Horizontal spacing="small" style={{ alignSelf: 'center' }}>
           <Text>Showing data for Last 7 days</Text>
         </Layout.Horizontal>
-        <SpendVsSavingsGraph service={props.service?.data} />
+        <SpendVsSavingsGraph service={props.service?.data} mode={props.mode} />
         <LogsAndUsage service={props.service?.data} />
       </Layout.Vertical>
     </Container>
   )
 }
 
-const CumulativeSavingsSection = (props: { service?: Service }) => {
+const CumulativeSavingsSection = (props: { service?: Service; mode: RulesMode }) => {
   const { accountId } = useParams<AccountPathProps>()
   const { getString } = useStrings()
 
@@ -411,7 +412,8 @@ const CumulativeSavingsSection = (props: { service?: Service }) => {
     account_id: accountId,
     rule_id: props.service?.id as number,
     queryParams: {
-      accountIdentifier: accountId
+      accountIdentifier: accountId,
+      dry_run: props.mode === RulesMode.DRY
     }
   })
 
@@ -453,7 +455,7 @@ const CumulativeSavingsSection = (props: { service?: Service }) => {
   )
 }
 
-const SpendVsSavingsGraph = (props: { service?: Service }) => {
+const SpendVsSavingsGraph = (props: { service?: Service; mode: RulesMode }) => {
   const { accountId } = useParams<AccountPathProps>()
   const { getString } = useStrings()
 
@@ -470,7 +472,8 @@ const SpendVsSavingsGraph = (props: { service?: Service }) => {
       accountIdentifier: accountId,
       from: moment(startOfDay(today().subtract(7, 'days'))).format(DATE_FORMAT),
       to: moment(endOfDay(today())).format(DATE_FORMAT),
-      group_by: 'date'
+      group_by: 'date',
+      dry_run: props.mode === RulesMode.DRY
     }
   })
 

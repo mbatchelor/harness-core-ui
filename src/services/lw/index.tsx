@@ -2065,6 +2065,7 @@ export interface SavingsOfServiceQueryParams {
   from?: string
   to?: string
   group_by?: string
+  dry_run?: boolean
 }
 
 export interface SavingsOfServicePathParams {
