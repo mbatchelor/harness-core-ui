@@ -429,7 +429,7 @@ describe('ServerlessAwsLambda as deployment type', () => {
     cy.contains('span', '<+input>').should('be.visible')
   })
 
-  it(`select Serverless Lambda deployment type and validate execution tab`, () => {
+  it.only(`select Serverless Lambda deployment type and validate execution tab`, () => {
     cy.intercept('GET', pipelineDetails, {
       fixture: 'pipeline/api/pipelines/pipelineDetailsWithoutServiceDefinitionType'
     }).as('pipelineDetails')
@@ -462,11 +462,11 @@ describe('ServerlessAwsLambda as deployment type', () => {
 
     // Got to Execution tab, Serverless Aws Lambda Deploy should be added by default
     // Switching between Rollback and Execution should work as expected
-    cy.contains('span', 'Execution').click()
+    cy.contains('span', 'Execution').click({ force: true })
     cy.contains('p', 'Serverless Aws Lambda Deploy')
-    cy.contains('p', 'Rollback').click()
+    cy.contains('p', 'Rollback').click({ force: true })
     cy.contains('p', 'Serverless Aws Lambda Rollback')
-    cy.contains('p', 'Execution').click()
+    cy.contains('p', 'Execution').click({ force: true })
     cy.contains('p', 'Serverless Aws Lambda Deploy')
 
     // Add another Serverless Lambda Deploy Step
