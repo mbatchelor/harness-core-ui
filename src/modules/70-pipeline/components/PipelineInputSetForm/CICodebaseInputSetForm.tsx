@@ -141,6 +141,7 @@ export const handleCIConnectorRefOnChange = ({
 }): void => {
   const newConnectorRef = value as ConnectorRefInterface
   setGitAuthProtocol?.(get(value, 'record.spec.authentication.type'))
+  setFieldValue(codeBaseInputFieldFormName?.branch || 'branch', '')
   if (connectorRefType === MultiTypeInputType.FIXED) {
     const connectionType = newConnectorRef?.record?.spec?.type
     if (connectionType === ConnectionType.Account) {
