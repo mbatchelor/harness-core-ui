@@ -146,14 +146,15 @@ export function HarnessApprovalView(props: HarnessApprovalViewProps): React.Reac
           />
         }
       />
-      {isManualInterruption ? (
+      {isManualInterruption && (
         <Tabs.Tab
           id={ApprovalStepTab.MANUAL_INTERVENTION}
           key={ApprovalStepTab.MANUAL_INTERVENTION}
           title={getString('pipeline.failureStrategies.strategiesLabel.ManualIntervention')}
           panel={<ManualInterventionTab step={step} allowedStrategies={failureStrategies} />}
         />
-      ) : (
+      )}
+      {activeTab === ApprovalStepTab.APPROVAL && (
         <>
           <Tabs.Expander />
           <Button
@@ -161,7 +162,6 @@ export function HarnessApprovalView(props: HarnessApprovalViewProps): React.Reac
             intent="primary"
             icon="refresh"
             iconProps={{ size: 12, style: { marginRight: 'var(--spacing-2)' } }}
-            style={{ transform: 'translateY(-5px)' }}
             onClick={() => refetch()}
           >
             {getString('common.refresh')}
