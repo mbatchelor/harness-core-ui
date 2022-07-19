@@ -84,7 +84,7 @@ describe('Test CIUtils', () => {
     ).toBe(JSON.stringify([{ label: 'val1', value: 'val1' }]))
   })
 
-  test('getgetCodebaseRepoNameFromConnector method', () => {
+  test('Test getCodebaseRepoNameFromConnector method', () => {
     let codebaseConnector: ConnectorInfoDTO = {
       name: 'test-connector',
       identifier: 'test_connector',
