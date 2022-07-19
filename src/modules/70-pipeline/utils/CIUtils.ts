@@ -149,7 +149,7 @@ export const getCodebaseRepoNameFromConnector = (
   codebaseConnector: ConnectorInfoDTO,
   getString: UseStringsReturn['getString']
 ): string => {
-  let repoName
+  let repoName = ''
   const connectorGitScope = get(codebaseConnector, 'spec.type', '')
   if (connectorGitScope === connectorUrlType.REPO) {
     const repoURL: string = get(codebaseConnector, 'spec.url')
