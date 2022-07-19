@@ -281,7 +281,7 @@ export const getAccessPointFetchQueryParams = (
   { gatewayDetails, accountId }: BaseFetchDetails,
   { isAwsProvider, isGcpProvider }: RuleCreationParams
 ): ListAccessPointsQueryParams => {
-  const params: ListAccessPointsQueryParams & { subnet?: string } = {
+  const params: ListAccessPointsQueryParams = {
     cloud_account_id: gatewayDetails.cloudAccount.id,
     accountIdentifier: accountId
   }
@@ -306,7 +306,7 @@ export const getSupportedResourcesQueryParams = (
   { gatewayDetails, accountId }: BaseFetchDetails,
   { isGcpProvider }: RuleCreationParams
 ): AccessPointResourcesQueryParams => {
-  const params: AccessPointResourcesQueryParams & { subnet?: string } = {
+  const params: AccessPointResourcesQueryParams = {
     cloud_account_id: gatewayDetails.cloudAccount.id,
     accountIdentifier: accountId,
     region: ''

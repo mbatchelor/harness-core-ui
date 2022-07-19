@@ -777,6 +777,11 @@
             "in": "query",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "subnet",
+            "in": "query",
+            "type": "string"
           }
         ],
         "tags": ["ListAccessPoints"],
@@ -911,6 +916,11 @@
           "name": "cluster",
           "in": "query",
           "required": false,
+          "type": "string"
+        },
+        {
+          "name": "subnet",
+          "in": "query",
           "type": "string"
         }
       ],
