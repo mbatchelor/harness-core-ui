@@ -263,9 +263,9 @@ export const getSelectedDeploymentType = (
   if (isPropagating) {
     const parentStageId = get(stage, 'stage.spec.serviceConfig.useFromStage.stage', null)
     const parentStage = getStageFromPipeline<DeploymentStageElementConfig>(defaultTo(parentStageId, ''))
-    const isParentStageTemplate = get(parentStage, 'stage.stage.template.templateRef')
-    if (isParentStageTemplate && templateServiceData) {
-      return get(templateServiceData, isParentStageTemplate)
+    const parentStageTemplateRef = get(parentStage, 'stage.stage.template.templateRef')
+    if (parentStageTemplateRef && templateServiceData) {
+      return get(templateServiceData, parentStageTemplateRef)
     }
     return get(parentStage, 'stage.stage.spec.serviceConfig.serviceDefinition.type', null)
   }

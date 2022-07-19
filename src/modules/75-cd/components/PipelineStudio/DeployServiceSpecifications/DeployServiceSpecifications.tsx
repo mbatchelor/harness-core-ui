@@ -99,18 +99,30 @@ export default function DeployServiceSpecifications({
     [updateStage]
   )
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
-  const getDeploymentType = (): ServiceDeploymentType => {
-    return get(stage, 'stage.spec.serviceConfig.serviceDefinition.type')
-  }
 
   const [setupModeType, setSetupMode] = useState('')
   const [checkedItems, setCheckedItems] = useState({
     overrideSetCheckbox: false
   })
+
+  const serviceDefinitionType = useCallback(
+    (stageData?: StageElementWrapper<DeploymentStageElementConfig>): ServiceDeploymentType => {
+      const data = getServiceDefinitionType(
+        stageData,
+        getStageFromPipeline,
+        isNewServiceEnvEntity,
+        false,
+        templateServiceData
+      ) as ServiceDeploymentType
+      return data
+    },
+    [getStageFromPipeline, templateServiceData]
+  )
+
   const [selectedPropagatedState, setSelectedPropagatedState] = useState<SelectOption>()
   const [serviceIdNameMap, setServiceIdNameMap] = useState<{ [key: string]: string }>()
   const [selectedDeploymentType, setSelectedDeploymentType] = useState<ServiceDeploymentType | undefined>(
-    getDeploymentType()
+    serviceDefinitionType(stage)
   )
   const [previousStageList, setPreviousStageList] = useState<SelectOption[]>([])
   const [currStageData, setCurrStageData] = useState<StageElementWrapper<DeploymentStageElementConfig> | undefined>()
@@ -258,8 +270,16 @@ export default function DeployServiceSpecifications({
         }
       })
       debounceUpdateStage(stageData?.stage)
+      setSelectedDeploymentType(serviceDefinitionType(stageData))
     }
   }, [selectedPropagatedState])
+
+  useEffect(() => {
+    if (selectedPropagatedState?.value && checkedItems.overrideSetCheckbox) {
+      setSelectedDeploymentType(serviceDefinitionType(stage))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedPropagatedState?.value, checkedItems.overrideSetCheckbox])
 
   const setStageOverrideSchema = (): Promise<void> => {
     const stageData = produce(stage, draft => {
@@ -351,14 +371,7 @@ export default function DeployServiceSpecifications({
       if (isConfirmed) {
         deleteStageData(currStageData?.stage)
         await debounceUpdateStage(currStageData?.stage)
-        const deploymentType = getServiceDefinitionType(
-          currStageData,
-          getStageFromPipeline,
-          isNewServiceEnvEntity,
-          false,
-          templateServiceData
-        )
-        setSelectedDeploymentType(deploymentType as ServiceDeploymentType)
+        setSelectedDeploymentType(serviceDefinitionType(currStageData))
       }
     }
   })
