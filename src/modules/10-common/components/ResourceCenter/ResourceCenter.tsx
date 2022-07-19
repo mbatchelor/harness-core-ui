@@ -46,7 +46,7 @@ export const ResourceCenter = (): React.ReactElement => {
   const [show, setShow] = useState<boolean>(false)
 
   const isCommunity = useGetCommunity()
-  const { EARLY_ACCESS_ENABLED, SHOW_NG_REFINER_FEEDBACK } = useFeatureFlags()
+  const { SHOW_NG_REFINER_FEEDBACK } = useFeatureFlags()
   useEffect(() => {
     _refiner('dismissForm', refinerSurveryId)
     _refiner('setProject', refinerProjectId)
@@ -162,27 +162,25 @@ export const ResourceCenter = (): React.ReactElement => {
           <CommunitySubmitTicket />
         ) : (
           <>
-            {EARLY_ACCESS_ENABLED && (
-              <ResourceSection
-                title={getString('common.resourceCenter.productUpdates.title')}
-                resources={[
-                  {
-                    title: getString('common.resourceCenter.productUpdates.whatsnew'),
-                    icon: 'stars',
-                    iconClassname: css.iconFilled,
-                    onClick: (e: React.MouseEvent<Element, MouseEvent>) => openWhatsNew(e),
-                    testId: 'whatsnew'
-                  },
-                  {
-                    title: getString('common.resourceCenter.productUpdates.earlyAcess'),
-                    icon: 'flag-tick',
-                    iconClassname: css.iconFilled,
-                    onClick: (e: React.MouseEvent<Element, MouseEvent>) => openEarlyAccess(e),
-                    testId: 'early-access'
-                  }
-                ]}
-              />
-            )}
+            <ResourceSection
+              title={getString('common.resourceCenter.productUpdates.title')}
+              resources={[
+                {
+                  title: getString('common.resourceCenter.productUpdates.whatsnew'),
+                  icon: 'stars',
+                  iconClassname: css.iconFilled,
+                  onClick: (e: React.MouseEvent<Element, MouseEvent>) => openWhatsNew(e),
+                  testId: 'whatsnew'
+                },
+                {
+                  title: getString('common.resourceCenter.productUpdates.earlyAcess'),
+                  icon: 'flag-tick',
+                  iconClassname: css.iconFilled,
+                  onClick: (e: React.MouseEvent<Element, MouseEvent>) => openEarlyAccess(e),
+                  testId: 'early-access'
+                }
+              ]}
+            />
             <ResourceSection
               title={getString('common.resourceCenter.ticketmenu.title')}
               resources={getContactUsTiles}
