@@ -240,7 +240,7 @@ describe('GIT SYNC ENABLED', () => {
   })
 })
 
-describe('Execution Stages', () => {
+describe.only('Execution Stages', () => {
   const visitExecutionStageWithAssertion = (): void => {
     cy.visit(pipelineStudioRoute, {
       timeout: 30000
@@ -259,7 +259,6 @@ describe('Execution Stages', () => {
       return false
     })
     cy.initializeRoute()
-
     cy.intercept('GET', gitSyncEnabledCall, { connectivityMode: null, gitSyncEnabled: false })
     cy.intercept('POST', pipelineSaveCall, { fixture: 'pipeline/api/pipelines.post' })
     cy.intercept('POST', stepLibrary, { fixture: 'ng/api/stepLibrary' }).as('stepLibrary')
@@ -316,7 +315,7 @@ describe('Execution Stages', () => {
     cy.get('*[class^="ExecutionGraph-module_canvas"]')
       .should('be.visible')
       .within(() => {
-        cy.get('span[data-icon="zoom-out"]').click()
+        cy.get('span[data-icon="zoom-out"]').click({ force: true })
         cy.get('p[data-name="node-name"]').contains('Add step').click({ force: true })
         cy.wait(1000)
         cy.get('[class*="ExecutionGraph-module_add-step-popover"]', { withinSubject: null })
