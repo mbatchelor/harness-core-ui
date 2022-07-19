@@ -348,16 +348,16 @@ function CICodebaseInputSetFormInternal({
   useEffect(() => {
     if (codeBaseType === CodebaseTypes.branch && codebaseConnector) {
       isFetchingDefaultBranch(true)
-      const connectorRef = get(originalPipeline, 'properties.ci.codebase.connectorRef', '')
+      const connectorReference = get(originalPipeline, 'properties.ci.codebase.connectorRef', '')
       let repoName = get(originalPipeline, 'properties.ci.codebase.repoName', '') // for account level connectors, repo name is available directly in pipeline properties
       if (!repoName) {
         repoName = getCodebaseRepoNameFromConnector(codebaseConnector, getString)
       }
-      if (connectorRef && repoName) {
+      if (connectorReference && repoName) {
         try {
           getListOfBranchesByRefConnectorV2Promise({
             queryParams: {
-              connectorRef,
+              connectorRef: connectorReference,
               accountIdentifier: accountId,
               orgIdentifier,
               projectIdentifier,
