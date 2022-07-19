@@ -429,7 +429,7 @@ describe('ServerlessAwsLambda as deployment type', () => {
     cy.contains('span', '<+input>').should('be.visible')
   })
 
-  it.only(`select Serverless Lambda deployment type and validate execution tab`, () => {
+  it(`select Serverless Lambda deployment type and validate execution tab`, () => {
     cy.intercept('GET', pipelineDetails, {
       fixture: 'pipeline/api/pipelines/pipelineDetailsWithoutServiceDefinitionType'
     }).as('pipelineDetails')
