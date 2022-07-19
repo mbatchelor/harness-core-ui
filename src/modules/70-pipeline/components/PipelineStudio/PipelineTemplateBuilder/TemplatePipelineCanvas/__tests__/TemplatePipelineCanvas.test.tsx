@@ -115,7 +115,7 @@ jest.mock('@pipeline/utils/templateUtils', () => ({
   getTemplateTypesByRef: () =>
     Promise.resolve({
       templateTypes: { Test_Stage_Template: 'Deployment' },
-      templateServiceData: {}
+      templateServiceData: { Test_Template_Stage_Type: 'Kubernetes' }
     })
 }))
 
@@ -159,6 +159,9 @@ describe('<TemplatePipelineCanvas/> tests', () => {
     )
     expect(container).toMatchSnapshot()
     await waitFor(() => expect(contextMock.setTemplateTypes).toBeCalledWith({ Test_Stage_Template: 'Deployment' }))
+    await waitFor(() =>
+      expect(contextMock.setTemplateServiceData).toBeCalledWith({ Test_Template_Stage_Type: 'Kubernetes' })
+    )
   })
 
   test('should render loading view correctly', async () => {
