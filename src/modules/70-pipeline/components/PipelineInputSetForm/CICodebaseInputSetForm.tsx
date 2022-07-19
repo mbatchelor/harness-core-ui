@@ -23,8 +23,13 @@ import {
 import { FontVariation, Color } from '@harness/design-system'
 import { connect } from 'formik'
 import { StringKeys, useStrings, UseStringsReturn } from 'framework/strings'
-import { getIdentifierFromValue, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
+import {
+  getIdentifierFromValue,
+  getScopeFromDTO,
+  getScopeFromValue
+} from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
+import { getReference } from '@common/utils/utils'
 import { Connectors } from '@connectors/constants'
 import { getCompleteConnectorUrl, GitAuthenticationProtocol } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
@@ -348,14 +353,18 @@ function CICodebaseInputSetFormInternal({
 
   useEffect(() => {
     if (!isDefaultBranchSet && codeBaseType === CodebaseTypes.branch && codebaseConnector) {
-      setFetchingDefaultBranch(true)
-      const connectorReference = get(originalPipeline, 'properties.ci.codebase.connectorRef', '')
+      let connectorReference = get(originalPipeline, 'properties.ci.codebase.connectorRef', '')
+      if (connectorReference === RUNTIME_INPUT_VALUE) {
+        connectorReference = getReference(getScopeFromDTO(codebaseConnector), codebaseConnector.identifier) || ''
+      }
+
       let repoName = get(originalPipeline, 'properties.ci.codebase.repoName', '') // for account level connectors, repo name is available directly in pipeline properties
-      if (!repoName) {
+      if (!repoName || repoName === RUNTIME_INPUT_VALUE) {
         repoName = getCodebaseRepoNameFromConnector(codebaseConnector, getString)
       }
       if (connectorReference && repoName) {
         try {
+          setFetchingDefaultBranch(true)
           getListOfBranchesByRefConnectorV2Promise({
             queryParams: {
               connectorRef: connectorReference,
@@ -449,14 +458,17 @@ function CICodebaseInputSetFormInternal({
   }, [codeBaseType])
 
   const handleTypeChange = (newType: CodeBaseType): void => {
-    formik?.setFieldValue(`${formattedPath}properties.ci.codebase.build`, '')
-    formik?.setFieldValue(codeBaseTypePath, newType)
+    const existingValues = { ...formik.values }
+    let updatedValues
+    updatedValues = { ...existingValues, [`${formattedPath}properties.ci.codebase.build`]: '' }
+    updatedValues = { ...updatedValues, codeBaseTypePath: newType }
 
     if (!isInputTouched && triggerIdentifier && isNotScheduledTrigger) {
-      formik?.setFieldValue(buildSpecPath, { [inputNames[newType]]: defaultValues[newType] })
+      updatedValues = { ...updatedValues, buildSpecPath: { [inputNames[newType]]: defaultValues[newType] } }
     } else {
-      formik?.setFieldValue(buildSpecPath, { [inputNames[newType]]: savedValues.current[newType] })
+      updatedValues = { ...updatedValues, buildSpecPath: { [inputNames[newType]]: savedValues.current[newType] } }
     }
+    formik?.setValues(updatedValues)
   }
   const renderCodeBaseTypeInput = (type: CodeBaseType): JSX.Element => {
     return (
@@ -516,7 +528,8 @@ function CICodebaseInputSetFormInternal({
                   disabled: readonly,
                   allowableTypes: AllowableTypesForCodebaseProperties
                 }}
-                onChange={(value, _valueType, connectorRefType) =>
+                onChange={(value, _valueType, connectorRefType) => {
+                  setIsDefaultBranchSet(false)
                   handleCIConnectorRefOnChange({
                     value: value as ConnectorRefInterface,
                     connectorRefType,
@@ -527,7 +540,7 @@ function CICodebaseInputSetFormInternal({
                     setGitAuthProtocol,
                     setIsConnectorExpression
                   })
-                }
+                }}
               />
             </Container>
           )}
