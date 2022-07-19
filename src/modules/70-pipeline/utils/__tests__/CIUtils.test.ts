@@ -85,7 +85,7 @@ describe('Test CIUtils', () => {
   })
 
   test('getgetCodebaseRepoNameFromConnector method', () => {
-    const codebaseConnector: ConnectorInfoDTO = {
+    let codebaseConnector: ConnectorInfoDTO = {
       name: 'test-connector',
       identifier: 'test_connector',
       orgIdentifier: 'orgId',
@@ -108,9 +108,10 @@ describe('Test CIUtils', () => {
       }
     }
     expect(getCodebaseRepoNameFromConnector(codebaseConnector, getString)).toBe('test-repo')
-    codebaseConnector.spec.type = 'Account'
-    codebaseConnector.spec.url = 'https://github.com'
-    codebaseConnector.spec.validationRepo = 'test-repo2'
+    codebaseConnector = {
+      ...codebaseConnector,
+      spec: { type: 'Account', url: 'https://github.com', validationRepo: 'test-repo2' }
+    }
     expect(getCodebaseRepoNameFromConnector(codebaseConnector, getString)).toBe('test-repo2')
   })
 })
