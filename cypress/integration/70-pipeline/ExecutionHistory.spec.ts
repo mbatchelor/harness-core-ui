@@ -219,7 +219,7 @@ describe('Pipeline Execution History', () => {
   })
 
   // Execution List
-  it('loads successful, aborted and failed pipelines', () => {
+  it.skip('loads successful, aborted and failed pipelines', () => {
     // Fixtures
     cy.intercept('GET', pipelineSummaryCallAPI, {
       fixture: 'pipeline/api/executionHistory/executionSummary.json'
@@ -238,7 +238,7 @@ describe('Pipeline Execution History', () => {
       cy.findByText('Duration: 11s').should('exist')
       cy.findByText('John Doe').should('exist')
 
-      cy.get('[class^=ExecutionActions]').click()
+      cy.get('[class^=ExecutionActions]').click({ force: true })
     })
     cy.findByText('Retry Failed Pipeline').should('not.exist')
     cy.get('body').type('{esc}')
@@ -255,7 +255,7 @@ describe('Pipeline Execution History', () => {
       cy.findByText('Duration: 8s').should('exist')
       cy.findByText('John Doe').should('exist')
 
-      cy.get('[class^=ExecutionActions]').click()
+      cy.get('[class^=ExecutionActions]').click({ force: true })
     })
     cy.findByText('Retry Failed Pipeline').should('exist')
     cy.get('body').type('{esc}')
@@ -274,7 +274,7 @@ describe('Pipeline Execution History', () => {
       cy.findByText('Services deployed (1)').should('exist')
       cy.findByText('Environments (1)').should('exist')
 
-      cy.get('[class^=ExecutionActions]').click()
+      cy.get('[class^=ExecutionActions]').click({ force: true })
     })
     cy.findByText('Retry Failed Pipeline').should('exist')
     cy.get('body').type('{esc}')
