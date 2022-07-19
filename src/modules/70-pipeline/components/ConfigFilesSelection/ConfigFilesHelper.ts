@@ -117,43 +117,6 @@ export const prepareConfigFilesValue = (formData: ConfigFileHarnessDataType & { 
   return filesData
 }
 
-// const prepareInitialValuesConfigFile = (
-//   listOfConfigFiles: any,
-//   configFileIndex: number,
-//   configStore: string,
-//   isNewFile: boolean
-// ) => {
-//   const initValues = get(listOfConfigFiles[configFileIndex], 'configFile.spec.store.spec', null)
-
-//   let files
-//   let fileType
-//   if (Array.isArray(get(listOfConfigFiles[configFileIndex], 'configFile.spec.store.spec.secretFiles'))) {
-//     files = get(listOfConfigFiles[configFileIndex], 'configFile.spec.store.spec.secretFiles', [])
-//     fileType = FILE_TYPE_VALUES.ENCRYPTED
-//   } else {
-//     files = get(listOfConfigFiles[configFileIndex], 'configFile.spec.store.spec.files', [])
-//     fileType = FILE_TYPE_VALUES.FILE_STORE
-//   }
-
-//   if (initValues && !isNewFile) {
-//     const values = {
-//       ...initValues,
-//       store: listOfConfigFiles[configFileIndex]?.configFile.spec?.store?.type,
-//       identifier: get(listOfConfigFiles[configFileIndex], 'configFile.identifier', ''),
-//       files: files || [],
-//       secretFiles: get(listOfConfigFiles[configFileIndex], 'configFile.spec.store.spec.secretFiles', []),
-//       fileType
-//     }
-//     return values
-//   }
-//   return {
-//     store: configStore,
-//     files: [],
-//     identifier: '',
-//     fileType: FILE_TYPE_VALUES.FILE_STORE
-//   }
-// }
-
 export const ENABLE_CONFIG_FILES = {
   Harness: 'Harness'
 }
