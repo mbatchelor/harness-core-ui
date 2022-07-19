@@ -240,7 +240,7 @@ describe('GIT SYNC ENABLED', () => {
   })
 })
 
-describe.only('Execution Stages', () => {
+describe('Execution Stages', () => {
   const visitExecutionStageWithAssertion = (): void => {
     cy.visit(pipelineStudioRoute, {
       timeout: 30000
