@@ -5,12 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, useMemo } from 'react'
+import React, { useState } from 'react'
 import { Layout } from '@wings-software/uicore'
 
 import { useParams } from 'react-router-dom'
-
-import get from 'lodash-es/get'
 
 import { useGetServiceV2 } from 'services/cd-ng'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
@@ -59,14 +57,6 @@ export default function ConfigFilesSelection({
     setSelectedConfig(configFile)
   }
 
-  const listOfConfigFiles = useMemo(() => {
-    if (isPropagating) {
-      return get(stage, 'stage.spec.serviceConfig.stageOverrides.configFiles', [])
-    }
-
-    return get(stage, 'stage.spec.serviceConfig.serviceDefinition.spec.configFiles', [])
-  }, [isPropagating, isReadonly, selectedServiceResponse?.data?.service, stage])
-
   return (
     <Layout.Vertical>
       <ConfigFilesListView
@@ -74,13 +64,13 @@ export default function ConfigFilesSelection({
         pipeline={pipeline}
         updateStage={updateStage}
         stage={stage}
-        listOfConfigFiles={listOfConfigFiles}
         setSelectedConfig={handleSelect}
         selectedConfig={selectedConfig}
         isReadonly={isReadonly}
         deploymentType={deploymentType}
         allowableTypes={allowableTypes}
         allowOnlyOne={isServerlessDeploymentType(deploymentType)}
+        selectedServiceResponse={selectedServiceResponse}
       />
     </Layout.Vertical>
   )

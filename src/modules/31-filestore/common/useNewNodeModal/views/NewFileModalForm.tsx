@@ -29,6 +29,7 @@ import { getFileUsageNameByType, getMimeTypeByName } from '@filestore/utils/File
 import { FileStoreNodeTypes, FileUsage, NewFileDTO, NewFileFormDTO } from '@filestore/interfaces/FileStore'
 import type { FileStoreContextState, FileStoreNodeDTO } from '@filestore/components/FileStoreContext/FileStoreContext'
 import { FILE_STORE_ROOT, SEARCH_FILES } from '@filestore/utils/constants'
+import css from '../useNewNodeModal.module.scss'
 
 interface NewFileModalData {
   data?: NewFileDTO
@@ -241,7 +242,7 @@ const NewFileForm: React.FC<NewFileModalData> = props => {
                   }}
                 />
                 <FormInput.Select
-                  style={{ width: 180 }}
+                  className={css.fileUsage}
                   value={
                     formikProps?.values?.fileUsage
                       ? {

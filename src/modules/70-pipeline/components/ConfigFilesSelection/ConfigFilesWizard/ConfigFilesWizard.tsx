@@ -54,9 +54,6 @@ export function ConfigFilesWizard({
         configFilesStoreTypes={types}
         name={getString('pipeline.configFiles.source')}
         stepName={getString('pipeline.configFiles.source')}
-        // name={'Config File Details'}
-        // stepName={'Config File Details'}
-        // selectedConfigFile={selectedConfigFile}
         allowableTypes={allowableTypes}
         initialValues={initialValues}
         handleStoreChange={handleStoreChange}
@@ -66,8 +63,6 @@ export function ConfigFilesWizard({
         isNewFile={isNewFile}
         configFileIndex={configFileIndex}
       />
-
-      {/* {newConnectorView ? newConnectorSteps : null} */}
 
       {lastSteps?.length ? lastSteps?.map((step: any) => step) : null}
     </StepWizard>

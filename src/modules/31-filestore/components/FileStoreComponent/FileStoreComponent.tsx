@@ -176,13 +176,9 @@ const useFileStoreModal = ({ applySelected, fileUsage }: UseFileStoreModalProps)
     )
   }, [activeTab, selectedFile])
 
-  const handleShowModal = React.useCallback(() => {
-    showModal()
-  }, [])
-
   return {
     openFileStoreModal: () => {
-      handleShowModal()
+      showModal()
     },
     closeFileStoreModal: hideModal
   }

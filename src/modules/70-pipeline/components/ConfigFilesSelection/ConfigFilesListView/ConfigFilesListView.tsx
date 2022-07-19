@@ -26,9 +26,10 @@ import { FontVariation, Color } from '@harness/design-system'
 import cx from 'classnames'
 import get from 'lodash/get'
 import set from 'lodash-es/set'
+import { noop } from 'lodash-es'
 import produce from 'immer'
 import { useModalHook } from '@harness/use-modal'
-import type { ConnectorInfoDTO, ConfigFileWrapper, StageElementConfig } from 'services/cd-ng'
+import type { ConfigFileWrapper, StageElementConfig } from 'services/cd-ng'
 
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -47,12 +48,7 @@ import StepGitlabAuthentication from '@connectors/components/CreateConnector/Git
 
 import DelegateSelectorStep from '@connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectorStep'
 
-import {
-  buildBitbucketPayload,
-  buildGithubPayload,
-  buildGitlabPayload,
-  buildGitPayload
-} from '@connectors/pages/connectors/utils/ConnectorUtils'
+import { getBuildPayload } from '../../ManifestSelection/Manifesthelper'
 
 import { ConfigFilesWizard } from '../ConfigFilesWizard/ConfigFilesWizard'
 import type { ConfigFilesListViewProps, ConfigFileType, ConfigInitStepData } from '../ConfigFilesInterface'
@@ -70,12 +66,12 @@ function ConfigFilesListView({
   updateStage,
   stage,
   isPropagating,
-  listOfConfigFiles,
   deploymentType,
   isReadonly,
   allowableTypes,
   selectedConfig,
-  setSelectedConfig
+  setSelectedConfig,
+  selectedServiceResponse
 }: ConfigFilesListViewProps): JSX.Element {
   const DIALOG_PROPS: IDialogProps = {
     isOpen: true,
@@ -98,11 +94,17 @@ function ConfigFilesListView({
 
   const { expressions } = useVariablesExpression()
 
+  const listOfConfigFiles = React.useMemo(() => {
+    if (isPropagating) {
+      return get(stage, 'stage.spec.serviceConfig.stageOverrides.configFiles', [])
+    }
+
+    return get(stage, 'stage.spec.serviceConfig.serviceDefinition.spec.configFiles', [])
+  }, [isPropagating, isReadonly, selectedServiceResponse?.data?.service, stage])
+
   const commonProps = {
     name: getString('credentials'),
-    onConnectorCreated: () => {
-      //
-    },
+    onConnectorCreated: noop,
     isEditMode,
     setIsEditMode,
     accountId,
@@ -214,22 +216,6 @@ function ConfigFilesListView({
     arr.push(configDetailStep)
     return arr
   }, [configStore, commonLastStepProps, getString])
-
-  const getBuildPayload = (type: ConnectorInfoDTO['type']) => {
-    if (type === Connectors.GIT) {
-      return buildGitPayload
-    }
-    if (type === Connectors.GITHUB) {
-      return buildGithubPayload
-    }
-    if (type === Connectors.BITBUCKET) {
-      return buildBitbucketPayload
-    }
-    if (type === Connectors.GITLAB) {
-      return buildGitlabPayload
-    }
-    return () => ({})
-  }
 
   const getNewConnectorSteps = useCallback((): JSX.Element => {
     const buildPayload = getBuildPayload(ConfigFilesToConnectorMap[configStore])

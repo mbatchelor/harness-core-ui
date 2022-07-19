@@ -7,8 +7,6 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly configFileWizard: string
-  readonly formGroup: string
-  readonly subtitle: string
+  readonly storeView: string
 }
 export default styles

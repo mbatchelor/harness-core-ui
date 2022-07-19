@@ -22,14 +22,6 @@ export enum ModalViewFor {
   SIDECAR = 2
 }
 
-export const isAllowedArtifactDeploymentTypes = (deploymentType: ServiceDefinition['type']): boolean => {
-  return (
-    deploymentType === ServiceDeploymentType.Kubernetes ||
-    deploymentType === ServiceDeploymentType.NativeHelm ||
-    deploymentType === ServiceDeploymentType.Ssh ||
-    deploymentType === ServiceDeploymentType.WinRm
-  )
-}
 export const isAllowedACRArtifactDeploymentTypes = (deploymentType: ServiceDefinition['type']): boolean => {
   return (
     deploymentType === ServiceDeploymentType.Kubernetes ||

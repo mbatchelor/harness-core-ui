@@ -80,7 +80,6 @@ export default function DeployServiceSpecifications({
   const queryParams = useParams<ProjectPathProps & ServicePathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
 
-  const context = usePipelineContext()
   const {
     state: {
       pipeline,
@@ -92,7 +91,7 @@ export default function DeployServiceSpecifications({
     scope,
     getStageFromPipeline,
     updateStage
-  } = context
+  } = usePipelineContext()
 
   const scrollRef = React.useRef<HTMLDivElement | null>(null)
   // eslint-disable-next-line react-hooks/exhaustive-deps

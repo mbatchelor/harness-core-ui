@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { IconName, MultiTypeInputType, getMultiTypeFromValue } from '@harness/uicore'
+import type { IconName } from '@harness/uicore'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
 import { Connectors } from '@connectors/constants'
 
@@ -88,29 +88,16 @@ export enum FILE_TYPE_VALUES {
 }
 
 export const prepareConfigFilesValue = (formData: ConfigFileHarnessDataType & { store?: string }) => {
-  const { fileType, files } = formData
+  const { fileType } = formData
 
-  const typeValue = getMultiTypeFromValue(
-    files,
-    [MultiTypeInputType.RUNTIME, MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
-    true
-  )
-  const isRunTime = typeValue === MultiTypeInputType.RUNTIME
   const filesData: any = {
     files: [],
     secretFiles: []
   }
-  if (fileType === FILE_TYPE_VALUES.FILE_STORE && !isRunTime) {
+  if (fileType === FILE_TYPE_VALUES.FILE_STORE) {
     filesData.files = formData?.files
   }
-  if (fileType === FILE_TYPE_VALUES.FILE_STORE && isRunTime) {
-    filesData.files = formData?.files
-  }
-
-  if (fileType === FILE_TYPE_VALUES.ENCRYPTED && !isRunTime) {
-    filesData.secretFiles = formData?.files
-  }
-  if (fileType === FILE_TYPE_VALUES.ENCRYPTED && isRunTime) {
+  if (fileType === FILE_TYPE_VALUES.ENCRYPTED) {
     filesData.secretFiles = formData?.files
   }
 

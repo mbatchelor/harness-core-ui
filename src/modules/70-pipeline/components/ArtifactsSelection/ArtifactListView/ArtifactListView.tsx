@@ -82,7 +82,6 @@ function ArtifactListView({
   removeSidecar,
   addNewArtifact,
   isAdditionAllowed,
-  withSideCar = true,
   isSidecarAllowed
 }: ArtifactListViewProps): React.ReactElement {
   const { getString } = useStrings()
@@ -271,7 +270,7 @@ function ArtifactListView({
             text={getString('pipelineSteps.serviceTab.artifactList.addPrimary')}
           />
         )}
-        {isAdditionAllowed && isSidecarAllowed && withSideCar && (
+        {isAdditionAllowed && isSidecarAllowed && (
           <Button
             className={css.addArtifact}
             id="add-artifact"
