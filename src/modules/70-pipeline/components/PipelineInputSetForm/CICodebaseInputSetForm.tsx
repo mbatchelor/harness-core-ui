@@ -352,7 +352,13 @@ function CICodebaseInputSetFormInternal({
   }, [loadingConnectorDetails, connectorDetails])
 
   useEffect(() => {
-    if (!isDefaultBranchSet && codeBaseType === CodebaseTypes.branch && codebaseConnector) {
+    // Default branch needs to be set only if not specified by the user already for "branch" type build
+    if (
+      !get(formik?.values, codeBaseInputFieldFormName.branch) &&
+      !isDefaultBranchSet &&
+      codeBaseType === CodebaseTypes.branch &&
+      codebaseConnector
+    ) {
       let connectorReference = get(originalPipeline, 'properties.ci.codebase.connectorRef', '')
       if (connectorReference === RUNTIME_INPUT_VALUE) {
         connectorReference = getReference(getScopeFromDTO(codebaseConnector), codebaseConnector.identifier) || ''
@@ -453,7 +459,12 @@ function CICodebaseInputSetFormInternal({
           ''
         )
       })
-      formik?.setFieldValue(buildSpecPath, { [inputNames[codeBaseType]]: savedValues.current[codeBaseType] })
+      const existingValues = { ...formik?.values }
+      let updatedValues = set(existingValues, codeBaseTypePath, codeBaseType)
+      updatedValues = set(existingValues, buildSpecPath, {
+        [inputNames[codeBaseType]]: savedValues.current[codeBaseType]
+      })
+      formik?.setValues(updatedValues)
     }
   }, [codeBaseType])
 
