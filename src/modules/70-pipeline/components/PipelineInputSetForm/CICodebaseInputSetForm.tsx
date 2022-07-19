@@ -458,17 +458,13 @@ function CICodebaseInputSetFormInternal({
   }, [codeBaseType])
 
   const handleTypeChange = (newType: CodeBaseType): void => {
-    const existingValues = { ...formik.values }
-    let updatedValues
-    updatedValues = { ...existingValues, [`${formattedPath}properties.ci.codebase.build`]: '' }
-    updatedValues = { ...updatedValues, codeBaseTypePath: newType }
-
+    formik?.setFieldValue(`${formattedPath}properties.ci.codebase.build`, '')
+    formik?.setFieldValue(codeBaseTypePath, newType)
     if (!isInputTouched && triggerIdentifier && isNotScheduledTrigger) {
-      updatedValues = { ...updatedValues, buildSpecPath: { [inputNames[newType]]: defaultValues[newType] } }
+      formik?.setFieldValue(buildSpecPath, { [inputNames[newType]]: defaultValues[newType] })
     } else {
-      updatedValues = { ...updatedValues, buildSpecPath: { [inputNames[newType]]: savedValues.current[newType] } }
+      formik?.setFieldValue(buildSpecPath, { [inputNames[newType]]: savedValues.current[newType] })
     }
-    formik?.setValues(updatedValues)
   }
   const renderCodeBaseTypeInput = (type: CodeBaseType): JSX.Element => {
     return (
