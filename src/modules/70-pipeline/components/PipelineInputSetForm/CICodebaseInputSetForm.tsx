@@ -239,7 +239,7 @@ function CICodebaseInputSetFormInternal({
   const [codeBaseType, setCodeBaseType] = useState<CodeBaseType | undefined>(get(formik?.values, codeBaseTypePath))
   const [gitAuthProtocol, setGitAuthProtocol] = useState<GitAuthenticationProtocol>(GitAuthenticationProtocol.HTTPS)
   const [codebaseConnector, setCodebaseConnector] = useState<ConnectorInfoDTO>()
-  const [fetchingDefaultBranch, isFetchingDefaultBranch] = useState<boolean>()
+  const [fetchingDefaultBranch, setFetchingDefaultBranch] = useState<boolean>(false)
 
   const radioLabels = {
     branch: getString('gitBranch'),
@@ -346,8 +346,8 @@ function CICodebaseInputSetFormInternal({
   }, [loadingConnectorDetails, connectorDetails])
 
   useEffect(() => {
-    if (codeBaseType === CodebaseTypes.branch && codebaseConnector) {
-      isFetchingDefaultBranch(true)
+    if (!fetchingDefaultBranch && codeBaseType === CodebaseTypes.branch && codebaseConnector) {
+      setFetchingDefaultBranch(true)
       const connectorReference = get(originalPipeline, 'properties.ci.codebase.connectorRef', '')
       let repoName = get(originalPipeline, 'properties.ci.codebase.repoName', '') // for account level connectors, repo name is available directly in pipeline properties
       if (!repoName) {
@@ -366,14 +366,14 @@ function CICodebaseInputSetFormInternal({
             }
           })
             .then((result: ResponseGitBranchesResponseDTO) => {
-              isFetchingDefaultBranch(false)
+              setFetchingDefaultBranch(false)
               formik.setFieldValue(codeBaseInputFieldFormName.branch, result.data?.defaultBranch?.name || '')
             })
             .catch(_e => {
-              isFetchingDefaultBranch(true)
+              setFetchingDefaultBranch(true)
             })
         } catch (e) {
-          isFetchingDefaultBranch(true)
+          setFetchingDefaultBranch(true)
         }
       }
     }
