@@ -40,10 +40,15 @@
     }
   }
 
-  [data-icon='steps-spinner'] {
-    margin-top: var(--spacing-1);
-    margin-bottom: var(--spacing-1);
-    color: var(--primary-7) !important;
+  div[class*='StepsProgress--stepWrap'] {
+    svg {
+      margin-top: var(--spacing-1);
+      margin-bottom: var(--spacing-1);
+    }
+
+    [data-icon='steps-spinner'] {
+      color: var(--primary-7) !important;
+    }
   }
 
   .errorContainer {

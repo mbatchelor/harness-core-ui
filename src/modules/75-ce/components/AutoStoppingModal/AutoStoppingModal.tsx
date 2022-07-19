@@ -49,13 +49,12 @@ export const useAutoStoppingModal = ({ connector }: { connector: ConnectorInfoDT
             title={getString('ce.cloudIntegration.enableAutoStopping')}
             className={css.stepWizard}
           >
-            <CreateSecret name={getString('ce.cloudIntegration.autoStoppingModal.createSecret.title')} />
-            <InstallComponents
+            <CreateSecret
+              name={getString('ce.cloudIntegration.autoStoppingModal.createSecret.title')}
               connector={connector}
-              name={getString('ce.cloudIntegration.autoStoppingModal.installComponents.title')}
             />
+            <InstallComponents name={getString('ce.cloudIntegration.autoStoppingModal.installComponents.title')} />
             <TestComponents
-              connector={connector}
               closeModal={closeModal}
               name={getString('ce.cloudIntegration.autoStoppingModal.testComponents.title')}
             />

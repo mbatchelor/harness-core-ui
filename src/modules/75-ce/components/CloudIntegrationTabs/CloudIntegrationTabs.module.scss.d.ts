@@ -12,6 +12,7 @@ declare const styles: {
   readonly content: string
   readonly enableBtn: string
   readonly enableCloudCostsDialog: string
+  readonly failure: string
   readonly features: string
   readonly main: string
   readonly nameCell: string
@@ -19,6 +20,7 @@ declare const styles: {
   readonly search: string
   readonly spinner: string
   readonly statusCell: string
+  readonly success: string
   readonly table: string
   readonly testBtn: string
 }

@@ -49,11 +49,19 @@
     .permissionTag {
       padding: 6px var(--spacing-small);
       margin-right: var(--spacing-small);
-      background: var(--purple-50);
-      color: var(--purple-700);
       font-size: 13px;
       font-weight: 400;
       border-radius: 4px;
+
+      &.success {
+        background: var(--purple-50);
+        color: var(--purple-700);
+      }
+
+      &.failure {
+        background: var(--red-50);
+        color: var(--red-800);
+      }
     }
 
     .features {

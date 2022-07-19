@@ -8,7 +8,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import {
   Button,
-  ButtonSize,
+  // ButtonSize,
   ButtonVariation,
   Container,
   ExpandingSearchInput,
@@ -19,10 +19,11 @@ import {
   Text
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import { Classes, Menu, Popover, Spinner } from '@blueprintjs/core'
+import { Classes, Menu, Popover, PopoverInteractionKind, Position, Spinner } from '@blueprintjs/core'
 import { useHistory, useParams } from 'react-router-dom'
 import qs from 'qs'
 import type { CellProps, Column, Renderer } from 'react-table'
+import cx from 'classnames'
 import { debounce } from 'lodash-es'
 import ReactTimeago from 'react-timeago'
 
@@ -31,11 +32,11 @@ import RbacButton from '@rbac/components/Button/Button'
 import useCreateConnectorModal from '@connectors/modals/ConnectorModal/useCreateConnectorModal'
 import { useStrings } from 'framework/strings'
 import {
+  CcmK8sConnectorResponse,
   ConnectorInfoDTO,
-  ConnectorResponse,
-  PageConnectorResponse,
-  useGetConnectorListV2,
-  useGetTestConnectionResult
+  PageCcmK8sConnectorResponse,
+  useGetCCMK8SConnectorList
+  // useGetTestConnectionResult
 } from 'services/cd-ng'
 import { useFetchCcmMetaDataQuery } from 'services/ce/services'
 import { generateFilters } from '@ce/utils/anomaliesUtils'
@@ -51,11 +52,11 @@ import { useAutoStoppingModal } from '../AutoStoppingModal/AutoStoppingModal'
 
 import css from './CloudIntegrationTabs.module.scss'
 
-type CustomColumn = Column<ConnectorResponse>[]
-type CustomCell = Renderer<CellProps<ConnectorResponse>>
+type CustomColumn = Column<CcmK8sConnectorResponse>[]
+type CustomCell = Renderer<CellProps<CcmK8sConnectorResponse>>
 
 const ConnectorNameCell: CustomCell = cell => {
-  const name = cell.row.original?.connector?.name
+  const name = cell.row.original?.k8sConnector?.connector?.name
 
   return (
     <Text
@@ -71,21 +72,21 @@ const ConnectorNameCell: CustomCell = cell => {
 }
 
 const ConnectorStatusCell: CustomCell = cell => {
-  const { getString } = useStrings()
-  const { accountId } = useParams<{ accountId: string }>()
+  // const { getString } = useStrings()
+  // const { accountId } = useParams<{ accountId: string }>()
 
   const data = cell.row.original
-  const status = data.status
-  const isStatusSuccess = data?.status === 'SUCCESS'
+  const status = data.k8sConnector?.status
+  const isStatusSuccess = data.k8sConnector?.status === 'SUCCESS'
 
-  const [lastTestedAt, setLastTestedAt] = useState<number>()
+  // const [lastTestedAt, setLastTestedAt] = useState<number>()
 
-  const { mutate: testConnection } = useGetTestConnectionResult({
-    identifier: data.connector?.identifier || '',
-    queryParams: {
-      accountIdentifier: accountId
-    }
-  })
+  // const { mutate: testConnection } = useGetTestConnectionResult({
+  //   identifier: data.connector?.identifier || '',
+  //   queryParams: {
+  //     accountIdentifier: accountId
+  //   }
+  // })
 
   const iconProps: { icon: IconName; iconProps: { size: number; color: Color } } = useMemo(() => {
     if (isStatusSuccess) {
@@ -102,9 +103,9 @@ const ConnectorStatusCell: CustomCell = cell => {
         font={{ variation: FontVariation.BODY }}
         color={isStatusSuccess ? Color.GREY_800 : Color.RED_500}
       >
-        <ReactTimeago date={lastTestedAt || status?.lastTestedAt || status?.testedAt || ''} />
+        <ReactTimeago date={status?.lastTestedAt || status?.testedAt || ''} />
       </Text>
-      {!isStatusSuccess ? (
+      {/* {!isStatusSuccess ? (
         <Button
           variation={ButtonVariation.SECONDARY}
           size={ButtonSize.SMALL}
@@ -119,23 +120,13 @@ const ConnectorStatusCell: CustomCell = cell => {
             }
           }}
         />
-      ) : null}
+      ) : null} */}
     </div>
   )
 }
 
 const FeaturesEnabledCell: CustomCell = cell => {
   const { getString } = useStrings()
-  const connector = (cell.row.original?.connector || {}) as ConnectorInfoDTO
-  const permissions = (cell.row.original?.connector?.spec?.featuresEnabled || []) as string[]
-
-  const isReportingEnabled = permissions.includes('VISIBILITY')
-  const isAutoStoppingEnabled = permissions.includes('OPTIMIZATION')
-
-  const iconProps: { icon: IconName; iconProps: { size: number; color: Color } } = {
-    icon: 'tick',
-    iconProps: { size: 12, color: Color.PURPLE_700 }
-  }
 
   const featureInfo = useFeature({
     featureRequest: {
@@ -143,12 +134,43 @@ const FeaturesEnabledCell: CustomCell = cell => {
     }
   })
 
-  const [openCloudVisibilityModal] = useCloudVisibilityModal({ connector })
-  const [openAutoStoppingModal] = useAutoStoppingModal({ connector })
+  const k8sConnector = cell.row.original.k8sConnector?.connector as ConnectorInfoDTO
+  const ccmk8sConnectorList = cell.row.original?.ccmk8sConnector
+
+  const ccmk8sConnector = ccmk8sConnectorList?.[0]?.connector as ConnectorInfoDTO
+  const permissions = (ccmk8sConnector?.spec?.featuresEnabled || []) as string[]
+
+  const [openCloudVisibilityModal] = useCloudVisibilityModal({ connector: k8sConnector })
+  const [openAutoStoppingModal] = useAutoStoppingModal({ connector: ccmk8sConnector })
+
+  const isReportingEnabled = permissions.includes('VISIBILITY')
+  const isAutoStoppingEnabled = permissions.includes('OPTIMIZATION')
+
+  const ccmk8sConnectorStatus = ccmk8sConnectorList?.[0]?.status
+
+  const props = useMemo(() => {
+    if (ccmk8sConnectorStatus?.status === 'SUCCESS') {
+      return {
+        className: cx(css.permissionTag, css.success),
+        background: Color.PURPLE_50,
+        color: Color.PURPLE_700,
+        icon: 'tick' as IconName,
+        iconProps: { size: 12, color: Color.PURPLE_700 }
+      }
+    } else {
+      return {
+        className: cx(css.permissionTag, css.failure),
+        background: Color.RED_50,
+        color: Color.RED_800,
+        icon: 'warning-sign' as IconName,
+        iconProps: { size: 12, color: Color.RED_700 }
+      }
+    }
+  }, [ccmk8sConnectorStatus])
 
   return (
     <Layout.Horizontal className={css.features}>
-      {!isReportingEnabled && !isAutoStoppingEnabled ? (
+      {!ccmk8sConnectorList?.length ? (
         <Button
           icon="ccm-solid"
           variation={ButtonVariation.SECONDARY}
@@ -162,15 +184,22 @@ const FeaturesEnabledCell: CustomCell = cell => {
       ) : (
         <>
           {isReportingEnabled ? (
-            <Text {...iconProps} className={css.permissionTag}>
-              {getString('ce.cloudIntegration.reporting')}
-            </Text>
+            <Popover
+              disabled={ccmk8sConnectorStatus?.status !== 'FAILURE'}
+              popoverClassName={Classes.DARK}
+              position={Position.BOTTOM}
+              interactionKind={PopoverInteractionKind.HOVER}
+              content={
+                <Text padding={'small'} color={Color.WHITE} font={{ variation: FontVariation.BODY }}>
+                  {ccmk8sConnectorStatus?.errorSummary}
+                </Text>
+              }
+            >
+              <Text {...props}>{getString('ce.cloudIntegration.reporting')}</Text>
+            </Popover>
           ) : null}
-          {/* TODO - Reporting Popover */}
           {isAutoStoppingEnabled ? (
-            <Text {...iconProps} className={css.permissionTag}>
-              {getString('common.ce.autostopping')}
-            </Text>
+            <Text {...props}>{getString('common.ce.autostopping')}</Text>
           ) : (
             <Button
               icon="plus"
@@ -183,7 +212,6 @@ const FeaturesEnabledCell: CustomCell = cell => {
               }}
             />
           )}
-          {/* TODO - AutoStopping Popover */}
         </>
       )}
     </Layout.Horizontal>
@@ -215,8 +243,9 @@ const MenuCell: CustomCell = () => {
         }}
       />
       <Menu style={{ minWidth: 'unset' }}>
-        <Menu.Item icon="edit" text={getString('edit')} />
-        <Menu.Item icon="trash" text={getString('delete')} />
+        <Menu.Item text={getString('common.smtp.testConnection')} />
+        {/* <Menu.Item icon="edit" text={getString('edit')} />
+        <Menu.Item icon="trash" text={getString('delete')} /> */}
       </Menu>
     </Popover>
   )
@@ -227,14 +256,14 @@ const K8sClustersTab: React.FC = () => {
   const history = useHistory()
   const { accountId } = useParams<{ accountId: string }>()
 
-  const [k8sClusters, setK8sClusters] = useState<PageConnectorResponse>()
+  const [k8sClusters, setK8sClusters] = useState<PageCcmK8sConnectorResponse>()
   const [page, setPage] = useState(0)
   const [searchTerm, setSearchTerm] = useState('')
 
   const [ccmMetaResult] = useFetchCcmMetaDataQuery()
   const { data: ccmMetaDataRes, fetching: fetchingCCMMetaData } = ccmMetaResult
 
-  const { loading, mutate: fetchConnectors } = useGetConnectorListV2({
+  const { loading, mutate: fetchConnectors } = useGetCCMK8SConnectorList({
     queryParams: {
       searchTerm,
       pageIndex: page,
@@ -260,7 +289,9 @@ const K8sClustersTab: React.FC = () => {
   const defaultClusterPerspectiveId = ccmMetaDataRes?.ccmMetaData?.defaultClusterPerspectiveId as string
 
   const ViewCostsCell: CustomCell = cell => {
-    const connector = cell.row.original.connector
+    const ccmk8sConnectorList = cell.row.original.ccmk8sConnector
+    const connector = ccmk8sConnectorList?.[0]?.connector
+
     const connectorName = connector?.name || ''
     const isReportingEnabled = connector?.spec?.featuresEnabled?.includes('VISIBILITY')
 
@@ -365,12 +396,12 @@ const K8sClustersTab: React.FC = () => {
         />
       </Layout.Horizontal>
       {!isLoading ? (
-        <TableV2<ConnectorResponse>
+        <TableV2<CcmK8sConnectorResponse>
           data={k8sClusters?.content || []}
           columns={columns as CustomColumn}
           className={css.table}
-          onRowClick={({ connector }) =>
-            history.push(routes.toConnectorDetails({ accountId, connectorId: connector?.identifier }))
+          onRowClick={({ k8sConnector }) =>
+            history.push(routes.toConnectorDetails({ accountId, connectorId: k8sConnector?.connector?.identifier }))
           }
           pagination={{
             itemCount: k8sClusters?.totalItems || 0,

@@ -21,21 +21,19 @@ import css from '../AutoStoppingModal.module.scss'
 
 interface TestComponentsProps {
   name: string
-  connector?: ConnectorInfoDTO
   isCloudReportingModal?: boolean
   closeModal: () => void
 }
 
 const TestComponents: React.FC<StepProps<ConnectorInfoDTO> & TestComponentsProps> = ({
   isCloudReportingModal,
-  connector: ccmConnector,
   prevStepData,
   previousStep,
   closeModal
 }) => {
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
-  const connector = isCloudReportingModal ? prevStepData : ccmConnector
+  const connector = prevStepData
 
   const [stepDetails, setStepDetails] = useState<StepDetails>({
     step: 1,

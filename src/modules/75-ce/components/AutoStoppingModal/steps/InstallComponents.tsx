@@ -13,6 +13,8 @@ import { useStrings } from 'framework/strings'
 
 import { useStepLoadTelemetry } from '@connectors/common/useTrackStepLoad/useStepLoadTelemetry'
 import { CE_K8S_CONNECTOR_CREATION_EVENTS } from '@connectors/trackingConstants'
+import { downloadYamlAsFile } from '@common/utils/downloadYamlUtils'
+import { useTelemetry } from '@common/hooks/useTelemetry'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { DialogExtensionContext } from '@connectors/common/ConnectorExtention/DialogExtention'
 import EnableAutoStoppingHeader from '@ce/components/CloudVisibilityModal/steps/EnableAutoStoppingStep'
@@ -26,24 +28,25 @@ import css from '../AutoStoppingModal.module.scss'
 
 interface InstallComponentsProps {
   name: string
-  connector?: ConnectorInfoDTO
   isCloudReportingModal?: boolean
 }
+
+const yamlFileName = 'ccm-kubernetes.yaml'
 
 const InstallComponents: React.FC<StepProps<ConnectorInfoDTO> & InstallComponentsProps> = ({
   previousStep,
   prevStepData,
   nextStep,
-  connector: ccmConnector,
   isCloudReportingModal
 }) => {
   const { getString } = useStrings()
+  const { trackEvent } = useTelemetry()
   const { triggerExtension } = useContext(DialogExtensionContext)
   const { accountId } = useParams<AccountPathProps>()
 
   useStepLoadTelemetry(CE_K8S_CONNECTOR_CREATION_EVENTS.LOAD_SECRET_CREATION)
 
-  const connector = isCloudReportingModal ? prevStepData : ccmConnector
+  const connector = prevStepData
 
   const { data: permissionsYaml, loading: yamlLoading } = useMutateAsGet(useCloudCostK8sClusterSetup, {
     queryParams: {
@@ -56,11 +59,16 @@ const InstallComponents: React.FC<StepProps<ConnectorInfoDTO> & InstallComponent
     }
   })
 
+  const handleDownload = async () => {
+    trackEvent(CE_K8S_CONNECTOR_CREATION_EVENTS.DOWNLOAD_YAML, {})
+    await downloadYamlAsFile(permissionsYaml, yamlFileName)
+  }
+
   return (
     <Layout.Vertical height={'100%'} spacing={'medium'}>
       {isCloudReportingModal ? <EnableAutoStoppingHeader /> : null}
       <Text font={{ variation: FontVariation.H4 }} color={Color.GREY_800}>
-        {`i. ${getString('ce.cloudIntegration.autoStoppingModal.installComponents.title')}`}
+        {`ii. ${getString('ce.cloudIntegration.autoStoppingModal.installComponents.title')}`}
       </Text>
       <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_600}>
         <p>{getString('ce.cloudIntegration.autoStoppingModal.installComponents.desc')}</p>
@@ -75,10 +83,12 @@ const InstallComponents: React.FC<StepProps<ConnectorInfoDTO> & InstallComponent
             {getString('ce.cloudIntegration.autoStoppingModal.createSecret.step1')}
           </Text>
           <Button
+            loading={yamlLoading}
             rightIcon="launch"
             variation={ButtonVariation.SECONDARY}
             margin={{ right: 'medium' }}
             text={getString('connectors.ceK8.providePermissionsStep.downloadYamlBtnText')}
+            onClick={handleDownload}
           />
           <Button
             loading={yamlLoading}

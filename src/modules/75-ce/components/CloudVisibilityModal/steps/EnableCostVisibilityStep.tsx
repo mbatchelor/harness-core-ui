@@ -81,30 +81,13 @@ const EnableCostVisibilityStep: React.FC<Props & StepProps<ConnectorInfoDTO>> = 
   })
 
   const { mutate: testConnection } = useGetTestConnectionResult({
-    identifier: connector.identifier,
+    identifier: ccmConnector?.identifier || '',
     queryParams: {
       accountIdentifier: accountId
     }
   })
 
-  const updateAndVerifyConnector = async () => {
-    if (stepDetails.status === 'PROCESS') {
-      try {
-        const result = await testConnection()
-        setTestConnectionRes(result)
-        if (result?.data?.status === 'SUCCESS') {
-          setStepDetails({ step: 3, intent: Intent.SUCCESS, status: 'DONE' })
-        } else {
-          setStepDetails({ step: 1, intent: Intent.DANGER, status: 'ERROR' })
-        }
-      } catch (err) {
-        setTestConnectionRes(err)
-        setStepDetails({ step: 1, intent: Intent.DANGER, status: 'ERROR' })
-      }
-    }
-  }
-
-  const saveConnector: () => Promise<boolean> = async () => {
+  const saveConnector = async () => {
     try {
       const res = await createConnector({
         connector: {
@@ -121,17 +104,32 @@ const EnableCostVisibilityStep: React.FC<Props & StepProps<ConnectorInfoDTO>> = 
       })
 
       setCCMConnector(res.data?.connector)
-
-      return true
     } catch (error) {
       modalErrorHandler?.showDanger(getErrorInfoFromErrorObject(error))
+    }
+  }
 
-      return false
+  const createAndVerifyCcmK8sConnector = async () => {
+    await saveConnector()
+
+    if (stepDetails.status === 'PROCESS') {
+      try {
+        const result = await testConnection()
+        setTestConnectionRes(result)
+        if (result?.data?.status === 'SUCCESS') {
+          setStepDetails({ step: 3, intent: Intent.SUCCESS, status: 'DONE' })
+        } else {
+          setStepDetails({ step: 1, intent: Intent.DANGER, status: 'ERROR' })
+        }
+      } catch (err) {
+        setTestConnectionRes(err)
+        setStepDetails({ step: 1, intent: Intent.DANGER, status: 'ERROR' })
+      }
     }
   }
 
   useEffect(() => {
-    updateAndVerifyConnector()
+    createAndVerifyCcmK8sConnector()
   }, [])
 
   const renderError = () => {
@@ -171,23 +169,14 @@ const EnableCostVisibilityStep: React.FC<Props & StepProps<ConnectorInfoDTO>> = 
             text={getString('finish')}
             variation={ButtonVariation.SECONDARY}
             margin={{ right: 'medium' }}
-            onClick={async () => {
-              const connectorSaved = await saveConnector()
-              if (connectorSaved) {
-                closeModal()
-              }
-            }}
-            disabled={testConnectionRes?.status !== 'SUCCESS'}
+            onClick={closeModal}
           />
           <Button
             rightIcon="chevron-right"
             text={getString('ce.cloudIntegration.enableAutoStopping')}
             variation={ButtonVariation.PRIMARY}
             onClick={async () => {
-              // const connectorSaved = await saveConnector()
-              // if (connectorSaved) {
               gotoStep?.({ stepNumber: 3, prevStepData: ccmConnector })
-              // }
             }}
             // disabled={testConnectionRes?.status !== 'SUCCESS'}
           />

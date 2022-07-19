@@ -5,8 +5,17 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
-import { Button, ButtonVariation, Layout, StepProps, Text } from '@harness/uicore'
+import React, { useEffect, useState } from 'react'
+import {
+  Button,
+  ButtonVariation,
+  getErrorInfoFromErrorObject,
+  Layout,
+  ModalErrorHandler,
+  ModalErrorHandlerBinding,
+  StepProps,
+  Text
+} from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
@@ -16,7 +25,7 @@ import { CE_K8S_CONNECTOR_CREATION_EVENTS } from '@connectors/trackingConstants'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import CopyCodeSection from '@connectors/components/CreateConnector/CEK8sConnector/components/CopyCodeSection'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
-import type { ConnectorInfoDTO } from 'services/cd-ng'
+import { ConnectorInfoDTO, useUpdateConnector } from 'services/cd-ng'
 import EnableAutoStoppingHeader from '@ce/components/CloudVisibilityModal/steps/EnableAutoStoppingStep'
 
 import css from '../AutoStoppingModal.module.scss'
@@ -24,11 +33,13 @@ import css from '../AutoStoppingModal.module.scss'
 interface CreateSecretProps {
   isCloudReportingModal?: boolean
   name: string
+  connector?: ConnectorInfoDTO
 }
 
 const CreateSecret: React.FC<StepProps<ConnectorInfoDTO> & CreateSecretProps> = ({
   gotoStep,
   prevStepData,
+  connector,
   nextStep,
   isCloudReportingModal
 }) => {
@@ -36,6 +47,41 @@ const CreateSecret: React.FC<StepProps<ConnectorInfoDTO> & CreateSecretProps> = 
   const { accountId } = useParams<AccountPathProps>()
 
   useStepLoadTelemetry(CE_K8S_CONNECTOR_CREATION_EVENTS.LOAD_SECRET_CREATION)
+
+  const { mutate: updateConnector } = useUpdateConnector({
+    queryParams: {
+      accountIdentifier: accountId
+    }
+  })
+
+  const [modalErrorHandler, setModalErrorHandler] = useState<ModalErrorHandlerBinding>()
+  const [ccmConnector, setCCMConnector] = useState<ConnectorInfoDTO | undefined>(
+    isCloudReportingModal ? prevStepData : connector
+  )
+
+  const enableAutoStopping = async () => {
+    try {
+      if (ccmConnector) {
+        const res = await updateConnector({
+          connector: {
+            ...ccmConnector,
+            spec: {
+              ...ccmConnector.spec,
+              featuresEnabled: ['VISIBILITY', 'OPTIMIZATION']
+            }
+          }
+        })
+
+        setCCMConnector(res.data?.connector)
+      }
+    } catch (error) {
+      modalErrorHandler?.showDanger(getErrorInfoFromErrorObject(error))
+    }
+  }
+
+  useEffect(() => {
+    enableAutoStopping()
+  }, [])
 
   const secretYaml = yamlStringify({
     apiVersion: 'v1',
@@ -51,6 +97,7 @@ const CreateSecret: React.FC<StepProps<ConnectorInfoDTO> & CreateSecretProps> = 
 
   return (
     <Layout.Vertical height={'100%'} spacing={'medium'}>
+      <ModalErrorHandler bind={setModalErrorHandler} />
       {isCloudReportingModal ? <EnableAutoStoppingHeader /> : null}
       <Text font={{ variation: FontVariation.H4 }} color={Color.GREY_800}>
         {`i. ${getString('secrets.createSecret')}`}
@@ -107,7 +154,7 @@ const CreateSecret: React.FC<StepProps<ConnectorInfoDTO> & CreateSecretProps> = 
           rightIcon="chevron-right"
           text={getString('continue')}
           variation={ButtonVariation.PRIMARY}
-          onClick={() => nextStep?.(prevStepData)}
+          onClick={() => nextStep?.(ccmConnector)}
         />
       </div>
     </Layout.Vertical>
