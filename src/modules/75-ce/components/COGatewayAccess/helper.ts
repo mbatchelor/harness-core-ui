@@ -279,9 +279,9 @@ export const getLoadBalancerToEdit = (
 
 export const getAccessPointFetchQueryParams = (
   { gatewayDetails, accountId }: BaseFetchDetails,
-  isAwsProvider: boolean
+  { isAwsProvider, isGcpProvider }: RuleCreationParams
 ): ListAccessPointsQueryParams => {
-  const params: ListAccessPointsQueryParams = {
+  const params: ListAccessPointsQueryParams & { subnet?: string } = {
     cloud_account_id: gatewayDetails.cloudAccount.id,
     accountIdentifier: accountId
   }
@@ -293,13 +293,19 @@ export const getAccessPointFetchQueryParams = (
       ? gatewayDetails.selectedInstances[0].vpc
       : gatewayDetails.routing.instance.scale_group?.target_groups?.[0]?.vpc || ''
   }
+  if (isGcpProvider) {
+    const subnet = get(gatewayDetails, 'selectedInstances[0].metadata.network_interfaces[0].subnetwork', null)
+    if (subnet) {
+      params.subnet = subnet
+    }
+  }
   return params
 }
 
-export const getSupportedResourcesQueryParams = ({
-  gatewayDetails,
-  accountId
-}: BaseFetchDetails): AccessPointResourcesQueryParams => {
+export const getSupportedResourcesQueryParams = (
+  { gatewayDetails, accountId }: BaseFetchDetails,
+  { isGcpProvider }: RuleCreationParams
+): AccessPointResourcesQueryParams => {
   const params: AccessPointResourcesQueryParams & { subnet?: string } = {
     cloud_account_id: gatewayDetails.cloudAccount.id,
     accountIdentifier: accountId,
@@ -315,7 +321,7 @@ export const getSupportedResourcesQueryParams = ({
       : _defaultTo(gatewayDetails.routing.instance.scale_group?.region, '')
     params.resource_group_name = gatewayDetails.selectedInstances[0]?.metadata?.resourceGroup
   }
-  if (Utils.isProviderGcp(gatewayDetails.provider)) {
+  if (isGcpProvider) {
     const subnet = get(gatewayDetails, 'selectedInstances[0].metadata.network_interfaces[0].subnetwork', null)
     if (subnet) {
       params.subnet = subnet

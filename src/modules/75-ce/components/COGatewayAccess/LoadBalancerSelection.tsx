@@ -142,7 +142,10 @@ const LoadBalancerSelection: React.FC<LoadBalancerSelectionProps> = ({ gatewayDe
     refetch: refetchAccessPoints
   } = useListAccessPoints({
     account_id: accountId,
-    queryParams: getAccessPointFetchQueryParams({ gatewayDetails: gatewayDetails, accountId }, isAwsProvider)
+    queryParams: getAccessPointFetchQueryParams(
+      { gatewayDetails: gatewayDetails, accountId },
+      { isAwsProvider, isGcpProvider }
+    )
   })
 
   const {
@@ -151,7 +154,7 @@ const LoadBalancerSelection: React.FC<LoadBalancerSelectionProps> = ({ gatewayDe
     refetch: apCoresRefetch
   } = useAccessPointResources({
     account_id: accountId,
-    queryParams: getSupportedResourcesQueryParams({ gatewayDetails: gatewayDetails, accountId })
+    queryParams: getSupportedResourcesQueryParams({ gatewayDetails: gatewayDetails, accountId }, { isGcpProvider })
   })
 
   useEffect(() => {
