@@ -49,7 +49,7 @@
     "generate-eslint": "node scripts/generate-eslint-config-for-imports.mjs",
     "build-docker": "sh scripts/docker-build.sh",
     "lighthouse": "node scripts/lighthouse/lighthouse.js",
-    "custom-coverage": "npx new-files-coverage-check --e !**/*.test.tsx !**/*.test.ts !**/*.snap !**/*.js !**/*.scss !**/*.mock.ts !**/*.spec.ts !**/*.d.ts !**/*.json !**/*.types.ts !**/*.yml !**/*.yaml !**cypress/** !**/cypress/** !**/__test*/** !**/*.png !**/*.svg !**/src/services/** !**/src/queries/** !**/src/**/__mocks__/** !**/src/**/RouteDestinations.tsx"
+    "custom-coverage": "npx new-files-coverage-check --e !**/*.test.tsx !**/*.test.ts !**/*.snap !**/*.js !**/*.scss !**/*.mock.ts !**/*.spec.ts !**/*.d.ts !**/*.json !**/*.types.ts !**/*.yml !**/*.yaml !**cypress/** !**/cypress/** !**/__test*/** !**/*.png !**/*.svg !**/src/services/** !**/src/queries/** !**/src/**/__mocks__/** !**/src/**/RouteDestinations.tsx !**/*.sh !**/*.md"
   },
   "dependencies": {
     "@blueprintjs/core": "3.26.1",
